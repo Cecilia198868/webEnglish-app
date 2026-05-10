@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 
 type LoginPageClientProps = {
@@ -10,6 +10,49 @@ type LoginPageClientProps = {
 
 export default function LoginPageClient(_: LoginPageClientProps) {
   const { t } = useLanguage();
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
+  const [googleError, setGoogleError] = useState("");
+
+  async function handleGoogleSignIn() {
+    try {
+      setGoogleError("");
+      setIsGoogleSubmitting(true);
+
+      const csrfResponse = await fetch("/api/auth/csrf", {
+        credentials: "same-origin",
+      });
+      const csrfData = (await csrfResponse.json()) as { csrfToken?: string };
+
+      if (!csrfData.csrfToken) {
+        throw new Error("Missing Google sign-in token");
+      }
+
+      const response = await fetch("/api/auth/signin/google", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          csrfToken: csrfData.csrfToken,
+          callbackUrl: `${window.location.origin}/dashboard`,
+          json: "true",
+        }),
+      });
+
+      const data = (await response.json()) as { url?: string };
+
+      if (!data.url || data.url.includes("csrf=true")) {
+        throw new Error("Google sign-in did not return an authorization URL");
+      }
+
+      window.location.assign(data.url);
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+      setGoogleError("Google sign-in failed. Please try again.");
+      setIsGoogleSubmitting(false);
+    }
+  }
 
   return (
     <main className="relative mx-auto min-h-screen max-w-[430px] overflow-hidden bg-[#090110] text-white">
@@ -34,15 +77,24 @@ export default function LoginPageClient(_: LoginPageClientProps) {
             <button
               type="button"
               onClick={() => {
-                void signIn("google", { callbackUrl: "/dashboard" });
+                void handleGoogleSignIn();
               }}
+              disabled={isGoogleSubmitting}
               className="flex w-full items-center justify-center gap-3 rounded-full border border-white/14 bg-[linear-gradient(90deg,rgba(255,255,255,0.14),rgba(255,255,255,0.06))] px-5 py-4 font-[var(--font-sora)] text-base font-semibold text-white shadow-[0_24px_60px_rgba(255,0,153,0.16)] transition hover:scale-[1.01] hover:border-fuchsia-200/30"
             >
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-bold text-[#1f1f1f]">
                 G
               </span>
-              <span>Continue with Google</span>
+              <span>
+                {isGoogleSubmitting ? "Opening Google..." : "Continue with Google"}
+              </span>
             </button>
+
+            {googleError ? (
+              <p className="text-sm font-medium text-fuchsia-100">
+                {googleError}
+              </p>
+            ) : null}
 
             <Link
               href="/login/email"
