@@ -29,6 +29,59 @@ function appendSetCookies(response: NextResponse, cookies: string[]) {
   });
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function googleHandoffResponse(url: string) {
+  const escapedUrl = escapeHtml(url);
+
+  return new NextResponse(
+    `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content="0;url=${escapedUrl}" />
+    <title>Opening Google</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #090110;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      a {
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        border-radius: 999px;
+        padding: 14px 20px;
+        text-decoration: none;
+      }
+    </style>
+    <script>
+      window.location.replace(${JSON.stringify(url)});
+    </script>
+  </head>
+  <body>
+    <a href="${escapedUrl}">Continue to Google</a>
+  </body>
+</html>`,
+    {
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+      },
+    }
+  );
+}
+
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const origin = requestUrl.origin;
@@ -83,7 +136,7 @@ export async function GET(request: Request) {
     return NextResponse.redirect(new URL("/login?google=signin", origin));
   }
 
-  const response = NextResponse.redirect(signInData.url);
+  const response = googleHandoffResponse(signInData.url);
   appendSetCookies(response, csrfCookies);
   appendSetCookies(response, getSetCookieHeaders(signInResponse.headers));
 
