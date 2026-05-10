@@ -716,9 +716,14 @@ export default function StudyPage() {
     lessonId,
   ]);
 
-  function handleBackHome() {
+  function handleBackToPreviousPage() {
     stopAutoPlay();
-    router.push("/");
+    if (window.history.length > 1) {
+      router.back();
+      return;
+    }
+
+    router.push("/dashboard");
   }
 
   function handleSaveCurrentPosition() {
@@ -737,13 +742,11 @@ export default function StudyPage() {
         <div className="mb-3 rounded-[1.35rem] border border-white/12 bg-white/[0.05] p-3 backdrop-blur-xl">
           <div className="flex items-start gap-3">
             <button
-              onClick={() => {
-                stopAutoPlay();
-                router.push("/");
-              }}
+              type="button"
+              onClick={handleBackToPreviousPage}
               className="shrink-0 rounded-xl bg-slate-700 px-3 py-2 text-sm font-medium hover:bg-slate-600"
             >
-              返回首页
+              返回上一页
             </button>
 
             <div className="min-w-0 flex-1 pt-0.5">
@@ -941,10 +944,18 @@ export default function StudyPage() {
                 </button>
               ))}
               <button
+                type="button"
                 onClick={() => setShowMoreActions((prev) => !prev)}
                 className="rounded-xl bg-slate-800 px-2.5 py-1.5 text-xs font-bold hover:bg-slate-700"
               >
                 声音设置
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveCurrentPosition}
+                className="rounded-xl bg-emerald-700 px-2.5 py-1.5 text-xs font-bold hover:bg-emerald-600"
+              >
+                保存当前位置
               </button>
             </div>
             {showMoreActions ? (
@@ -985,20 +996,6 @@ export default function StudyPage() {
               }}
             />
           ) : null}
-          <div className="mt-2 grid grid-cols-2 gap-2 rounded-[1.35rem] border border-white/10 bg-white/5 p-2.5">
-            <button
-              onClick={handleBackHome}
-              className="rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium hover:bg-slate-700"
-            >
-              返回首页
-            </button>
-            <button
-              onClick={handleSaveCurrentPosition}
-              className="rounded-xl bg-emerald-700 px-3 py-2 text-sm font-medium hover:bg-emerald-600"
-            >
-              保存当前位置
-            </button>
-          </div>
         </section>
       </div>
     </main>
