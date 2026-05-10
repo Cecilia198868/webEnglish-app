@@ -12,7 +12,7 @@ export default function LoginPageClient(_: LoginPageClientProps) {
   const { t } = useLanguage();
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#090110] text-white">
+    <main className="relative mx-auto min-h-screen max-w-[430px] overflow-hidden bg-[#090110] text-white">
       <div className="absolute inset-0 bg-[linear-gradient(180deg,#120216_0%,#090110_28%,#10031f_58%,#06010d_100%)]" />
       <div className="lux-grid absolute inset-0 opacity-[0.14]" />
       <div className="aurora-wave absolute left-[-8%] top-[-10%] h-[34rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,153,0.30),transparent_58%)] blur-[96px]" />
@@ -20,7 +20,7 @@ export default function LoginPageClient(_: LoginPageClientProps) {
       <div className="hero-glow absolute left-[16%] top-[24%] h-44 w-44 rounded-full bg-fuchsia-400/14 blur-[90px]" />
       <div className="hero-glow absolute right-[18%] top-[18%] h-56 w-56 rounded-full bg-cyan-300/14 blur-[110px]" />
 
-      <div className="relative mx-auto flex min-h-screen max-w-[430px] items-center justify-center px-5 py-8">
+      <div className="relative flex min-h-screen items-center justify-center px-5 py-8">
         <section className="w-full rounded-[36px] border border-white/12 bg-white/[0.05] px-6 py-9 text-center shadow-[0_30px_90px_rgba(2,8,23,0.46)] backdrop-blur-2xl">
           <p className="font-[var(--font-sora)] text-xs uppercase tracking-normal text-cyan-100/65">
             Access

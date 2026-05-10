@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function HomePageClient() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#090110] text-white">
+    <main className="relative mx-auto min-h-screen max-w-[430px] overflow-hidden bg-[#090110] text-white">
       <div className="absolute inset-0 bg-[linear-gradient(180deg,#120216_0%,#090110_28%,#10031f_58%,#06010d_100%)]" />
       <div className="lux-grid absolute inset-0 opacity-[0.14]" />
 
@@ -19,7 +19,7 @@ export default function HomePageClient() {
       <div className="float-slow absolute right-[10%] top-[24%] h-px w-44 bg-gradient-to-r from-transparent via-cyan-200/70 to-transparent" />
       <div className="float-slow absolute left-1/2 top-[72%] h-px w-52 -translate-x-1/2 bg-gradient-to-r from-transparent via-lime-200/55 to-transparent" />
 
-      <div className="relative mx-auto flex min-h-screen max-w-[430px] items-center justify-center px-5 py-8">
+      <div className="relative flex min-h-screen items-center justify-center px-5 py-8">
         <section className="relative w-full rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] px-6 py-10 text-center shadow-[0_30px_90px_rgba(2,8,23,0.46)] backdrop-blur-2xl">
           <div className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-fuchsia-300/12" />
           <div className="pointer-events-none absolute left-1/2 top-1/2 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-200/12" />

@@ -157,13 +157,13 @@ export default function LanguageSelectionPageClient() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#090110] text-white">
+    <main className="relative mx-auto min-h-screen max-w-[430px] overflow-hidden bg-[#090110] text-white">
       <div className="absolute inset-0 bg-[linear-gradient(180deg,#120216_0%,#090110_34%,#07191b_68%,#06010d_100%)]" />
       <div className="lux-grid absolute inset-0 opacity-[0.12]" />
       <div className="aurora-wave absolute left-[-10%] top-[-10%] h-[34rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,153,0.26),transparent_58%)] blur-[96px]" />
       <div className="aurora-wave absolute right-[-10%] top-[8%] h-[34rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.24),transparent_58%)] blur-[96px]" />
 
-      <div className="relative mx-auto min-h-screen max-w-[430px] px-5 py-7">
+      <div className="relative min-h-screen px-5 py-7">
         <div className="flex items-center justify-between gap-4">
           <Link
             href="/"
