@@ -46,7 +46,6 @@ function googleHandoffResponse(url: string) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0;url=${escapedUrl}" />
     <title>Opening Google</title>
     <style>
       body {
@@ -58,20 +57,45 @@ function googleHandoffResponse(url: string) {
         color: white;
         font-family: Arial, sans-serif;
       }
+      main {
+        width: min(100vw - 40px, 390px);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 32px;
+        padding: 34px 24px;
+        text-align: center;
+        background: linear-gradient(145deg, rgba(28, 50, 72, 0.88), rgba(45, 16, 55, 0.88));
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.4);
+      }
+      h1 {
+        margin: 0;
+        font-size: 28px;
+      }
+      p {
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.6;
+        margin: 16px 0 26px;
+      }
       a {
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
         color: white;
         border: 1px solid rgba(255, 255, 255, 0.24);
         border-radius: 999px;
-        padding: 14px 20px;
+        padding: 16px 20px;
         text-decoration: none;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.12);
       }
     </style>
-    <script>
-      window.location.replace(${JSON.stringify(url)});
-    </script>
   </head>
   <body>
-    <a href="${escapedUrl}">Continue to Google</a>
+    <main>
+      <h1>Open Google</h1>
+      <p>Tap the button below to continue with your Google account.</p>
+      <a href="${escapedUrl}">Continue to Google</a>
+    </main>
   </body>
 </html>`,
     {
