@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 
@@ -9,48 +10,74 @@ type LoginPageClientProps = {
 
 export default function LoginPageClient(_: LoginPageClientProps) {
   const { t } = useLanguage();
+  const textOutlineStyle: CSSProperties = {
+    paintOrder: "stroke fill",
+    textShadow: "none",
+    WebkitTextStroke: "0.9px rgba(0, 0, 0, 0.96)",
+  };
+  const titleOutlineStyle: CSSProperties = {
+    paintOrder: "stroke fill",
+    textShadow: "none",
+    WebkitTextStroke: "1.4px rgba(0, 0, 0, 0.98)",
+  };
 
   return (
-    <main className="relative mx-auto min-h-screen max-w-[430px] overflow-hidden bg-[#090110] text-white">
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,#120216_0%,#090110_28%,#10031f_58%,#06010d_100%)]" />
-      <div className="lux-grid absolute inset-0 opacity-[0.14]" />
-      <div className="aurora-wave absolute left-[-8%] top-[-10%] h-[34rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,153,0.30),transparent_58%)] blur-[96px]" />
-      <div className="aurora-wave absolute right-[-8%] top-[8%] h-[34rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.28),transparent_58%)] blur-[96px]" />
-      <div className="hero-glow absolute left-[16%] top-[24%] h-44 w-44 rounded-full bg-fuchsia-400/14 blur-[90px]" />
-      <div className="hero-glow absolute right-[18%] top-[18%] h-56 w-56 rounded-full bg-cyan-300/14 blur-[110px]" />
+    <main className="relative mx-auto min-h-screen max-w-[430px] overflow-hidden bg-[#06020d] text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-8%,rgba(255,255,255,0.20),transparent_28%),radial-gradient(circle_at_12%_17%,rgba(0,229,255,0.42),transparent_38%),radial-gradient(circle_at_88%_19%,rgba(255,33,196,0.38),transparent_34%),linear-gradient(180deg,#180326_0%,#090212_45%,#04010a_100%)]" />
+      <div className="lux-grid absolute inset-0 opacity-[0.20]" />
+      <div className="aurora-wave absolute left-[-24%] top-[-18%] h-[34rem] w-[44rem] rounded-full bg-[conic-gradient(from_140deg,rgba(0,245,255,0.42),rgba(255,0,199,0.36),rgba(111,77,255,0.32),rgba(0,245,255,0.42))] opacity-85 blur-[86px]" />
+      <div className="aurora-wave absolute right-[-44%] top-[22%] h-[34rem] w-[44rem] rounded-full bg-[conic-gradient(from_20deg,rgba(255,255,255,0.18),rgba(255,0,153,0.36),rgba(0,245,255,0.32),rgba(255,255,255,0.18))] opacity-75 blur-[92px]" />
+      <div className="hero-glow absolute left-[9%] top-[20%] h-48 w-48 rounded-full bg-cyan-300/24 blur-[76px]" />
+      <div className="hero-glow absolute right-[10%] top-[16%] h-56 w-56 rounded-full bg-fuchsia-300/24 blur-[88px]" />
+      <div className="absolute inset-x-0 top-0 h-32 bg-[linear-gradient(180deg,rgba(255,255,255,0.16),transparent)]" />
 
       <div className="relative flex min-h-screen items-center justify-center px-5 py-8">
-        <section className="w-full rounded-[36px] border border-white/12 bg-white/[0.05] px-6 py-9 text-center shadow-[0_30px_90px_rgba(2,8,23,0.46)] backdrop-blur-2xl">
-          <p className="font-[var(--font-sora)] text-xs uppercase tracking-normal text-cyan-100/65">
+        <section className="relative w-full overflow-hidden rounded-[36px] border border-cyan-100/36 bg-[linear-gradient(180deg,rgba(34,23,65,0.94),rgba(13,8,30,0.96)_45%,rgba(5,2,13,0.98))] px-6 py-9 text-center shadow-[0_34px_110px_rgba(0,0,0,0.68),0_0_44px_rgba(0,229,255,0.22),inset_0_1px_0_rgba(255,255,255,0.26)] backdrop-blur-xl">
+          <div className="pointer-events-none absolute inset-x-7 top-0 z-0 h-px bg-gradient-to-r from-transparent via-cyan-100/95 to-transparent" />
+          <div className="pointer-events-none absolute -left-10 top-8 z-0 h-36 w-36 rounded-full bg-cyan-200/12 blur-3xl" />
+          <div className="pointer-events-none absolute -right-12 top-0 z-0 h-44 w-44 rounded-full bg-fuchsia-300/12 blur-3xl" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(120deg,transparent_0%,rgba(255,255,255,0.07)_42%,transparent_56%)] opacity-60" />
+
+          <p
+            className="relative z-10 font-[var(--font-sora)] text-xs font-black uppercase tracking-[0.18em] text-white"
+            style={textOutlineStyle}
+          >
             Access
           </p>
-          <h1 className="mt-6 font-[var(--font-sora)] text-4xl font-semibold tracking-normal text-white">
+          <h1
+            className="relative z-10 mt-5 font-[var(--font-sora)] text-[2.75rem] font-black leading-none tracking-normal text-white"
+            style={titleOutlineStyle}
+          >
             {t("loginTitle")}
           </h1>
-          <div className="mx-auto mt-6 h-px w-40 bg-gradient-to-r from-transparent via-fuchsia-200/80 to-transparent" />
+          <div className="relative z-10 mx-auto mt-7 h-px w-44 bg-gradient-to-r from-transparent via-cyan-100 to-transparent shadow-[0_0_18px_rgba(103,232,249,0.75)]" />
 
-          <div className="mt-10 space-y-4">
+          <div className="relative z-10 mt-10 space-y-4">
             <a
               href="/api/auth/google/start"
-              className="flex w-full items-center justify-center gap-3 rounded-full border border-white/14 bg-[linear-gradient(90deg,rgba(255,255,255,0.14),rgba(255,255,255,0.06))] px-5 py-4 font-[var(--font-sora)] text-base font-semibold text-white shadow-[0_24px_60px_rgba(255,0,153,0.16)] transition hover:scale-[1.01] hover:border-fuchsia-200/30"
+              className="group flex w-full items-center justify-center gap-3 rounded-full border border-white/48 bg-[linear-gradient(90deg,rgba(36,36,51,0.96),rgba(19,15,37,0.96))] px-5 py-4 font-[var(--font-sora)] text-base font-black text-white shadow-[0_18px_44px_rgba(0,0,0,0.46),0_0_26px_rgba(0,229,255,0.22),inset_0_1px_0_rgba(255,255,255,0.22)] transition duration-300 hover:scale-[1.018] hover:border-cyan-100/80 hover:shadow-[0_22px_62px_rgba(0,0,0,0.48),0_0_42px_rgba(0,229,255,0.30)]"
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-bold text-[#1f1f1f]">
+              <span
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-black text-[#111111] shadow-[0_0_16px_rgba(255,255,255,0.42)] transition group-hover:scale-105"
+                style={textOutlineStyle}
+              >
                 G
               </span>
-              <span>Continue with Google</span>
+              <span style={textOutlineStyle}>Continue with Google</span>
             </a>
 
             <Link
               href="/login/email"
-              className="block w-full rounded-full border border-cyan-200/18 bg-[linear-gradient(90deg,rgba(255,255,255,0.09),rgba(255,255,255,0.04))] px-5 py-4 font-[var(--font-sora)] text-base font-semibold text-white shadow-[0_24px_60px_rgba(0,245,255,0.10)] transition hover:scale-[1.01] hover:border-cyan-100/34"
+              className="block w-full rounded-full border border-fuchsia-100/42 bg-[linear-gradient(90deg,rgba(36,32,48,0.96),rgba(16,11,28,0.98))] px-5 py-4 font-[var(--font-sora)] text-base font-black text-white shadow-[0_18px_44px_rgba(0,0,0,0.44),0_0_26px_rgba(255,33,196,0.20),inset_0_1px_0_rgba(255,255,255,0.18)] transition duration-300 hover:scale-[1.018] hover:border-fuchsia-100/80 hover:shadow-[0_22px_62px_rgba(0,0,0,0.48),0_0_42px_rgba(255,33,196,0.28)]"
             >
-              {t("signInWithEmail")}
+              <span style={textOutlineStyle}>{t("signInWithEmail")}</span>
             </Link>
           </div>
 
           <Link
             href="/register"
-            className="mt-6 inline-flex font-[var(--font-sora)] text-base font-medium tracking-normal text-white/82 transition hover:text-fuchsia-100"
+            className="relative z-10 mt-7 inline-flex font-[var(--font-sora)] text-base font-black tracking-normal text-white underline-offset-4 transition hover:text-cyan-50 hover:underline"
+            style={textOutlineStyle}
           >
             {t("createAccount")}
           </Link>
