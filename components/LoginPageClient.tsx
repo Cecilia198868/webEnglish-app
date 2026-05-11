@@ -11,14 +11,18 @@ type LoginPageClientProps = {
 export default function LoginPageClient(_: LoginPageClientProps) {
   const { t } = useLanguage();
   const textOutlineStyle: CSSProperties = {
+    filter: "none",
     paintOrder: "stroke fill",
     textShadow: "none",
-    WebkitTextStroke: "0.9px rgba(0, 0, 0, 0.96)",
+    WebkitFontSmoothing: "antialiased",
+    WebkitTextStroke: "0.55px #000",
   };
   const titleOutlineStyle: CSSProperties = {
+    filter: "none",
     paintOrder: "stroke fill",
     textShadow: "none",
-    WebkitTextStroke: "1.4px rgba(0, 0, 0, 0.98)",
+    WebkitFontSmoothing: "antialiased",
+    WebkitTextStroke: "0.85px #000",
   };
 
   return (
@@ -39,13 +43,13 @@ export default function LoginPageClient(_: LoginPageClientProps) {
           <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(120deg,transparent_0%,rgba(255,255,255,0.07)_42%,transparent_56%)] opacity-60" />
 
           <p
-            className="relative z-10 font-[var(--font-sora)] text-xs font-black uppercase tracking-[0.18em] text-white"
+            className="relative z-10 font-[var(--font-sora)] text-xs font-extrabold uppercase tracking-[0.18em] text-white"
             style={textOutlineStyle}
           >
             Access
           </p>
           <h1
-            className="relative z-10 mt-5 font-[var(--font-sora)] text-[2.75rem] font-black leading-none tracking-normal text-white"
+            className="relative z-10 mt-5 font-[var(--font-sora)] text-[2.75rem] font-extrabold leading-none tracking-normal text-white"
             style={titleOutlineStyle}
           >
             {t("loginTitle")}
@@ -55,10 +59,10 @@ export default function LoginPageClient(_: LoginPageClientProps) {
           <div className="relative z-10 mt-10 space-y-4">
             <a
               href="/api/auth/google/start"
-              className="group flex w-full items-center justify-center gap-3 rounded-full border border-white/48 bg-[linear-gradient(90deg,rgba(36,36,51,0.96),rgba(19,15,37,0.96))] px-5 py-4 font-[var(--font-sora)] text-base font-black text-white shadow-[0_18px_44px_rgba(0,0,0,0.46),0_0_26px_rgba(0,229,255,0.22),inset_0_1px_0_rgba(255,255,255,0.22)] transition duration-300 hover:scale-[1.018] hover:border-cyan-100/80 hover:shadow-[0_22px_62px_rgba(0,0,0,0.48),0_0_42px_rgba(0,229,255,0.30)]"
+              className="group flex w-full items-center justify-center gap-3 rounded-full border border-white/48 bg-[linear-gradient(90deg,rgba(36,36,51,0.96),rgba(19,15,37,0.96))] px-5 py-4 font-[var(--font-sora)] text-base font-extrabold text-white shadow-[0_18px_44px_rgba(0,0,0,0.46),0_0_26px_rgba(0,229,255,0.22),inset_0_1px_0_rgba(255,255,255,0.22)] transition duration-300 hover:scale-[1.018] hover:border-cyan-100/80 hover:shadow-[0_22px_62px_rgba(0,0,0,0.48),0_0_42px_rgba(0,229,255,0.30)]"
             >
               <span
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-black text-[#111111] shadow-[0_0_16px_rgba(255,255,255,0.42)] transition group-hover:scale-105"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-extrabold text-[#111111] shadow-[0_0_16px_rgba(255,255,255,0.42)] transition group-hover:scale-105"
                 style={textOutlineStyle}
               >
                 G
@@ -68,7 +72,7 @@ export default function LoginPageClient(_: LoginPageClientProps) {
 
             <Link
               href="/login/email"
-              className="block w-full rounded-full border border-fuchsia-100/42 bg-[linear-gradient(90deg,rgba(36,32,48,0.96),rgba(16,11,28,0.98))] px-5 py-4 font-[var(--font-sora)] text-base font-black text-white shadow-[0_18px_44px_rgba(0,0,0,0.44),0_0_26px_rgba(255,33,196,0.20),inset_0_1px_0_rgba(255,255,255,0.18)] transition duration-300 hover:scale-[1.018] hover:border-fuchsia-100/80 hover:shadow-[0_22px_62px_rgba(0,0,0,0.48),0_0_42px_rgba(255,33,196,0.28)]"
+              className="block w-full rounded-full border border-fuchsia-100/42 bg-[linear-gradient(90deg,rgba(36,32,48,0.96),rgba(16,11,28,0.98))] px-5 py-4 font-[var(--font-sora)] text-base font-extrabold text-white shadow-[0_18px_44px_rgba(0,0,0,0.44),0_0_26px_rgba(255,33,196,0.20),inset_0_1px_0_rgba(255,255,255,0.18)] transition duration-300 hover:scale-[1.018] hover:border-fuchsia-100/80 hover:shadow-[0_22px_62px_rgba(0,0,0,0.48),0_0_42px_rgba(255,33,196,0.28)]"
             >
               <span style={textOutlineStyle}>{t("signInWithEmail")}</span>
             </Link>
@@ -76,7 +80,7 @@ export default function LoginPageClient(_: LoginPageClientProps) {
 
           <Link
             href="/register"
-            className="relative z-10 mt-7 inline-flex font-[var(--font-sora)] text-base font-black tracking-normal text-white underline-offset-4 transition hover:text-cyan-50 hover:underline"
+            className="relative z-10 mt-7 inline-flex font-[var(--font-sora)] text-base font-extrabold tracking-normal text-white underline-offset-4 transition hover:text-cyan-50 hover:underline"
             style={textOutlineStyle}
           >
             {t("createAccount")}
