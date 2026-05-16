@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
 import type { AppLanguage } from "@/lib/i18n";
 
@@ -18,9 +17,14 @@ const popularLanguages: LanguageOption[] = [
 const launchLanguages = popularLanguages;
 
 export default function LanguagePicker() {
-  const router = useRouter();
   const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+
+  function chooseLanguage(code: AppLanguage) {
+    setLanguage(code);
+    setIsOpen(false);
+    window.location.assign("/login");
+  }
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -57,12 +61,7 @@ export default function LanguagePicker() {
                   <button
                     key={item.code}
                     type="button"
-                    onClick={() => {
-                      setLanguage(item.code);
-                      setIsOpen(false);
-                      router.push("/login");
-                      router.refresh();
-                    }}
+                    onClick={() => chooseLanguage(item.code)}
                     className={`rounded-full border px-5 py-2.5 text-sm font-medium transition duration-200 ${
                       isSelected
                         ? "border-fuchsia-300/40 bg-[linear-gradient(90deg,rgba(255,0,153,0.22),rgba(0,245,255,0.14))] text-white shadow-[0_16px_34px_rgba(255,0,153,0.2)]"
@@ -88,12 +87,7 @@ export default function LanguagePicker() {
                   <button
                     key={item.code}
                     type="button"
-                    onClick={() => {
-                      setLanguage(item.code);
-                      setIsOpen(false);
-                      router.push("/login");
-                      router.refresh();
-                    }}
+                    onClick={() => chooseLanguage(item.code)}
                     className={`rounded-[22px] border px-4 py-3 text-sm font-medium transition duration-200 ${
                       isSelected
                         ? "border-cyan-300/40 bg-[linear-gradient(135deg,rgba(0,245,255,0.22),rgba(139,92,246,0.18))] text-white shadow-[0_18px_38px_rgba(0,245,255,0.16)]"
