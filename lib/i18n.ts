@@ -13,7 +13,7 @@ export type TranslationValue = string | string[];
 
 export const translations = {
   en: {
-    appTitle: "Speak English Out Loud",
+    appTitle: "SpeakFlow",
     chooseBaseLanguage: "Choose Your Base Language",
     popular: "Popular",
     launchLanguages: "Launch Languages",

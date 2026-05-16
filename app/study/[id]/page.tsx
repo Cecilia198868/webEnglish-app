@@ -748,13 +748,13 @@ export default function StudyPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#090110] font-[var(--font-sora)] text-white">
+    <main className="relative min-h-[100dvh] overflow-x-hidden bg-[#090110] font-[var(--font-sora)] text-white">
       <div className="absolute inset-0 bg-[linear-gradient(180deg,#120216_0%,#090110_28%,#10031f_58%,#06010d_100%)]" />
       <div className="lux-grid absolute inset-0 opacity-[0.14]" />
       <div className="aurora-wave absolute left-[-10%] top-[-8%] h-[34rem] w-[46rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,153,0.20),transparent_58%)] blur-[92px]" />
       <div className="aurora-wave absolute right-[-8%] top-[4%] h-[36rem] w-[44rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.20),transparent_58%)] blur-[100px]" />
 
-      <div className="relative mx-auto max-w-[430px] px-4 py-3 pb-8">
+      <div className="relative mx-auto w-full max-w-5xl px-4 py-3 pb-8 sm:px-6 lg:px-8">
         <div className="mb-3 rounded-[1.35rem] border border-white/12 bg-white/[0.05] p-3 backdrop-blur-xl">
           <div className="flex items-start gap-3">
             <button
@@ -894,7 +894,7 @@ export default function StudyPage() {
           </div>
 
           <div className="rounded-[1.35rem] border border-white/10 bg-white/5 p-2.5">
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               <button
                 onClick={() => speakEnglish(currentPair.english, 1)}
                 disabled={isAutoPlaying}

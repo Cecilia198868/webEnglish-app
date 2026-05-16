@@ -1,18 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
 
 export default function EmailLoginPageClient() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const { t } = useLanguage();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => searchParams.get("email") ?? "");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(() =>
+    searchParams.get("registered") === "1"
+      ? "Account created. Please sign in with your password."
+      : ""
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const registeredEmail = searchParams.get("email");
+    window.setTimeout(() => {
+      if (registeredEmail) {
+        setEmail(registeredEmail);
+      }
+
+      if (searchParams.get("registered") === "1") {
+        setMessage("Account created. Please sign in with your password.");
+      }
+    }, 0);
+  }, [searchParams]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -45,18 +62,17 @@ export default function EmailLoginPageClient() {
       return;
     }
 
-    router.push("/dashboard");
-    router.refresh();
+    window.location.assign("/dashboard");
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#090110] text-white">
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,#120216_0%,#090110_28%,#10031f_58%,#06010d_100%)]" />
-      <div className="lux-grid absolute inset-0 opacity-[0.14]" />
-      <div className="aurora-wave absolute left-[-8%] top-[-10%] h-[34rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,153,0.30),transparent_58%)] blur-[96px]" />
-      <div className="aurora-wave absolute right-[-8%] top-[8%] h-[34rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.28),transparent_58%)] blur-[96px]" />
+    <main className="relative min-h-[100dvh] overflow-x-hidden bg-[#090110] text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,#120216_0%,#090110_28%,#10031f_58%,#06010d_100%)]" />
+      <div className="lux-grid pointer-events-none absolute inset-0 opacity-[0.14]" />
+      <div className="aurora-wave pointer-events-none absolute left-[-8%] top-[-10%] h-[34rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,153,0.30),transparent_58%)] blur-[96px]" />
+      <div className="aurora-wave pointer-events-none absolute right-[-8%] top-[8%] h-[34rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.28),transparent_58%)] blur-[96px]" />
 
-      <div className="relative mx-auto flex min-h-screen max-w-5xl items-center justify-center px-6 py-10">
+      <div className="relative mx-auto flex min-h-[100dvh] max-w-5xl items-start justify-center px-6 py-6 sm:items-center sm:py-10">
         <section className="w-full max-w-[560px] rounded-[34px] border border-white/12 bg-white/[0.05] px-6 py-8 text-center shadow-[0_30px_90px_rgba(2,8,23,0.46)] backdrop-blur-2xl sm:px-10 sm:py-12">
           <p className="font-[var(--font-sora)] text-xs uppercase tracking-[0.4em] text-cyan-100/65">
             Email Access
@@ -66,12 +82,15 @@ export default function EmailLoginPageClient() {
           </h1>
           <div className="mx-auto mt-6 h-px w-40 bg-gradient-to-r from-transparent via-fuchsia-200/80 to-transparent" />
 
-          <form onSubmit={handleSubmit} className="mt-8 text-left">
+          <form onSubmit={handleSubmit} noValidate className="mt-8 text-left">
             <label className="block font-[var(--font-sora)] text-sm font-medium uppercase tracking-[0.16em] text-white/72">
               {t("emailAddress")}
             </label>
             <input
+              name="email"
               type="email"
+              autoComplete="email"
+              inputMode="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder={t("emailPlaceholder")}
@@ -82,7 +101,9 @@ export default function EmailLoginPageClient() {
               {t("password")}
             </label>
             <input
+              name="current-password"
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder={t("passwordPlaceholder")}

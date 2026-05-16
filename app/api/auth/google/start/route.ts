@@ -46,7 +46,7 @@ function googleHandoffResponse(url: string) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Opening Google</title>
+    <title>SpeakFlow</title>
     <style>
       body {
         margin: 0;
@@ -92,7 +92,7 @@ function googleHandoffResponse(url: string) {
   </head>
   <body>
     <main>
-      <h1>Open Google</h1>
+      <h1>SpeakFlow</h1>
       <p>Tap the button below to continue with your Google account.</p>
       <a href="${escapedUrl}">Continue to Google</a>
     </main>
