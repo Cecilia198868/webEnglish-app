@@ -466,16 +466,32 @@ export default function VocabularyPage() {
 
   useEffect(() => {
     setMounted(true);
-    setWords(
-      loadVocabularyWords().filter(
+    const loadedWords = loadVocabularyWords().filter(
         (item): item is VocabularyWord =>
           item !== null &&
           typeof item === "object" &&
           typeof item.word === "string" &&
           item.word.trim().length > 0
-      )
-    );
+      );
+    setWords(loadedWords);
     setMastery(loadVocabularyGroupMastery());
+
+    const requestedGroup = Number(
+      new URLSearchParams(window.location.search).get("group")
+    );
+    const loadedGroups = groupVocabularyWords(loadedWords);
+
+    if (
+      Number.isInteger(requestedGroup) &&
+      requestedGroup >= 0 &&
+      requestedGroup < loadedGroups.length
+    ) {
+      void prepareAndStartQuiz(
+        "normal",
+        loadedGroups[requestedGroup],
+        requestedGroup
+      );
+    }
   }, []);
 
   useEffect(() => {

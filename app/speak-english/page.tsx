@@ -2,8 +2,27 @@
 
 import type { PointerEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  groupVocabularyWords,
+  loadVocabularyWords,
+  type VocabularyWord,
+} from "@/lib/vocabulary";
+import { featuredLessonRecords } from "@/data/featuredCourses";
 
 type KeyboardMode = "zh" | "en" | "handwriting" | "symbols";
+type PracticeStage = "native" | "english";
+
+type ClassicCourseSection = {
+  id: string;
+  label: string;
+  lessons: Array<{ id: string; title: string }>;
+};
+
+type ClassicCourseCategory = {
+  id: string;
+  label: string;
+  sections: ClassicCourseSection[];
+};
 
 type SpeechRecognitionAlternativeLike = {
   transcript?: string;
@@ -88,40 +107,328 @@ const pinyinDictionary: Record<string, string[]> = {
 const defaultChineseCandidates = ["？", "！", "我", "你", "好", "这", "谢谢"];
 const handwritingCandidates = ["我", "你", "好", "吗", "谢", "爱", "说"];
 const quickPracticeStarters = [
-  "我的肚子好胀啊，很难受",
-  "我想预约看医生",
-  "请你说慢一点",
-  "我听不懂",
+  "经典场景口语练习",
+  "单词本",
+  "创建我的课程",
+  "声音选择",
 ] as const;
+const bankLessonOrder = [
+  "新开银行账户",
+  "银行事务口语课",
+  "使用 ATM 机和自我服务",
+  "网上银行与手机App操作",
+  "存款和取款",
+  "货币兑换与国际汇款",
+  "国际电汇与海外付款",
+  "设立储蓄和定期存款账户",
+  "信用卡申请与审批流程",
+  "信用卡挂失口语课",
+  "信用卡报告欺诈收费口语课",
+  "银行费用查询与争议解决",
+  "银行客服电话口语课",
+  "申请个人贷款",
+  "房屋抵押贷款咨询",
+  "银行保险箱",
+  "银行提供的保险产品",
+  "投资产品与财富管理",
+  "退休储蓄与养老金计划",
+  "关闭银行账户",
+] as const;
+const bankLessons = bankLessonOrder
+  .map((title) => {
+    const lesson = featuredLessonRecords.find((item) => item.title === title);
+    return lesson ? { id: lesson.id, title: lesson.title } : null;
+  })
+  .filter((lesson): lesson is { id: string; title: string } => Boolean(lesson));
+const classicCourseCategories: ClassicCourseCategory[] = [
+  {
+    id: "finance-government",
+    label: "金融与行政事务",
+    sections: [
+      {
+        id: "bank-finance",
+        label: "银行与金融交易",
+        lessons: bankLessons,
+      },
+      {
+        id: "government-license-id-permit",
+        label: "政府服务：驾照、身份证、许可",
+        lessons: featuredLessonRecords
+          .filter(
+            (lesson) =>
+              lesson.id.startsWith("government_") ||
+              lesson.id.startsWith("driver_")
+          )
+          .map(({ id, title }) => ({ id, title })),
+      },
+      { id: "insurance-consulting", label: "保险咨询", lessons: [] },
+      { id: "tax-government-forms", label: "税务与政府表格", lessons: [] },
+    ],
+  },
+  {
+    id: "shopping-consumption",
+    label: "购物与消费",
+    sections: [
+      { id: "grocery-shopping", label: "超市购物", lessons: [] },
+      {
+        id: "general-shopping",
+        label: "购物：衣服、电子产品、一般商店",
+        lessons: [],
+      },
+      { id: "coffee-ordering", label: "咖啡店点单", lessons: [] },
+      { id: "fast-casual-dining", label: "快餐和休闲餐饮", lessons: [] },
+      { id: "market-shopping", label: "市场购物", lessons: [] },
+      {
+        id: "electronics-tech-support",
+        label: "买电子产品和技术支持",
+        lessons: [],
+      },
+    ],
+  },
+  {
+    id: "restaurant-takeout",
+    label: "餐饮与外卖",
+    sections: [
+      { id: "restaurant-dining", label: "餐厅用餐", lessons: [] },
+      { id: "takeout-ordering", label: "点外卖或打包食物", lessons: [] },
+    ],
+  },
+  {
+    id: "transportation-travel",
+    label: "交通与出行",
+    sections: [
+      { id: "public-transit", label: "公共交通", lessons: [] },
+      { id: "taxi-rideshare", label: "出租车或网约车", lessons: [] },
+      {
+        id: "airport-customs-immigration",
+        label: "机场入境、海关和移民",
+        lessons: [],
+      },
+      {
+        id: "car-rental-gas-driving-directions",
+        label: "租车、加油站、开车问路",
+        lessons: [],
+      },
+      { id: "directions-navigation", label: "问路和导航", lessons: [] },
+    ],
+  },
+  {
+    id: "housing-home",
+    label: "住宿与家居",
+    sections: [
+      { id: "hotel-checkin-stay", label: "酒店入住和住宿", lessons: [] },
+      { id: "renting-apartment-house", label: "租公寓或房子", lessons: [] },
+      {
+        id: "utilities-internet-setup",
+        label: "设置水电煤气和网络",
+        lessons: [],
+      },
+      { id: "home-repair-request", label: "房屋维修请求", lessons: [] },
+      { id: "moving-home-goods", label: "搬家和家居用品", lessons: [] },
+      {
+        id: "home-repair-services",
+        label: "修理服务（Plumber, Electrician, etc.）",
+        lessons: [],
+      },
+    ],
+  },
+  {
+    id: "health-medical",
+    label: "健康与医疗",
+    sections: [
+      { id: "doctor-hospital-er", label: "看医生、医院和急诊", lessons: [] },
+      { id: "pharmacy-medicine", label: "药店买药", lessons: [] },
+      { id: "pet-vet-pet-store", label: "宠物兽医或宠物店", lessons: [] },
+      { id: "checkup-vaccine", label: "健康检查/疫苗", lessons: [] },
+    ],
+  },
+  {
+    id: "service-repair",
+    label: "服务与维修",
+    sections: [
+      { id: "post-office-mail-package", label: "邮局寄邮件或包裹", lessons: [] },
+      { id: "hair-salon", label: "理发店/美容院", lessons: [] },
+      { id: "gym-membership", label: "健身房/健身中心会员", lessons: [] },
+      { id: "library-books", label: "图书馆借书", lessons: [] },
+      { id: "laundry-dry-cleaning", label: "洗衣和干洗", lessons: [] },
+      { id: "spa-nails", label: "美容服务：水疗、美甲", lessons: [] },
+      {
+        id: "repair-home-auto",
+        label: "维修服务：房屋维修、汽车修理",
+        lessons: [],
+      },
+      {
+        id: "customer-service-returns",
+        label: "客服投诉和退货",
+        lessons: [],
+      },
+      { id: "auto-repair", label: "汽车维修", lessons: [] },
+      { id: "delivery-shipping", label: "快递收发", lessons: [] },
+    ],
+  },
+  {
+    id: "education-work-social",
+    label: "教育、工作与社交生活",
+    sections: [
+      {
+        id: "job-interview-workplace",
+        label: "求职面试和工作场所沟通",
+        lessons: [],
+      },
+      {
+        id: "school-university-class",
+        label: "学校/大学入学和上课",
+        lessons: [],
+      },
+      { id: "emergency-911", label: "紧急情况：报警、消防、911", lessons: [] },
+      {
+        id: "entertainment",
+        label: "娱乐：电影院、剧院、演唱会",
+        lessons: [],
+      },
+      {
+        id: "phone-sim-store",
+        label: "手机设置：买SIM卡、商店互动",
+        lessons: [],
+      },
+      {
+        id: "social-friends-party-chat",
+        label: "社交：交朋友、派对闲聊",
+        lessons: [],
+      },
+      {
+        id: "tourist-attractions-museum",
+        label: "参观旅游景点/博物馆",
+        lessons: [],
+      },
+      { id: "weather-small-talk", label: "天气和日常闲聊", lessons: [] },
+      {
+        id: "buying-tickets",
+        label: "买票（电影、活动、火车）",
+        lessons: [],
+      },
+      { id: "neighbor-interaction", label: "邻里互动", lessons: [] },
+      {
+        id: "parent-teacher-conference",
+        label: "家长教师会议",
+        lessons: [],
+      },
+      {
+        id: "community-volunteering",
+        label: "社区活动和志愿服务",
+        lessons: [],
+      },
+      {
+        id: "party-social-prep",
+        label: "派对或社交活动准备",
+        lessons: [],
+      },
+      {
+        id: "religious-community-center",
+        label: "宗教或社区中心",
+        lessons: [],
+      },
+    ],
+  },
+];
 const emojis = ["😊", "👍", "🙏", "❤️", "😂", "😅"] as const;
 
 function unique(values: string[]) {
   return Array.from(new Set(values));
 }
 
-function FlowMark({ className = "" }: { className?: string }) {
+function SoundWaveMark({ className = "" }: { className?: string }) {
   return (
     <svg
       aria-hidden="true"
-      viewBox="0 0 36 36"
+      viewBox="0 0 92 44"
       className={className}
       fill="none"
     >
-      <path
-        d="M8 20.5c3.1-6.9 7.2-9.9 12.4-9.1 3.1.5 5.7 2.5 7.6 5.8"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="3.2"
+      <defs>
+        <linearGradient id="soundWaveBorder" x1="10" y1="36" x2="82" y2="8">
+          <stop stopColor="#d85ee9" />
+          <stop offset="1" stopColor="#28d5e8" />
+        </linearGradient>
+        <linearGradient id="soundWaveBars" x1="22" y1="22" x2="70" y2="22">
+          <stop stopColor="#d85ee9" />
+          <stop offset="0.48" stopColor="#e9e6ff" />
+          <stop offset="1" stopColor="#28d5e8" />
+        </linearGradient>
+      </defs>
+      <rect
+        x="2"
+        y="3"
+        width="88"
+        height="38"
+        rx="19"
+        fill="rgba(255,255,255,0.34)"
+        stroke="url(#soundWaveBorder)"
+        strokeWidth="3"
       />
       <path
-        d="M8 25.2c4.8-2.6 8.8-2.7 12.1-.4 2.4 1.7 4.8 1.9 7.1.6"
-        stroke="currentColor"
+        d="M23 22h0.1M33 17v10M43 13v18M53 8v28M63 14v16M73 18v8"
+        stroke="url(#soundWaveBars)"
         strokeLinecap="round"
-        strokeWidth="3.2"
+        strokeWidth="7"
       />
-      <circle cx="12.2" cy="13.4" r="2.4" fill="currentColor" />
-      <circle cx="27.6" cy="22.4" r="2.1" fill="currentColor" />
+      <circle cx="82" cy="22" r="4" fill="#28d5e8" />
     </svg>
+  );
+}
+
+function MenuGlyph({
+  level,
+  className = "",
+}: {
+  level: 2 | 3 | 4 | 5;
+  className?: string;
+}) {
+  if (level === 2) {
+    return (
+      <span
+        aria-hidden="true"
+        className={`mr-2 inline-grid h-5 w-5 shrink-0 place-items-center text-[1.1rem] font-bold leading-none text-[#201833] ${className}`}
+      >
+        ⌄
+      </span>
+    );
+  }
+
+  if (level === 4) {
+    return (
+      <span
+        aria-hidden="true"
+        className={`mr-2 inline-grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#ede8ff] ${className}`}
+      >
+        <span className="relative block h-3 w-3">
+          <span className="absolute left-0 top-[1px] h-px w-3 rounded-full bg-[#6e5d9e]" />
+          <span className="absolute left-0 top-[5px] h-px w-3 rounded-full bg-[#6e5d9e]" />
+          <span className="absolute left-0 top-[9px] h-px w-3 rounded-full bg-[#6e5d9e]" />
+          <span className="absolute left-[2px] top-[-1px] h-1.5 w-1.5 rounded-full bg-[#6e5d9e]" />
+          <span className="absolute right-[1px] top-[3px] h-1.5 w-1.5 rounded-full bg-[#6e5d9e]" />
+          <span className="absolute left-[5px] top-[7px] h-1.5 w-1.5 rounded-full bg-[#6e5d9e]" />
+        </span>
+      </span>
+    );
+  }
+
+  const glyphByLevel = {
+    3: "›",
+    5: "•",
+  } as const;
+  const classByLevel = {
+    3: "h-5 w-5 rounded-[9px] bg-[#ece7ff] text-[1.05rem] font-bold text-[#4b4267]",
+    5: "h-3 w-3 rounded-full bg-[#f2efff] text-[0.62rem] text-[#8b7ab8]",
+  } as const;
+
+  return (
+    <span
+      aria-hidden="true"
+      className={`mr-2 inline-grid shrink-0 place-items-center leading-none ${classByLevel[level]} ${className}`}
+    >
+      {glyphByLevel[level]}
+    </span>
   );
 }
 
@@ -148,16 +455,39 @@ export default function SpeakEnglishPage() {
   const isDrawingRef = useRef(false);
   const speechBufferRef = useRef("");
   const shouldCommitSpeechRef = useRef(false);
+  const speechSilenceTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(
+    null
+  );
 
-  const [message, setMessage] = useState("Hold to speak in your language");
+  const [message, setMessage] = useState("用中文说出你想表达的内容");
   const [inputText, setInputText] = useState("");
   const [keyboardMode, setKeyboardMode] = useState<KeyboardMode>("zh");
   const [composingPinyin, setComposingPinyin] = useState("");
   const [isShifted, setIsShifted] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [liveTranscript, setLiveTranscript] = useState("");
+  const [practiceStage, setPracticeStage] = useState<PracticeStage>("native");
+  const [nativeSpeech, setNativeSpeech] = useState("");
+  const [hasEnglishAttempt, setHasEnglishAttempt] = useState(false);
+  const [standardEnglish, setStandardEnglish] = useState("");
+  const [isLoadingStandardEnglish, setIsLoadingStandardEnglish] = useState(false);
+  const [hasNativeSpeech, setHasNativeSpeech] = useState(false);
   const [hasInk, setHasInk] = useState(false);
   const [showQuickPanel, setShowQuickPanel] = useState(false);
+  const [showClassicCoursePicker, setShowClassicCoursePicker] = useState(false);
+  const [expandedClassicCourseCategory, setExpandedClassicCourseCategory] =
+    useState("");
+  const [expandedClassicCourseSection, setExpandedClassicCourseSection] =
+    useState("");
+  const [showVocabularyPicker, setShowVocabularyPicker] = useState(false);
+  const [showVoicePicker, setShowVoicePicker] = useState(false);
+  const [vocabularyGroups, setVocabularyGroups] = useState<VocabularyWord[][]>(
+    []
+  );
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>(
+    []
+  );
+  const [selectedVoiceURI, setSelectedVoiceURI] = useState("");
   const [showEmojiPanel, setShowEmojiPanel] = useState(false);
   const [showPreviewKeyboard, setShowPreviewKeyboard] = useState(true);
 
@@ -170,8 +500,6 @@ export default function SpeakEnglishPage() {
     isListening && liveTranscript.trim()
       ? `${baseInputValue}${baseInputValue ? " " : ""}${liveTranscript}`
       : baseInputValue;
-  const canSend =
-    Boolean(inputText.trim()) || Boolean(composingPinyin.trim());
   const currentMode = modeMeta[keyboardMode];
 
   const chineseCandidates = useMemo(() => {
@@ -195,8 +523,48 @@ export default function SpeakEnglishPage() {
   }, [renderedInputValue]);
 
   useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    function loadVoices() {
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoices = voices.filter((voice) =>
+        voice.lang.toLowerCase().startsWith("en")
+      );
+      const sortedVoices = (englishVoices.length ? englishVoices : voices).sort(
+        (a, b) => a.name.localeCompare(b.name)
+      );
+
+      setAvailableVoices(sortedVoices);
+      setSelectedVoiceURI((current) => current || sortedVoices[0]?.voiceURI || "");
+    }
+
+    loadVoices();
+    window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
+
+    return () => {
+      window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!showQuickPanel) {
+      setShowClassicCoursePicker(false);
+      setExpandedClassicCourseCategory("");
+      setExpandedClassicCourseSection("");
+      setShowVocabularyPicker(false);
+      setShowVoicePicker(false);
+      return;
+    }
+
+    setVocabularyGroups(groupVocabularyWords(loadVocabularyWords()));
+  }, [showQuickPanel]);
+
+  useEffect(() => {
     return () => {
       shouldCommitSpeechRef.current = false;
+      if (speechSilenceTimerRef.current) {
+        window.clearTimeout(speechSilenceTimerRef.current);
+      }
       recognitionRef.current?.abort?.();
     };
   }, []);
@@ -207,9 +575,6 @@ export default function SpeakEnglishPage() {
 
   function appendText(value: string) {
     setInputText((current) => `${current}${value}`);
-    if (value.trim()) {
-      setMessage("Hold to speak in your language");
-    }
 
     if (typeof window !== "undefined") {
       window.setTimeout(focusInput, 0);
@@ -244,6 +609,11 @@ export default function SpeakEnglishPage() {
     setComposingPinyin("");
     setShowEmojiPanel(false);
     setShowQuickPanel(false);
+    setShowClassicCoursePicker(false);
+    setExpandedClassicCourseCategory("");
+    setExpandedClassicCourseSection("");
+    setShowVocabularyPicker(false);
+    setShowVoicePicker(false);
     focusInput();
   }
 
@@ -252,7 +622,16 @@ export default function SpeakEnglishPage() {
     return window.SpeechRecognition || window.webkitSpeechRecognition || null;
   }
 
+  function clearSpeechSilenceTimer() {
+    if (!speechSilenceTimerRef.current) return;
+
+    window.clearTimeout(speechSilenceTimerRef.current);
+    speechSilenceTimerRef.current = null;
+  }
+
   function startRecognition() {
+    if (isListening) return;
+
     const RecognitionConstructor = getRecognitionConstructor();
 
     if (!RecognitionConstructor) {
@@ -261,16 +640,31 @@ export default function SpeakEnglishPage() {
     }
 
     recognitionRef.current?.abort?.();
+    clearSpeechSilenceTimer();
     speechBufferRef.current = "";
     shouldCommitSpeechRef.current = true;
+    const isStartingNextNativeRound = Boolean(standardEnglish);
+    const nextPracticeStage: PracticeStage = isStartingNextNativeRound
+      ? "native"
+      : practiceStage;
+
+    if (isStartingNextNativeRound) {
+      setPracticeStage("native");
+      setNativeSpeech("");
+      setHasNativeSpeech(false);
+      setHasEnglishAttempt(false);
+      setStandardEnglish("");
+    }
 
     const recognition = new RecognitionConstructor();
-    recognition.lang = currentMode.lang;
+    recognition.lang = nextPracticeStage === "english" ? "en-US" : currentMode.lang;
     recognition.continuous = true;
     recognition.interimResults = true;
+    setInputText("");
+    setComposingPinyin("");
     setLiveTranscript("");
     setIsListening(true);
-    setMessage("Listening... release to add it");
+    setMessage("正在听你说话…");
 
     recognition.onresult = (event) => {
       const transcript = Array.from(event.results)
@@ -280,25 +674,44 @@ export default function SpeakEnglishPage() {
 
       setLiveTranscript(transcript);
       speechBufferRef.current = transcript;
+      clearSpeechSilenceTimer();
+
+      if (transcript) {
+        speechSilenceTimerRef.current = window.setTimeout(() => {
+          stopRecognition();
+        }, 1000);
+      }
     };
 
     recognition.onerror = () => {
       shouldCommitSpeechRef.current = false;
+      clearSpeechSilenceTimer();
       setIsListening(false);
       setLiveTranscript("");
       setMessage("I did not catch that. Try again");
     };
 
     recognition.onend = () => {
-      if (shouldCommitSpeechRef.current && speechBufferRef.current.trim()) {
-        appendText(speechBufferRef.current.trim());
+      const finalTranscript = speechBufferRef.current.trim();
+
+      if (shouldCommitSpeechRef.current && finalTranscript) {
+        setMessage(finalTranscript);
+        if (nextPracticeStage === "native") {
+          setNativeSpeech(finalTranscript);
+          setStandardEnglish("");
+          setHasEnglishAttempt(false);
+          setHasNativeSpeech(true);
+          setPracticeStage("english");
+        } else {
+          setHasEnglishAttempt(true);
+        }
       }
 
+      clearSpeechSilenceTimer();
       speechBufferRef.current = "";
       shouldCommitSpeechRef.current = false;
       setLiveTranscript("");
       setIsListening(false);
-      setMessage("Hold to speak in your language");
     };
 
     recognitionRef.current = recognition;
@@ -307,38 +720,60 @@ export default function SpeakEnglishPage() {
       recognition.start();
     } catch {
       shouldCommitSpeechRef.current = false;
+      clearSpeechSilenceTimer();
       setIsListening(false);
       setMessage("Speech recognition could not start");
     }
   }
 
   function stopRecognition() {
+    clearSpeechSilenceTimer();
     recognitionRef.current?.stop();
     recognitionRef.current = null;
   }
 
-  function handleMicPointerDown(event: PointerEvent<HTMLButtonElement>) {
-    if (canSend) return;
+  async function showStandardEnglish() {
+    if (!nativeSpeech || isLoadingStandardEnglish) return;
 
-    event.preventDefault();
+    setIsLoadingStandardEnglish(true);
     try {
-      event.currentTarget.setPointerCapture(event.pointerId);
+      const response = await fetch("/api/accurate-sentence", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chinese: nativeSpeech }),
+      });
+      const data = (await response.json()) as { english?: string; error?: string };
+
+      if (!response.ok || !data.english) {
+        throw new Error(data.error || "Generate standard English failed");
+      }
+
+      setStandardEnglish(data.english);
     } catch {
-      // Some embedded browsers skip pointer capture for touch gestures.
+      setStandardEnglish("生成失败，请再点一次地道英语");
+    } finally {
+      setIsLoadingStandardEnglish(false);
     }
-    startRecognition();
   }
 
-  function handleMicPointerUp(event: PointerEvent<HTMLButtonElement>) {
-    if (canSend) return;
+  function readStandardEnglish(rate: number) {
+    if (!standardEnglish || typeof window === "undefined") return;
 
-    event.preventDefault();
-    try {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    } catch {
-      // Capture may already be released on mobile browsers.
+    const utterance = new SpeechSynthesisUtterance(standardEnglish);
+    utterance.lang = "en-US";
+    utterance.rate = rate;
+    utterance.voice =
+      availableVoices.find((voice) => voice.voiceURI === selectedVoiceURI) ||
+      null;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function openClassicLesson(id: string, title: string) {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("currentLessonTitle", title);
+      window.location.href = `/study/${id}`;
     }
-    stopRecognition();
   }
 
   function handleKeyPress(key: string) {
@@ -368,23 +803,6 @@ export default function SpeakEnglishPage() {
     }
 
     appendText(" ");
-  }
-
-  function sendInput() {
-    const committedPinyin =
-      keyboardMode === "zh" && composingPinyin ? chineseCandidates[0] : "";
-    const finalText = `${inputText}${committedPinyin}`.trim();
-
-    if (!finalText) {
-      focusInput();
-      return;
-    }
-
-    setMessage(finalText);
-    setInputText("");
-    setComposingPinyin("");
-    setLiveTranscript("");
-    focusInput();
   }
 
   function getCanvasContext() {
@@ -476,7 +894,7 @@ export default function SpeakEnglishPage() {
             <div className="flex items-center justify-between">
               <button
                 type="button"
-                aria-label="Practice starters"
+                aria-label="打开菜单"
                 onClick={() => setShowQuickPanel((current) => !current)}
                 className="sf-header-button"
               >
@@ -485,15 +903,15 @@ export default function SpeakEnglishPage() {
                 </span>
               </button>
 
-              <div className="flex items-center gap-2">
-                <span className="grid h-9 w-9 place-items-center rounded-[16px] bg-[linear-gradient(135deg,#7b61ff,#5b8cff_58%,#7ee7ff)] text-white shadow-[0_14px_34px_rgba(91,140,255,0.30)]">
-                  <FlowMark className="h-5 w-5" />
+              <div className="flex items-center gap-1.5">
+                <span className="grid h-5 w-[42px] place-items-center">
+                  <SoundWaveMark className="h-5 w-[42px] drop-shadow-[0_8px_16px_rgba(91,140,255,0.18)]" />
                 </span>
                 <div>
-                  <h1 className="text-[1.45rem] font-semibold leading-none tracking-[-0.02em] text-white">
+                  <h1 className="text-[1.05rem] font-semibold leading-none text-white">
                     SpeakFlow
                   </h1>
-                  <p className="mt-1 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#91dcff]/80">
+                  <p className="mt-0.5 text-[0.42rem] font-semibold uppercase tracking-[0.16em] text-[#91dcff]/80">
                     voice practice
                   </p>
                 </div>
@@ -510,58 +928,240 @@ export default function SpeakEnglishPage() {
             </div>
           </header>
 
-          <section className="relative z-10 flex h-full flex-col px-6 pb-[352px] pt-8">
+          <section className="relative z-10 flex h-full flex-col px-6 pb-[352px] pt-6">
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
 
-            <div className="flex flex-1 flex-col items-center justify-center text-center">
+            <div className="flex flex-1 flex-col items-center justify-start pt-14 text-center">
               <p className="max-w-[320px] text-[1.6rem] font-semibold leading-9 tracking-[-0.03em] text-[#fffaff]">
                 {isListening && liveTranscript ? liveTranscript : message}
               </p>
-              <p className="mt-4 max-w-[280px] text-[0.95rem] font-medium leading-6 text-[#c9c0df]">
-                Speak naturally first. SpeakFlow turns your thought into English practice.
-              </p>
-
-              <div className="mt-7 flex rounded-full border border-white/10 bg-white/[0.06] p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
-                {(["zh", "en", "handwriting"] as const).map((mode) => (
+              <div className="mt-4 max-w-[320px] text-[0.95rem] font-medium leading-6 text-[#c9c0df]">
+                {standardEnglish ? (
+                  <div className="space-y-2">
+                    <p className="text-[1rem] font-semibold text-[#201833]">
+                      {standardEnglish}
+                    </p>
+                    <div className="flex justify-center gap-5 text-[0.9rem] font-semibold">
+                      <button
+                        type="button"
+                        onClick={() => readStandardEnglish(1)}
+                        className="underline decoration-2 underline-offset-4"
+                      >
+                        朗读
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => readStandardEnglish(0.65)}
+                        className="underline decoration-2 underline-offset-4"
+                      >
+                        慢速朗读
+                      </button>
+                    </div>
+                  </div>
+                ) : hasEnglishAttempt ? (
                   <button
-                    key={mode}
                     type="button"
-                    onClick={() => {
-                      setShowPreviewKeyboard(true);
-                      switchKeyboardMode(mode);
-                    }}
-                    className={`rounded-full px-4 py-2 text-[0.78rem] font-semibold transition ${
-                      keyboardMode === mode
-                        ? "bg-[#efe9ff] text-[#12051f] shadow-[0_10px_24px_rgba(123,97,255,0.20)]"
-                        : "text-[#d8d0ea]"
-                    }`}
+                    onClick={showStandardEnglish}
+                    disabled={isLoadingStandardEnglish}
+                    className="rounded-full border border-[#b9aaff] bg-white/70 px-5 py-2 text-[0.95rem] font-semibold text-[#201833] shadow-[0_10px_24px_rgba(84,72,146,0.14)] disabled:opacity-70"
                   >
-                    {modeMeta[mode].short}
+                    {isLoadingStandardEnglish ? "生成中…" : "地道英语"}
                   </button>
-                ))}
+                ) : hasNativeSpeech ? (
+                  "试着用英语说出来"
+                ) : (
+                  "自然地说中文，SpeakFlow 会帮你转换成英语练习。"
+                )}
               </div>
             </div>
           </section>
 
           {showQuickPanel ? (
-            <div className="sf-floating-panel absolute left-4 right-4 top-[92px] z-30 p-3">
-              <div className="mb-2 px-1 text-xs font-semibold text-[#91dcff]">
-                Practice starters
-              </div>
+            <div className="sf-floating-panel sf-menu-panel absolute left-4 right-4 top-[92px] z-30 p-4">
               <div className="grid gap-2">
                 {quickPracticeStarters.map((phrase) => (
-                  <button
-                    key={phrase}
-                    type="button"
-                    onClick={() => {
-                      appendText(phrase);
-                      setShowQuickPanel(false);
-                    }}
-                    className="rounded-[18px] border border-white/10 bg-white/[0.07] px-3 py-2 text-left text-sm font-medium text-[#fffaff] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                  >
-                    {phrase}
-                  </button>
+                  <div key={phrase} className="grid gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (phrase === "经典场景口语练习") {
+                          setShowClassicCoursePicker((current) => !current);
+                          setExpandedClassicCourseCategory("");
+                          setExpandedClassicCourseSection("");
+                          setShowVocabularyPicker(false);
+                          setShowVoicePicker(false);
+                          return;
+                        }
+
+                        if (phrase === "单词本") {
+                          setShowVocabularyPicker((current) => !current);
+                          setShowClassicCoursePicker(false);
+                          setExpandedClassicCourseCategory("");
+                          setExpandedClassicCourseSection("");
+                          setShowVoicePicker(false);
+                          return;
+                        }
+
+                        if (phrase === "声音选择") {
+                          setShowVoicePicker((current) => !current);
+                          setShowClassicCoursePicker(false);
+                          setExpandedClassicCourseCategory("");
+                          setExpandedClassicCourseSection("");
+                          setShowVocabularyPicker(false);
+                          return;
+                        }
+
+                        setShowQuickPanel(false);
+                      }}
+                      className="rounded-[18px] border border-[#c9bfff] bg-[#f7f4ff] px-4 py-3 text-left text-base font-semibold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
+                    >
+                      <MenuGlyph level={2} />
+                      {phrase}
+                    </button>
+
+                    {phrase === "经典场景口语练习" &&
+                    showClassicCoursePicker ? (
+                      <div className="grid max-h-72 gap-2 overflow-y-auto rounded-[18px] border border-[#c9bfff] bg-white p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                        {classicCourseCategories.map((category) => (
+                          <div key={category.id} className="grid gap-2">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExpandedClassicCourseCategory((current) =>
+                                  current === category.id ? "" : category.id
+                                )
+                              }
+                              className="flex w-full items-center justify-between gap-3 rounded-[14px] bg-[#f7f4ff] px-3 py-2 text-left text-sm font-semibold text-[#201833] hover:bg-[#e9e4ff]"
+                            >
+                              <span>
+                                <MenuGlyph level={3} />
+                                {category.label}
+                              </span>
+                              <span className="text-[0.72rem] font-medium opacity-70">
+                                {category.sections.length} 类
+                              </span>
+                            </button>
+
+                            {expandedClassicCourseCategory === category.id ? (
+                              <div className="grid gap-1 rounded-[14px] bg-[#f7f4ff] p-2">
+                                {category.sections.length ? (
+                                  category.sections.map((section) => (
+                                  <div key={section.id} className="grid gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setExpandedClassicCourseSection(
+                                          (current) =>
+                                            current === section.id
+                                              ? ""
+                                              : section.id
+                                        )
+                                      }
+                                      className="flex w-full items-center justify-between rounded-[12px] px-3 py-2 text-left text-[0.88rem] font-semibold text-[#201833] hover:bg-white"
+                                    >
+                                      <span>
+                                        <MenuGlyph level={4} />
+                                        {section.label}
+                                      </span>
+                                      <span className="text-[0.72rem] font-medium opacity-70">
+                                        {section.lessons.length} 门
+                                      </span>
+                                    </button>
+
+                                    {expandedClassicCourseSection ===
+                                    section.id ? (
+                                      <div className="grid gap-1 rounded-[12px] bg-white/70 p-2">
+                                        {section.lessons.map((lesson) => (
+                                          <button
+                                            key={lesson.id}
+                                            type="button"
+                                            onClick={() =>
+                                              openClassicLesson(
+                                                lesson.id,
+                                                lesson.title
+                                              )
+                                            }
+                                            className="rounded-[10px] px-3 py-2 text-left text-[0.82rem] font-semibold leading-5 text-[#4b4267] hover:bg-[#f7f4ff]"
+                                          >
+                                            <MenuGlyph level={5} />
+                                            {lesson.title}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                  ))
+                                ) : (
+                                  <p className="px-3 py-2 text-[0.82rem] font-semibold text-[#4b4267]">
+                                    暂无课程
+                                  </p>
+                                )}
+                              </div>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {phrase === "单词本" && showVocabularyPicker ? (
+                      <div className="max-h-52 overflow-y-auto rounded-[18px] border border-[#c9bfff] bg-white p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                        {vocabularyGroups.length ? (
+                          vocabularyGroups.map((group, groupIndex) => (
+                            <button
+                              key={`vocabulary-group-${groupIndex}`}
+                              type="button"
+                              onClick={() => {
+                                window.location.href = `/vocabulary?group=${groupIndex}`;
+                              }}
+                              className="flex w-full items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-left text-sm font-semibold text-[#201833] hover:bg-[#e9e4ff]"
+                            >
+                              <span>单词本 {groupIndex + 1}</span>
+                              <span className="text-[0.72rem] font-medium opacity-70">
+                                {group.length} 个单词
+                              </span>
+                            </button>
+                          ))
+                        ) : (
+                          <p className="px-3 py-2 text-sm font-semibold text-[#4b4267]">
+                            还没有单词本
+                          </p>
+                        )}
+                      </div>
+                    ) : null}
+                  </div>
                 ))}
+                {showVoicePicker ? (
+                  <div className="max-h-52 overflow-y-auto rounded-[18px] border border-[#c9bfff] bg-white p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                    {availableVoices.length ? (
+                      availableVoices.map((voice) => (
+                        <button
+                          key={voice.voiceURI}
+                          type="button"
+                          onClick={() => setSelectedVoiceURI(voice.voiceURI)}
+                          className={`flex w-full items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-left text-sm font-semibold ${
+                            selectedVoiceURI === voice.voiceURI
+                              ? "bg-[#e9e4ff] text-[#201833]"
+                              : "text-[#4b4267]"
+                          }`}
+                        >
+                          <span className="min-w-0">
+                            <span className="block truncate">{voice.name}</span>
+                            <span className="block text-[0.72rem] font-medium opacity-70">
+                              {voice.lang}
+                            </span>
+                          </span>
+                          <span className="shrink-0">
+                            {selectedVoiceURI === voice.voiceURI ? "✓" : ""}
+                          </span>
+                        </button>
+                      ))
+                    ) : (
+                      <p className="px-3 py-2 text-sm font-semibold text-[#4b4267]">
+                        正在加载声音…
+                      </p>
+                    )}
+                  </div>
+                ) : null}
               </div>
             </div>
           ) : null}
@@ -571,7 +1171,7 @@ export default function SpeakEnglishPage() {
               <div className="flex items-end gap-2">
                 <button
                   type="button"
-                  aria-label="Practice starters"
+                  aria-label="打开菜单"
                   onClick={() => setShowQuickPanel((current) => !current)}
                   className="grid h-12 w-14 shrink-0 place-items-center rounded-[22px] border border-white/10 bg-white/[0.08] text-3xl font-light text-[#efe9ff] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                 >
@@ -599,28 +1199,21 @@ export default function SpeakEnglishPage() {
                     autoCapitalize="sentences"
                     autoCorrect="on"
                     spellCheck
-                    placeholder="Say what you mean"
+                    placeholder="说出你想表达的话…"
                     className="block max-h-24 min-h-[32px] w-full resize-none overflow-hidden bg-transparent text-[1rem] font-medium leading-8 text-[#fffaff] outline-none placeholder:text-[#a9a0c7]"
                   />
                 </label>
 
                 <button
                   type="button"
-                  aria-label={canSend ? "Send" : "Hold to speak"}
-                  onClick={canSend ? sendInput : focusInput}
-                  onPointerDown={!canSend ? handleMicPointerDown : undefined}
-                  onPointerUp={!canSend ? handleMicPointerUp : undefined}
-                  onPointerCancel={!canSend ? stopRecognition : undefined}
+                  aria-label={isListening ? "停止语音输入" : "开始语音输入"}
+                  onClick={isListening ? stopRecognition : startRecognition}
                   onContextMenu={(event) => event.preventDefault()}
                   className={`sf-voice-button speakflow-breathe grid h-12 w-14 shrink-0 touch-none place-items-center rounded-[22px] transition ${
                     isListening ? "scale-105 ring-4 ring-[#91dcff]/18" : ""
                   }`}
                 >
-                  {canSend ? (
-                    <span className="text-[2rem] font-semibold leading-none">↑</span>
-                  ) : (
-                    <VoiceGlyph active={isListening} />
-                  )}
+                  <VoiceGlyph active={isListening} />
                 </button>
               </div>
             </div>
