@@ -455,9 +455,7 @@ export default function SpeakEnglishPage() {
   const isDrawingRef = useRef(false);
   const speechBufferRef = useRef("");
   const shouldCommitSpeechRef = useRef(false);
-  const speechSilenceTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(
-    null
-  );
+  const speechSilenceTimerRef = useRef<number | null>(null);
 
   const [message, setMessage] = useState("用中文说出你想表达的内容");
   const [inputText, setInputText] = useState("");
@@ -563,7 +561,8 @@ export default function SpeakEnglishPage() {
     return () => {
       shouldCommitSpeechRef.current = false;
       if (speechSilenceTimerRef.current) {
-        window.clearTimeout(speechSilenceTimerRef.current);
+        clearTimeout(speechSilenceTimerRef.current);
+        speechSilenceTimerRef.current = null;
       }
       recognitionRef.current?.abort?.();
     };
@@ -625,7 +624,7 @@ export default function SpeakEnglishPage() {
   function clearSpeechSilenceTimer() {
     if (!speechSilenceTimerRef.current) return;
 
-    window.clearTimeout(speechSilenceTimerRef.current);
+    clearTimeout(speechSilenceTimerRef.current);
     speechSilenceTimerRef.current = null;
   }
 

@@ -40,7 +40,10 @@ export default async function RootLayout({
       lang={initialLanguage}
       className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#090110]">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-[#090110]"
+      >
         <LanguageProvider initialLanguage={initialLanguage}>
           {children}
         </LanguageProvider>
