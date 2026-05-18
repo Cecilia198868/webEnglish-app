@@ -24,6 +24,8 @@ type ClassicCourseCategory = {
   sections: ClassicCourseSection[];
 };
 
+type ClassicCoursePickerView = "categories" | "sections" | "lessons";
+
 type SpeechRecognitionAlternativeLike = {
   transcript?: string;
 };
@@ -473,9 +475,11 @@ export default function SpeakEnglishPage() {
   const [hasInk, setHasInk] = useState(false);
   const [showQuickPanel, setShowQuickPanel] = useState(false);
   const [showClassicCoursePicker, setShowClassicCoursePicker] = useState(false);
-  const [expandedClassicCourseCategory, setExpandedClassicCourseCategory] =
+  const [classicCoursePickerView, setClassicCoursePickerView] =
+    useState<ClassicCoursePickerView>("categories");
+  const [selectedClassicCourseCategoryId, setSelectedClassicCourseCategoryId] =
     useState("");
-  const [expandedClassicCourseSection, setExpandedClassicCourseSection] =
+  const [selectedClassicCourseSectionId, setSelectedClassicCourseSectionId] =
     useState("");
   const [showVocabularyPicker, setShowVocabularyPicker] = useState(false);
   const [showVoicePicker, setShowVoicePicker] = useState(false);
@@ -499,6 +503,20 @@ export default function SpeakEnglishPage() {
       ? `${baseInputValue}${baseInputValue ? " " : ""}${liveTranscript}`
       : baseInputValue;
   const currentMode = modeMeta[keyboardMode];
+  const selectedClassicCourseCategory = useMemo(
+    () =>
+      classicCourseCategories.find(
+        (category) => category.id === selectedClassicCourseCategoryId
+      ) ?? null,
+    [selectedClassicCourseCategoryId]
+  );
+  const selectedClassicCourseSection = useMemo(
+    () =>
+      selectedClassicCourseCategory?.sections.find(
+        (section) => section.id === selectedClassicCourseSectionId
+      ) ?? null,
+    [selectedClassicCourseCategory, selectedClassicCourseSectionId]
+  );
 
   const chineseCandidates = useMemo(() => {
     const pinyin = composingPinyin.toLowerCase();
@@ -547,8 +565,7 @@ export default function SpeakEnglishPage() {
   useEffect(() => {
     if (!showQuickPanel) {
       setShowClassicCoursePicker(false);
-      setExpandedClassicCourseCategory("");
-      setExpandedClassicCourseSection("");
+      resetClassicCoursePicker();
       setShowVocabularyPicker(false);
       setShowVoicePicker(false);
       return;
@@ -570,6 +587,12 @@ export default function SpeakEnglishPage() {
 
   function focusInput() {
     textareaRef.current?.focus();
+  }
+
+  function resetClassicCoursePicker() {
+    setClassicCoursePickerView("categories");
+    setSelectedClassicCourseCategoryId("");
+    setSelectedClassicCourseSectionId("");
   }
 
   function appendText(value: string) {
@@ -609,8 +632,7 @@ export default function SpeakEnglishPage() {
     setShowEmojiPanel(false);
     setShowQuickPanel(false);
     setShowClassicCoursePicker(false);
-    setExpandedClassicCourseCategory("");
-    setExpandedClassicCourseSection("");
+    resetClassicCoursePicker();
     setShowVocabularyPicker(false);
     setShowVoicePicker(false);
     focusInput();
@@ -931,13 +953,19 @@ export default function SpeakEnglishPage() {
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
 
             <div className="flex flex-1 flex-col items-center justify-start pt-14 text-center">
-              <p className="max-w-[320px] text-[1.6rem] font-semibold leading-9 tracking-[-0.03em] text-[#fffaff]">
+              <p
+                className={`max-w-[320px] ${
+                  standardEnglish
+                    ? "text-[1.05rem] font-semibold leading-6 text-[#7f7896]"
+                    : "text-[1.6rem] font-semibold leading-9 tracking-[-0.03em] text-[#fffaff]"
+                }`}
+              >
                 {isListening && liveTranscript ? liveTranscript : message}
               </p>
-              <div className="mt-4 max-w-[320px] text-[0.95rem] font-medium leading-6 text-[#c9c0df]">
+              <div className="mt-4 max-w-[340px] text-[0.95rem] font-medium leading-6 text-[#c9c0df]">
                 {standardEnglish ? (
-                  <div className="space-y-2">
-                    <p className="text-[1rem] font-semibold text-[#201833]">
+                  <div className="space-y-3">
+                    <p className="text-[1.45rem] font-extrabold leading-8 text-[#201833]">
                       {standardEnglish}
                     </p>
                     <div className="flex justify-center gap-5 text-[0.9rem] font-semibold">
@@ -985,8 +1013,7 @@ export default function SpeakEnglishPage() {
                       onClick={() => {
                         if (phrase === "经典场景口语练习") {
                           setShowClassicCoursePicker((current) => !current);
-                          setExpandedClassicCourseCategory("");
-                          setExpandedClassicCourseSection("");
+                          resetClassicCoursePicker();
                           setShowVocabularyPicker(false);
                           setShowVoicePicker(false);
                           return;
@@ -995,8 +1022,7 @@ export default function SpeakEnglishPage() {
                         if (phrase === "单词本") {
                           setShowVocabularyPicker((current) => !current);
                           setShowClassicCoursePicker(false);
-                          setExpandedClassicCourseCategory("");
-                          setExpandedClassicCourseSection("");
+                          resetClassicCoursePicker();
                           setShowVoicePicker(false);
                           return;
                         }
@@ -1004,8 +1030,7 @@ export default function SpeakEnglishPage() {
                         if (phrase === "声音选择") {
                           setShowVoicePicker((current) => !current);
                           setShowClassicCoursePicker(false);
-                          setExpandedClassicCourseCategory("");
-                          setExpandedClassicCourseSection("");
+                          resetClassicCoursePicker();
                           setShowVocabularyPicker(false);
                           return;
                         }
@@ -1020,85 +1045,128 @@ export default function SpeakEnglishPage() {
 
                     {phrase === "经典场景口语练习" &&
                     showClassicCoursePicker ? (
-                      <div className="grid max-h-72 gap-2 overflow-y-auto rounded-[18px] border border-[#c9bfff] bg-white p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-                        {classicCourseCategories.map((category) => (
-                          <div key={category.id} className="grid gap-2">
+                      <div className="grid max-h-[22rem] gap-3 overflow-y-auto rounded-[18px] border border-[#c9bfff] bg-white p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                        <div className="flex items-center gap-2">
+                          {classicCoursePickerView !== "categories" ? (
                             <button
                               type="button"
-                              onClick={() =>
-                                setExpandedClassicCourseCategory((current) =>
-                                  current === category.id ? "" : category.id
-                                )
-                              }
-                              className="flex w-full items-center justify-between gap-3 rounded-[14px] bg-[#f7f4ff] px-3 py-2 text-left text-sm font-semibold text-[#201833] hover:bg-[#e9e4ff]"
+                              onClick={() => {
+                                if (classicCoursePickerView === "lessons") {
+                                  setClassicCoursePickerView("sections");
+                                  setSelectedClassicCourseSectionId("");
+                                  return;
+                                }
+
+                                resetClassicCoursePicker();
+                              }}
+                              className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#f7f4ff] text-lg font-bold text-[#201833] hover:bg-[#e9e4ff]"
+                              aria-label="返回上一层"
                             >
-                              <span>
-                                <MenuGlyph level={3} />
-                                {category.label}
-                              </span>
-                              <span className="text-[0.72rem] font-medium opacity-70">
-                                {category.sections.length} 类
-                              </span>
+                              ←
                             </button>
-
-                            {expandedClassicCourseCategory === category.id ? (
-                              <div className="grid gap-1 rounded-[14px] bg-[#f7f4ff] p-2">
-                                {category.sections.length ? (
-                                  category.sections.map((section) => (
-                                  <div key={section.id} className="grid gap-1">
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        setExpandedClassicCourseSection(
-                                          (current) =>
-                                            current === section.id
-                                              ? ""
-                                              : section.id
-                                        )
-                                      }
-                                      className="flex w-full items-center justify-between rounded-[12px] px-3 py-2 text-left text-[0.88rem] font-semibold text-[#201833] hover:bg-white"
-                                    >
-                                      <span>
-                                        <MenuGlyph level={4} />
-                                        {section.label}
-                                      </span>
-                                      <span className="text-[0.72rem] font-medium opacity-70">
-                                        {section.lessons.length} 门
-                                      </span>
-                                    </button>
-
-                                    {expandedClassicCourseSection ===
-                                    section.id ? (
-                                      <div className="grid gap-1 rounded-[12px] bg-white/70 p-2">
-                                        {section.lessons.map((lesson) => (
-                                          <button
-                                            key={lesson.id}
-                                            type="button"
-                                            onClick={() =>
-                                              openClassicLesson(
-                                                lesson.id,
-                                                lesson.title
-                                              )
-                                            }
-                                            className="rounded-[10px] px-3 py-2 text-left text-[0.82rem] font-semibold leading-5 text-[#4b4267] hover:bg-[#f7f4ff]"
-                                          >
-                                            <MenuGlyph level={5} />
-                                            {lesson.title}
-                                          </button>
-                                        ))}
-                                      </div>
-                                    ) : null}
-                                  </div>
-                                  ))
-                                ) : (
-                                  <p className="px-3 py-2 text-[0.82rem] font-semibold text-[#4b4267]">
-                                    暂无课程
-                                  </p>
-                                )}
-                              </div>
+                          ) : null}
+                          <div className="min-w-0">
+                            {selectedClassicCourseCategory ? (
+                              <p className="truncate text-[0.72rem] font-semibold text-[#75689c]">
+                                {selectedClassicCourseCategory.label}
+                                {selectedClassicCourseSection
+                                  ? ` / ${selectedClassicCourseSection.label}`
+                                  : ""}
+                              </p>
                             ) : null}
+                            <h3 className="truncate text-base font-bold text-[#201833]">
+                              {classicCoursePickerView === "categories"
+                                ? "经典场景口语练习"
+                                : classicCoursePickerView === "sections"
+                                  ? selectedClassicCourseCategory?.label
+                                  : selectedClassicCourseSection?.label}
+                            </h3>
                           </div>
-                        ))}
+                        </div>
+
+                        {classicCoursePickerView === "categories" ? (
+                          <div className="grid gap-2">
+                            {classicCourseCategories.map((category) => (
+                              <button
+                                key={category.id}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedClassicCourseCategoryId(category.id);
+                                  setSelectedClassicCourseSectionId("");
+                                  setClassicCoursePickerView("sections");
+                                }}
+                                className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
+                              >
+                                <span className="min-w-0 truncate">
+                                  <MenuGlyph level={3} />
+                                  {category.label}
+                                </span>
+                                <span className="shrink-0 text-[0.72rem] font-semibold opacity-70">
+                                  {category.sections.length} 类 ›
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+                        ) : null}
+
+                        {classicCoursePickerView === "sections" &&
+                        selectedClassicCourseCategory ? (
+                          <div className="grid gap-2">
+                            {selectedClassicCourseCategory.sections.map(
+                              (section) => (
+                                <button
+                                  key={section.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedClassicCourseSectionId(section.id);
+                                    setClassicCoursePickerView("lessons");
+                                  }}
+                                  className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
+                                >
+                                  <span className="min-w-0 truncate">
+                                    <MenuGlyph level={4} />
+                                    {section.label}
+                                  </span>
+                                  <span className="shrink-0 text-[0.72rem] font-semibold opacity-70">
+                                    {section.lessons.length} 门 ›
+                                  </span>
+                                </button>
+                              )
+                            )}
+                          </div>
+                        ) : null}
+
+                        {classicCoursePickerView === "lessons" &&
+                        selectedClassicCourseSection ? (
+                          <div className="grid gap-2">
+                            {selectedClassicCourseSection.lessons.length ? (
+                              selectedClassicCourseSection.lessons.map(
+                                (lesson) => (
+                                  <button
+                                    key={lesson.id}
+                                    type="button"
+                                    onClick={() =>
+                                      openClassicLesson(lesson.id, lesson.title)
+                                    }
+                                    className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold leading-5 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
+                                  >
+                                    <span className="min-w-0">
+                                      <MenuGlyph level={5} />
+                                      {lesson.title}
+                                    </span>
+                                    <span className="shrink-0 text-[1rem] font-bold opacity-60">
+                                      ›
+                                    </span>
+                                  </button>
+                                )
+                              )
+                            ) : (
+                              <p className="rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-sm font-semibold text-[#4b4267]">
+                                暂无课程
+                              </p>
+                            )}
+                          </div>
+                        ) : null}
                       </div>
                     ) : null}
 
