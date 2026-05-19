@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { parseTrainingContent, type SentencePair } from "@/lib/training";
 import { getFeaturedLessonById } from "@/data/featuredCourses";
@@ -28,11 +29,61 @@ const DB_NAME = "english-learning-app-db";
 const DB_VERSION = 1;
 const AUDIO_STORE_NAME = "audios";
 const LAST_STUDY_PROGRESS_KEY = "lastStudyProgress";
+const expressionVariantLabels: Array<{
+  key: ExpressionVariantKey;
+  label: string;
+}> = [
+  { key: "standard", label: "标准表达" },
+  { key: "idiomatic", label: "更地道" },
+  { key: "simple", label: "更简单" },
+  { key: "natural", label: "更自然" },
+];
 
 type AudioDBRecord = {
   id: string;
   file?: Blob;
 };
+
+type ExpressionVariantKey = "standard" | "idiomatic" | "simple" | "natural";
+
+type ExpressionVariant = {
+  key: ExpressionVariantKey;
+  label: string;
+  text: string;
+};
+
+type SpeechRecognitionAlternativeLike = {
+  transcript?: string;
+};
+
+type SpeechRecognitionResultLike = {
+  0?: SpeechRecognitionAlternativeLike;
+};
+
+type SpeechRecognitionResultEventLike = Event & {
+  results: ArrayLike<SpeechRecognitionResultLike>;
+};
+
+type BrowserSpeechRecognition = {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start: () => void;
+  stop: () => void;
+  abort?: () => void;
+  onresult: ((event: SpeechRecognitionResultEventLike) => void) | null;
+  onerror: ((event: Event) => void) | null;
+  onend: (() => void) | null;
+};
+
+type SpeechRecognitionConstructor = new () => BrowserSpeechRecognition;
+
+declare global {
+  interface Window {
+    webkitSpeechRecognition?: SpeechRecognitionConstructor;
+    SpeechRecognition?: SpeechRecognitionConstructor;
+  }
+}
 
 function getDefaultLessonsData(): LocalLessonData {
   return { lessons: [] };
@@ -101,6 +152,54 @@ async function getAudioBlobById(id: string): Promise<Blob | null> {
   });
 }
 
+function SoundWaveMark({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 92 44"
+      className={className}
+      fill="none"
+    >
+      <defs>
+        <linearGradient id="studySoundWaveBorder" x1="10" y1="36" x2="82" y2="8">
+          <stop stopColor="#d85ee9" />
+          <stop offset="1" stopColor="#28d5e8" />
+        </linearGradient>
+        <linearGradient id="studySoundWaveBars" x1="22" y1="22" x2="70" y2="22">
+          <stop stopColor="#d85ee9" />
+          <stop offset="0.48" stopColor="#e9e6ff" />
+          <stop offset="1" stopColor="#28d5e8" />
+        </linearGradient>
+      </defs>
+      <rect
+        x="2"
+        y="3"
+        width="88"
+        height="38"
+        rx="19"
+        fill="rgba(255,255,255,0.34)"
+        stroke="url(#studySoundWaveBorder)"
+        strokeWidth="3"
+      />
+      <path
+        d="M23 22h0.1M33 17v10M43 13v18M53 8v28M63 14v16M73 18v8"
+        stroke="url(#studySoundWaveBars)"
+        strokeLinecap="round"
+        strokeWidth="7"
+      />
+      <circle cx="82" cy="22" r="4" fill="#28d5e8" />
+    </svg>
+  );
+}
+
+function createFallbackExpressionVariants(standardEnglish: string) {
+  return expressionVariantLabels.map(({ key, label }) => ({
+    key,
+    label,
+    text: standardEnglish || "This sentence is still being prepared.",
+  }));
+}
+
 export default function StudyPage() {
   const params = useParams();
   const router = useRouter();
@@ -112,6 +211,15 @@ export default function StudyPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showEnglish, setShowEnglish] = useState(false);
   const [message, setMessage] = useState("");
+  const [spokenEnglish, setSpokenEnglish] = useState("");
+  const [liveTranscript, setLiveTranscript] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const [expressionVariants, setExpressionVariants] = useState<
+    ExpressionVariant[]
+  >([]);
+  const [selectedExpressionIndex, setSelectedExpressionIndex] = useState(0);
+  const [isLoadingExpressionVariants, setIsLoadingExpressionVariants] =
+    useState(false);
   const [pendingVocabularyWord, setPendingVocabularyWord] = useState<{
     word: string;
     sourceSentence: string;
@@ -145,6 +253,9 @@ export default function StudyPage() {
   const sourceAudioObjectUrlRef = useRef<string | null>(null);
   const clipEndTimeRef = useRef<number | null>(null);
   const isSequencePlayingRef = useRef(false);
+  const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
+  const speechBufferRef = useRef("");
+  const speechSilenceTimerRef = useRef<number | null>(null);
 
   function clearAutoTimer() {
     if (timerRef.current !== null) {
@@ -158,6 +269,27 @@ export default function StudyPage() {
       window.clearTimeout(sequenceTimerRef.current);
       sequenceTimerRef.current = null;
     }
+  }
+
+  function clearSpeechSilenceTimer() {
+    if (speechSilenceTimerRef.current !== null) {
+      window.clearTimeout(speechSilenceTimerRef.current);
+      speechSilenceTimerRef.current = null;
+    }
+  }
+
+  function resetPracticeAttempt() {
+    setSpokenEnglish("");
+    setLiveTranscript("");
+    setShowEnglish(false);
+    setExpressionVariants([]);
+    setSelectedExpressionIndex(0);
+    setIsLoadingExpressionVariants(false);
+    speechBufferRef.current = "";
+    clearSpeechSilenceTimer();
+    recognitionRef.current?.abort?.();
+    recognitionRef.current = null;
+    setIsListening(false);
   }
 
   function stopClipPlayback(resetTime = false) {
@@ -209,6 +341,10 @@ export default function StudyPage() {
       setCurrentIndex(0);
       currentIndexRef.current = 0;
       setShowEnglish(false);
+      setSpokenEnglish("");
+      setLiveTranscript("");
+      setExpressionVariants([]);
+      setSelectedExpressionIndex(0);
       return;
     }
 
@@ -233,6 +369,10 @@ export default function StudyPage() {
     }
 
     setShowEnglish(false);
+    setSpokenEnglish("");
+    setLiveTranscript("");
+    setExpressionVariants([]);
+    setSelectedExpressionIndex(0);
   }, [lessonId, progressKey]);
 
   function saveProgress(index: number) {
@@ -310,7 +450,7 @@ export default function StudyPage() {
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
       currentIndexRef.current = newIndex;
-      setShowEnglish(false);
+      resetPracticeAttempt();
       saveProgress(newIndex);
       setMessage("");
     }
@@ -322,7 +462,7 @@ export default function StudyPage() {
       const newIndex = currentIndex + 1;
       setCurrentIndex(newIndex);
       currentIndexRef.current = newIndex;
-      setShowEnglish(false);
+      resetPracticeAttempt();
       saveProgress(newIndex);
       setMessage("");
     }
@@ -359,7 +499,7 @@ export default function StudyPage() {
   function moveToSentence(index: number) {
     setCurrentIndex(index);
     currentIndexRef.current = index;
-    setShowEnglish(false);
+    resetPracticeAttempt();
     saveProgress(index);
     setMessage("");
   }
@@ -630,6 +770,8 @@ export default function StudyPage() {
       clearAutoTimer();
       isSequencePlayingRef.current = false;
       clearSequenceTimer();
+      clearSpeechSilenceTimer();
+      recognitionRef.current?.abort?.();
       stopClipPlayback();
       if (sourceAudioObjectUrlRef.current) {
         URL.revokeObjectURL(sourceAudioObjectUrlRef.current);
@@ -684,10 +826,6 @@ export default function StudyPage() {
   const currentPair = useMemo(() => {
     return pairs[currentIndex] || { chinese: "", english: "" };
   }, [pairs, currentIndex]);
-  const englishTokens = useMemo(
-    () => tokenizeEnglishSentence(currentPair.english || ""),
-    [currentPair.english]
-  );
   const isSourcePlaybackActive = isClipPlaying || isAutoPlaying;
   const hasSourceAudioId = Boolean(lesson?.sourceAudioId);
   const hasValidTimeRange =
@@ -698,8 +836,6 @@ export default function StudyPage() {
     hasSourceAudioId &&
     Boolean(sourceAudioUrl) &&
     hasValidTimeRange;
-  const actionButtonClassName =
-    "rounded-xl px-2 py-2 text-xs font-semibold leading-tight text-white transition disabled:cursor-not-allowed disabled:opacity-40 sm:px-3 sm:text-sm";
 
   useEffect(() => {
     console.log("[study] currentSentence", {
@@ -714,6 +850,71 @@ export default function StudyPage() {
     currentPair.startTime,
     lesson?.sourceAudioId,
     lessonId,
+  ]);
+
+  useEffect(() => {
+    if (!spokenEnglish || isListening) return;
+
+    let cancelled = false;
+    const fallbackVariants = createFallbackExpressionVariants(
+      currentPair.english || ""
+    );
+
+    setExpressionVariants(fallbackVariants);
+    setSelectedExpressionIndex(0);
+    setIsLoadingExpressionVariants(false);
+
+    async function loadExpressionVariants() {
+      try {
+        const response = await fetch("/api/expression-variants", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chinese: currentPair.chinese,
+            userEnglish: spokenEnglish,
+            standardEnglish: currentPair.english,
+          }),
+        });
+        const data = (await response.json()) as {
+          variants?: Partial<Record<ExpressionVariantKey, string>>;
+        };
+
+        if (!response.ok || !data.variants || cancelled) return;
+
+        const nextVariants = expressionVariantLabels.map(({ key, label }) => ({
+          key,
+          label,
+          text:
+            typeof data.variants?.[key] === "string" &&
+            data.variants[key]?.trim()
+              ? data.variants[key]!.trim()
+              : fallbackVariants.find((variant) => variant.key === key)?.text ||
+                currentPair.english ||
+                "",
+        }));
+
+        setExpressionVariants(nextVariants);
+      } catch {
+        if (!cancelled) {
+          setExpressionVariants(fallbackVariants);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoadingExpressionVariants(false);
+        }
+      }
+    }
+
+    void loadExpressionVariants();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    currentPair.chinese,
+    currentPair.english,
+    isListening,
+    spokenEnglish,
   ]);
 
   function handleBackToPreviousPage() {
@@ -747,44 +948,469 @@ export default function StudyPage() {
     setMessage("当前位置已保存");
   }
 
+  function getRecognitionConstructor() {
+    if (typeof window === "undefined") return null;
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  }
+
+  function stopEnglishRecognition() {
+    clearSpeechSilenceTimer();
+    recognitionRef.current?.stop();
+    recognitionRef.current = null;
+  }
+
+  function startEnglishRecognition() {
+    const RecognitionConstructor = getRecognitionConstructor();
+    if (!RecognitionConstructor) {
+      setMessage("当前浏览器不支持语音识别");
+      return;
+    }
+
+    stopSequencePlayback();
+    recognitionRef.current?.abort?.();
+    clearSpeechSilenceTimer();
+    speechBufferRef.current = "";
+    setLiveTranscript("");
+    setShowEnglish(false);
+    setMessage("");
+
+    const recognition = new RecognitionConstructor();
+    recognition.lang = "en-US";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognitionRef.current = recognition;
+    setIsListening(true);
+
+    recognition.onresult = (event) => {
+      const transcripts = Array.from(event.results)
+        .map((result) => result[0]?.transcript || "")
+        .filter(Boolean);
+      const transcript = transcripts.join(" ").trim();
+
+      setLiveTranscript(transcript);
+      speechBufferRef.current = transcript;
+      clearSpeechSilenceTimer();
+      speechSilenceTimerRef.current = window.setTimeout(() => {
+        stopEnglishRecognition();
+      }, 1300);
+    };
+
+    recognition.onerror = () => {
+      clearSpeechSilenceTimer();
+      setIsListening(false);
+      setLiveTranscript("");
+      setMessage("没有听清，请再试一次");
+    };
+
+    recognition.onend = () => {
+      clearSpeechSilenceTimer();
+      const finalTranscript = speechBufferRef.current.trim();
+      if (finalTranscript) {
+        setSpokenEnglish(finalTranscript);
+      }
+      setLiveTranscript("");
+      setIsListening(false);
+      recognitionRef.current = null;
+    };
+
+    recognition.start();
+  }
+
+  const spokenDisplay = (isListening && liveTranscript ? liveTranscript : spokenEnglish).trim();
+  const courseTitle = lessonTitle || lesson?.title || "未命名课程";
+  const showStudyPrompt = !spokenDisplay && !showEnglish;
+  const showStudyListeningPrompt = isListening;
+  const showStudyVoiceOnlyPrompt = showStudyPrompt || showStudyListeningPrompt;
+  const showExpressionFeedback = Boolean(spokenDisplay) && !showStudyListeningPrompt;
+  const selectedExpression =
+    expressionVariants[selectedExpressionIndex] ||
+    createFallbackExpressionVariants(currentPair.english || "")[0];
+  const selectedExpressionTokens = useMemo(
+    () => tokenizeEnglishSentence(selectedExpression.text || ""),
+    [selectedExpression.text]
+  );
+  const hasPreviousExpression = selectedExpressionIndex > 0;
+  const hasNextExpression =
+    selectedExpressionIndex < expressionVariantLabels.length - 1;
+
   return (
-    <main className="responsive-page-shell relative min-h-[100dvh] overflow-x-hidden bg-[#090110] font-[var(--font-sora)] text-white">
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,#120216_0%,#090110_28%,#10031f_58%,#06010d_100%)]" />
-      <div className="lux-grid absolute inset-0 opacity-[0.14]" />
-      <div className="aurora-wave absolute left-[-10%] top-[-8%] h-[34rem] w-[46rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,153,0.20),transparent_58%)] blur-[92px]" />
-      <div className="aurora-wave absolute right-[-8%] top-[4%] h-[36rem] w-[44rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,245,255,0.20),transparent_58%)] blur-[100px]" />
+    <main className="responsive-page-shell sf-speak-page min-h-[100dvh] overflow-x-hidden text-white">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[560px] items-center justify-center p-0 sm:p-4">
+        <section className="sf-speak-phone relative h-[100dvh] min-h-[100dvh] w-full max-w-[520px] overflow-hidden rounded-none sm:h-[calc(100dvh-16px)] sm:min-h-[720px] sm:rounded-[34px]">
+          <div className="pointer-events-none absolute left-1/2 top-[21%] z-0 h-[460px] w-[460px] -translate-x-1/2 rounded-full border border-[#91dcff]/10" />
+          <div className="pointer-events-none absolute left-1/2 top-[31%] z-0 h-[310px] w-[310px] -translate-x-1/2 rounded-full border border-[#b799ff]/10" />
 
-      <div className="relative mx-auto w-full max-w-5xl px-4 py-3 pb-8 sm:px-6 lg:px-8">
-        <div className="mb-3 rounded-[1.35rem] border border-white/12 bg-white/[0.05] p-3 backdrop-blur-xl">
-          <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
-            <button
-              type="button"
-              onClick={handleBackToPreviousPage}
-              className="shrink-0 rounded-xl bg-slate-700 px-3 py-2 text-sm font-medium hover:bg-slate-600"
-            >
-              返回上一页
-            </button>
+          <header className="relative z-10 px-7 pt-8">
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                aria-label="返回课程列表"
+                onClick={handleBackToPreviousPage}
+                className="sf-header-button"
+              >
+                <span className="relative block h-4 w-5 before:absolute before:left-0 before:top-0 before:h-px before:w-4 before:bg-[#6f6685] after:absolute after:bottom-0 after:left-0 after:h-px after:w-5 after:bg-[#6f6685]">
+                  <span className="absolute left-0 top-1/2 h-px w-5 -translate-y-1/2 bg-[#6f6685]" />
+                </span>
+              </button>
 
-            <div className="min-w-0 flex-1 pt-0.5">
-              <div className="truncate text-base font-semibold">
-                {lessonTitle || lesson?.title || "未命名课程"}
+              <div className="flex items-center gap-1.5">
+                <span className="grid h-5 w-[42px] place-items-center">
+                  <SoundWaveMark className="h-5 w-[42px] drop-shadow-[0_8px_16px_rgba(91,140,255,0.18)]" />
+                </span>
+                <div>
+                  <h1 className="text-[1.05rem] font-semibold leading-none text-[#201833]">
+                    SpeakFlow
+                  </h1>
+                  <p className="mt-0.5 text-[0.42rem] font-semibold uppercase tracking-[0.16em] text-[#7ee7ff]/80">
+                    voice practice
+                  </p>
+                </div>
               </div>
-              {pairs.length > 0 ? (
-                <p className="mt-1 text-xs text-white/55">
-                  第 {currentIndex + 1} / {pairs.length} 句
-                </p>
+
+              <button
+                type="button"
+                aria-label="显示设置"
+                onClick={() => setShowMoreActions((prev) => !prev)}
+                className="sf-header-button text-[1.25rem] font-semibold text-[#201833]"
+              >
+                ⌄
+              </button>
+            </div>
+          </header>
+
+          <section
+            className={`relative z-10 flex h-full flex-col px-6 pt-9 ${
+              showStudyVoiceOnlyPrompt || showExpressionFeedback
+                ? "pb-10"
+                : "pb-[128px]"
+            }`}
+          >
+            <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
+
+            <div
+              className={`flex flex-1 flex-col items-center text-center ${
+                showStudyVoiceOnlyPrompt ? "justify-start pt-24" : "justify-start pt-16"
+              }`}
+            >
+              {showStudyListeningPrompt ? (
+                <>
+                  <h2 className="max-w-[360px] text-[1.65rem] font-extrabold leading-10 text-[#201833]">
+                    正在听你说话...
+                  </h2>
+                  <p className="mt-6 max-w-[340px] text-[1rem] font-semibold leading-7 text-[#201833]">
+                    试着用英语说出来
+                  </p>
+                </>
+              ) : showStudyPrompt ? (
+                <>
+                  <div className="max-w-[430px] bg-white/10 px-5 py-5">
+                    <h2 className="text-[1.75rem] font-extrabold leading-10 text-[#201833]">
+                      {currentPair.chinese || "没有内容"}
+                    </h2>
+                    <p className="mt-5 text-[1rem] font-extrabold text-[#4b4267]">
+                      试着用英语说出来
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={startEnglishRecognition}
+                    className="mt-64 grid place-items-center"
+                    aria-label="点击开始说话"
+                  >
+                    <Image
+                      src="/icons/glow-mic.svg"
+                      alt=""
+                      width={96}
+                      height={96}
+                      className="h-24 w-24"
+                    />
+                    <span className="mt-7 text-[1.08rem] font-semibold text-[#7f7896]">
+                      点击开始说话
+                    </span>
+                  </button>
+                </>
               ) : (
-                <p className="mt-1 text-xs text-white/55">正在加载课程...</p>
+                <>
+                  <div className="w-full max-w-[430px] text-left">
+                    <p className="text-[1.05rem] font-extrabold text-[#7f7896]">
+                      你的表达:
+                    </p>
+                    <p className="mt-5 rounded-[18px] bg-white/10 px-5 py-4 text-[1.15rem] font-bold leading-8 text-[#8f879c]">
+                      {spokenDisplay}
+                    </p>
+                  </div>
+
+                  <div className="mt-9 w-full max-w-[430px]">
+                    <div className="flex items-center gap-2 text-left">
+                      <button
+                        type="button"
+                        aria-label="上一种表达"
+                        onClick={() =>
+                          setSelectedExpressionIndex((index) =>
+                            Math.max(index - 1, 0)
+                          )
+                        }
+                        disabled={!hasPreviousExpression}
+                        className="grid h-8 w-8 place-items-center rounded-full bg-white/35 text-lg font-extrabold text-[#5b8cff] disabled:invisible"
+                      >
+                        ←
+                      </button>
+                      <span className="text-[1.2rem] font-extrabold text-[#4f6fe8]">
+                        {selectedExpression.label}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label="下一种表达"
+                        onClick={() =>
+                          setSelectedExpressionIndex((index) =>
+                            Math.min(
+                              index + 1,
+                              expressionVariantLabels.length - 1
+                            )
+                          )
+                        }
+                        disabled={!hasNextExpression}
+                        className="grid h-8 w-8 place-items-center rounded-full bg-white/35 text-lg font-extrabold text-[#5b8cff] disabled:invisible"
+                      >
+                        →
+                      </button>
+                    </div>
+
+                    <p className="mt-4 bg-white/18 px-4 py-4 text-[1.6rem] font-extrabold leading-9 text-[#201833] sm:text-[1.85rem]">
+                      {isLoadingExpressionVariants
+                        ? "正在生成表达..."
+                        : selectedExpressionTokens.map((token, index) =>
+                            token.type === "word" ? (
+                              <button
+                                key={`${token.value}-${index}`}
+                                type="button"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  handleWordClick(
+                                    token.value,
+                                    selectedExpression.text
+                                  );
+                                }}
+                                className="inline rounded-xl px-1 py-0.5 transition hover:bg-white/55"
+                              >
+                                {token.value}
+                              </button>
+                            ) : (
+                              <span key={`${token.value}-${index}`}>
+                                {token.value}
+                              </span>
+                            )
+                          )}
+                    </p>
+
+                    <div className="mt-5 flex justify-center gap-5 text-[#201833]">
+                      <button
+                        type="button"
+                        aria-label="播放朗读"
+                        onClick={() => speakEnglish(selectedExpression.text, 1)}
+                        className="flex h-12 items-center gap-2 rounded-[16px] bg-white/40 px-5 text-[1.25rem] font-extrabold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]"
+                      >
+                        ▶
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="慢速朗读"
+                        onClick={() => speakEnglish(selectedExpression.text, 0.5)}
+                        className="flex h-12 items-center gap-2 rounded-[16px] bg-white/40 px-5 text-[1.05rem] font-extrabold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]"
+                      >
+                        ▶ <span>0.5x</span>
+                      </button>
+                    </div>
+                  </div>
+                </>
               )}
+
+              {message ? (
+                <p className="mt-4 max-w-[360px] rounded-full bg-white/50 px-4 py-2 text-[0.78rem] font-semibold text-[#6f6685]">
+                  {message}
+                </p>
+              ) : null}
+            </div>
+
+            {showStudyVoiceOnlyPrompt || showExpressionFeedback ? null : (
+            <div className="mb-3 flex items-center justify-between text-[0.72rem] font-bold text-[#75689c]">
+              <button
+                type="button"
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className="rounded-full bg-white/45 px-3 py-1.5 disabled:opacity-35"
+              >
+                上一句
+              </button>
+              <span className="truncate px-3">
+                {courseTitle} · 第 {pairs.length ? currentIndex + 1 : 0} / {pairs.length} 句
+              </span>
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={currentIndex >= pairs.length - 1}
+                className="rounded-full bg-white/45 px-3 py-1.5 disabled:opacity-35"
+              >
+                下一句
+              </button>
+            </div>
+            )}
+          </section>
+
+          {showMoreActions ? (
+            <div className="absolute left-6 right-6 top-[92px] z-30 rounded-[18px] border border-[#c9bfff] bg-white p-3 text-[#201833] shadow-[0_22px_58px_rgba(84,72,146,0.22)]">
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => speakEnglish(currentPair.english, 1)}
+                  className="rounded-[14px] bg-[#f7f4ff] px-3 py-2 text-sm font-bold"
+                >
+                  朗读英文
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    void handlePlaySourceAudio();
+                  }}
+                  disabled={isSourceAudioLoading || !canPlaySourceAudio}
+                  className={`rounded-[14px] px-3 py-2 text-sm font-bold disabled:opacity-50 ${
+                    isSourcePlaybackActive ? "bg-[#d9f8ff]" : "bg-[#f7f4ff]"
+                  }`}
+                >
+                  播放原音频
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveCurrentPosition}
+                  className="rounded-[14px] bg-[#f7f4ff] px-3 py-2 text-sm font-bold"
+                >
+                  保存当前位置
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isAutoPlaying) {
+                      stopAutoPlay();
+                      return;
+                    }
+
+                    void startAutoPlay();
+                  }}
+                  className="rounded-[14px] bg-[#f7f4ff] px-3 py-2 text-sm font-bold"
+                >
+                  {isAutoPlaying ? "停止自动播放" : "自动播放"}
+                </button>
+              </div>
+              <div className="mt-2 grid grid-cols-4 gap-2">
+                {[0.5, 0.75, 1, 1.25].map((rate) => (
+                  <button
+                    key={rate}
+                    type="button"
+                    onClick={() => setSourcePlaybackRate(rate)}
+                    className={`rounded-[12px] px-2 py-1.5 text-xs font-bold ${
+                      sourcePlaybackRate === rate
+                        ? "bg-[#5b8cff] text-white"
+                        : "bg-[#f7f4ff] text-[#201833]"
+                    }`}
+                  >
+                    {rate}x
+                  </button>
+                ))}
+              </div>
+              <select
+                value={selectedVoiceName}
+                onChange={(e) => setSelectedVoiceName(e.target.value)}
+                className="mt-2 w-full rounded-[14px] border border-[#c9bfff] bg-[#f7f4ff] px-3 py-2 text-sm font-bold outline-none"
+              >
+                {voices.map((voice) => (
+                  <option key={voice.name} value={voice.name}>
+                    {voice.name} ({voice.lang})
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
+          {showStudyVoiceOnlyPrompt ? null : showExpressionFeedback ? (
+          <button
+            type="button"
+            onClick={isListening ? stopEnglishRecognition : startEnglishRecognition}
+            className="absolute bottom-9 left-1/2 z-20 grid -translate-x-1/2 place-items-center"
+            aria-label="点击开始说话"
+          >
+            <Image
+              src="/icons/glow-mic.svg"
+              alt=""
+              width={96}
+              height={96}
+              className="h-24 w-24"
+            />
+            <span className="mt-7 text-[1.08rem] font-semibold text-[#7f7896]">
+              {isListening ? "正在听..." : "点击开始说话"}
+            </span>
+          </button>
+          ) : (
+          <div className="absolute bottom-0 left-0 right-0 z-20 rounded-t-[30px] border border-[#d8d0ff] bg-white/35 p-3 shadow-[0_-18px_40px_rgba(84,72,146,0.12)] backdrop-blur-xl">
+            <div className="flex items-center gap-3 rounded-[24px] border border-[#d8d0ff] bg-white/35 p-2">
+              <button
+                type="button"
+                onClick={() => setShowMoreActions((prev) => !prev)}
+                aria-label="更多操作"
+                className="grid h-12 w-12 shrink-0 place-items-center rounded-[20px] bg-white/30 text-3xl font-light text-[#201833]"
+              >
+                +
+              </button>
+              <div className="flex h-12 min-w-0 flex-1 items-center bg-white/60 px-3 text-left text-[1rem] font-semibold text-[#8f88a5]">
+                {isListening
+                  ? liveTranscript || "正在听..."
+                  : spokenEnglish || "说出你想表达的话..."}
+              </div>
+              <button
+                type="button"
+                aria-label={isListening ? "停止语音输入" : "开始语音输入"}
+                onClick={isListening ? stopEnglishRecognition : startEnglishRecognition}
+                className={`grid h-14 w-14 shrink-0 place-items-center rounded-[22px] transition ${
+                  isListening
+                    ? "scale-105 bg-[#28d5e8]"
+                    : "bg-[linear-gradient(135deg,#7b61ff_0%,#5b8cff_58%,#7ee7ff_100%)]"
+                }`}
+              >
+                <span className="flex items-end gap-0.5">
+                  {[11, 20, 30, 22].map((height, index) => (
+                    <span
+                      key={`${height}-${index}`}
+                      className="w-1.5 rounded-full bg-white"
+                      style={{ height }}
+                    />
+                  ))}
+                </span>
+              </button>
             </div>
           </div>
-        </div>
+          )}
 
-        {message && (
-          <div className="mb-3 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-3 text-sm text-emerald-300">
-            {message}
-          </div>
-        )}
+          {sourceAudioUrl ? (
+            <audio
+              ref={sourceAudioRef}
+              src={sourceAudioUrl}
+              preload="auto"
+              className="hidden"
+              onPause={() => setIsClipPlaying(false)}
+              onEnded={handleSourceClipComplete}
+              onTimeUpdate={() => {
+                const audio = sourceAudioRef.current;
+                const clipEndTime = clipEndTimeRef.current;
+                if (!audio || clipEndTime === null) return;
+
+                if (audio.currentTime >= clipEndTime) {
+                  audio.pause();
+                  audio.currentTime = clipEndTime;
+                  handleSourceClipComplete();
+                }
+              }}
+            />
+          ) : null}
+        </section>
 
         {pendingVocabularyWord ? (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4">
@@ -823,196 +1449,6 @@ export default function StudyPage() {
             </div>
           </div>
         ) : null}
-
-        <section className="space-y-3">
-          <div
-            className={`rounded-[1.5rem] border bg-white/5 px-5 py-6 transition ${
-              isSequencePlaying
-                ? "border-cyan-400 bg-slate-900/70"
-                : "border-white/10"
-            }`}
-          >
-            <div className="min-h-[180px]">
-              <p className="text-left text-[clamp(1.35rem,6vw,1.625rem)] font-bold leading-[1.65]">
-                {currentPair.chinese || "没有内容"}
-              </p>
-            </div>
-
-            <div className="my-5 border-t border-white/20" />
-
-            <div className="min-h-[180px]">
-              {showEnglish ? (
-                <p className="text-left text-[18px] font-semibold leading-[1.85] text-emerald-300">
-                  {englishTokens.length > 0
-                    ? englishTokens.map((token, index) =>
-                        token.type === "word" ? (
-                          <button
-                            key={`${token.value}-${index}`}
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleWordClick(token.value, currentPair.english || "");
-                            }}
-                            className="inline rounded-xl px-1 py-0.5 text-left transition hover:bg-emerald-400/20 hover:text-white"
-                          >
-                            {token.value}
-                          </button>
-                        ) : (
-                          <span key={`${token.value}-${index}`}>{token.value}</span>
-                        )
-                      )
-                    : "这一句还没有对应英文。"}
-                </p>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setShowEnglish(true)}
-                  className="w-full rounded-2xl border border-white/12 bg-white/[0.04] px-4 py-4 text-left text-base font-semibold text-white/70 transition hover:border-emerald-300/35 hover:bg-emerald-400/10 hover:text-white"
-                >
-                  显示英语
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 rounded-[1.35rem] border border-white/10 bg-white/5 p-2.5">
-            <button
-              onClick={handlePrev}
-              disabled={currentIndex === 0}
-              className="rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold disabled:opacity-40"
-            >
-              上一句
-            </button>
-
-            <button
-              onClick={handleNext}
-              disabled={currentIndex >= pairs.length - 1}
-              className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold disabled:opacity-40"
-            >
-              下一句
-            </button>
-          </div>
-
-          <div className="rounded-[1.35rem] border border-white/10 bg-white/5 p-2.5">
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              <button
-                onClick={() => speakEnglish(currentPair.english, 1)}
-                disabled={isAutoPlaying}
-                className={`${actionButtonClassName} bg-purple-600 hover:bg-purple-500`}
-              >
-                朗读英文
-              </button>
-
-              <button
-                onClick={() => speakEnglish(currentPair.english, 0.5)}
-                disabled={isAutoPlaying}
-                className={`${actionButtonClassName} bg-indigo-600 hover:bg-indigo-500`}
-              >
-                慢速朗读
-              </button>
-
-              <button
-                onClick={() => {
-                  void handlePlaySourceAudio();
-                }}
-                disabled={isSourceAudioLoading}
-                className={`${actionButtonClassName} ${
-                  isSourcePlaybackActive
-                    ? "bg-cyan-500"
-                    : "bg-cyan-600 hover:bg-cyan-500"
-                }`}
-              >
-                播放原音频
-              </button>
-
-              <button
-                onClick={() => {
-                  if (isAutoPlaying) {
-                    stopAutoPlay();
-                    return;
-                  }
-
-                  void startAutoPlay();
-                }}
-                disabled={isSourceAudioLoading}
-                className={`${actionButtonClassName} ${
-                  isAutoPlaying
-                    ? "bg-red-600 hover:bg-red-500"
-                    : "bg-orange-600 hover:bg-orange-500"
-                }`}
-              >
-                {isAutoPlaying ? "停止自动播放" : "自动播放"}
-              </button>
-            </div>
-
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {[0.5, 0.75, 1, 1.25].map((rate) => (
-                <button
-                  key={rate}
-                  onClick={() => setSourcePlaybackRate(rate)}
-                  className={`rounded-xl px-2.5 py-1.5 text-xs font-bold ${
-                    sourcePlaybackRate === rate
-                      ? "bg-cyan-500 text-white"
-                      : "bg-slate-700 text-white"
-                  }`}
-                >
-                  {rate}x
-                </button>
-              ))}
-              <button
-                type="button"
-                onClick={() => setShowMoreActions((prev) => !prev)}
-                className="rounded-xl bg-slate-800 px-2.5 py-1.5 text-xs font-bold hover:bg-slate-700"
-              >
-                声音设置
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveCurrentPosition}
-                className="rounded-xl bg-emerald-700 px-2.5 py-1.5 text-xs font-bold hover:bg-emerald-600"
-              >
-                保存当前位置
-              </button>
-            </div>
-            {showMoreActions ? (
-              <div className="mt-2">
-                <select
-                  value={selectedVoiceName}
-                  onChange={(e) => setSelectedVoiceName(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm outline-none"
-                >
-                  {voices.map((voice) => (
-                    <option key={voice.name} value={voice.name}>
-                      {voice.name} ({voice.lang})
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ) : null}
-          </div>
-
-          {sourceAudioUrl ? (
-            <audio
-              ref={sourceAudioRef}
-              src={sourceAudioUrl}
-              preload="auto"
-              className="hidden"
-              onPause={() => setIsClipPlaying(false)}
-              onEnded={handleSourceClipComplete}
-              onTimeUpdate={() => {
-                const audio = sourceAudioRef.current;
-                const clipEndTime = clipEndTimeRef.current;
-                if (!audio || clipEndTime === null) return;
-
-                if (audio.currentTime >= clipEndTime) {
-                  audio.pause();
-                  audio.currentTime = clipEndTime;
-                  handleSourceClipComplete();
-                }
-              }}
-            />
-          ) : null}
-        </section>
       </div>
     </main>
   );

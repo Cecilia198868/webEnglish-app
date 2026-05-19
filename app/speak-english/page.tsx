@@ -2,6 +2,7 @@
 
 import type { PointerEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import {
   groupVocabularyWords,
   loadVocabularyWords,
@@ -25,6 +26,14 @@ type ClassicCourseCategory = {
 };
 
 type ClassicCoursePickerView = "categories" | "sections" | "lessons";
+
+type ExpressionVariantKey = "standard" | "idiomatic" | "simple" | "natural";
+
+type ExpressionVariant = {
+  key: ExpressionVariantKey;
+  label: string;
+  text: string;
+};
 
 type SpeechRecognitionAlternativeLike = {
   transcript?: string;
@@ -334,9 +343,26 @@ const classicCourseCategories: ClassicCourseCategory[] = [
   },
 ];
 const emojis = ["😊", "👍", "🙏", "❤️", "😂", "😅"] as const;
+const expressionVariantLabels: Array<{
+  key: ExpressionVariantKey;
+  label: string;
+}> = [
+  { key: "standard", label: "标准表达" },
+  { key: "idiomatic", label: "更地道" },
+  { key: "simple", label: "更简单" },
+  { key: "natural", label: "更自然" },
+];
 
 function unique(values: string[]) {
   return Array.from(new Set(values));
+}
+
+function createFallbackExpressionVariants(standardEnglish: string) {
+  return expressionVariantLabels.map(({ key, label }) => ({
+    key,
+    label,
+    text: standardEnglish || "This sentence is still being prepared.",
+  }));
 }
 
 function SoundWaveMark({ className = "" }: { className?: string }) {
@@ -470,8 +496,13 @@ export default function SpeakEnglishPage() {
   const [nativeSpeech, setNativeSpeech] = useState("");
   const [hasEnglishAttempt, setHasEnglishAttempt] = useState(false);
   const [standardEnglish, setStandardEnglish] = useState("");
-  const [isLoadingStandardEnglish, setIsLoadingStandardEnglish] = useState(false);
   const [hasNativeSpeech, setHasNativeSpeech] = useState(false);
+  const [expressionVariants, setExpressionVariants] = useState<
+    ExpressionVariant[]
+  >([]);
+  const [selectedExpressionIndex, setSelectedExpressionIndex] = useState(0);
+  const [isLoadingExpressionVariants, setIsLoadingExpressionVariants] =
+    useState(false);
   const [hasInk, setHasInk] = useState(false);
   const [showQuickPanel, setShowQuickPanel] = useState(false);
   const [showClassicCoursePicker, setShowClassicCoursePicker] = useState(false);
@@ -529,6 +560,25 @@ export default function SpeakEnglishPage() {
 
     return unique([...exact, ...prefixMatches, pinyin]).slice(0, 7);
   }, [composingPinyin]);
+  const hasPracticeActivity =
+    hasNativeSpeech ||
+    hasEnglishAttempt ||
+    Boolean(standardEnglish) ||
+    isListening ||
+    Boolean(inputText.trim()) ||
+    Boolean(liveTranscript.trim());
+  const showLandingPrompt = !hasPracticeActivity;
+  const showNativeCompletePrompt =
+    hasNativeSpeech && !hasEnglishAttempt && !standardEnglish;
+  const showListeningPrompt = isListening;
+  const showVoiceOnlyPrompt =
+    showLandingPrompt || showNativeCompletePrompt || showListeningPrompt;
+  const selectedExpression =
+    expressionVariants[selectedExpressionIndex] ||
+    createFallbackExpressionVariants(standardEnglish)[0];
+  const hasPreviousExpression = selectedExpressionIndex > 0;
+  const hasNextExpression =
+    selectedExpressionIndex < expressionVariantLabels.length - 1;
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -675,6 +725,9 @@ export default function SpeakEnglishPage() {
       setHasNativeSpeech(false);
       setHasEnglishAttempt(false);
       setStandardEnglish("");
+      setExpressionVariants([]);
+      setSelectedExpressionIndex(0);
+      setIsLoadingExpressionVariants(false);
     }
 
     const recognition = new RecognitionConstructor();
@@ -720,6 +773,8 @@ export default function SpeakEnglishPage() {
         if (nextPracticeStage === "native") {
           setNativeSpeech(finalTranscript);
           setStandardEnglish("");
+          setExpressionVariants([]);
+          setSelectedExpressionIndex(0);
           setHasEnglishAttempt(false);
           setHasNativeSpeech(true);
           setPracticeStage("english");
@@ -753,34 +808,66 @@ export default function SpeakEnglishPage() {
     recognitionRef.current = null;
   }
 
-  async function showStandardEnglish() {
-    if (!nativeSpeech || isLoadingStandardEnglish) return;
+  useEffect(() => {
+    if (!hasEnglishAttempt || !nativeSpeech) return;
 
-    setIsLoadingStandardEnglish(true);
-    try {
-      const response = await fetch("/api/accurate-sentence", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chinese: nativeSpeech }),
-      });
-      const data = (await response.json()) as { english?: string; error?: string };
+    let cancelled = false;
+    setExpressionVariants([]);
+    setSelectedExpressionIndex(0);
+    setIsLoadingExpressionVariants(true);
 
-      if (!response.ok || !data.english) {
-        throw new Error(data.error || "Generate standard English failed");
+    async function loadExpressionVariants() {
+      try {
+        const response = await fetch("/api/expression-variants", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chinese: nativeSpeech,
+            userEnglish: message,
+            standardEnglish: "",
+          }),
+        });
+        const data = (await response.json()) as {
+          variants?: Partial<Record<ExpressionVariantKey, string>>;
+        };
+
+        if (!response.ok || !data.variants || cancelled) return;
+
+        const nextVariants = expressionVariantLabels.map(({ key, label }) => ({
+          key,
+          label,
+          text:
+            typeof data.variants?.[key] === "string" &&
+            data.variants[key]?.trim()
+              ? data.variants[key]!.trim()
+              : "",
+        }));
+
+        setExpressionVariants(nextVariants);
+        setStandardEnglish(nextVariants[0]?.text || "");
+      } catch {
+        if (!cancelled) {
+          setExpressionVariants([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoadingExpressionVariants(false);
+        }
       }
-
-      setStandardEnglish(data.english);
-    } catch {
-      setStandardEnglish("生成失败，请再点一次地道英语");
-    } finally {
-      setIsLoadingStandardEnglish(false);
     }
-  }
+
+    void loadExpressionVariants();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [hasEnglishAttempt, message, nativeSpeech]);
 
   function readStandardEnglish(rate: number) {
-    if (!standardEnglish || typeof window === "undefined") return;
+    const text = selectedExpression.text || standardEnglish;
+    if (!text || typeof window === "undefined") return;
 
-    const utterance = new SpeechSynthesisUtterance(standardEnglish);
+    const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
     utterance.rate = rate;
     utterance.voice =
@@ -949,57 +1036,169 @@ export default function SpeakEnglishPage() {
             </div>
           </header>
 
-          <section className="relative z-10 flex h-full flex-col px-6 pb-[352px] pt-6">
+          <section
+            className={`relative z-10 flex h-full flex-col px-6 pt-6 ${
+              showVoiceOnlyPrompt ? "pb-10" : "pb-[352px]"
+            }`}
+          >
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
 
-            <div className="flex flex-1 flex-col items-center justify-start pt-14 text-center">
-              <p
-                className={`max-w-[320px] ${
-                  standardEnglish
-                    ? "text-[1.05rem] font-semibold leading-6 text-[#7f7896]"
-                    : "text-[1.6rem] font-semibold leading-9 tracking-[-0.03em] text-[#fffaff]"
-                }`}
-              >
-                {isListening && liveTranscript ? liveTranscript : message}
-              </p>
-              <div className="mt-4 max-w-[340px] text-[0.95rem] font-medium leading-6 text-[#c9c0df]">
-                {standardEnglish ? (
-                  <div className="space-y-3">
-                    <p className="text-[1.45rem] font-extrabold leading-8 text-[#201833]">
-                      {standardEnglish}
-                    </p>
-                    <div className="flex justify-center gap-5 text-[0.9rem] font-semibold">
-                      <button
-                        type="button"
-                        onClick={() => readStandardEnglish(1)}
-                        className="underline decoration-2 underline-offset-4"
-                      >
-                        朗读
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => readStandardEnglish(0.65)}
-                        className="underline decoration-2 underline-offset-4"
-                      >
-                        慢速朗读
-                      </button>
-                    </div>
-                  </div>
-                ) : hasEnglishAttempt ? (
+            <div
+              className={`flex flex-1 flex-col items-center text-center ${
+                showVoiceOnlyPrompt ? "justify-start pt-28" : "justify-start pt-14"
+              }`}
+            >
+              {showListeningPrompt ? (
+                <>
+                  <h2 className="max-w-[360px] text-[1.65rem] font-extrabold leading-10 text-[#201833]">
+                    正在听你说话...
+                  </h2>
+                  <p className="mt-6 max-w-[340px] text-[1rem] font-semibold leading-7 text-[#201833]">
+                    {practiceStage === "native"
+                      ? "自然地说中文，SpeakFlow 会帮你转换成英语练习。"
+                      : "试着用英语说出来"}
+                  </p>
+                </>
+              ) : showLandingPrompt ? (
+                <>
+                  <h2 className="max-w-[360px] text-[1.65rem] font-extrabold leading-10 text-[#201833]">
+                    用中文说出你想表达的内容
+                  </h2>
                   <button
                     type="button"
-                    onClick={showStandardEnglish}
-                    disabled={isLoadingStandardEnglish}
-                    className="rounded-full border border-[#b9aaff] bg-white/70 px-5 py-2 text-[0.95rem] font-semibold text-[#201833] shadow-[0_10px_24px_rgba(84,72,146,0.14)] disabled:opacity-70"
+                    onClick={startRecognition}
+                    className="mt-52 grid place-items-center"
+                    aria-label="点击开始说话"
                   >
-                    {isLoadingStandardEnglish ? "生成中…" : "地道英语"}
+                    <Image
+                      src="/icons/glow-mic.svg"
+                      alt=""
+                      width={96}
+                      height={96}
+                      className="h-24 w-24"
+                    />
+                    <span className="mt-7 text-[1.08rem] font-semibold text-[#7f7896]">
+                      点击开始说话
+                    </span>
                   </button>
-                ) : hasNativeSpeech ? (
-                  "试着用英语说出来"
-                ) : (
-                  "自然地说中文，SpeakFlow 会帮你转换成英语练习。"
-                )}
-              </div>
+                </>
+              ) : showNativeCompletePrompt ? (
+                <>
+                  <div className="max-w-[360px] bg-white/10 px-5 py-5">
+                    <h2 className="text-[1.75rem] font-extrabold leading-10 text-[#201833]">
+                      {nativeSpeech}
+                    </h2>
+                    <p className="mt-5 text-[1rem] font-extrabold text-[#4b4267]">
+                      试着用英语说出来
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={startRecognition}
+                    className="mt-64 grid place-items-center"
+                    aria-label="点击开始说话"
+                  >
+                    <Image
+                      src="/icons/glow-mic.svg"
+                      alt=""
+                      width={96}
+                      height={96}
+                      className="h-24 w-24"
+                    />
+                    <span className="mt-7 text-[1.08rem] font-semibold text-[#7f7896]">
+                      点击开始说话
+                    </span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  {hasEnglishAttempt ? (
+                    <>
+                      <div className="w-full max-w-[360px] text-left">
+                        <p className="text-[1.05rem] font-extrabold text-[#7f7896]">
+                          你的表达:
+                        </p>
+                        <p className="mt-5 rounded-[18px] bg-white/10 px-5 py-4 text-[1.15rem] font-bold leading-8 text-[#8f879c]">
+                          {message}
+                        </p>
+                      </div>
+
+                      <div className="mt-9 w-full max-w-[360px]">
+                        <div className="flex items-center gap-2 text-left">
+                          <button
+                            type="button"
+                            aria-label="上一种表达"
+                            onClick={() =>
+                              setSelectedExpressionIndex((index) =>
+                                Math.max(index - 1, 0)
+                              )
+                            }
+                            disabled={!hasPreviousExpression}
+                            className="grid h-8 w-8 place-items-center rounded-full bg-white/35 text-lg font-extrabold text-[#5b8cff] disabled:invisible"
+                          >
+                            ←
+                          </button>
+                          <span className="text-[1.2rem] font-extrabold text-[#4f6fe8]">
+                            {selectedExpression.label}
+                          </span>
+                          <button
+                            type="button"
+                            aria-label="下一种表达"
+                            onClick={() =>
+                              setSelectedExpressionIndex((index) =>
+                                Math.min(
+                                  index + 1,
+                                  expressionVariantLabels.length - 1
+                                )
+                              )
+                            }
+                            disabled={!hasNextExpression}
+                            className="grid h-8 w-8 place-items-center rounded-full bg-white/35 text-lg font-extrabold text-[#5b8cff] disabled:invisible"
+                          >
+                            →
+                          </button>
+                        </div>
+
+                        <p className="mt-4 bg-white/18 px-4 py-4 text-[1.55rem] font-extrabold leading-9 text-[#201833]">
+                          {isLoadingExpressionVariants
+                            ? "正在生成表达..."
+                            : selectedExpression.text}
+                        </p>
+
+                        <div className="mt-5 flex justify-center gap-5 text-[#201833]">
+                          <button
+                            type="button"
+                            aria-label="播放朗读"
+                            onClick={() => readStandardEnglish(1)}
+                            className="flex h-12 items-center gap-2 rounded-[16px] bg-white/40 px-5 text-[1.25rem] font-extrabold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]"
+                          >
+                            ▶
+                          </button>
+                          <button
+                            type="button"
+                            aria-label="慢速朗读"
+                            onClick={() => readStandardEnglish(0.5)}
+                            className="flex h-12 items-center gap-2 rounded-[16px] bg-white/40 px-5 text-[1.05rem] font-extrabold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]"
+                          >
+                            ▶ <span>0.5x</span>
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="max-w-[320px] text-[1.6rem] font-semibold leading-9 tracking-[-0.03em] text-[#fffaff]">
+                        {message}
+                      </p>
+                      <div className="mt-4 max-w-[340px] text-[0.95rem] font-medium leading-6 text-[#c9c0df]">
+                        {hasNativeSpeech
+                          ? "试着用英语说出来"
+                          : "自然地说中文，SpeakFlow 会帮你转换成英语练习。"}
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           </section>
 
@@ -1233,6 +1432,25 @@ export default function SpeakEnglishPage() {
             </div>
           ) : null}
 
+          {hasEnglishAttempt ? (
+          <button
+            type="button"
+            onClick={isListening ? stopRecognition : startRecognition}
+            className="absolute bottom-9 left-1/2 z-20 grid -translate-x-1/2 place-items-center"
+            aria-label="点击开始说话"
+          >
+            <Image
+              src="/icons/glow-mic.svg"
+              alt=""
+              width={96}
+              height={96}
+              className="h-24 w-24"
+            />
+            <span className="mt-7 text-[1.08rem] font-semibold text-[#7f7896]">
+              点击开始说话
+            </span>
+          </button>
+          ) : hasPracticeActivity && !showNativeCompletePrompt && !showListeningPrompt ? (
           <div className="sf-keyboard-panel absolute inset-x-0 bottom-0 z-20 rounded-t-[32px] px-3 pb-3 pt-3 text-[#fffaff]">
             <div className="sf-composer mb-3 p-2">
               <div className="flex items-end gap-2">
@@ -1480,6 +1698,7 @@ export default function SpeakEnglishPage() {
               </button>
             </div>
           </div>
+          ) : null}
         </section>
       </div>
     </main>
