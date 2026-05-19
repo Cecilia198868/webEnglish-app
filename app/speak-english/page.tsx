@@ -3,6 +3,7 @@
 import type { PointerEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 import {
   addVocabularyWord,
   updateVocabularyWord,
@@ -64,6 +65,35 @@ type BrowserSpeechRecognition = {
 };
 
 type SpeechRecognitionConstructor = new () => BrowserSpeechRecognition;
+
+type SessionResponse = {
+  user?: {
+    email?: string | null;
+    image?: string | null;
+    name?: string | null;
+  } | null;
+};
+
+const accountMenuSections = [
+  {
+    title: "账户",
+    items: [
+      { icon: "👤", label: "账户" },
+      { icon: "💎", label: "订阅" },
+      { icon: "⬆", label: "升级 Pro" },
+      { icon: "🔄", label: "恢复购买" },
+    ],
+  },
+  {
+    title: "支持",
+    items: [
+      { icon: "❓", label: "帮助中心" },
+      { icon: "🐞", label: "报告问题" },
+      { icon: "🔒", label: "隐私政策" },
+      { icon: "ℹ", label: "关于" },
+    ],
+  },
+];
 
 declare global {
   interface Window {
@@ -548,6 +578,10 @@ export default function SpeakEnglishPage() {
   >([]);
   const [hasInk, setHasInk] = useState(false);
   const [showQuickPanel, setShowQuickPanel] = useState(false);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [accountEmail, setAccountEmail] = useState("");
+  const [accountImage, setAccountImage] = useState("");
+  const [accountImageFailed, setAccountImageFailed] = useState(false);
   const [showClassicCoursePicker, setShowClassicCoursePicker] = useState(false);
   const [classicCoursePickerView, setClassicCoursePickerView] =
     useState<ClassicCoursePickerView>("categories");
@@ -626,6 +660,11 @@ export default function SpeakEnglishPage() {
   const hasPreviousExpression = selectedExpressionIndex > 0;
   const hasNextExpression =
     selectedExpressionIndex < expressionVariantLabels.length - 1;
+  const accountAvatarLabel = (
+    accountEmail || "CL"
+  )
+    .slice(0, 2)
+    .toUpperCase();
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -671,6 +710,33 @@ export default function SpeakEnglishPage() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
+    async function loadAccountSession() {
+      try {
+        const response = await fetch("/api/auth/session");
+        const session = (await response.json()) as SessionResponse;
+        if (cancelled) return;
+
+        setAccountEmail(session.user?.email || session.user?.name || "");
+        setAccountImage(session.user?.image || "");
+        setAccountImageFailed(false);
+      } catch {
+        if (!cancelled) {
+          setAccountEmail("");
+          setAccountImage("");
+        }
+      }
+    }
+
+    void loadAccountSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
     if (typeof window === "undefined") return;
 
     const searchParams = new URLSearchParams(window.location.search);
@@ -685,6 +751,7 @@ export default function SpeakEnglishPage() {
       setShowClassicCoursePicker(false);
       resetClassicCoursePicker();
       setShowVoicePicker(false);
+      setShowAccountMenu(false);
       return;
     }
   }, [showQuickPanel]);
@@ -1184,16 +1251,46 @@ export default function SpeakEnglishPage() {
 
           <header className="relative z-10 shrink-0 px-5 pt-6">
             <div className="flex items-center justify-between">
-              <button
-                type="button"
-                aria-label="打开菜单"
-                onClick={() => setShowQuickPanel((current) => !current)}
-                className="sf-header-button"
-              >
-                <span className="relative block h-4 w-5 before:absolute before:left-0 before:top-0 before:h-px before:w-4 before:bg-[#efe9ff] after:absolute after:bottom-0 after:left-0 after:h-px after:w-5 after:bg-[#efe9ff]">
-                  <span className="absolute left-0 top-1/2 h-px w-5 -translate-y-1/2 bg-[#efe9ff]" />
-                </span>
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  aria-label="打开菜单"
+                  onClick={() => {
+                    setShowQuickPanel((current) => !current);
+                    setShowAccountMenu(false);
+                  }}
+                  className="sf-header-button"
+                >
+                  <span className="relative block h-4 w-5 before:absolute before:left-0 before:top-0 before:h-px before:w-4 before:bg-[#efe9ff] after:absolute after:bottom-0 after:left-0 after:h-px after:w-5 after:bg-[#efe9ff]">
+                    <span className="absolute left-0 top-1/2 h-px w-5 -translate-y-1/2 bg-[#efe9ff]" />
+                  </span>
+                </button>
+
+                {showQuickPanel ? (
+                  <button
+                    type="button"
+                    aria-label="打开账户菜单"
+                    onClick={() =>
+                      setShowAccountMenu((current) => !current)
+                    }
+                    className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-[#f7f4ff] text-[0.82rem] font-extrabold text-white shadow-[0_12px_26px_rgba(84,72,146,0.18)]"
+                  >
+                    {accountImage && !accountImageFailed ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={accountImage}
+                        alt={accountEmail || "user"}
+                        className="h-full w-full object-cover"
+                        onError={() => setAccountImageFailed(true)}
+                      />
+                    ) : (
+                      <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#ffd84d_0%,#f0b912_52%,#e9a70f_100%)] text-[#fff8dd]">
+                        {accountAvatarLabel}
+                      </span>
+                    )}
+                  </button>
+                ) : null}
+              </div>
 
               <div className="flex items-center gap-1.5">
                 <span className="grid h-5 w-[42px] place-items-center">
@@ -1219,6 +1316,40 @@ export default function SpeakEnglishPage() {
               </button>
             </div>
           </header>
+
+          {showQuickPanel && showAccountMenu ? (
+            <div className="absolute left-5 top-[82px] z-50 w-[250px] rounded-[24px] border border-[#c9bfff] bg-[#fbf9ff] p-4 text-[#201833] shadow-[0_24px_64px_rgba(84,72,146,0.28)]">
+              {accountMenuSections.map((section) => (
+                <div key={section.title} className="border-b border-[#ded7ff] py-2 last:border-b-0">
+                  <h3 className="px-2 pb-2 text-[0.86rem] font-extrabold text-[#7f7896]">
+                    {section.title}
+                  </h3>
+                  <div className="grid gap-1">
+                    {section.items.map((item) => (
+                      <button
+                        key={`${section.title}-${item.label}`}
+                        type="button"
+                        className="flex items-center gap-3 rounded-[14px] px-2 py-2.5 text-left text-[0.98rem] font-bold text-[#201833] transition hover:bg-[#efeaff]"
+                      >
+                        <span className="grid h-6 w-6 place-items-center text-[1.05rem]">
+                          {item.icon}
+                        </span>
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => void signOut({ callbackUrl: "/" })}
+                className="mt-2 flex w-full items-center gap-3 rounded-[14px] px-2 py-2.5 text-left text-[0.98rem] font-extrabold text-[#d33b46] transition hover:bg-[#ffecef]"
+              >
+                <span className="grid h-6 w-6 place-items-center">↩</span>
+                <span>退出登录</span>
+              </button>
+            </div>
+          ) : null}
 
           <section
             className={`sf-free-practice-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pt-6 ${
@@ -1431,6 +1562,8 @@ export default function SpeakEnglishPage() {
                     <button
                       type="button"
                       onClick={() => {
+                        setShowAccountMenu(false);
+
                         if (phrase === "经典场景口语练习") {
                           setShowClassicCoursePicker((current) => !current);
                           resetClassicCoursePicker();
