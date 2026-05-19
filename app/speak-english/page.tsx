@@ -1318,34 +1318,76 @@ export default function SpeakEnglishPage() {
           </header>
 
           {showQuickPanel && showAccountMenu ? (
-            <div className="absolute left-5 top-[82px] z-50 w-[250px] rounded-[24px] border border-[#c9bfff] bg-[#fbf9ff] p-4 text-[#201833] shadow-[0_24px_64px_rgba(84,72,146,0.28)]">
-              {accountMenuSections.map((section) => (
-                <div key={section.title} className="border-b border-[#ded7ff] py-2 last:border-b-0">
-                  <h3 className="px-2 pb-2 text-[0.86rem] font-extrabold text-[#7f7896]">
-                    {section.title}
-                  </h3>
-                  <div className="grid gap-1">
-                    {section.items.map((item) => (
-                      <button
-                        key={`${section.title}-${item.label}`}
-                        type="button"
-                        className="flex items-center gap-3 rounded-[14px] px-2 py-2.5 text-left text-[0.98rem] font-bold text-[#201833] transition hover:bg-[#efeaff]"
-                      >
-                        <span className="grid h-6 w-6 place-items-center text-[1.05rem]">
-                          {item.icon}
-                        </span>
-                        <span>{item.label}</span>
-                      </button>
-                    ))}
+            <div className="absolute inset-0 z-50 flex flex-col bg-[#fbf9ff]/96 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-2xl">
+              <div className="flex shrink-0 items-center justify-between gap-4">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full border border-white/80 bg-[#f7f4ff] text-[0.95rem] font-extrabold text-white shadow-[0_14px_28px_rgba(84,72,146,0.18)]">
+                    {accountImage && !accountImageFailed ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={accountImage}
+                        alt={accountEmail || "user"}
+                        className="h-full w-full object-cover"
+                        onError={() => setAccountImageFailed(true)}
+                      />
+                    ) : (
+                      <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#ffd84d_0%,#f0b912_52%,#e9a70f_100%)] text-[#fff8dd]">
+                        {accountAvatarLabel}
+                      </span>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="text-[1.25rem] font-extrabold leading-7">
+                      账户
+                    </h2>
+                    <p className="mt-0.5 truncate text-[0.86rem] font-semibold text-[#7f7896]">
+                      {accountEmail || "SpeakFlow 用户"}
+                    </p>
                   </div>
                 </div>
-              ))}
+                <button
+                  type="button"
+                  aria-label="关闭账户菜单"
+                  onClick={() => setShowAccountMenu(false)}
+                  className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.45rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="mt-7 min-h-0 flex-1 overflow-y-auto pr-1">
+                {accountMenuSections.map((section) => (
+                  <section
+                    key={section.title}
+                    className="border-b border-[#ded7ff] py-4 last:border-b-0"
+                  >
+                    <h3 className="px-1 pb-3 text-[0.86rem] font-extrabold text-[#7f7896]">
+                      {section.title}
+                    </h3>
+                    <div className="grid gap-1.5">
+                      {section.items.map((item) => (
+                        <button
+                          key={`${section.title}-${item.label}`}
+                          type="button"
+                          className="flex min-h-12 items-center gap-3 rounded-[18px] px-3 py-2.5 text-left text-[1.05rem] font-bold text-[#201833] transition hover:bg-[#efeaff]"
+                        >
+                          <span className="grid h-7 w-7 place-items-center text-[1.08rem]">
+                            {item.icon}
+                          </span>
+                          <span>{item.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+
               <button
                 type="button"
                 onClick={() => void signOut({ callbackUrl: "/" })}
-                className="mt-2 flex w-full items-center gap-3 rounded-[14px] px-2 py-2.5 text-left text-[0.98rem] font-extrabold text-[#d33b46] transition hover:bg-[#ffecef]"
+                className="mt-5 flex min-h-12 shrink-0 items-center gap-3 rounded-[18px] px-3 py-2.5 text-left text-[1.05rem] font-extrabold text-[#d33b46] transition hover:bg-[#ffecef]"
               >
-                <span className="grid h-6 w-6 place-items-center">↩</span>
+                <span className="grid h-7 w-7 place-items-center">↩</span>
                 <span>退出登录</span>
               </button>
             </div>
