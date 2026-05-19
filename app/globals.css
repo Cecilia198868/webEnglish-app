@@ -477,6 +477,11 @@ html,
 body {
   width: 100%;
   max-width: 100%;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100dvh;
 }
 
 .responsive-page-shell {
@@ -596,6 +601,21 @@ body {
     padding-bottom: clamp(300px, 47dvh, 352px) !important;
   }
 
+  .sf-study-phone {
+    height: 100dvh !important;
+    min-height: 100svh !important;
+    max-height: 100dvh !important;
+  }
+
+  .sf-study-phone > .sf-study-main {
+    padding-top: clamp(0.5rem, 2dvh, 1rem) !important;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom)) !important;
+  }
+
+  .sf-speak-phone > .sf-free-practice-result-main {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom)) !important;
+  }
+
   .sf-keyboard-panel {
     max-height: min(58dvh, 390px);
     overflow-y: auto;
@@ -607,6 +627,15 @@ body {
   .sf-speak-phone > section {
     padding-top: 0.75rem !important;
     padding-bottom: clamp(286px, 52dvh, 330px) !important;
+  }
+
+  .sf-study-phone > .sf-study-main {
+    padding-top: 0.5rem !important;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom)) !important;
+  }
+
+  .sf-speak-phone > .sf-free-practice-result-main {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom)) !important;
   }
 
   .sf-keyboard-panel {
@@ -1187,9 +1216,9 @@ body {
   }
 
   .sf-home-stage {
-    min-height: calc(100dvh - 96px);
-    padding-top: 5rem;
-    padding-bottom: 5rem;
+    min-height: calc(100dvh - 32px);
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
   }
 
   .sf-home-orbit-lg {
@@ -1205,6 +1234,23 @@ body {
   .sf-home-logo {
     width: clamp(96px, 30vw, 132px);
     margin-bottom: 1.45rem;
+  }
+
+  .sf-home-title {
+    max-width: 100%;
+    font-size: clamp(2.7rem, 11vw, 4rem) !important;
+    line-height: 0.95 !important;
+  }
+
+  .sf-home-copy {
+    max-width: min(88vw, 380px);
+    font-size: 1rem !important;
+    line-height: 1.65 !important;
+  }
+
+  .sf-home-button {
+    min-height: 64px;
+    margin-top: 2.5rem !important;
   }
 }
 

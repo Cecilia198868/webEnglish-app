@@ -1144,11 +1144,11 @@ export default function StudyPage() {
   return (
     <main className="responsive-page-shell sf-speak-page min-h-[100dvh] overflow-x-hidden text-white">
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-[560px] items-center justify-center p-0 sm:p-4">
-        <section className="sf-speak-phone relative h-[100dvh] min-h-[100dvh] w-full max-w-[520px] overflow-hidden rounded-none sm:h-[calc(100dvh-16px)] sm:min-h-[720px] sm:rounded-[34px]">
+        <section className="sf-speak-phone sf-study-phone relative flex h-[100dvh] min-h-[100dvh] w-full max-w-[520px] flex-col overflow-hidden rounded-none sm:h-[calc(100dvh-16px)] sm:min-h-[720px] sm:rounded-[34px]">
           <div className="pointer-events-none absolute left-1/2 top-[21%] z-0 h-[460px] w-[460px] -translate-x-1/2 rounded-full border border-[#91dcff]/10" />
           <div className="pointer-events-none absolute left-1/2 top-[31%] z-0 h-[310px] w-[310px] -translate-x-1/2 rounded-full border border-[#b799ff]/10" />
 
-          <header className="relative z-10 px-7 pt-8">
+          <header className="relative z-10 shrink-0 px-7 pt-8">
             <div className="flex items-center justify-between">
               <button
                 type="button"
@@ -1186,15 +1186,9 @@ export default function StudyPage() {
             </div>
           </header>
 
-          <section
-            className={`relative z-10 flex h-full flex-col px-6 pt-9 ${
-              showStudyVoiceOnlyPrompt || showExpressionFeedback
-                ? "pb-10"
-                : "pb-[128px]"
-            }`}
-          >
+          <section className="sf-study-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4">
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
-            <div className="mt-5 text-center">
+            <div className="mt-4 shrink-0 text-center">
               <div className="flex items-center justify-center gap-2 text-[1.18rem] font-extrabold text-[#8b849d]">
                 {previousLesson ? (
                   <button
@@ -1224,8 +1218,10 @@ export default function StudyPage() {
             </div>
 
             <div
-              className={`flex flex-1 flex-col items-center text-center ${
-                showStudyVoiceOnlyPrompt ? "justify-start pt-20" : "justify-start pt-12"
+              className={`flex min-h-0 flex-1 flex-col items-center overflow-y-auto text-center ${
+                showStudyVoiceOnlyPrompt
+                  ? "justify-center py-6"
+                  : "justify-start py-5"
               }`}
             >
               {showStudyListeningPrompt ? (
@@ -1259,7 +1255,7 @@ export default function StudyPage() {
                     </p>
                   </div>
 
-                  <div className="mt-9 w-full max-w-[430px]">
+                  <div className="mt-6 w-full max-w-[430px]">
                     <div className="flex items-center gap-2 text-left">
                       <button
                         type="button"
@@ -1295,7 +1291,7 @@ export default function StudyPage() {
                       </button>
                     </div>
 
-                    <p className="mt-4 bg-white/18 px-4 py-4 text-[1.6rem] font-extrabold leading-9 text-[#201833] sm:text-[1.85rem]">
+                    <p className="mt-4 bg-white/18 px-4 py-4 text-[clamp(1.55rem,7vw,1.85rem)] font-extrabold leading-[1.22] text-[#201833]">
                       {isLoadingExpressionVariants
                         ? "正在生成表达..."
                         : selectedExpressionSegments.map((segment, index) =>
@@ -1350,6 +1346,50 @@ export default function StudyPage() {
                 </p>
               ) : null}
             </div>
+
+            {showStudyVoiceOnlyPrompt || showExpressionFeedback ? (
+              <div className="relative z-20 mt-2 shrink-0">
+                <div className="flex items-start justify-center gap-10">
+                  <button
+                    type="button"
+                    onClick={handlePrev}
+                    disabled={currentIndex === 0}
+                    className="mt-8 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                    aria-label="上一句"
+                  >
+                    ←
+                  </button>
+                  <button
+                    type="button"
+                    onClick={
+                      isListening ? stopEnglishRecognition : startEnglishRecognition
+                    }
+                    className="grid place-items-center"
+                    aria-label={isListening ? "停止语音输入" : "点击开始说话"}
+                  >
+                    <Image
+                      src="/icons/glow-mic.svg"
+                      alt=""
+                      width={96}
+                      height={96}
+                      className="h-24 w-24"
+                    />
+                    <span className="mt-5 text-[1.08rem] font-semibold text-[#7f7896]">
+                      {isListening ? "正在听..." : "点击开始说话"}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    disabled={currentIndex >= pairs.length - 1}
+                    className="mt-8 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                    aria-label="下一句"
+                  >
+                    →
+                  </button>
+                </div>
+              </div>
+            ) : null}
 
           </section>
 
@@ -1427,50 +1467,8 @@ export default function StudyPage() {
             </div>
           ) : null}
 
-          {showStudyVoiceOnlyPrompt || showExpressionFeedback ? (
-            <div className="absolute bottom-9 left-1/2 z-20 w-full max-w-[360px] -translate-x-1/2 px-6">
-              <div className="flex items-start justify-center gap-10">
-                <button
-                  type="button"
-                  onClick={handlePrev}
-                  disabled={currentIndex === 0}
-                  className="mt-9 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
-                  aria-label="上一句"
-                >
-                  ←
-                </button>
-                <button
-                  type="button"
-                  onClick={
-                    isListening ? stopEnglishRecognition : startEnglishRecognition
-                  }
-                  className="grid place-items-center"
-                  aria-label={isListening ? "停止语音输入" : "点击开始说话"}
-                >
-                  <Image
-                    src="/icons/glow-mic.svg"
-                    alt=""
-                    width={96}
-                    height={96}
-                    className="h-24 w-24"
-                  />
-                  <span className="mt-7 text-[1.08rem] font-semibold text-[#7f7896]">
-                    {isListening ? "正在听..." : "点击开始说话"}
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  disabled={currentIndex >= pairs.length - 1}
-                  className="mt-9 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
-                  aria-label="下一句"
-                >
-                  →
-                </button>
-              </div>
-            </div>
-          ) : (
-          <div className="absolute bottom-0 left-0 right-0 z-20 rounded-t-[30px] border border-[#d8d0ff] bg-white/35 p-3 shadow-[0_-18px_40px_rgba(84,72,146,0.12)] backdrop-blur-xl">
+          {showStudyVoiceOnlyPrompt || showExpressionFeedback ? null : (
+          <div className="relative z-20 shrink-0 rounded-t-[30px] border border-[#d8d0ff] bg-white/35 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-18px_40px_rgba(84,72,146,0.12)] backdrop-blur-xl">
             <div className="flex items-center gap-3 rounded-[24px] border border-[#d8d0ff] bg-white/35 p-2">
               <button
                 type="button"

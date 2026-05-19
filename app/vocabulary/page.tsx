@@ -188,11 +188,11 @@ export default function VocabularyPage() {
   return (
     <main className="responsive-page-shell sf-speak-page min-h-[100dvh] overflow-x-hidden text-white">
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-[560px] items-center justify-center p-0 sm:p-4">
-        <section className="sf-speak-phone relative h-[100dvh] min-h-[100dvh] w-full max-w-[520px] overflow-hidden rounded-none sm:h-[calc(100dvh-16px)] sm:min-h-[720px] sm:rounded-[34px]">
+        <section className="sf-speak-phone sf-study-phone relative flex h-[100dvh] min-h-[100dvh] w-full max-w-[520px] flex-col overflow-hidden rounded-none sm:h-[calc(100dvh-16px)] sm:min-h-[720px] sm:rounded-[34px]">
           <div className="pointer-events-none absolute left-1/2 top-[21%] z-0 h-[460px] w-[460px] -translate-x-1/2 rounded-full border border-[#91dcff]/10" />
           <div className="pointer-events-none absolute left-1/2 top-[31%] z-0 h-[310px] w-[310px] -translate-x-1/2 rounded-full border border-[#b799ff]/10" />
 
-          <header className="relative z-10 px-7 pt-8">
+          <header className="relative z-10 shrink-0 px-7 pt-8">
             <div className="flex items-center justify-between">
               <button
                 type="button"
@@ -270,9 +270,9 @@ export default function VocabularyPage() {
             </div>
           ) : null}
 
-          <section className="relative z-10 flex h-full flex-col px-6 pt-7 pb-10">
+          <section className="sf-study-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-4">
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
-            <div className="mt-5 text-center">
+            <div className="mt-5 shrink-0 text-center">
               <h2 className="text-[1.12rem] font-extrabold text-[#6f668a]">
                 ✨ 已经学到的新表达
               </h2>
@@ -286,7 +286,7 @@ export default function VocabularyPage() {
               ) : null}
             </div>
 
-            <div className="flex flex-1 flex-col items-center pt-10 text-center">
+            <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto pt-7 text-center">
               {displayedExpression ? (
                 <div className="w-full max-w-[390px] bg-white/16 px-7 py-8 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.28)]">
                   <h3 className="text-[1.65rem] font-extrabold leading-9 text-[#201833]">
@@ -334,13 +334,13 @@ export default function VocabularyPage() {
             </div>
           </section>
 
-          <div className="absolute bottom-9 left-1/2 z-20 w-full max-w-[360px] -translate-x-1/2 px-6">
+          <div className="relative z-20 mt-2 w-full max-w-[360px] self-center px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <div className="flex items-start justify-center gap-10">
               <button
                 type="button"
                 onClick={() => setCurrentIndex((index) => Math.max(index - 1, 0))}
                 disabled={!hasPrevious}
-                className="mt-9 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                className="mt-8 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
                 aria-label="上一个表达"
               >
                 ←
@@ -358,7 +358,7 @@ export default function VocabularyPage() {
                   height={96}
                   className="h-24 w-24"
                 />
-                <span className="mt-7 text-[1.08rem] font-semibold text-[#7f7896]">
+                <span className="mt-5 text-[1.08rem] font-semibold text-[#7f7896]">
                   点击开始说话
                 </span>
               </button>
@@ -368,7 +368,7 @@ export default function VocabularyPage() {
                   setCurrentIndex((index) => Math.min(index + 1, words.length - 1))
                 }
                 disabled={!hasNext}
-                className="mt-9 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                className="mt-8 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
                 aria-label="下一个表达"
               >
                 →

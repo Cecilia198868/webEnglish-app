@@ -1108,11 +1108,11 @@ export default function SpeakEnglishPage() {
   return (
     <main className="responsive-page-shell sf-speak-page min-h-[100dvh] overflow-x-hidden text-white">
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-[520px] items-center justify-center p-2 sm:p-4">
-        <section className="sf-speak-phone relative h-[calc(100dvh-16px)] min-h-[calc(100dvh-16px)] w-full max-w-[430px] overflow-hidden rounded-[34px] sm:min-h-[720px]">
+        <section className="sf-speak-phone relative flex h-[calc(100dvh-16px)] min-h-[calc(100dvh-16px)] w-full max-w-[430px] flex-col overflow-hidden rounded-[34px] sm:min-h-[720px]">
           <div className="pointer-events-none absolute left-1/2 top-[19%] z-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full border border-[#91dcff]/10" />
           <div className="pointer-events-none absolute left-1/2 top-[25%] z-0 h-[300px] w-[300px] -translate-x-1/2 rounded-full border border-[#b799ff]/10" />
 
-          <header className="relative z-10 px-5 pt-6">
+          <header className="relative z-10 shrink-0 px-5 pt-6">
             <div className="flex items-center justify-between">
               <button
                 type="button"
@@ -1151,14 +1151,16 @@ export default function SpeakEnglishPage() {
           </header>
 
           <section
-            className={`relative z-10 flex h-full flex-col px-6 pt-6 ${
-              showVoiceOnlyPrompt ? "pb-10" : "pb-[352px]"
+            className={`sf-free-practice-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pt-6 ${
+              hasEnglishAttempt ? "sf-free-practice-result-main" : ""
+            } ${
+              showVoiceOnlyPrompt || hasEnglishAttempt ? "pb-10" : "pb-[352px]"
             }`}
           >
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
 
             <div
-              className={`flex flex-1 flex-col items-center text-center ${
+              className={`flex min-h-0 flex-1 flex-col items-center overflow-y-auto text-center ${
                 showVoiceOnlyPrompt ? "justify-start pt-28" : "justify-start pt-14"
               }`}
             >
@@ -1546,7 +1548,7 @@ export default function SpeakEnglishPage() {
           <button
             type="button"
             onClick={isListening ? stopRecognition : startRecognition}
-            className="absolute bottom-9 left-1/2 z-20 grid -translate-x-1/2 place-items-center"
+            className="relative z-20 mb-[max(0.75rem,env(safe-area-inset-bottom))] grid place-items-center self-center"
             aria-label="点击开始说话"
           >
             <Image
