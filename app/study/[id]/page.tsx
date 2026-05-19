@@ -998,38 +998,6 @@ export default function StudyPage() {
     return window.SpeechRecognition || window.webkitSpeechRecognition || null;
   }
 
-  function isMobileSpeechBlocked() {
-    if (typeof window === "undefined" || typeof navigator === "undefined") {
-      return false;
-    }
-
-    const userAgent = navigator.userAgent.toLowerCase();
-    return (
-      window.matchMedia("(max-width: 768px)").matches ||
-      navigator.maxTouchPoints > 0 ||
-      /iphone|ipad|ipod|android|micromessenger/.test(userAgent)
-    );
-  }
-
-  function enterTypedEnglishAnswer() {
-    if (typeof window === "undefined") return;
-
-    stopSequencePlayback();
-    setShowEnglish(false);
-    setLiveTranscript("");
-    setMessage("");
-
-    const typedAnswer = window.prompt("请输入你的英语回答", spokenEnglish);
-    const finalAnswer = typedAnswer?.trim();
-
-    if (!finalAnswer) {
-      setMessage("请输入你的英语回答");
-      return;
-    }
-
-    setSpokenEnglish(finalAnswer);
-  }
-
   function stopEnglishRecognition() {
     clearSpeechSilenceTimer();
     recognitionRef.current?.stop();
@@ -1042,20 +1010,10 @@ export default function StudyPage() {
       return;
     }
 
-    if (isMobileSpeechBlocked()) {
-      enterTypedEnglishAnswer();
-      return;
-    }
-
     startEnglishRecognition();
   }
 
   function startEnglishRecognition() {
-    if (isMobileSpeechBlocked()) {
-      enterTypedEnglishAnswer();
-      return;
-    }
-
     const RecognitionConstructor = getRecognitionConstructor();
     if (!RecognitionConstructor) {
       setMessage("当前浏览器不支持语音识别");
