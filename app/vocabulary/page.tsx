@@ -62,6 +62,27 @@ function SoundWaveMark({ className = "" }: { className?: string }) {
   );
 }
 
+function TrashIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <path d="M3 6h18" />
+      <path d="M8 6V4h8v2" />
+      <path d="M6 6l1 15h10l1-15" />
+      <path d="M10 11v6" />
+      <path d="M14 11v6" />
+    </svg>
+  );
+}
+
 function getExpressionExample(word: VocabularyWord) {
   return word.sourceSentence || word.example || "";
 }
@@ -134,20 +155,40 @@ export default function VocabularyPage() {
     window.speechSynthesis.speak(utterance);
   }
 
-  function handleDeleteExpression() {
-    if (!displayedExpression) return;
+  function removeExpressionFromLibrary(
+    expression: VocabularyWord,
+    options: { keepLibraryOpen?: boolean } = {}
+  ) {
+    const deletedVisibleIndex = words.findIndex(
+      (word) => word.word === expression.word
+    );
 
     const nextStoredWords = loadVocabularyWords().filter(
-      (word) => word.word !== displayedExpression.word
+      (word) => word.word !== expression.word
     );
     const nextVisibleWords = [...nextStoredWords].reverse();
 
     saveVocabularyWords(nextStoredWords);
     setWords(nextVisibleWords);
-    setCurrentIndex((index) =>
-      Math.min(index, Math.max(nextVisibleWords.length - 1, 0))
-    );
-    setShowExpressionLibrary(false);
+    setCurrentIndex((index) => {
+      const maxIndex = Math.max(nextVisibleWords.length - 1, 0);
+
+      if (deletedVisibleIndex >= 0 && deletedVisibleIndex < index) {
+        return Math.min(index - 1, maxIndex);
+      }
+
+      return Math.min(index, maxIndex);
+    });
+
+    if (!options.keepLibraryOpen) {
+      setShowExpressionLibrary(false);
+    }
+  }
+
+  function handleDeleteExpression() {
+    if (!displayedExpression) return;
+
+    removeExpressionFromLibrary(displayedExpression);
   }
 
   return (
@@ -227,26 +268,42 @@ export default function VocabularyPage() {
                 {words.length ? (
                   <div className="grid gap-2">
                     {words.map((word, index) => (
-                      <button
+                      <div
                         key={`${word.word}-${word.createdAt}`}
-                        type="button"
-                        onClick={() => {
-                          setCurrentIndex(index);
-                          setShowExpressionLibrary(false);
-                        }}
-                        className={`rounded-[18px] px-4 py-3 text-left transition ${
+                        className={`flex items-center gap-3 rounded-[18px] px-4 py-3 transition ${
                           index === currentIndex
                             ? "bg-[#e8e3ff] shadow-[inset_0_0_0_1px_rgba(91,140,255,0.22)]"
                             : "bg-white/72 hover:bg-[#f2efff]"
                         }`}
                       >
-                        <span className="block text-[1.08rem] font-extrabold leading-6 text-[#201833]">
-                          {word.word}
-                        </span>
-                        <span className="mt-1 block text-[0.92rem] font-bold leading-6 text-[#7f7896]">
-                          {getExpressionNativeMeaning(word)}
-                        </span>
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCurrentIndex(index);
+                            setShowExpressionLibrary(false);
+                          }}
+                          className="min-w-0 flex-1 text-left"
+                        >
+                          <span className="block text-[1.08rem] font-extrabold leading-6 text-[#201833]">
+                            {word.word}
+                          </span>
+                          <span className="mt-1 block text-[0.92rem] font-bold leading-6 text-[#7f7896]">
+                            {getExpressionNativeMeaning(word)}
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={`从表达库移除 ${word.word}`}
+                          onClick={() =>
+                            removeExpressionFromLibrary(word, {
+                              keepLibraryOpen: true,
+                            })
+                          }
+                          className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] bg-white/60 text-[#6f668a] transition hover:bg-[#ffecef] hover:text-[#9b2444]"
+                        >
+                          <TrashIcon className="h-5 w-5" />
+                        </button>
+                      </div>
                     ))}
                   </div>
                 ) : (
@@ -346,9 +403,10 @@ export default function VocabularyPage() {
               type="button"
               onClick={handleDeleteExpression}
               disabled={!displayedExpression}
-              className="mx-auto mt-7 flex min-h-12 items-center justify-center bg-white/78 px-5 py-3 text-[0.95rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] disabled:opacity-45"
+              className="mx-auto mt-7 flex min-h-12 items-center justify-center gap-2 bg-white/78 px-5 py-3 text-[0.95rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] disabled:opacity-45"
             >
-              🗑 从表达库移除
+              <TrashIcon className="h-4 w-4" />
+              从表达库移除
             </button>
           </div>
 
