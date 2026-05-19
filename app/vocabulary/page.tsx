@@ -76,6 +76,8 @@ export default function VocabularyPage() {
   const router = useRouter();
   const [words, setWords] = useState<VocabularyWord[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showExpressionLibrary, setShowExpressionLibrary] = useState(false);
+  const [showLibraryHint, setShowLibraryHint] = useState(false);
 
   useEffect(() => {
     const loadTimer = window.setTimeout(() => {
@@ -84,6 +86,20 @@ export default function VocabularyPage() {
 
     return () => {
       window.clearTimeout(loadTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    const showTimer = window.setTimeout(() => {
+      setShowLibraryHint(true);
+    }, 250);
+    const hideTimer = window.setTimeout(() => {
+      setShowLibraryHint(false);
+    }, 3600);
+
+    return () => {
+      window.clearTimeout(showTimer);
+      window.clearTimeout(hideTimer);
     };
   }, []);
 
@@ -148,9 +164,79 @@ export default function VocabularyPage() {
                 </div>
               </div>
 
-              <div aria-hidden="true" className="sf-header-button invisible" />
+              <button
+                type="button"
+                aria-label="打开表达库"
+                onClick={() => {
+                  setShowExpressionLibrary(true);
+                  setShowLibraryHint(false);
+                }}
+                className="sf-header-button text-[1.25rem] font-semibold text-[#201833]"
+              >
+                ...
+              </button>
             </div>
           </header>
+
+          {showLibraryHint ? (
+            <div className="absolute left-1/2 top-[94px] z-40 w-[min(84%,350px)] -translate-x-1/2 rounded-[20px] border border-white/70 bg-[#fbf9ff] px-5 py-4 text-center text-[0.98rem] font-extrabold leading-6 text-[#201833] shadow-[0_20px_50px_rgba(84,72,146,0.22)]">
+              点击右上角三个点，可以打开表达库。
+            </div>
+          ) : null}
+
+          {showExpressionLibrary ? (
+            <div className="absolute inset-x-5 top-[92px] z-50 max-h-[min(72dvh,560px)] overflow-hidden rounded-[24px] border border-[#c9bfff] bg-[#fbf9ff] p-4 text-[#201833] shadow-[0_26px_70px_rgba(84,72,146,0.30)]">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-[1.15rem] font-extrabold">表达库</h3>
+                  <p className="mt-1 text-[0.86rem] font-bold text-[#7f7896]">
+                    共 {words.length} 个新表达
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  aria-label="关闭表达库"
+                  onClick={() => setShowExpressionLibrary(false)}
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-[16px] bg-[#f1edff] text-[1.35rem] font-extrabold text-[#201833]"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="mt-4 max-h-[calc(min(72dvh,560px)-96px)] overflow-y-auto pr-1">
+                {words.length ? (
+                  <div className="grid gap-2">
+                    {words.map((word, index) => (
+                      <button
+                        key={`${word.word}-${word.createdAt}`}
+                        type="button"
+                        onClick={() => {
+                          setCurrentIndex(index);
+                          setShowExpressionLibrary(false);
+                        }}
+                        className={`rounded-[18px] px-4 py-3 text-left transition ${
+                          index === currentIndex
+                            ? "bg-[#e8e3ff] shadow-[inset_0_0_0_1px_rgba(91,140,255,0.22)]"
+                            : "bg-white/72 hover:bg-[#f2efff]"
+                        }`}
+                      >
+                        <span className="block text-[1.08rem] font-extrabold leading-6 text-[#201833]">
+                          {word.word}
+                        </span>
+                        <span className="mt-1 block text-[0.92rem] font-bold leading-6 text-[#7f7896]">
+                          {getExpressionNativeMeaning(word)}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="rounded-[18px] bg-white/72 px-4 py-5 text-center text-[1rem] font-bold text-[#7f7896]">
+                    还没有收藏的新表达。
+                  </p>
+                )}
+              </div>
+            </div>
+          ) : null}
 
           <section className="sf-study-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-4">
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
