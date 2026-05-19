@@ -123,7 +123,7 @@ const defaultChineseCandidates = ["？", "！", "我", "你", "好", "这", "谢
 const handwritingCandidates = ["我", "你", "好", "吗", "谢", "爱", "说"];
 const quickPracticeStarters = [
   "经典场景口语练习",
-  "已经学到的新表达",
+  "新表达",
   "创建我的课程",
   "声音选择",
 ] as const;
@@ -1438,7 +1438,7 @@ export default function SpeakEnglishPage() {
                           return;
                         }
 
-                        if (phrase === "已经学到的新表达") {
+                        if (phrase === "新表达") {
                           window.location.href = "/vocabulary";
                           return;
                         }

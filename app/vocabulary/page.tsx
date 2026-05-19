@@ -262,7 +262,7 @@ export default function VocabularyPage() {
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
             <div className="mt-5 shrink-0 text-center">
               <h2 className="text-[1.12rem] font-extrabold text-[#6f668a]">
-                ✨ 已经学到的新表达
+                ✨ 学习新表达
               </h2>
               <p className="mt-4 text-[1.08rem] font-extrabold text-[#9a93a9]">
                 {progressText}
