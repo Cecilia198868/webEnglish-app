@@ -680,9 +680,11 @@ export default function SpeakEnglishPage() {
   )
     .slice(0, 2)
     .toUpperCase();
-  const loginMethodLabel = accountEmail ? "邮箱登录" : "当前登录方式";
   const accountPanelTitle =
     accountPanelView === "subscription" ? "订阅" : "账户";
+  const accountDisplayName =
+    accountName ||
+    (accountEmail ? accountEmail.split("@")[0] : "SpeakFlow 用户");
   const subscriptionPlanLabel = "免费版";
   const subscriptionExpiryLabel = "无到期时间";
   const subscriptionPaymentLabel = "未绑定";
@@ -1411,58 +1413,86 @@ export default function SpeakEnglishPage() {
 
           {showQuickPanel && showAccountMenu ? (
             <div className="absolute inset-0 z-50 flex flex-col bg-[#fbf9ff]/96 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-2xl">
-              <div className="flex shrink-0 items-center justify-between gap-4">
-                <div className="flex min-w-0 items-center gap-3">
-                  {accountPanelView !== "menu" ? (
-                    <button
-                      type="button"
-                      aria-label="返回账户菜单"
-                      onClick={() => {
-                        setShowAvatarEditor(false);
-                        setAccountPanelView("menu");
-                      }}
-                      className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
-                    >
-                      ←
-                    </button>
-                  ) : null}
-                  <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full border border-white/80 bg-[#f7f4ff] text-[0.95rem] font-extrabold text-white shadow-[0_14px_28px_rgba(84,72,146,0.18)]">
-                    {accountImage && !accountImageFailed ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={accountImage}
-                        alt={accountEmail || "user"}
-                        className="h-full w-full object-cover"
-                        onError={() => setAccountImageFailed(true)}
-                      />
-                    ) : (
-                      <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#ffd84d_0%,#f0b912_52%,#e9a70f_100%)] text-[#fff8dd]">
-                        {accountAvatarLabel}
-                      </span>
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <h2 className="text-[1.25rem] font-extrabold leading-7">
-                      {accountPanelTitle}
-                    </h2>
-                    <p className="mt-0.5 truncate text-[0.86rem] font-semibold text-[#7f7896]">
-                      {accountEmail || accountName || "SpeakFlow 用户"}
-                    </p>
-                  </div>
+              {accountPanelView === "account" ? (
+                <div className="flex shrink-0 items-center justify-between">
+                  <button
+                    type="button"
+                    aria-label="返回账户菜单"
+                    onClick={() => {
+                      setShowAvatarEditor(false);
+                      setAccountPanelView("menu");
+                    }}
+                    className="grid h-12 w-12 shrink-0 place-items-center rounded-[20px] bg-[#efeaff] text-[1.6rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="关闭账户菜单"
+                    onClick={() => {
+                      setShowAccountMenu(false);
+                      setAccountPanelView("menu");
+                      setShowAvatarEditor(false);
+                    }}
+                    className="grid h-12 w-12 shrink-0 place-items-center rounded-[20px] bg-[#efeaff] text-[1.45rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+                  >
+                    ×
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  aria-label="关闭账户菜单"
-                  onClick={() => {
-                    setShowAccountMenu(false);
-                    setAccountPanelView("menu");
-                    setShowAvatarEditor(false);
-                  }}
-                  className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.45rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
-                >
-                  ×
-                </button>
-              </div>
+              ) : (
+                <div className="flex shrink-0 items-center justify-between gap-4">
+                  <div className="flex min-w-0 items-center gap-3">
+                    {accountPanelView !== "menu" ? (
+                      <button
+                        type="button"
+                        aria-label="返回账户菜单"
+                        onClick={() => {
+                          setShowAvatarEditor(false);
+                          setAccountPanelView("menu");
+                        }}
+                        className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+                      >
+                        ←
+                      </button>
+                    ) : null}
+                    <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full border border-white/80 bg-[#f7f4ff] text-[0.95rem] font-extrabold text-white shadow-[0_14px_28px_rgba(84,72,146,0.18)]">
+                      {accountImage && !accountImageFailed ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={accountImage}
+                          alt={accountEmail || "user"}
+                          className="h-full w-full object-cover"
+                          onError={() => setAccountImageFailed(true)}
+                        />
+                      ) : (
+                        <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#ffd84d_0%,#f0b912_52%,#e9a70f_100%)] text-[#fff8dd]">
+                          {accountAvatarLabel}
+                        </span>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <h2 className="text-[1.25rem] font-extrabold leading-7">
+                        {accountPanelTitle}
+                      </h2>
+                      <p className="mt-0.5 truncate text-[0.86rem] font-semibold text-[#7f7896]">
+                        {accountEmail || accountName || "SpeakFlow 用户"}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label="关闭账户菜单"
+                    onClick={() => {
+                      setShowAccountMenu(false);
+                      setAccountPanelView("menu");
+                      setShowAvatarEditor(false);
+                    }}
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.45rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
 
               <div className="mt-7 min-h-0 flex-1 overflow-y-auto pr-1">
                 {accountPanelView === "menu" ? (
@@ -1499,45 +1529,155 @@ export default function SpeakEnglishPage() {
                     </section>
                   ))
                 ) : accountPanelView === "account" ? (
-                  <section className="grid gap-2">
-                    <button
-                      type="button"
-                      onClick={openAvatarEditor}
-                      className="flex min-h-14 items-center justify-between gap-4 rounded-[18px] px-3 py-3 text-left transition hover:bg-[#efeaff]"
-                    >
-                      <span className="font-bold">修改头像</span>
-                      <span className="shrink-0 text-[0.9rem] font-bold text-[#7f7896]">
-                        更换
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      className="flex min-h-14 items-center justify-between gap-4 rounded-[18px] px-3 py-3 text-left transition hover:bg-[#efeaff]"
-                    >
-                      <span className="font-bold">修改昵称</span>
-                      <span className="min-w-0 truncate text-right text-[0.9rem] font-bold text-[#7f7896]">
-                        {accountName || "未设置"}
-                      </span>
-                    </button>
-                    <div className="flex min-h-14 items-center justify-between gap-4 rounded-[18px] px-3 py-3 text-left">
-                      <span className="font-bold">登录邮箱</span>
-                      <span className="min-w-0 truncate text-right text-[0.9rem] font-bold text-[#7f7896]">
-                        {accountEmail || "未绑定"}
-                      </span>
+                  <section className="pb-10">
+                    <div className="flex items-center gap-5 px-1 pt-4">
+                      <button
+                        type="button"
+                        aria-label="修改头像"
+                        onClick={openAvatarEditor}
+                        className="relative grid h-28 w-28 shrink-0 place-items-center overflow-visible rounded-full bg-[#f0ebff] text-[1.25rem] font-extrabold text-white shadow-[0_18px_36px_rgba(84,72,146,0.22)]"
+                      >
+                        <span className="grid h-full w-full overflow-hidden rounded-full border border-white/90">
+                          {accountImage && !accountImageFailed ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={accountImage}
+                              alt={accountEmail || "user"}
+                              className="h-full w-full object-cover"
+                              onError={() => setAccountImageFailed(true)}
+                            />
+                          ) : (
+                            <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#ffd84d_0%,#f0b912_52%,#e9a70f_100%)] text-[#fff8dd]">
+                              {accountAvatarLabel}
+                            </span>
+                          )}
+                        </span>
+                        <span className="absolute bottom-1 right-1 grid h-10 w-10 place-items-center rounded-full border-4 border-[#fbf9ff] bg-[#7460e8] text-[1.05rem] font-extrabold text-white shadow-[0_10px_22px_rgba(84,72,146,0.28)]">
+                          ✎
+                        </span>
+                      </button>
+                      <div className="min-w-0">
+                        <h2 className="truncate text-[2rem] font-extrabold leading-tight text-[#201833]">
+                          {accountDisplayName}
+                        </h2>
+                        <p className="mt-3 truncate text-[1.05rem] font-semibold text-[#7f7896]">
+                          {accountEmail || "未绑定邮箱"}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex min-h-14 items-center justify-between gap-4 rounded-[18px] px-3 py-3 text-left">
-                      <span className="font-bold">登录方式</span>
-                      <span className="shrink-0 text-[0.9rem] font-bold text-[#7f7896]">
-                        {loginMethodLabel}
-                      </span>
+
+                    <h3 className="mt-10 px-1 text-[1rem] font-extrabold text-[#7f7896]">
+                      会员
+                    </h3>
+                    <div className="mt-4 overflow-hidden rounded-[24px] bg-white/72 shadow-[0_18px_44px_rgba(84,72,146,0.12)] ring-1 ring-white/80">
+                      <button
+                        type="button"
+                        onClick={() => setAccountPanelView("subscription")}
+                        className="flex min-h-16 w-full items-center gap-4 border-b border-[#e8e2ff] px-5 py-4 text-left"
+                      >
+                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[14px] bg-[#efeaff] text-[1.2rem]">
+                          ◆
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-[1.08rem] font-extrabold">
+                          SpeakFlow Pro
+                        </span>
+                        <span className="rounded-full bg-[#efeaff] px-3 py-1 text-[0.9rem] font-extrabold text-[#7460e8]">
+                          未订阅
+                        </span>
+                        <span className="text-[1.75rem] font-semibold text-[#7f7896]">
+                          ›
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAccountPanelView("subscription")}
+                        className="flex min-h-16 w-full items-center gap-4 border-b border-[#e8e2ff] px-5 py-4 text-left"
+                      >
+                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[14px] bg-[#efeaff] text-[1.2rem]">
+                          ▭
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-[1.08rem] font-extrabold">
+                          管理订阅
+                        </span>
+                        <span className="text-[1.75rem] font-semibold text-[#7f7896]">
+                          ›
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        className="flex min-h-16 w-full items-center gap-4 px-5 py-4 text-left"
+                      >
+                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[14px] bg-[#efeaff] text-[1.2rem]">
+                          ↻
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-[1.08rem] font-extrabold">
+                          恢复购买
+                        </span>
+                        <span className="text-[1.75rem] font-semibold text-[#7f7896]">
+                          ›
+                        </span>
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      className="mt-3 flex min-h-14 items-center justify-between gap-4 rounded-[18px] px-3 py-3 text-left font-extrabold text-[#d33b46] transition hover:bg-[#ffecef]"
-                    >
-                      <span>删除账户</span>
-                      <span className="shrink-0 text-[1.2rem]">›</span>
-                    </button>
+
+                    <h3 className="mt-8 px-1 text-[1rem] font-extrabold text-[#7f7896]">
+                      账户与安全
+                    </h3>
+                    <div className="mt-4 overflow-hidden rounded-[24px] bg-white/72 shadow-[0_18px_44px_rgba(84,72,146,0.12)] ring-1 ring-white/80">
+                      <button
+                        type="button"
+                        className="flex min-h-16 w-full items-center gap-4 px-5 py-4 text-left"
+                      >
+                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[14px] bg-[#efeaff] text-[1.2rem]">
+                          ▣
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-[1.08rem] font-extrabold">
+                          登录与安全
+                        </span>
+                        <span className="text-[1.75rem] font-semibold text-[#7f7896]">
+                          ›
+                        </span>
+                      </button>
+                    </div>
+
+                    <h3 className="mt-8 px-1 text-[1rem] font-extrabold text-[#7f7896]">
+                      数据
+                    </h3>
+                    <div className="mt-4 overflow-hidden rounded-[24px] bg-white/72 shadow-[0_18px_44px_rgba(84,72,146,0.12)] ring-1 ring-white/80">
+                      <button
+                        type="button"
+                        className="flex min-h-16 w-full items-center gap-4 px-5 py-4 text-left"
+                      >
+                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[14px] bg-[#efeaff] text-[1.2rem]">
+                          ◔
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-[1.08rem] font-extrabold">
+                          学习数据
+                        </span>
+                        <span className="text-[1.75rem] font-semibold text-[#7f7896]">
+                          ›
+                        </span>
+                      </button>
+                    </div>
+
+                    <h3 className="mt-8 px-1 text-[1rem] font-extrabold text-[#7f7896]">
+                      其他
+                    </h3>
+                    <div className="mt-4 overflow-hidden rounded-[24px] bg-white/72 shadow-[0_18px_44px_rgba(84,72,146,0.12)] ring-1 ring-white/80">
+                      <button
+                        type="button"
+                        className="flex min-h-16 w-full items-center gap-4 px-5 py-4 text-left font-extrabold text-[#d33b46]"
+                      >
+                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[14px] bg-[#ffecef] text-[1.2rem]">
+                          ▥
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-[1.08rem]">
+                          删除账户
+                        </span>
+                        <span className="text-[1.75rem] font-semibold">
+                          ›
+                        </span>
+                      </button>
+                    </div>
                   </section>
                 ) : (
                   <section className="grid gap-2">
