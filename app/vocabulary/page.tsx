@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import ExpressionLearningLimitModal from "@/components/ExpressionLearningLimitModal";
 import {
@@ -105,6 +105,7 @@ function getExpressionNativeMeaning(word: VocabularyWord) {
 
 export default function VocabularyPage() {
   const router = useRouter();
+  const suppressLibraryHintRef = useRef(false);
   const [words, setWords] = useState<VocabularyWord[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showExpressionLibrary, setShowExpressionLibrary] = useState(false);
@@ -123,6 +124,24 @@ export default function VocabularyPage() {
   }, []);
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get("library") !== "1") return;
+
+    suppressLibraryHintRef.current = true;
+    window.history.replaceState(null, "", "/vocabulary");
+    const openLibraryTimer = window.setTimeout(() => {
+      setShowExpressionLibrary(true);
+      setShowLibraryHint(false);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(openLibraryTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (suppressLibraryHintRef.current) return;
+
     const showTimer = window.setTimeout(() => {
       setShowLibraryHint(true);
     }, 250);

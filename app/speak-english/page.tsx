@@ -894,6 +894,7 @@ function SpeakEnglishClient() {
   const [showAvatarEditor, setShowAvatarEditor] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState("");
   const [avatarEditorNotice, setAvatarEditorNotice] = useState("");
+  const [showExpressionMenu, setShowExpressionMenu] = useState(false);
   const [showClassicCoursePicker, setShowClassicCoursePicker] = useState(false);
   const [classicCoursePickerView, setClassicCoursePickerView] =
     useState<ClassicCoursePickerView>("categories");
@@ -1108,6 +1109,7 @@ function SpeakEnglishClient() {
 
   useEffect(() => {
     if (!showQuickPanel) {
+      setShowExpressionMenu(false);
       setShowClassicCoursePicker(false);
       resetClassicCoursePicker();
       return;
@@ -1145,6 +1147,7 @@ function SpeakEnglishClient() {
     setShowAccountMenu(true);
     setAccountPanelView("subscription");
     setShowAvatarEditor(false);
+    setShowExpressionMenu(false);
     setShowClassicCoursePicker(false);
     resetClassicCoursePicker();
   }
@@ -1261,6 +1264,7 @@ function SpeakEnglishClient() {
     setComposingPinyin("");
     setShowEmojiPanel(false);
     setShowQuickPanel(false);
+    setShowExpressionMenu(false);
     setShowClassicCoursePicker(false);
     resetClassicCoursePicker();
     focusInput();
@@ -2735,14 +2739,17 @@ function SpeakEnglishClient() {
                       onClick={() => {
                         setShowAccountMenu(false);
 
-                        if (phrase === "经典场景口语练习") {
-                          setShowClassicCoursePicker((current) => !current);
+                        if (phrase === "新表达") {
+                          setShowClassicCoursePicker(false);
                           resetClassicCoursePicker();
+                          setShowExpressionMenu((current) => !current);
                           return;
                         }
 
-                        if (phrase === "新表达") {
-                          window.location.href = "/vocabulary";
+                        if (phrase === "经典场景口语练习") {
+                          setShowExpressionMenu(false);
+                          setShowClassicCoursePicker((current) => !current);
+                          resetClassicCoursePicker();
                           return;
                         }
 
@@ -2753,6 +2760,41 @@ function SpeakEnglishClient() {
                       <MenuGlyph level={2} />
                       {phrase}
                     </button>
+
+                    {phrase === "新表达" && showExpressionMenu ? (
+                      <div className="grid gap-2 rounded-[18px] border border-[#c9bfff] bg-white p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            window.location.href = "/vocabulary";
+                          }}
+                          className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
+                        >
+                          <span className="min-w-0 truncate">
+                            <MenuGlyph level={3} />
+                            学习新表达
+                          </span>
+                          <span className="shrink-0 text-[1rem] font-bold opacity-60">
+                            ›
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            window.location.href = "/vocabulary?library=1";
+                          }}
+                          className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
+                        >
+                          <span className="min-w-0 truncate">
+                            <MenuGlyph level={3} />
+                            我的表达库
+                          </span>
+                          <span className="shrink-0 text-[1rem] font-bold opacity-60">
+                            ›
+                          </span>
+                        </button>
+                      </div>
+                    ) : null}
 
                     {phrase === "经典场景口语练习" &&
                     showClassicCoursePicker ? (
