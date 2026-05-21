@@ -80,12 +80,13 @@ type SessionResponse = {
   } | null;
 };
 
-type AccountPanelView = "menu" | "account" | "subscription" | "checkout";
+type AccountPanelView = "menu" | "account" | "subscription" | "checkout" | "voice";
 type ProPlan = "monthly" | "yearly";
 
 type AccountMenuAction = "subscription" | "voice";
 
 const accountAvatarStoragePrefix = "speakflow-account-avatar";
+const selectedVoiceStorageKey = "speakflow-selected-voice-uri";
 
 function getAccountAvatarStorageKey(identifier: string) {
   return `${accountAvatarStoragePrefix}:${identifier || "local-user"}`;
@@ -440,7 +441,6 @@ const quickPracticeStarters = [
   "经典场景口语练习",
   "新表达",
   "创建我的课程",
-  "声音选择",
 ] as const;
 const bankLessonOrder = [
   "新开银行账户",
@@ -903,7 +903,6 @@ function SpeakEnglishClient() {
     useState("");
   const [selectedClassicCourseSectionId, setSelectedClassicCourseSectionId] =
     useState("");
-  const [showVoicePicker, setShowVoicePicker] = useState(false);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>(
     []
   );
@@ -987,6 +986,8 @@ function SpeakEnglishClient() {
   const accountPanelTitle =
     accountPanelView === "subscription"
       ? accountCopy.subscriptionTitle
+      : accountPanelView === "voice"
+        ? accountCopy.accountMenuSections[1].items[0].label
       : accountCopy.accountTitle;
   const accountDisplayName =
     accountName ||
@@ -1016,6 +1017,8 @@ function SpeakEnglishClient() {
 
       setAvailableVoices(sortedVoices);
       setSelectedVoiceURI((current) => {
+        const savedVoiceURI = window.localStorage.getItem(selectedVoiceStorageKey);
+
         if (
           current &&
           sortedVoices.some(
@@ -1024,6 +1027,17 @@ function SpeakEnglishClient() {
           )
         ) {
           return current;
+        }
+
+        if (
+          savedVoiceURI &&
+          sortedVoices.some(
+            (voice) =>
+              voice.voiceURI === savedVoiceURI &&
+              !distortedVoiceNamePattern.test(voice.name)
+          )
+        ) {
+          return savedVoiceURI;
         }
 
         return preferredVoice?.voiceURI || "";
@@ -1037,6 +1051,12 @@ function SpeakEnglishClient() {
       window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedVoiceURI || typeof window === "undefined") return;
+
+    window.localStorage.setItem(selectedVoiceStorageKey, selectedVoiceURI);
+  }, [selectedVoiceURI]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1093,7 +1113,6 @@ function SpeakEnglishClient() {
     if (!showQuickPanel) {
       setShowClassicCoursePicker(false);
       resetClassicCoursePicker();
-      setShowVoicePicker(false);
       if (!shouldOpenProFromUrlRef.current) {
         setShowAccountMenu(false);
         setAccountPanelView("menu");
@@ -1138,7 +1157,6 @@ function SpeakEnglishClient() {
     setShowAvatarEditor(false);
     setShowClassicCoursePicker(false);
     resetClassicCoursePicker();
-    setShowVoicePicker(false);
   }
 
   function ensureFreePracticeAvailable() {
@@ -1159,8 +1177,8 @@ function SpeakEnglishClient() {
     }
 
     if (action === "voice") {
-      setShowAccountMenu(false);
-      setShowVoicePicker(true);
+      setShowAvatarEditor(false);
+      setAccountPanelView("voice");
     }
   }
 
@@ -1255,7 +1273,6 @@ function SpeakEnglishClient() {
     setShowQuickPanel(false);
     setShowClassicCoursePicker(false);
     resetClassicCoursePicker();
-    setShowVoicePicker(false);
     focusInput();
   }
 
@@ -1523,6 +1540,22 @@ function SpeakEnglishClient() {
     );
     utterance.voice =
       selectedVoice || pickPreferredEnglishVoice(availableVoices) || null;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function previewVoice(voice: SpeechSynthesisVoice) {
+    if (typeof window === "undefined") return;
+
+    const utterance = new SpeechSynthesisUtterance(
+      "This is your SpeakFlow voice."
+    );
+    utterance.lang = voice.lang || "en-US";
+    utterance.voice = voice;
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
   }
@@ -1946,6 +1979,61 @@ function SpeakEnglishClient() {
                       </div>
                     </section>
                   ))
+                ) : accountPanelView === "voice" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[24px] bg-white/72 px-5 py-5 shadow-[0_18px_44px_rgba(84,72,146,0.12)] ring-1 ring-white/85">
+                      <h3 className="text-[1.12rem] font-extrabold text-[#201833]">
+                        {language === "en" ? "Choose a voice" : "选择朗读声音"}
+                      </h3>
+                      <p className="mt-2 text-[0.9rem] font-bold leading-6 text-[#7f7896]">
+                        {language === "en"
+                          ? "This voice will be used for English playback in practice."
+                          : "这个声音会用于练习中的英文朗读。"}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 grid gap-2">
+                      {availableVoices.length ? (
+                        availableVoices.map((voice) => (
+                          <button
+                            key={voice.voiceURI}
+                            type="button"
+                            onClick={() => {
+                              setSelectedVoiceURI(voice.voiceURI);
+                              previewVoice(voice);
+                            }}
+                            className={`flex min-h-[4.4rem] w-full items-center gap-3 rounded-[20px] px-4 py-3 text-left transition ${
+                              selectedVoiceURI === voice.voiceURI
+                                ? "border-2 border-[#8b67ff] bg-white/86 shadow-[0_18px_44px_rgba(126,92,255,0.14)]"
+                                : "border border-[#e8e2ff] bg-white/66 shadow-[0_12px_30px_rgba(84,72,146,0.08)]"
+                            }`}
+                          >
+                            <span
+                              className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[0.9rem] font-extrabold ${
+                                selectedVoiceURI === voice.voiceURI
+                                  ? "bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] text-white"
+                                  : "border-2 border-[#c7bddf] text-transparent"
+                              }`}
+                            >
+                              ✓
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-[1rem] font-extrabold text-[#201833]">
+                                {voice.name}
+                              </span>
+                              <span className="mt-1 block text-[0.82rem] font-bold text-[#7f7896]">
+                                {voice.lang}
+                              </span>
+                            </span>
+                          </button>
+                        ))
+                      ) : (
+                        <p className="rounded-[20px] bg-white/72 px-4 py-5 text-center text-[1rem] font-bold text-[#7f7896] ring-1 ring-white/85">
+                          {language === "en" ? "Loading voices..." : "正在加载声音…"}
+                        </p>
+                      )}
+                    </div>
+                  </section>
                 ) : accountPanelView === "account" ? (
                   <section className="pb-10">
                     <div className="flex items-center gap-4 px-2 pt-5">
@@ -2639,7 +2727,6 @@ function SpeakEnglishClient() {
                         if (phrase === "经典场景口语练习") {
                           setShowClassicCoursePicker((current) => !current);
                           resetClassicCoursePicker();
-                          setShowVoicePicker(false);
                           return;
                         }
 
@@ -2648,10 +2735,8 @@ function SpeakEnglishClient() {
                           return;
                         }
 
-                        if (phrase === "声音选择") {
-                          setShowVoicePicker((current) => !current);
-                          setShowClassicCoursePicker(false);
-                          resetClassicCoursePicker();
+                        if (phrase === "创建我的课程") {
+                          window.location.href = "/create-course";
                           return;
                         }
 
@@ -2791,38 +2876,6 @@ function SpeakEnglishClient() {
                     ) : null}
                   </div>
                 ))}
-                {showVoicePicker ? (
-                  <div className="max-h-52 overflow-y-auto rounded-[18px] border border-[#c9bfff] bg-white p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-                    {availableVoices.length ? (
-                      availableVoices.map((voice) => (
-                        <button
-                          key={voice.voiceURI}
-                          type="button"
-                          onClick={() => setSelectedVoiceURI(voice.voiceURI)}
-                          className={`flex w-full items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-left text-sm font-semibold ${
-                            selectedVoiceURI === voice.voiceURI
-                              ? "bg-[#e9e4ff] text-[#201833]"
-                              : "text-[#4b4267]"
-                          }`}
-                        >
-                          <span className="min-w-0">
-                            <span className="block truncate">{voice.name}</span>
-                            <span className="block text-[0.72rem] font-medium opacity-70">
-                              {voice.lang}
-                            </span>
-                          </span>
-                          <span className="shrink-0">
-                            {selectedVoiceURI === voice.voiceURI ? "✓" : ""}
-                          </span>
-                        </button>
-                      ))
-                    ) : (
-                      <p className="px-3 py-2 text-sm font-semibold text-[#4b4267]">
-                        正在加载声音…
-                      </p>
-                    )}
-                  </div>
-                ) : null}
               </div>
             </div>
           ) : null}

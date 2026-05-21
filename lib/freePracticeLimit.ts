@@ -1,6 +1,6 @@
 export const FREE_PRACTICE_DAILY_LIMIT = 5;
 
-export type FreePracticeScope = "free" | "classic";
+export type FreePracticeScope = "free" | "classic" | "course";
 
 const FREE_PRACTICE_USAGE_KEY_PREFIX = "speakflow-free-practice-usage";
 

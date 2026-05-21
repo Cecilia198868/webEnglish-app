@@ -313,6 +313,9 @@ export default function StudyPage() {
   const voiceKey = "selected-voice-name";
   const prepKey = "study-prep-seconds";
   const gapKey = "study-gap-seconds";
+  const freePracticeScope = lessonId.startsWith("my-course-")
+    ? "course"
+    : "classic";
 
   const autoPlayRef = useRef(false);
   const currentIndexRef = useRef(0);
@@ -1021,8 +1024,8 @@ export default function StudyPage() {
   function ensureFreePracticeAvailable(index = currentIndex) {
     const completionId = getSentenceCompletionId(index);
 
-    if (hasFreePracticeCompletion("classic", completionId)) return true;
-    if (!isFreePracticeLimitReached("classic")) return true;
+    if (hasFreePracticeCompletion(freePracticeScope, completionId)) return true;
+    if (!isFreePracticeLimitReached(freePracticeScope)) return true;
 
     showFreePracticeLimit();
     return false;
@@ -1030,7 +1033,7 @@ export default function StudyPage() {
 
   function markCurrentSentenceCompleted(index = currentIndex) {
     recordFreePracticeCompletion(
-      "classic",
+      freePracticeScope,
       getSentenceCompletionId(index)
     );
   }
@@ -1119,6 +1122,10 @@ export default function StudyPage() {
   const spokenDisplay = (isListening && liveTranscript ? liveTranscript : spokenEnglish).trim();
   const courseTitle = lessonTitle || lesson?.title || "未命名课程";
   const lessonSequence = useMemo(() => {
+    if (lessonId.startsWith("my-course-")) {
+      return localLessonSequence.filter((record) => record.id === lessonId);
+    }
+
     if (localLessonSequence.some((record) => record.id === lessonId)) {
       return localLessonSequence;
     }
