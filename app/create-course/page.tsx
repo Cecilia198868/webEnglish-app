@@ -1,11 +1,11 @@
 "use client";
 
 import type { ChangeEvent, ReactNode, RefObject } from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { serializeTrainingItems, type TrainingItem } from "@/lib/training";
 
-type ImportView = "home" | "paste" | "video" | "youtube";
+type ImportView = "home" | "paste" | "image" | "camera" | "video" | "youtube";
 type StoredLesson = {
   id: string;
   title: string;
@@ -16,6 +16,7 @@ type StoredLesson = {
 const LESSONS_STORAGE_KEY = "english-app-lessons";
 const DEFAULT_YOUTUBE_COURSE_NAME = "YouTube 视频课程";
 const DEFAULT_PASTE_COURSE_NAME = "粘贴文字课程";
+const DEFAULT_IMAGE_COURSE_NAME = "图片文字课程";
 
 type YoutubeTrainingResponse = {
   title?: string;
@@ -25,6 +26,12 @@ type YoutubeTrainingResponse = {
   error?: string;
   message?: string;
   detail?: string;
+};
+
+type ExtractTextResponse = {
+  text?: string;
+  fileName?: string;
+  error?: string;
 };
 
 function extractCourseName(sourceText: string, fallback = DEFAULT_YOUTUBE_COURSE_NAME) {
@@ -46,6 +53,10 @@ function createPasteCourseId() {
   return `my-course-paste-${Date.now()}`;
 }
 
+function createImageCourseId() {
+  return `my-course-image-${Date.now()}`;
+}
+
 function extractPastedCourseName(sourceText: string) {
   const bracketMatch = sourceText.match(/《([^》]+)》/);
   if (bracketMatch?.[1]?.trim()) {
@@ -60,6 +71,35 @@ function extractPastedCourseName(sourceText: string) {
   const cleaned = firstLine.replace(/\s+/g, " ").replace(/^[-#*>\s]+/, "");
 
   return cleaned ? cleaned.slice(0, 22) : DEFAULT_PASTE_COURSE_NAME;
+}
+
+function extractImageCourseName(fileName: string, sourceText: string) {
+  const cleanFileName = fileName
+    .replace(/\.[^.]+$/, "")
+    .replace(/[_-]+/g, " ")
+    .trim();
+
+  if (cleanFileName) return cleanFileName.slice(0, 22);
+
+  const firstLine =
+    sourceText
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .find(Boolean) || "";
+
+  return firstLine ? firstLine.slice(0, 22) : DEFAULT_IMAGE_COURSE_NAME;
+}
+
+function normalizeGeneratedTrainingItems(data: unknown) {
+  return Array.isArray(data)
+    ? data.filter(
+        (item): item is TrainingItem =>
+          typeof item?.zh === "string" &&
+          typeof item?.en === "string" &&
+          Boolean(item.zh.trim()) &&
+          Boolean(item.en.trim())
+      )
+    : [];
 }
 
 function saveGeneratedCourseToStorage({
@@ -209,6 +249,50 @@ function LocalVideoIcon() {
   );
 }
 
+function ImageSourceIcon() {
+  return (
+    <span className="grid h-24 w-24 place-items-center rounded-full bg-[#efe9ff] sm:h-28 sm:w-28">
+      <span className="relative h-14 w-14 rounded-[12px] bg-[linear-gradient(135deg,#bda7ff_0%,#765cff_100%)] shadow-[0_16px_34px_rgba(126,92,255,0.24)] sm:h-16 sm:w-16">
+        <span className="absolute bottom-3 left-3 h-0 w-0 border-x-[14px] border-b-[18px] border-x-transparent border-b-white" />
+        <span className="absolute bottom-3 right-3 h-0 w-0 border-x-[12px] border-b-[15px] border-x-transparent border-b-white/86" />
+        <span className="absolute right-3 top-3 h-4 w-4 rounded-full bg-white/92" />
+      </span>
+    </span>
+  );
+}
+
+function CameraSourceIcon() {
+  return (
+    <span className="grid h-24 w-24 place-items-center rounded-full bg-[#efe9ff] sm:h-28 sm:w-28">
+      <span className="relative h-14 w-16 rounded-[14px] bg-[linear-gradient(135deg,#bda7ff_0%,#765cff_100%)] shadow-[0_16px_34px_rgba(126,92,255,0.24)] sm:h-16 sm:w-[4.5rem]">
+        <span className="absolute left-5 top-[-8px] h-4 w-8 rounded-t-[8px] bg-[#a891ff]" />
+        <span className="absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-[5px] border-white">
+          <span className="h-3 w-3 rounded-full bg-white" />
+        </span>
+      </span>
+    </span>
+  );
+}
+
+function ShieldLockIcon() {
+  return (
+    <span className="relative grid h-12 w-12 shrink-0 place-items-center rounded-[14px] bg-[linear-gradient(135deg,#cabaff_0%,#856bff_100%)] shadow-[0_12px_26px_rgba(126,92,255,0.2)]">
+      <span className="absolute inset-x-3 top-2 h-7 rounded-b-[12px] rounded-t-[8px] bg-white/30" />
+      <span className="relative mt-1 h-4 w-4 rounded-[4px] bg-white/88 before:absolute before:left-1/2 before:top-[-8px] before:h-3 before:w-3 before:-translate-x-1/2 before:rounded-t-full before:border-2 before:border-b-0 before:border-white/88" />
+    </span>
+  );
+}
+
+function ImageTipIcon() {
+  return (
+    <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[linear-gradient(135deg,#b7a6ff_0%,#8c6cff_100%)] shadow-[0_10px_24px_rgba(126,92,255,0.18)]">
+      <span className="absolute top-2.5 h-4 w-4 rounded-full border-2 border-white/78" />
+      <span className="absolute top-[22px] h-2 w-3 rounded-b-[5px] bg-white/78" />
+      <span className="absolute bottom-2 h-1 w-4 rounded-full bg-white/68" />
+    </span>
+  );
+}
+
 function LightbulbIcon() {
   return (
     <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[linear-gradient(135deg,#b7a6ff_0%,#8c6cff_100%)] shadow-[0_10px_24px_rgba(126,92,255,0.18)]">
@@ -216,6 +300,34 @@ function LightbulbIcon() {
       <span className="absolute top-[22px] h-2 w-3 rounded-b-[5px] bg-white/78" />
       <span className="absolute bottom-2 h-1 w-4 rounded-full bg-white/68" />
     </span>
+  );
+}
+
+function ImageSourceButton({
+  icon,
+  title,
+  description,
+  onClick,
+}: {
+  icon: ReactNode;
+  title: string;
+  description: ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex min-h-[16rem] flex-col items-center justify-center rounded-[28px] bg-white/76 px-3 py-6 text-center shadow-[0_24px_54px_rgba(84,72,146,0.1),inset_0_1px_0_rgba(255,255,255,0.94)] transition hover:bg-white/88 sm:min-h-[17.5rem] sm:px-5 sm:py-7"
+    >
+      {icon}
+      <span className="mt-6 text-[1.22rem] font-black leading-8 text-[#201833] sm:mt-7 sm:text-[1.45rem]">
+        {title}
+      </span>
+      <span className="mt-3 text-[0.9rem] font-bold leading-7 text-[#746b91] sm:text-[0.98rem]">
+        {description}
+      </span>
+    </button>
   );
 }
 
@@ -299,6 +411,10 @@ export default function CreateCoursePage() {
   const audioFileInputRef = useRef<HTMLInputElement | null>(null);
   const videoFileInputRef = useRef<HTMLInputElement | null>(null);
   const textImageInputRef = useRef<HTMLInputElement | null>(null);
+  const cameraImageInputRef = useRef<HTMLInputElement | null>(null);
+  const cameraVideoRef = useRef<HTMLVideoElement | null>(null);
+  const cameraCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const cameraStreamRef = useRef<MediaStream | null>(null);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [showSourceSheet, setShowSourceSheet] = useState(false);
   const [importView, setImportView] = useState<ImportView>("home");
@@ -306,6 +422,35 @@ export default function CreateCoursePage() {
   const [pastedText, setPastedText] = useState("");
   const [isGeneratingCourse, setIsGeneratingCourse] = useState(false);
   const [generationError, setGenerationError] = useState("");
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
+  const [isCameraStarting, setIsCameraStarting] = useState(false);
+
+  useEffect(() => {
+    if (!cameraVideoRef.current || !cameraStream) return;
+
+    cameraVideoRef.current.srcObject = cameraStream;
+    void cameraVideoRef.current.play().catch(() => {
+      setGenerationError("相机预览暂时无法播放，请重新打开相机。");
+    });
+  }, [cameraStream]);
+
+  useEffect(() => {
+    return () => {
+      cameraStreamRef.current?.getTracks().forEach((track) => track.stop());
+      cameraStreamRef.current = null;
+    };
+  }, []);
+
+  function stopCameraStream() {
+    cameraStreamRef.current?.getTracks().forEach((track) => track.stop());
+    cameraStreamRef.current = null;
+    setCameraStream(null);
+    setIsCameraStarting(false);
+
+    if (cameraVideoRef.current) {
+      cameraVideoRef.current.srcObject = null;
+    }
+  }
 
   function openFilePicker(inputRef: RefObject<HTMLInputElement | null>) {
     inputRef.current?.click();
@@ -314,7 +459,20 @@ export default function CreateCoursePage() {
 
   function handleFileSelection(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-    setSelectedFileName(file?.name || "");
+    if (!file) return;
+
+    const isImageInput =
+      event.currentTarget === textImageInputRef.current ||
+      event.currentTarget === cameraImageInputRef.current;
+
+    event.currentTarget.value = "";
+
+    if (isImageInput) {
+      void startGeneratingImageCourse(file);
+      return;
+    }
+
+    setSelectedFileName(file.name);
   }
 
   function openVideoImportView() {
@@ -338,12 +496,52 @@ export default function CreateCoursePage() {
       return;
     }
 
+    if (importView === "image") {
+      returnToSourceSheet();
+      return;
+    }
+
+    if (importView === "camera") {
+      stopCameraStream();
+      setImportView("image");
+      return;
+    }
+
     if (importView === "video") {
       returnToSourceSheet();
       return;
     }
 
     router.replace("/speak-english?menu=1");
+  }
+
+  async function requestTrainingItemsFromText({
+    text,
+    emptyMessage,
+    fallbackErrorMessage,
+  }: {
+    text: string;
+    emptyMessage: string;
+    fallbackErrorMessage: string;
+  }) {
+    const response = await fetch("/api/generate-training", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+    const data = (await response.json()) as TrainingItem[] | { error?: string };
+
+    if (!response.ok) {
+      throw new Error(fallbackErrorMessage);
+    }
+
+    const items = normalizeGeneratedTrainingItems(data);
+
+    if (items.length === 0) {
+      throw new Error(emptyMessage);
+    }
+
+    return items;
   }
 
   async function startGeneratingCourse() {
@@ -413,26 +611,6 @@ export default function CreateCoursePage() {
     }
   }
 
-  async function pasteFromClipboard() {
-    if (typeof navigator === "undefined" || !navigator.clipboard?.readText) {
-      setGenerationError("请长按输入框粘贴内容。");
-      return;
-    }
-
-    try {
-      const clipboardText = await navigator.clipboard.readText();
-      if (!clipboardText.trim()) {
-        setGenerationError("剪贴板里还没有可用文字。");
-        return;
-      }
-
-      setPastedText(clipboardText);
-      setGenerationError("");
-    } catch {
-      setGenerationError("请长按输入框粘贴内容。");
-    }
-  }
-
   async function startGeneratingPastedCourse() {
     const trimmedText = pastedText.trim();
 
@@ -447,30 +625,11 @@ export default function CreateCoursePage() {
     setIsGeneratingCourse(true);
 
     try {
-      const response = await fetch("/api/generate-training", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: trimmedText }),
+      const items = await requestTrainingItemsFromText({
+        text: trimmedText,
+        emptyMessage: "没有从这段文字中生成可学习内容。",
+        fallbackErrorMessage: "暂时无法从这段文字生成课程",
       });
-      const data = (await response.json()) as TrainingItem[] | { error?: string };
-
-      if (!response.ok) {
-        throw new Error("暂时无法从这段文字生成课程");
-      }
-
-      const items = Array.isArray(data)
-        ? data.filter(
-            (item): item is TrainingItem =>
-              typeof item?.zh === "string" &&
-              typeof item?.en === "string" &&
-              Boolean(item.zh.trim()) &&
-              Boolean(item.en.trim())
-          )
-        : [];
-
-      if (items.length === 0) {
-        throw new Error("没有从这段文字中生成可学习内容。");
-      }
 
       const courseName = extractPastedCourseName(trimmedText);
       const courseTitle = `我的课程：${courseName}`;
@@ -491,6 +650,127 @@ export default function CreateCoursePage() {
     } finally {
       setIsGeneratingCourse(false);
     }
+  }
+
+  async function startGeneratingImageCourse(file: File) {
+    stopCameraStream();
+    setSelectedFileName(file.name);
+    setGenerationError("");
+    setShowSourceSheet(false);
+    setImportView("home");
+    setIsGeneratingCourse(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const extractResponse = await fetch("/api/extract-text", {
+        method: "POST",
+        body: formData,
+      });
+      const extractData = (await extractResponse.json()) as ExtractTextResponse;
+      const extractedText = extractData.text?.trim() || "";
+
+      if (!extractResponse.ok || !extractedText) {
+        throw new Error(
+          extractData.error || "暂时无法识别这张图片的文字，请换一张更清晰的图片。"
+        );
+      }
+
+      const items = await requestTrainingItemsFromText({
+        text: extractedText,
+        emptyMessage: "没有从这张图片中生成可学习内容。",
+        fallbackErrorMessage: "暂时无法从这张图片生成课程",
+      });
+
+      const courseName = extractImageCourseName(file.name, extractedText);
+      const courseTitle = `我的课程：${courseName}`;
+      const courseId = createImageCourseId();
+
+      saveGeneratedCourseToStorage({
+        courseId,
+        courseTitle,
+        items,
+      });
+      setSelectedFileName(courseName.replace(/[《》]/g, ""));
+      router.push(`/study/${courseId}`);
+    } catch (error) {
+      setGenerationError(
+        error instanceof Error ? error.message : "暂时无法从这张图片生成课程"
+      );
+      setImportView("image");
+    } finally {
+      setIsGeneratingCourse(false);
+    }
+  }
+
+  async function openCameraCaptureView() {
+    setGenerationError("");
+    setShowSourceSheet(false);
+
+    if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+      openFilePicker(cameraImageInputRef);
+      return;
+    }
+
+    stopCameraStream();
+    setImportView("camera");
+    setIsCameraStarting(true);
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1440 },
+          height: { ideal: 1920 },
+        },
+      });
+
+      cameraStreamRef.current = stream;
+      setCameraStream(stream);
+      setIsCameraStarting(false);
+    } catch {
+      stopCameraStream();
+      setGenerationError("无法打开相机，请允许相机权限，或改用相册选择。");
+      setImportView("image");
+    }
+  }
+
+  function takeCameraPhoto() {
+    const video = cameraVideoRef.current;
+    const canvas = cameraCanvasRef.current;
+
+    if (!video || !canvas || !video.videoWidth || !video.videoHeight) {
+      setGenerationError("相机还没有准备好，请稍等一下。");
+      return;
+    }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      setGenerationError("暂时无法拍照，请改用相册选择。");
+      return;
+    }
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          setGenerationError("暂时无法保存照片，请重新拍照。");
+          return;
+        }
+
+        const photoFile = new File([blob], `camera-photo-${Date.now()}.jpg`, {
+          type: "image/jpeg",
+        });
+        void startGeneratingImageCourse(photoFile);
+      },
+      "image/jpeg",
+      0.92
+    );
   }
 
   function openSubtitlePasteFallback() {
@@ -553,37 +833,26 @@ export default function CreateCoursePage() {
           </header>
 
           {importView === "paste" ? (
-            <section className="relative z-10 flex min-h-0 flex-1 flex-col px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-12">
-              <div className="text-center">
-                <h2 className="text-[2.25rem] font-black leading-tight text-[#201833]">
-                  粘贴文字
-                </h2>
-                <p className="mt-4 text-[1.02rem] font-extrabold leading-7 text-[#746b91]">
-                  复制英文、中文或中英对照内容后，自动生成课程
+            <section className="relative z-10 flex min-h-0 flex-1 flex-col px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4">
+              <div className="mx-auto w-full max-w-[342px] px-3 pb-3 pt-2">
+                <button
+                  type="button"
+                  onClick={startGeneratingPastedCourse}
+                  disabled={isGeneratingCourse}
+                  className="mx-auto flex h-14 w-[min(100%,282px)] items-center justify-center rounded-full bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_52%,#ef6cf8_100%)] px-6 text-[1.05rem] font-black text-[#201833] shadow-[0_18px_42px_rgba(200,92,255,0.28)] transition hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60"
+                >
+                  <span className="mr-2 text-[1.25rem]">✨</span>
+                  {isGeneratingCourse ? "正在生成..." : "生成我的课程"}
+                </button>
+
+                <p className="mt-4 flex items-center justify-center gap-2 text-center text-[0.82rem] font-bold leading-6 text-[#8b84a2]">
+                  <span className="text-[0.95rem] text-[#8b6dff]">🔒</span>
+                  内容仅保存在本地，隐私安全有保障
                 </p>
               </div>
 
-              <div className="mt-8 flex min-h-0 flex-1 flex-col rounded-[28px] border-2 border-dashed border-[#c7b8ff] bg-white/32 px-5 pb-6 pt-8 shadow-[0_24px_70px_rgba(84,72,146,0.1),inset_0_1px_0_rgba(255,255,255,0.82)]">
-                <button
-                  type="button"
-                  onClick={pasteFromClipboard}
-                  className="mx-auto grid h-20 w-20 place-items-center rounded-[20px] bg-[linear-gradient(135deg,#ede3ff_0%,#cdb6ff_100%)] text-[2rem] shadow-[0_16px_34px_rgba(126,92,255,0.18)]"
-                  aria-label="点击粘贴内容"
-                >
-                  📋
-                </button>
-                <button
-                  type="button"
-                  onClick={pasteFromClipboard}
-                  className="mt-6 text-[1.08rem] font-black text-[#6c63ff]"
-                >
-                  点击粘贴内容
-                </button>
-                <p className="mt-3 text-center text-[0.88rem] font-bold leading-6 text-[#8b84a2]">
-                  支持英文、中文、中英对照内容
-                </p>
-
-                <label className="mt-6 block min-h-0 flex-1">
+              <div className="mt-5 flex min-h-0 flex-1 flex-col rounded-[26px] border-2 border-dashed border-[#c7b8ff] bg-white/24 px-4 pb-4 pt-3 shadow-[0_24px_70px_rgba(84,72,146,0.1),inset_0_1px_0_rgba(255,255,255,0.82)]">
+                <label className="block min-h-0 flex-1">
                   <span className="sr-only">粘贴课程内容</span>
                   <textarea
                     value={pastedText}
@@ -591,8 +860,8 @@ export default function CreateCoursePage() {
                       setPastedText(event.target.value);
                       setGenerationError("");
                     }}
-                    placeholder="也可以在这里长按粘贴或直接输入内容..."
-                    className="h-full min-h-[160px] w-full resize-none rounded-[22px] border border-white/80 bg-white/56 px-4 py-4 text-[0.98rem] font-bold leading-7 text-[#201833] outline-none shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] placeholder:text-[#9a91ad]"
+                    placeholder="请在这里长按粘贴或直接输入内容"
+                    className="h-full min-h-[360px] w-full resize-none rounded-[22px] border border-white/86 bg-white/58 px-5 py-5 text-[1rem] font-bold leading-7 text-[#201833] outline-none shadow-[0_18px_42px_rgba(84,72,146,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] placeholder:text-[#8f88a5]"
                   />
                 </label>
 
@@ -601,22 +870,141 @@ export default function CreateCoursePage() {
                     {generationError}
                   </p>
                 ) : null}
-
-                <button
-                  type="button"
-                  onClick={startGeneratingPastedCourse}
-                  disabled={isGeneratingCourse}
-                  className="mx-auto mt-6 flex h-14 w-[min(100%,310px)] items-center justify-center rounded-full bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_52%,#ef6cf8_100%)] px-6 text-[1.05rem] font-black text-white shadow-[0_18px_42px_rgba(200,92,255,0.28)] transition hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60"
-                >
-                  <span className="mr-2 text-[1.25rem]">✨</span>
-                  {isGeneratingCourse ? "正在生成..." : "生成我的课程"}
-                </button>
-
-                <p className="mt-5 flex items-center justify-center gap-2 text-center text-[0.82rem] font-bold leading-6 text-[#8b84a2]">
-                  <span className="text-[0.95rem] text-[#8b6dff]">🔒</span>
-                  内容仅保存在本地，隐私安全有保障
+              </div>
+            </section>
+          ) : importView === "image" ? (
+            <section className="relative z-10 min-h-0 flex-1 overflow-y-auto px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-10 sm:px-8">
+              <div className="text-center">
+                <h2 className="text-[2.35rem] font-black leading-tight text-[#201833]">
+                  从图片识别文字
+                </h2>
+                <p className="mx-auto mt-6 max-w-[390px] text-[1.08rem] font-bold leading-8 text-[#746b91]">
+                  拍照、截图或相册图片，识别文字内容
+                  <br />
+                  自动生成你的专属课程
                 </p>
               </div>
+
+              <h3 className="mt-12 text-center text-[1.55rem] font-black leading-none text-[#201833]">
+                选择图片来源
+              </h3>
+
+              <div className="mt-9 grid grid-cols-2 gap-4 sm:gap-6">
+                <ImageSourceButton
+                  icon={<ImageSourceIcon />}
+                  title="从相册选择"
+                  description={
+                    <>
+                      选择已有图片
+                      <br />
+                      截图、课本或文档等
+                    </>
+                  }
+                  onClick={() => openFilePicker(textImageInputRef)}
+                />
+                <ImageSourceButton
+                  icon={<CameraSourceIcon />}
+                  title="直接拍照"
+                  description={
+                    <>
+                      拍摄书籍、屏幕
+                      <br />
+                      或纸质内容
+                    </>
+                  }
+                  onClick={openCameraCaptureView}
+                />
+              </div>
+
+              {generationError ? (
+                <p className="mt-5 rounded-[18px] bg-[#fff2f5]/86 px-4 py-3 text-center text-[0.9rem] font-black leading-6 text-[#b14363]">
+                  {generationError}
+                </p>
+              ) : null}
+
+              <button
+                type="button"
+                onClick={() => openFilePicker(textImageInputRef)}
+                className="mt-9 flex w-full items-center gap-5 rounded-[24px] bg-white/46 px-6 py-5 text-left shadow-[0_20px_48px_rgba(84,72,146,0.1),inset_0_1px_0_rgba(255,255,255,0.9)] transition hover:bg-white/62"
+              >
+                <ShieldLockIcon />
+                <span className="min-w-0 flex-1 text-[1rem] font-bold leading-7 text-[#746b91]">
+                  你的图片仅用于文字识别和课程生成，
+                  <br />
+                  不会被存储或分享，隐私安全有保障
+                </span>
+                <span className="shrink-0 text-[2.5rem] font-light leading-none text-[#9f96b4]">
+                  ›
+                </span>
+              </button>
+
+              <div className="mt-8 rounded-[24px] bg-white/46 px-6 py-6 shadow-[0_20px_48px_rgba(84,72,146,0.1),inset_0_1px_0_rgba(255,255,255,0.9)]">
+                <div className="flex items-start gap-4">
+                  <ImageTipIcon />
+                  <div className="min-w-0">
+                    <h3 className="text-[1.25rem] font-black leading-7 text-[#6c54df]">
+                      小贴士
+                    </h3>
+                    <ul className="mt-3 space-y-2 text-[0.98rem] font-bold leading-7 text-[#746b91]">
+                      <li>• 图片内容清晰，识别效果更好</li>
+                      <li>• 支持中英文及多种语言识别</li>
+                      <li>• 识别结果可编辑，生成课程后可随时调整</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+          ) : importView === "camera" ? (
+            <section className="absolute inset-0 z-40 overflow-hidden bg-[#17151f] text-white">
+              <video
+                ref={cameraVideoRef}
+                autoPlay
+                muted
+                playsInline
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/10" />
+
+              <button
+                type="button"
+                onClick={goBackFromCurrentView}
+                aria-label="返回图片识别"
+                className="absolute left-5 top-6 z-20 grid h-11 w-11 place-items-center rounded-full bg-black/24 text-white backdrop-blur-md"
+              >
+                <span
+                  aria-hidden="true"
+                  className="relative block h-5 w-5 before:absolute before:left-0 before:top-1/2 before:h-[2px] before:w-5 before:-translate-y-1/2 before:bg-white after:absolute after:left-0 after:top-1/2 after:h-3 after:w-3 after:-translate-y-1/2 after:rotate-45 after:border-b-[2px] after:border-l-[2px] after:border-white"
+                />
+              </button>
+
+              <div className="pointer-events-none absolute inset-x-4 top-6 z-10 h-[calc(100%-10.5rem)]">
+                <span className="absolute left-0 top-0 h-8 w-8 rounded-tl-[4px] border-l-[3px] border-t-[3px] border-white/86" />
+                <span className="absolute right-0 top-0 h-8 w-8 rounded-tr-[4px] border-r-[3px] border-t-[3px] border-white/86" />
+                <span className="absolute bottom-0 left-0 h-8 w-8 rounded-bl-[4px] border-b-[3px] border-l-[3px] border-white/86" />
+                <span className="absolute bottom-0 right-0 h-8 w-8 rounded-br-[4px] border-b-[3px] border-r-[3px] border-white/86" />
+              </div>
+
+              {isCameraStarting ? (
+                <div className="absolute inset-0 z-20 grid place-items-center bg-black/48 text-[1rem] font-bold text-white/84">
+                  正在打开相机...
+                </div>
+              ) : null}
+
+              <p className="absolute bottom-[7.75rem] left-0 right-0 z-20 text-center text-[0.88rem] font-bold text-white/88">
+                轻点屏幕照亮
+              </p>
+
+              <button
+                type="button"
+                onClick={takeCameraPhoto}
+                disabled={isCameraStarting}
+                aria-label="拍照"
+                className="absolute bottom-9 left-1/2 z-20 grid h-[4.75rem] w-[4.75rem] -translate-x-1/2 place-items-center rounded-full border-[5px] border-white bg-white/18 shadow-[0_0_36px_rgba(255,255,255,0.25)] disabled:opacity-60"
+              >
+                <span className="h-14 w-14 rounded-full bg-[#ff850f] shadow-[inset_0_1px_0_rgba(255,255,255,0.44)]" />
+              </button>
+
+              <canvas ref={cameraCanvasRef} className="hidden" />
             </section>
           ) : importView === "youtube" ? (
             <section className="relative z-10 flex min-h-0 flex-1 flex-col px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-12">
@@ -834,7 +1222,11 @@ export default function CreateCoursePage() {
 
                   <button
                     type="button"
-                    onClick={() => openFilePicker(textImageInputRef)}
+                    onClick={() => {
+                      setGenerationError("");
+                      setShowSourceSheet(false);
+                      setImportView("image");
+                    }}
                     className="flex min-h-[4.75rem] items-center gap-4 rounded-[18px] bg-white/70 px-4 py-3 text-left shadow-[0_14px_32px_rgba(84,72,146,0.08),inset_0_1px_0_rgba(255,255,255,0.92)] transition hover:bg-white/82"
                   >
                     <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[12px] bg-[linear-gradient(135deg,#dff7ff_0%,#b99cff_55%,#ffcfef_100%)] text-[1.45rem] shadow-[0_10px_22px_rgba(126,92,255,0.16)]">
@@ -946,6 +1338,14 @@ export default function CreateCoursePage() {
             type="file"
             className="sr-only"
             accept="image/*,.png,.jpg,.jpeg,.webp,.heic"
+            onChange={handleFileSelection}
+          />
+          <input
+            ref={cameraImageInputRef}
+            type="file"
+            className="sr-only"
+            accept="image/*"
+            capture="environment"
             onChange={handleFileSelection}
           />
           {isGeneratingCourse ? <GeneratingCourseOverlay /> : null}

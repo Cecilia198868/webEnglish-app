@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -123,17 +124,51 @@ function getDefaultLessonsData(): LocalLessonData {
   return { lessons: [] };
 }
 
+function getDisplayCourseFileName(title: string) {
+  return title.replace(/^我的课程：/, "").trim() || "未命名课程";
+}
+
+function getStoredCourseTitle(title: string) {
+  const trimmed = title.trim() || "未命名课程";
+  return trimmed.startsWith("我的课程：") ? trimmed : `我的课程：${trimmed}`;
+}
+
+function readLessonsStorage() {
+  if (typeof window === "undefined") {
+    return { lessons: [], payload: {} as Record<string, unknown> };
+  }
+
+  try {
+    const raw = localStorage.getItem(LESSONS_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    const payload =
+      typeof parsed === "object" && parsed !== null
+        ? (parsed as Record<string, unknown>)
+        : {};
+    const lessons = Array.isArray(payload.lessons)
+      ? (payload.lessons as Lesson[])
+      : [];
+
+    return { lessons, payload };
+  } catch {
+    return { lessons: [], payload: {} as Record<string, unknown> };
+  }
+}
+
+function writeLessonsStorage(
+  payload: Record<string, unknown>,
+  lessons: Lesson[]
+) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(LESSONS_STORAGE_KEY, JSON.stringify({ ...payload, lessons }));
+}
+
 function loadLessonsData(): LocalLessonData {
   if (typeof window === "undefined") return getDefaultLessonsData();
 
   try {
-    const raw = localStorage.getItem(LESSONS_STORAGE_KEY);
-    if (!raw) return getDefaultLessonsData();
-
-    const parsed = JSON.parse(raw);
-    return {
-      lessons: Array.isArray(parsed.lessons) ? parsed.lessons : [],
-    };
+    const { lessons } = readLessonsStorage();
+    return { lessons };
   } catch (error) {
     console.error("Failed to load lesson:", error);
     return getDefaultLessonsData();
@@ -184,6 +219,22 @@ async function getAudioBlobById(id: string): Promise<Blob | null> {
 
     request.onerror = () => reject(new Error("读取原音频失败"));
   });
+}
+
+async function deleteAudioById(id: string) {
+  try {
+    const db = await openAudioDB();
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(AUDIO_STORE_NAME, "readwrite");
+      const store = tx.objectStore(AUDIO_STORE_NAME);
+      const request = store.delete(id);
+
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(new Error("删除原音频失败"));
+    });
+  } catch (error) {
+    console.warn("Failed to delete audio:", error);
+  }
 }
 
 const distortedVoiceNamePattern =
@@ -294,6 +345,9 @@ export default function StudyPage() {
     HighlightedExpression[]
   >([]);
   const [showMoreActions, setShowMoreActions] = useState(false);
+  const [showCourseFileMenu, setShowCourseFileMenu] = useState(false);
+  const [showRenameCourseDialog, setShowRenameCourseDialog] = useState(false);
+  const [renameCourseTitle, setRenameCourseTitle] = useState("");
   const [showFreePracticeLimitModal, setShowFreePracticeLimitModal] =
     useState(false);
 
@@ -313,7 +367,8 @@ export default function StudyPage() {
   const voiceKey = "selected-voice-name";
   const prepKey = "study-prep-seconds";
   const gapKey = "study-gap-seconds";
-  const freePracticeScope = lessonId.startsWith("my-course-")
+  const isMyCourseLesson = lessonId.startsWith("my-course-");
+  const freePracticeScope = isMyCourseLesson
     ? (`course:${lessonId}` as const)
     : "classic";
 
@@ -1001,6 +1056,85 @@ export default function StudyPage() {
     router.replace("/speak-english?menu=1");
   }
 
+  function openRenameCourseDialog() {
+    setRenameCourseTitle(getDisplayCourseFileName(courseTitle));
+    setShowCourseFileMenu(false);
+    setShowRenameCourseDialog(true);
+  }
+
+  function closeRenameCourseDialog() {
+    setShowRenameCourseDialog(false);
+    setRenameCourseTitle("");
+  }
+
+  function renameCurrentCourse() {
+    if (!isMyCourseLesson || !lesson) return;
+
+    const nextTitle = getStoredCourseTitle(renameCourseTitle);
+    const { lessons, payload } = readLessonsStorage();
+    const nextLessons = lessons.map((item) =>
+      item.id === lessonId ? { ...item, title: nextTitle } : item
+    );
+
+    writeLessonsStorage(payload, nextLessons);
+    window.localStorage.setItem("currentLessonTitle", nextTitle);
+    setLesson((current) =>
+      current && current.id === lessonId ? { ...current, title: nextTitle } : current
+    );
+    setLocalLessonSequence(nextLessons);
+    setLessonTitle(nextTitle);
+    closeRenameCourseDialog();
+  }
+
+  function handleRenameCourseKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      renameCurrentCourse();
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeRenameCourseDialog();
+    }
+  }
+
+  function deleteCurrentCourseFile() {
+    if (!isMyCourseLesson || !lesson) return;
+
+    const fileName = getDisplayCourseFileName(courseTitle);
+    const confirmed = window.confirm(`删除文件“${fileName}”？`);
+    if (!confirmed) return;
+
+    stopSequencePlayback(true);
+    const { lessons, payload } = readLessonsStorage();
+    const nextLessons = lessons.filter((item) => item.id !== lessonId);
+    writeLessonsStorage(payload, nextLessons);
+
+    localStorage.removeItem(progressKey);
+    localStorage.removeItem(`speakflow-free-practice-usage:course:${lessonId}`);
+
+    if (localStorage.getItem("currentLessonTitle") === lessonTitle) {
+      localStorage.removeItem("currentLessonTitle");
+    }
+
+    try {
+      const rawProgress = localStorage.getItem(LAST_STUDY_PROGRESS_KEY);
+      const progress = rawProgress ? JSON.parse(rawProgress) : null;
+      if (progress?.courseId === lessonId) {
+        localStorage.removeItem(LAST_STUDY_PROGRESS_KEY);
+      }
+    } catch {
+      localStorage.removeItem(LAST_STUDY_PROGRESS_KEY);
+    }
+
+    if (lesson.sourceAudioId) {
+      void deleteAudioById(lesson.sourceAudioId);
+    }
+
+    setShowCourseFileMenu(false);
+    router.replace("/speak-english?menu=1");
+  }
+
   function handleSaveCurrentPosition() {
     saveProgress(currentIndex);
     setMessage("当前位置已保存");
@@ -1278,11 +1412,28 @@ export default function StudyPage() {
 
               <button
                 type="button"
-                aria-label="显示设置"
-                onClick={() => setShowMoreActions((prev) => !prev)}
+                aria-label={isMyCourseLesson ? "课程文件菜单" : "显示设置"}
+                onClick={() => {
+                  if (isMyCourseLesson) {
+                    setShowMoreActions(false);
+                    setShowCourseFileMenu((prev) => !prev);
+                    return;
+                  }
+
+                  setShowCourseFileMenu(false);
+                  setShowMoreActions((prev) => !prev);
+                }}
                 className="sf-header-button text-[1.25rem] font-semibold text-[#201833]"
               >
-                ⌄
+                {isMyCourseLesson ? (
+                  <span className="flex items-center gap-0.5">
+                    <span className="h-1 w-1 rounded-full bg-[#201833]" />
+                    <span className="h-1 w-1 rounded-full bg-[#201833]" />
+                    <span className="h-1 w-1 rounded-full bg-[#201833]" />
+                  </span>
+                ) : (
+                  "⌄"
+                )}
               </button>
             </div>
           </header>
@@ -1502,6 +1653,29 @@ export default function StudyPage() {
 
           </section>
 
+          {showCourseFileMenu && isMyCourseLesson ? (
+            <div className="absolute right-6 top-[92px] z-40 w-[210px] rounded-[20px] border border-[#c9bfff] bg-white p-3 text-[#201833] shadow-[0_22px_58px_rgba(84,72,146,0.22)]">
+              <button
+                type="button"
+                onClick={openRenameCourseDialog}
+                className="flex h-12 w-full items-center gap-3 rounded-[14px] bg-[#f7f4ff] px-4 text-left text-sm font-black text-[#201833] hover:bg-[#e9e4ff]"
+              >
+                <span className="text-base">✎</span>
+                更改文件名
+              </button>
+              <button
+                type="button"
+                onClick={deleteCurrentCourseFile}
+                className="mt-2 flex h-12 w-full items-center gap-3 rounded-[14px] bg-[#fff2f5] px-4 text-left text-sm font-black text-[#d34a62] hover:bg-[#ffe8ee]"
+              >
+                <span aria-hidden="true" className="text-base">
+                  🗑
+                </span>
+                删除文件
+              </button>
+            </div>
+          ) : null}
+
           {showMoreActions ? (
             <div className="absolute left-6 right-6 top-[92px] z-30 rounded-[18px] border border-[#c9bfff] bg-white p-3 text-[#201833] shadow-[0_22px_58px_rgba(84,72,146,0.22)]">
               <div className="grid grid-cols-2 gap-2">
@@ -1581,7 +1755,10 @@ export default function StudyPage() {
             <div className="flex items-center gap-3 rounded-[24px] border border-[#d8d0ff] bg-white/35 p-2">
               <button
                 type="button"
-                onClick={() => setShowMoreActions((prev) => !prev)}
+                onClick={() => {
+                  setShowCourseFileMenu(false);
+                  setShowMoreActions((prev) => !prev);
+                }}
                 aria-label="更多操作"
                 className="grid h-12 w-12 shrink-0 place-items-center rounded-[20px] bg-white/30 text-3xl font-light text-[#201833]"
               >
@@ -1644,6 +1821,40 @@ export default function StudyPage() {
             onDismiss={() => setShowFreePracticeLimitModal(false)}
             onUnlockPro={openProFromFreePracticeLimit}
           />
+        ) : null}
+
+        {showRenameCourseDialog ? (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#171129]/72 p-4 backdrop-blur-[10px]">
+            <div className="w-full max-w-[390px] rounded-[30px] border border-white/80 bg-[#f8f5ff] p-6 text-[#201833] shadow-[0_28px_80px_rgba(28,18,62,0.42)]">
+              <h2 className="text-[1.45rem] font-extrabold">更改文件名</h2>
+              <label className="mt-5 block">
+                <span className="sr-only">课程文件名</span>
+                <input
+                  value={renameCourseTitle}
+                  onChange={(event) => setRenameCourseTitle(event.target.value)}
+                  onKeyDown={handleRenameCourseKeyDown}
+                  autoFocus
+                  className="h-14 w-full rounded-[18px] border border-[#c9bfff] bg-white px-4 text-[1rem] font-bold text-[#201833] outline-none shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
+                />
+              </label>
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={closeRenameCourseDialog}
+                  className="rounded-[18px] border border-[#d8d0f4] bg-white px-4 py-4 text-[1.05rem] font-extrabold text-[#6f668a] hover:bg-[#efeaff]"
+                >
+                  取消
+                </button>
+                <button
+                  type="button"
+                  onClick={renameCurrentCourse}
+                  className="rounded-[18px] bg-[#5f73ff] px-4 py-4 text-[1.05rem] font-extrabold text-white shadow-[0_12px_28px_rgba(95,115,255,0.28)] hover:bg-[#5267f1]"
+                >
+                  保存
+                </button>
+              </div>
+            </div>
+          </div>
         ) : null}
 
         {pendingExpression ? (
