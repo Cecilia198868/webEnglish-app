@@ -4,6 +4,7 @@ import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
+import AccountAvatarButton from "@/components/AccountAvatarButton";
 import FreePracticeLimitModal from "@/components/FreePracticeLimitModal";
 import { parseTrainingContent, type SentencePair } from "@/lib/training";
 import {
@@ -68,7 +69,7 @@ const expressionVariantLabels: Array<{
   key: ExpressionVariantKey;
   label: string;
 }> = [
-  { key: "standard", label: "标准表达" },
+  { key: "standard", label: "推荐表达" },
   { key: "idiomatic", label: "更地道" },
   { key: "simple", label: "更简单" },
   { key: "natural", label: "更自然" },
@@ -1410,39 +1411,15 @@ export default function StudyPage() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                aria-label={isMyCourseLesson ? "课程文件菜单" : "显示设置"}
-                onClick={() => {
-                  if (isMyCourseLesson) {
-                    setShowMoreActions(false);
-                    setShowCourseFileMenu((prev) => !prev);
-                    return;
-                  }
-
-                  setShowCourseFileMenu(false);
-                  setShowMoreActions((prev) => !prev);
-                }}
-                className="sf-header-button text-[1.25rem] font-semibold text-[#201833]"
-              >
-                {isMyCourseLesson ? (
-                  <span className="flex items-center gap-0.5">
-                    <span className="h-1 w-1 rounded-full bg-[#201833]" />
-                    <span className="h-1 w-1 rounded-full bg-[#201833]" />
-                    <span className="h-1 w-1 rounded-full bg-[#201833]" />
-                  </span>
-                ) : (
-                  "⌄"
-                )}
-              </button>
+              <AccountAvatarButton />
             </div>
           </header>
 
           <section
-            className={`sf-study-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 ${
+            className={`sf-study-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pt-4 ${
               showStudyVoiceOnlyPrompt || showExpressionFeedback
-                ? "sf-study-main-has-actions"
-                : ""
+                ? "sf-study-main-has-actions pb-[calc(7.25rem+env(safe-area-inset-bottom))]"
+                : "pb-[max(1rem,env(safe-area-inset-bottom))]"
             }`}
           >
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
@@ -1478,44 +1455,45 @@ export default function StudyPage() {
             <div
               className={`sf-study-content flex min-h-0 flex-1 flex-col items-center overflow-y-auto text-center ${
                 showStudyVoiceOnlyPrompt
-                  ? "sf-study-content-with-actions sf-study-content-voice justify-center py-6"
+                  ? "sf-study-content-with-actions sf-study-content-voice justify-start pb-6 pt-10"
                   : showExpressionFeedback
                     ? "sf-study-content-with-actions sf-study-content-feedback justify-start py-5"
                     : "justify-start py-5"
               }`}
             >
-              {showStudyListeningPrompt ? (
+              {showStudyListeningPrompt || showStudyPrompt ? (
                 <>
-                  <h2 className="max-w-[360px] text-[1.65rem] font-extrabold leading-10 text-[#201833]">
-                    正在听你说话...
-                  </h2>
-                  <p className="mt-6 max-w-[340px] text-[1rem] font-semibold leading-7 text-[#201833]">
-                    试着用英语说出来
-                  </p>
-                </>
-              ) : showStudyPrompt ? (
-                <>
-                  <div className="max-w-[430px] bg-white/10 px-5 py-5">
-                    <h2 className="text-[1.75rem] font-extrabold leading-10 text-[#201833]">
+                  <div className="w-full max-w-[430px] bg-white/10 px-5 py-5 text-left">
+                    <h2 className="text-[1.75rem] font-extrabold leading-[1.5] text-[#201833]">
                       {currentPair.chinese || "没有内容"}
                     </h2>
-                    <p className="mt-5 text-[1rem] font-extrabold text-[#4b4267]">
+                    <p className="mt-5 text-[1rem] font-extrabold leading-[1.5] text-[#4b4267]">
                       试着用英语说出来
                     </p>
                   </div>
+                  {showStudyListeningPrompt ? (
+                    <div className="mt-7 w-full max-w-[340px] bg-white/10 px-5 py-5 text-center">
+                      <h2 className="text-[1.45rem] font-extrabold leading-[1.5] text-[#201833]">
+                        正在听你说话...
+                      </h2>
+                      <p className="mt-4 text-[0.92rem] font-semibold leading-[1.5] text-[#201833]">
+                        试着用英语说出来
+                      </p>
+                    </div>
+                  ) : null}
                 </>
               ) : (
                 <>
                   <div className="w-full max-w-[430px] text-left">
-                    <p className="text-[1.05rem] font-extrabold text-[#7f7896]">
+                    <p className="text-[1.05rem] font-extrabold leading-[1.5] text-[#7f7896]">
                       你的表达:
                     </p>
-                    <p className="mt-5 rounded-[18px] bg-white/10 px-5 py-4 text-[1.15rem] font-bold leading-8 text-[#8f879c]">
+                    <p className="mt-5 rounded-[18px] bg-white/10 px-5 py-4 text-[1.15rem] font-bold leading-[1.5] text-[#8f879c]">
                       {spokenDisplay}
                     </p>
                   </div>
 
-                  <div className="mt-6 w-full max-w-[430px]">
+                  <div className="mt-6 w-full max-w-[430px] text-left">
                     <div className="flex items-center gap-2 text-left">
                       <button
                         type="button"
@@ -1530,7 +1508,7 @@ export default function StudyPage() {
                       >
                         ←
                       </button>
-                      <span className="text-[1.2rem] font-extrabold text-[#4f6fe8]">
+                      <span className="text-[1.2rem] font-extrabold leading-[1.5] text-[#4f6fe8]">
                         {selectedExpression.label}
                       </span>
                       <button
@@ -1551,7 +1529,7 @@ export default function StudyPage() {
                       </button>
                     </div>
 
-                    <p className="sf-study-expression-text mt-4 bg-white/18 px-4 py-4 text-[clamp(1.55rem,7vw,1.85rem)] font-extrabold leading-[1.22] text-[#201833]">
+                    <p className="sf-study-expression-text mt-4 bg-white/18 px-4 py-4 text-left text-[clamp(1.55rem,7vw,1.85rem)] font-extrabold leading-[1.5] text-[#201833]">
                       {isLoadingExpressionVariants
                         ? "正在生成表达..."
                         : selectedExpressionSegments.map((segment, index) =>
@@ -1578,24 +1556,6 @@ export default function StudyPage() {
                           )}
                     </p>
 
-                    <div className="mt-5 flex justify-center gap-5 text-[#201833]">
-                      <button
-                        type="button"
-                        aria-label="播放朗读"
-                        onClick={() => speakEnglish(selectedExpression.text, 1)}
-                        className="flex h-12 items-center gap-2 rounded-[16px] bg-white/40 px-5 text-[1.25rem] font-extrabold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]"
-                      >
-                        ▶
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="慢速朗读"
-                        onClick={() => speakEnglish(selectedExpression.text, 0.75)}
-                        className="flex h-12 items-center gap-2 rounded-[16px] bg-white/40 px-5 text-[1.05rem] font-extrabold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]"
-                      >
-                        ▶ <span>0.75x</span>
-                      </button>
-                    </div>
                   </div>
                 </>
               )}
@@ -1607,51 +1567,70 @@ export default function StudyPage() {
               ) : null}
             </div>
 
-            {showStudyVoiceOnlyPrompt || showExpressionFeedback ? (
-              <div className="sf-study-actions relative z-20 mt-2 shrink-0">
-                <div className="flex items-start justify-center gap-10">
-                  <button
-                    type="button"
-                    onClick={handlePrev}
-                    disabled={currentIndex === 0}
-                    className="mt-8 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
-                    aria-label="上一句"
-                  >
-                    ←
-                  </button>
-                  <button
-                    type="button"
-                    onClick={
-                      handleEnglishPracticeAction
-                    }
-                    className="grid place-items-center"
-                    aria-label={isListening ? "停止语音输入" : "点击开始说话"}
-                  >
-                    <Image
-                      src="/icons/glow-mic.svg"
-                      alt=""
-                      width={96}
-                      height={96}
-                      className="h-24 w-24"
-                    />
-                    <span className="mt-5 text-[1.08rem] font-semibold text-[#7f7896]">
-                      {isListening ? "正在听..." : "点击开始说话"}
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    disabled={currentIndex >= pairs.length - 1}
-                    className="mt-8 grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
-                    aria-label="下一句"
-                  >
-                    →
-                  </button>
-                </div>
-              </div>
-            ) : null}
-
           </section>
+
+          {showStudyVoiceOnlyPrompt || showExpressionFeedback ? (
+            <div
+              className={`sf-study-actions absolute inset-x-0 bottom-0 z-20 grid min-h-[7rem] items-center gap-1 border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.84),rgba(215,207,252,0.96))] px-3 pb-[max(0.55rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(100,82,180,0.09),inset_0_1px_0_rgba(255,255,255,0.58)] backdrop-blur-xl ${
+                showExpressionFeedback
+                  ? "grid-cols-[1fr_1fr_auto_1fr_1fr]"
+                  : "grid-cols-[1fr_auto_1fr] px-8"
+              }`}
+            >
+              {showExpressionFeedback ? (
+                <button
+                  type="button"
+                  aria-label="播放朗读"
+                  onClick={() => speakEnglish(selectedExpression.text, 1)}
+                  className="ml-auto flex h-10 min-w-[2.9rem] items-center justify-center rounded-[15px] px-1 text-[0.82rem] font-extrabold text-[#201833] transition hover:bg-white/30"
+                >
+                  朗读
+                </button>
+              ) : null}
+              <button
+                type="button"
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className="ml-auto flex h-11 min-w-[3.6rem] items-center justify-center rounded-[15px] px-1 text-[0.82rem] font-extrabold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                aria-label="上一句"
+              >
+                上一句
+              </button>
+              <button
+                type="button"
+                onClick={handleEnglishPracticeAction}
+                className="grid place-items-center transition"
+                aria-label={isListening ? "停止语音输入" : "点击开始说话"}
+              >
+                <Image
+                  src="/icons/glow-mic.svg"
+                  alt=""
+                  width={96}
+                  height={96}
+                  className="h-[4.5rem] w-[4.5rem]"
+                />
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={currentIndex >= pairs.length - 1}
+                className="mr-auto flex h-11 min-w-[3.6rem] items-center justify-center rounded-[15px] px-1 text-[0.82rem] font-extrabold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                aria-label="下一句"
+              >
+                下一句
+              </button>
+              {showExpressionFeedback ? (
+                <button
+                  type="button"
+                  aria-label="慢速朗读"
+                  onClick={() => speakEnglish(selectedExpression.text, 0.75)}
+                  className="mr-auto flex h-10 min-w-[4rem] items-center justify-center rounded-[15px] px-1 text-[0.76rem] font-extrabold text-[#201833] transition hover:bg-white/30"
+                >
+                  慢速朗读
+                </button>
+              ) : null}
+            </div>
+          ) : null}
 
           {showCourseFileMenu && isMyCourseLesson ? (
             <div className="absolute right-6 top-[92px] z-40 w-[210px] rounded-[20px] border border-[#c9bfff] bg-white p-3 text-[#201833] shadow-[0_22px_58px_rgba(84,72,146,0.22)]">

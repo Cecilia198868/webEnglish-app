@@ -618,8 +618,12 @@ body {
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom)) !important;
   }
 
+  .sf-study-phone > .sf-vocabulary-main {
+    padding-bottom: calc(7.25rem + env(safe-area-inset-bottom)) !important;
+  }
+
   .sf-study-phone > .sf-study-main-has-actions {
-    padding-bottom: max(2.5rem, env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(7.25rem + env(safe-area-inset-bottom)) !important;
   }
 
   .sf-study-phone .sf-study-heading {
@@ -656,7 +660,7 @@ body {
   .sf-study-phone .sf-study-expression-text {
     overflow-wrap: anywhere;
     font-size: clamp(1.35rem, 6vw, 1.65rem) !important;
-    line-height: 1.24 !important;
+    line-height: 1.5 !important;
   }
 
   .sf-study-phone .sf-study-expression-text button {
@@ -665,7 +669,7 @@ body {
   }
 
   .sf-study-phone .sf-study-actions {
-    margin-top: clamp(0.75rem, 2dvh, 1.25rem) !important;
+    margin-top: 0 !important;
   }
 
   .sf-study-phone .sf-study-actions > div {
@@ -674,12 +678,12 @@ body {
 
   .sf-study-phone .sf-study-actions [aria-label="上一句"],
   .sf-study-phone .sf-study-actions [aria-label="下一句"] {
-    margin-top: 1.25rem !important;
+    margin-top: 0 !important;
   }
 
   .sf-study-phone .sf-study-actions img {
-    width: 5.5rem !important;
-    height: 5.5rem !important;
+    width: 4.75rem !important;
+    height: 4.75rem !important;
   }
 
   .sf-study-phone .sf-study-actions span {
@@ -766,6 +770,14 @@ body {
     padding-bottom: max(0.5rem, env(safe-area-inset-bottom)) !important;
   }
 
+  .sf-study-phone > .sf-study-main-has-actions {
+    padding-bottom: calc(7.25rem + env(safe-area-inset-bottom)) !important;
+  }
+
+  .sf-study-phone > .sf-vocabulary-main {
+    padding-bottom: calc(7.25rem + env(safe-area-inset-bottom)) !important;
+  }
+
   .sf-study-phone > header {
     padding-top: 0.625rem !important;
   }
@@ -787,8 +799,8 @@ body {
   }
 
   .sf-study-phone .sf-study-actions img {
-    width: 5rem !important;
-    height: 5rem !important;
+    width: 4.5rem !important;
+    height: 4.5rem !important;
   }
 
   .sf-speak-phone > .sf-free-practice-result-main {
@@ -1382,6 +1394,185 @@ body {
     inset 0 5px 12px rgba(112, 97, 212, 0.12) !important;
 }
 
+.sf-login-page {
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.54), transparent 30%),
+    radial-gradient(circle at 84% 24%, rgba(211, 228, 255, 0.7), transparent 34%),
+    linear-gradient(180deg, #c8b9ff 0%, #ded8ff 48%, #eef2ff 100%) !important;
+  color: #18122f;
+}
+
+.sf-login-wrap {
+  max-width: min(100%, 52rem) !important;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0 clamp(2.65rem, 10.8vw, 5.9rem)
+    calc(env(safe-area-inset-bottom, 0px) + 2.2rem) !important;
+}
+
+.sf-login-topbar {
+  display: flex;
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top, 0px) + clamp(1.75rem, 4.2dvh, 3.4rem));
+  right: max(clamp(2.65rem, 10.8vw, 5.9rem), calc((100vw - 52rem) / 2 + 2.65rem));
+  left: max(clamp(2.65rem, 10.8vw, 5.9rem), calc((100vw - 52rem) / 2 + 2.65rem));
+  z-index: 30;
+  pointer-events: none;
+}
+
+.sf-login-topbar > * {
+  pointer-events: auto;
+}
+
+.sf-login-back {
+  display: grid;
+  width: clamp(3.75rem, 9vw, 5.05rem);
+  height: clamp(3.75rem, 9vw, 5.05rem);
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.66);
+}
+
+.sf-login-back span {
+  width: clamp(1.05rem, 2.45vw, 1.45rem);
+  height: clamp(1.05rem, 2.45vw, 1.45rem);
+  margin-left: 0.35rem;
+  border-bottom: 3px solid #35304f;
+  border-left: 3px solid #35304f;
+  transform: rotate(45deg);
+}
+
+.sf-login-close {
+  display: grid;
+  width: clamp(3.3rem, 7.2vw, 4rem);
+  height: clamp(3.3rem, 7.2vw, 4rem);
+  place-items: center;
+  color: #403957;
+  font-size: clamp(3rem, 6.4vw, 3.7rem);
+  font-weight: 300;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.sf-login-panel {
+  width: 100% !important;
+  margin-top: clamp(9.8rem, 15dvh, 16.5rem) !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-align: left;
+}
+
+.sf-login-panel::before,
+.sf-login-panel::after,
+.sf-login-panel .sf-brand-hairline {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+}
+
+.sf-login-title {
+  color: #17112f;
+  font-size: clamp(2.7rem, 6.4vw, 3.42rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0;
+  line-height: 1.5 !important;
+}
+
+.sf-login-subtitle {
+  margin-top: 0.45rem !important;
+  color: rgba(55, 47, 82, 0.68) !important;
+  font-size: clamp(1.38rem, 3.5vw, 1.72rem) !important;
+  font-weight: 760 !important;
+  line-height: 1.5 !important;
+}
+
+.sf-login-options {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(5.05rem, 12dvh, 7.6rem);
+}
+
+.sf-login-action {
+  min-height: clamp(6.65rem, 11.5dvh, 7.9rem);
+  gap: clamp(1.72rem, 5.3vw, 2.45rem);
+  border-bottom: 1px solid rgba(137, 116, 215, 0.2);
+  color: #17112f !important;
+  font-size: clamp(1.55rem, 3.7vw, 2.05rem) !important;
+  text-decoration: none;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-weight: 900 !important;
+  line-height: 1.5 !important;
+}
+
+.sf-login-action:last-child {
+  border-bottom: 0;
+}
+
+.sf-auth-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: clamp(4.05rem, 7.9vw, 5.5rem);
+  height: clamp(4.05rem, 7.9vw, 5.5rem);
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(158, 126, 255, 0.13);
+  color: #8b63ee;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  font-weight: 900;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 18px 38px rgba(126, 100, 213, 0.12);
+}
+
+.sf-login-action-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.sf-login-chevron {
+  flex: 0 0 auto;
+  width: clamp(0.78rem, 1.7vw, 1rem);
+  height: clamp(0.78rem, 1.7vw, 1rem);
+  border-bottom: 3px solid rgba(62, 55, 88, 0.66);
+  border-right: 3px solid rgba(62, 55, 88, 0.66);
+  transform: rotate(-45deg);
+}
+
+.sf-login-terms {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.68rem;
+  margin-top: auto;
+  padding-top: clamp(2.4rem, 6dvh, 5.5rem);
+  color: rgba(82, 74, 114, 0.72);
+  font-size: clamp(1rem, 2.6vw, 1.22rem);
+  font-weight: 720;
+  line-height: 1.5 !important;
+  text-align: left;
+}
+
+.sf-login-terms svg {
+  flex: 0 0 auto;
+  color: #8b63ee;
+}
+
+.sf-login-terms a {
+  color: #8061ef;
+  font-weight: 850;
+  text-decoration: none;
+}
+
 @media (max-width: 760px) {
   .sf-home-page {
     background:
@@ -1393,7 +1584,8 @@ body {
 
   .sf-home-stage {
     min-height: calc(100dvh - 32px);
-    padding-top: 3.5rem;
+    justify-content: flex-start;
+    padding-top: clamp(3.4rem, 9dvh, 4.75rem);
     padding-bottom: 3.5rem;
   }
 
@@ -1426,7 +1618,172 @@ body {
 
   .sf-home-button {
     min-height: 64px;
-    margin-top: 2.5rem !important;
+    margin-top: 2.15rem !important;
+  }
+
+  .sf-login-page {
+    background:
+      radial-gradient(circle at 20% 22%, rgba(255, 255, 255, 0.5), transparent 31%),
+      radial-gradient(circle at 82% 16%, rgba(221, 236, 255, 0.72), transparent 32%),
+      linear-gradient(180deg, #cabdff 0%, #e3deff 48%, #f0f4ff 100%) !important;
+  }
+
+  .sf-login-wrap {
+    max-width: none !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 0 clamp(2.65rem, 10.8vw, 4.4rem)
+      calc(env(safe-area-inset-bottom, 0px) + 1.8rem) !important;
+  }
+
+  .sf-login-topbar {
+    display: flex;
+    position: fixed !important;
+    top: calc(env(safe-area-inset-top, 0px) + clamp(1.75rem, 4.2dvh, 3rem));
+    right: clamp(2.65rem, 10.8vw, 4.4rem);
+    left: clamp(2.65rem, 10.8vw, 4.4rem);
+    z-index: 30;
+    pointer-events: none;
+  }
+
+  .sf-login-topbar > * {
+    pointer-events: auto;
+  }
+
+  .sf-login-back {
+    display: grid;
+    width: clamp(3.75rem, 14vw, 5rem);
+    height: clamp(3.75rem, 14vw, 5rem);
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.48);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.64);
+  }
+
+  .sf-login-back span {
+    width: 1.05rem;
+    height: 1.05rem;
+    margin-left: 0.35rem;
+    border-bottom: 3px solid #35304f;
+    border-left: 3px solid #35304f;
+    transform: rotate(45deg);
+  }
+
+  .sf-login-close {
+    display: grid;
+    width: clamp(3.2rem, 12vw, 3.65rem);
+    height: clamp(3.2rem, 12vw, 3.65rem);
+    place-items: center;
+    color: #403957;
+    font-size: clamp(3rem, 11vw, 3.55rem);
+    font-weight: 300;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .sf-login-panel {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    margin-top: clamp(9.8rem, 15dvh, 16.5rem) !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+  }
+
+  .sf-login-title {
+    font-size: clamp(2.7rem, 10vw, 3.45rem) !important;
+    font-weight: 900 !important;
+    line-height: 1.5 !important;
+  }
+
+  .sf-login-subtitle {
+    margin-top: 0.55rem !important;
+    color: rgba(57, 50, 83, 0.64) !important;
+    font-size: clamp(1.35rem, 5.8vw, 1.72rem) !important;
+    font-weight: 760 !important;
+    line-height: 1.5 !important;
+  }
+
+  .sf-login-options {
+    margin-top: clamp(5.05rem, 12dvh, 7.6rem) !important;
+  }
+
+  .sf-login-action {
+    min-height: clamp(6.65rem, 18.6vw, 7.9rem) !important;
+    gap: clamp(1.72rem, 6vw, 2.45rem) !important;
+    border-bottom: 1px solid rgba(137, 116, 215, 0.2) !important;
+    color: #17112f !important;
+    font-size: clamp(1.6rem, 6.8vw, 2.05rem) !important;
+    font-weight: 900 !important;
+    line-height: 1.5 !important;
+  }
+
+  .sf-auth-icon {
+    width: clamp(3.8rem, 16vw, 4.35rem) !important;
+    height: clamp(3.8rem, 16vw, 4.35rem) !important;
+    background: rgba(158, 126, 255, 0.13) !important;
+    color: #8b63ee !important;
+    font-size: clamp(1.8rem, 7.5vw, 2.25rem) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.72),
+      0 18px 38px rgba(126, 100, 213, 0.12) !important;
+  }
+
+  .sf-login-chevron {
+    width: 0.82rem;
+    height: 0.82rem;
+    border-bottom-width: 3px;
+    border-right-width: 3px;
+  }
+
+  .sf-login-terms {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.68rem;
+    margin-top: auto;
+    padding-top: 2.4rem;
+    color: rgba(82, 74, 114, 0.72);
+    font-size: clamp(1rem, 4.3vw, 1.22rem);
+    font-weight: 720;
+    line-height: 1.5 !important;
+    text-align: left;
+  }
+
+  .sf-login-terms svg {
+    flex: 0 0 auto;
+    color: #8b63ee;
+  }
+
+  .sf-login-terms a {
+    color: #8061ef;
+    font-weight: 850;
+    text-decoration: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .sf-login-wrap {
+    padding-right: 2.35rem !important;
+    padding-left: 2.35rem !important;
+  }
+
+  .sf-login-panel {
+    margin-top: 8.6rem !important;
+  }
+
+  .sf-login-options {
+    margin-top: 4.1rem !important;
+  }
+
+  .sf-login-action {
+    min-height: 5.9rem !important;
   }
 }
 

@@ -3,6 +3,7 @@
 import type { ChangeEvent, ReactNode, RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import AccountAvatarButton from "@/components/AccountAvatarButton";
 import { serializeTrainingItems, type TrainingItem } from "@/lib/training";
 
 type ImportView = "home" | "paste" | "image" | "camera" | "video" | "youtube";
@@ -947,12 +948,13 @@ export default function CreateCoursePage() {
                   if (importView !== "home") return;
                   router.replace("/speak-english?menu=1");
                 }}
-                className={`sf-header-button font-extrabold text-[#201833] ${
+                className={`hidden sf-header-button font-extrabold text-[#201833] ${
                   importView === "home" ? "text-[1.05rem]" : "text-[1.1rem]"
                 }`}
               >
                 {importView === "home" ? "v" : "?"}
               </button>
+              <AccountAvatarButton />
             </div>
           </header>
 

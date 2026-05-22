@@ -3,11 +3,22 @@ export const FREE_EXPRESSION_LEARNING_LIMIT = 5;
 const FREE_EXPRESSION_LEARNING_KEY = "speakflow-free-expression-learning";
 
 type ExpressionLearningUsage = {
+  date: string;
   learnedIds: string[];
 };
 
+function getTodayKey() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 function createEmptyUsage(): ExpressionLearningUsage {
   return {
+    date: getTodayKey(),
     learnedIds: [],
   };
 }
@@ -20,12 +31,15 @@ function getExpressionLearningUsage(): ExpressionLearningUsage {
     if (!raw) return createEmptyUsage();
 
     const parsed = JSON.parse(raw) as Partial<ExpressionLearningUsage>;
+    if (parsed.date !== getTodayKey()) return createEmptyUsage();
+
     const learnedIds = Array.isArray(parsed.learnedIds)
       ? parsed.learnedIds.filter((id): id is string => typeof id === "string")
       : [];
 
     return {
-      learnedIds,
+      date: getTodayKey(),
+      learnedIds: learnedIds.slice(0, FREE_EXPRESSION_LEARNING_LIMIT),
     };
   } catch {
     return createEmptyUsage();
@@ -73,6 +87,7 @@ export function recordLearnedExpression(expressionId: string) {
   if (usage.learnedIds.length >= FREE_EXPRESSION_LEARNING_LIMIT) return;
 
   saveExpressionLearningUsage({
+    date: usage.date,
     learnedIds: [...usage.learnedIds, expressionId],
   });
 }

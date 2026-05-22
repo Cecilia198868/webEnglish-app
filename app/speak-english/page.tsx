@@ -36,8 +36,6 @@ type ClassicCourseCategory = {
   sections: ClassicCourseSection[];
 };
 
-type ClassicCoursePickerView = "categories" | "sections" | "lessons";
-
 type ExpressionVariantKey = "standard" | "idiomatic" | "simple" | "natural";
 
 type ExpressionVariant = {
@@ -100,6 +98,44 @@ function createFreePracticeRoundId() {
   return `free:${Date.now()}:${Math.random().toString(36).slice(2)}`;
 }
 
+const accountMenuItemMarks = [
+  ["⭐", "💳", "↻"],
+  ["🎧", "🧠", "🔥", "📊", "⬆️"],
+  ["🎨", "🔔", "🔒", "☁️"],
+  ["❓", "⚑", "ℹ️"],
+] as const;
+
+const accountMenuChildMarks = ["中", "▶", "↪", "1x", "A", "?"] as const;
+
+function getAccountMenuItemMark(sectionIndex: number, itemIndex: number) {
+  return accountMenuItemMarks[sectionIndex]?.[itemIndex] || "•";
+}
+
+function getAccountMenuChildMark(childIndex: number) {
+  return accountMenuChildMarks[childIndex] || "•";
+}
+
+function AccountMenuMark({
+  danger = false,
+  value,
+}: {
+  danger?: boolean;
+  value: string;
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`grid h-8 w-8 shrink-0 place-items-center text-[1.28rem] font-black leading-none ${
+        danger
+          ? "text-[#d33b46]"
+          : "text-[#201833]"
+      }`}
+    >
+      {value}
+    </span>
+  );
+}
+
 function CrownIcon({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -136,15 +172,20 @@ const accountPanelCopy = {
       {
         title: "Account",
         items: [
-          { action: "subscription", label: "SpeakFlow Pro", trailing: "Not subscribed" },
-          { action: "subscription", label: "Manage Subscription" },
-          { label: "Restore Purchases" },
+          {
+            action: "subscription",
+            icon: "⭐",
+            label: "SpeakFlow Pro",
+            trailing: "Not subscribed",
+          },
+          { action: "subscription", icon: "💳", label: "Manage Subscription" },
+          { icon: "↻", label: "Restore Purchases" },
         ],
       },
       {
-        title: "Settings",
+        title: "Learning",
         items: [
-          { action: "voice", label: "Voice" },
+          { action: "voice", icon: "🎧", label: "Voice" },
           {
             children: [
               "Show Chinese by default",
@@ -154,18 +195,29 @@ const accountPanelCopy = {
               "Font size",
               "Long press to reveal answer",
             ],
+            icon: "🧠",
             label: "Learning Settings",
           },
-          { label: "Notifications" },
+          { icon: "🔥", label: "Learning Goals" },
+          { icon: "📊", label: "Learning Records" },
+          { action: "subscription", icon: "⬆️", label: "Upgrade to Pro" },
+        ],
+      },
+      {
+        title: "Settings",
+        items: [
+          { icon: "🎨", label: "Appearance" },
+          { icon: "🔔", label: "Notifications" },
+          { icon: "🔒", label: "Privacy & Security" },
+          { icon: "☁️", label: "Data Sync" },
         ],
       },
       {
         title: "Help",
         items: [
-          { label: "Help Center" },
-          { label: "Report an Issue" },
-          { label: "Privacy Policy" },
-          { label: "About" },
+          { icon: "❓", label: "Help Center" },
+          { icon: "⚑", label: "Report an Issue" },
+          { icon: "ℹ️", label: "About SpeakFlow" },
         ],
       },
     ],
@@ -263,15 +315,20 @@ const accountPanelCopy = {
       {
         title: "账户",
         items: [
-          { action: "subscription", label: "SpeakFlow Pro", trailing: "未订阅" },
-          { action: "subscription", label: "管理订阅" },
-          { label: "恢复购买" },
+          {
+            action: "subscription",
+            icon: "⭐",
+            label: "SpeakFlow Pro",
+            trailing: "未订阅",
+          },
+          { action: "subscription", icon: "💳", label: "管理订阅" },
+          { icon: "↻", label: "恢复购买" },
         ],
       },
       {
-        title: "设置",
+        title: "学习",
         items: [
-          { action: "voice", label: "声音" },
+          { action: "voice", icon: "🎧", label: "声音" },
           {
             children: [
               "默认显示中文",
@@ -281,18 +338,29 @@ const accountPanelCopy = {
               "字体大小",
               "长按显示答案",
             ],
+            icon: "🧠",
             label: "学习设置",
           },
-          { label: "通知" },
+          { icon: "🔥", label: "学习目标" },
+          { icon: "📊", label: "学习记录" },
+          { action: "subscription", icon: "⬆️", label: "升级到 Pro" },
+        ],
+      },
+      {
+        title: "设置",
+        items: [
+          { icon: "🎨", label: "外观" },
+          { icon: "🔔", label: "通知" },
+          { icon: "🔒", label: "隐私与安全" },
+          { icon: "☁️", label: "数据同步" },
         ],
       },
       {
         title: "帮助",
         items: [
-          { label: "帮助中心" },
-          { label: "报告应用问题" },
-          { label: "隐私政策" },
-          { label: "关于" },
+          { icon: "❓", label: "帮助中心" },
+          { icon: "⚑", label: "报告问题" },
+          { icon: "ℹ️", label: "关于 SpeakFlow" },
         ],
       },
     ],
@@ -669,7 +737,7 @@ const expressionVariantLabels: Array<{
   key: ExpressionVariantKey;
   label: string;
 }> = [
-  { key: "standard", label: "标准表达" },
+  { key: "standard", label: "推荐表达" },
   { key: "idiomatic", label: "更地道" },
   { key: "simple", label: "更简单" },
   { key: "natural", label: "更自然" },
@@ -778,7 +846,7 @@ function MenuGlyph({
     return (
       <span
         aria-hidden="true"
-        className={`mr-2 inline-grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#ede8ff] ${className}`}
+        className={`mr-2 inline-grid h-5 w-5 shrink-0 place-items-center ${className}`}
       >
         <span className="relative block h-3 w-3">
           <span className="absolute left-0 top-[1px] h-px w-3 rounded-full bg-[#6e5d9e]" />
@@ -797,8 +865,8 @@ function MenuGlyph({
     5: "•",
   } as const;
   const classByLevel = {
-    3: "h-5 w-5 rounded-[9px] bg-[#ece7ff] text-[1.05rem] font-bold text-[#4b4267]",
-    5: "h-3 w-3 rounded-full bg-[#f2efff] text-[0.62rem] text-[#8b7ab8]",
+    3: "h-5 w-5 text-[1.05rem] font-bold text-[#4b4267]",
+    5: "h-3 w-3 text-[0.62rem] text-[#8b7ab8]",
   } as const;
 
   return (
@@ -894,6 +962,9 @@ function SpeakEnglishClient() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [accountPanelView, setAccountPanelView] =
     useState<AccountPanelView>("menu");
+  const [collapsedAccountMenuItems, setCollapsedAccountMenuItems] = useState<
+    Set<string>
+  >(() => new Set());
   const [selectedProPlan, setSelectedProPlan] = useState<ProPlan>("yearly");
   const [accountName, setAccountName] = useState("");
   const [accountEmail, setAccountEmail] = useState("");
@@ -904,8 +975,6 @@ function SpeakEnglishClient() {
   const [avatarEditorNotice, setAvatarEditorNotice] = useState("");
   const [showExpressionMenu, setShowExpressionMenu] = useState(false);
   const [showClassicCoursePicker, setShowClassicCoursePicker] = useState(false);
-  const [classicCoursePickerView, setClassicCoursePickerView] =
-    useState<ClassicCoursePickerView>("categories");
   const [selectedClassicCourseCategoryId, setSelectedClassicCourseCategoryId] =
     useState("");
   const [selectedClassicCourseSectionId, setSelectedClassicCourseSectionId] =
@@ -932,21 +1001,7 @@ function SpeakEnglishClient() {
   const accountCopy = accountPanelCopy[language];
   const accountMenuSections = accountCopy.accountMenuSections;
   const proFeatureItems = accountCopy.proFeatures;
-  const selectedClassicCourseCategory = useMemo(
-    () =>
-      classicCourseCategories.find(
-        (category) => category.id === selectedClassicCourseCategoryId
-      ) ?? null,
-    [selectedClassicCourseCategoryId]
-  );
-  const selectedClassicCourseSection = useMemo(
-    () =>
-      selectedClassicCourseCategory?.sections.find(
-        (section) => section.id === selectedClassicCourseSectionId
-      ) ?? null,
-    [selectedClassicCourseCategory, selectedClassicCourseSectionId]
-  );
-
+  const voiceMenuItemLabel = language === "en" ? "Voice" : "声音";
   const chineseCandidates = useMemo(() => {
     const pinyin = composingPinyin.toLowerCase();
     if (!pinyin) return defaultChineseCandidates;
@@ -994,7 +1049,7 @@ function SpeakEnglishClient() {
     accountPanelView === "subscription"
       ? accountCopy.subscriptionTitle
       : accountPanelView === "voice"
-        ? accountCopy.accountMenuSections[1].items[0].label
+        ? voiceMenuItemLabel
       : accountCopy.accountTitle;
   const accountDisplayName =
     accountName ||
@@ -1105,12 +1160,17 @@ function SpeakEnglishClient() {
 
     const searchParams = new URLSearchParams(window.location.search);
     const shouldOpenPro = searchParams.get("pro") === "1";
-    if (searchParams.get("menu") !== "1" && !shouldOpenPro) return;
+    const shouldOpenAccount = searchParams.get("account") === "1";
+    if (searchParams.get("menu") !== "1" && !shouldOpenPro && !shouldOpenAccount)
+      return;
 
-    setShowQuickPanel(true);
+    setShowQuickPanel(!shouldOpenAccount);
     if (shouldOpenPro) {
       setShowAccountMenu(true);
       setAccountPanelView("subscription");
+    } else if (shouldOpenAccount) {
+      setShowAccountMenu(true);
+      setAccountPanelView("menu");
     }
     window.history.replaceState(null, "", "/speak-english");
   }, []);
@@ -1184,7 +1244,6 @@ function SpeakEnglishClient() {
   }
 
   function resetClassicCoursePicker() {
-    setClassicCoursePickerView("categories");
     setSelectedClassicCourseCategoryId("");
     setSelectedClassicCourseSectionId("");
   }
@@ -1225,6 +1284,20 @@ function SpeakEnglishClient() {
       setShowAvatarEditor(false);
       setAccountPanelView("voice");
     }
+  }
+
+  function toggleAccountMenuItem(menuItemKey: string) {
+    setCollapsedAccountMenuItems((current) => {
+      const next = new Set(current);
+
+      if (next.has(menuItemKey)) {
+        next.delete(menuItemKey);
+      } else {
+        next.add(menuItemKey);
+      }
+
+      return next;
+    });
   }
 
   function openAvatarEditor() {
@@ -1918,7 +1991,7 @@ function SpeakEnglishClient() {
           </header>
 
           {showAccountMenu ? (
-            <div className="absolute inset-0 z-50 flex flex-col bg-[#fbf9ff]/96 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-2xl">
+            <div className="absolute inset-0 z-50 flex flex-col bg-[linear-gradient(180deg,#f0eaff_0%,#f7f3ff_100%)] px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-2xl">
               {accountPanelView === "subscription" ||
               accountPanelView === "checkout" ? (
                 <div className="grid shrink-0 grid-cols-[2.75rem_1fr_2.75rem] items-center gap-3">
@@ -2032,56 +2105,88 @@ function SpeakEnglishClient() {
                 }`}
               >
                 {accountPanelView === "menu" ? (
-                  accountMenuSections.map((section) => (
+                  accountMenuSections.map((section, sectionIndex) => (
                     <section
                       key={section.title}
-                      className="border-b border-[#ded7ff] py-5 last:border-b-0"
+                      className="py-4"
                     >
-                      <h3 className="px-1 pb-3 text-[0.95rem] font-extrabold text-[#7f7896]">
+                      <h3 className="px-1 pb-3 text-[1.08rem] font-extrabold leading-[1.5] text-[#7f7896]">
                         {section.title}
                       </h3>
-                      <div className="overflow-hidden rounded-[22px] bg-white/62 shadow-[0_14px_36px_rgba(84,72,146,0.09)] ring-1 ring-white/75">
-                        {section.items.map((item, itemIndex) => (
+                      <div className="grid gap-1">
+                        {section.items.map((item, itemIndex) => {
+                          const menuItemKey = `${section.title}-${item.label}`;
+                          const childItems =
+                            "children" in item ? item.children : undefined;
+                          const hasChildren = Boolean(childItems?.length);
+                          const isCollapsed =
+                            hasChildren &&
+                            collapsedAccountMenuItems.has(menuItemKey);
+                          const itemMark =
+                            "icon" in item && item.icon
+                              ? item.icon
+                              : getAccountMenuItemMark(sectionIndex, itemIndex);
+                          const trailingText =
+                            "trailing" in item &&
+                            typeof item.trailing === "string"
+                              ? item.trailing
+                              : "";
+
+                          return (
                           <div
-                            key={`${section.title}-${item.label}`}
-                            className={
-                              itemIndex === section.items.length - 1
-                                ? ""
-                                : "border-b border-[#e8e2ff]"
-                            }
+                            key={menuItemKey}
+                            className=""
                           >
                             <button
                               type="button"
-                              onClick={() =>
+                              aria-expanded={hasChildren ? !isCollapsed : undefined}
+                              onClick={() => {
+                                if (hasChildren) {
+                                  toggleAccountMenuItem(menuItemKey);
+                                  return;
+                                }
+
                                 handleAccountMenuAction(
                                   "action" in item ? item.action : undefined
-                                )
-                              }
-                              className="flex min-h-[3.45rem] w-full items-center gap-3 px-4 py-3 text-left text-[1.04rem] font-extrabold text-[#201833] transition hover:bg-[#efeaff]/70"
+                                );
+                              }}
+                              className="flex min-h-[3.85rem] w-full items-center gap-3 px-1 py-3.5 text-left text-[1.18rem] font-extrabold leading-[1.5] text-[#201833] transition hover:text-[#5b63ff]"
                             >
+                              <AccountMenuMark value={itemMark} />
                               <span className="min-w-0 flex-1 truncate">
                                 {item.label}
                               </span>
-                              {"trailing" in item && item.trailing ? (
-                                <span className="shrink-0 rounded-full bg-[#efeaff] px-3 py-1 text-[0.86rem] font-extrabold text-[#7460e8]">
-                                  {item.trailing}
+                              {trailingText ? (
+                                <span className="shrink-0 px-2 text-[0.96rem] font-extrabold leading-[1.5] text-[#7460e8]">
+                                  {trailingText}
                                 </span>
                               ) : null}
-                              {"action" in item && item.action ? (
-                                <span className="shrink-0 text-[1.35rem] font-semibold text-[#7f7896]">
+                              {hasChildren ? (
+                                <span
+                                  className={`shrink-0 text-[1.3rem] font-extrabold leading-none text-[#7f7896] transition-transform ${
+                                    isCollapsed ? "-rotate-90" : ""
+                                  }`}
+                                >
+                                  ⌄
+                                </span>
+                              ) : "action" in item && item.action ? (
+                                <span className="shrink-0 text-[1.45rem] font-semibold leading-none text-[#7f7896]">
                                   ›
                                 </span>
                               ) : null}
                             </button>
 
-                            {"children" in item && item.children ? (
-                              <div className="px-4 pb-4">
-                                <div className="rounded-[18px] bg-[#f7f4ff]/78 px-4 py-2.5">
-                                  {item.children.map((child) => (
+                            {hasChildren && !isCollapsed ? (
+                              <div className="pb-2 pl-11 pr-1">
+                                <div className="grid gap-1">
+                                  {childItems?.map((child, childIndex) => (
                                     <div
                                       key={child}
-                                      className="flex min-h-9 items-center justify-between border-b border-[#e8e2ff] text-[0.92rem] font-bold text-[#7f7896] last:border-b-0"
+                                      className="flex min-h-11 items-center gap-3 text-[1.05rem] font-bold leading-[1.5] text-[#7f7896]"
                                     >
+                                      <AccountMenuMark
+                                        value={getAccountMenuChildMark(childIndex)}
+                                      />
                                       <span>{child}</span>
                                     </div>
                                   ))}
@@ -2089,7 +2194,8 @@ function SpeakEnglishClient() {
                               </div>
                             ) : null}
                           </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </section>
                   ))
@@ -2217,7 +2323,7 @@ function SpeakEnglishClient() {
                           ▭
                         </span>
                         <span className="min-w-0 flex-1 truncate text-[1.08rem] font-extrabold">
-                          {accountCopy.accountMenuSections[0].items[1].label}
+                          {accountCopy.subscriptionTitle}
                         </span>
                         <span className="text-[1.75rem] font-semibold text-[#7f7896]">
                           ›
@@ -2550,8 +2656,9 @@ function SpeakEnglishClient() {
                 <button
                   type="button"
                   onClick={() => void signOut({ callbackUrl: "/" })}
-                  className="mt-5 flex min-h-[3.45rem] shrink-0 items-center rounded-[22px] bg-white/62 px-4 py-3 text-left text-[1.06rem] font-extrabold text-[#d33b46] shadow-[0_14px_36px_rgba(84,72,146,0.09)] ring-1 ring-white/75 transition hover:bg-[#ffecef]"
+                  className="mt-5 flex min-h-[3.85rem] shrink-0 items-center gap-3 px-1 py-3 text-left text-[1.16rem] font-extrabold leading-[1.5] text-[#d33b46] transition hover:text-[#ad2430]"
                 >
+                  <AccountMenuMark danger value="🚪" />
                   <span>{accountCopy.signOut}</span>
                 </button>
               ) : null}
@@ -2634,9 +2741,9 @@ function SpeakEnglishClient() {
                 : ""
             } ${
               showVoiceOnlyPrompt
-                ? "pb-[calc(10rem+env(safe-area-inset-bottom))]"
+                ? "pb-[calc(7.25rem+env(safe-area-inset-bottom))]"
                 : hasEnglishAttempt
-                  ? "pb-[calc(10rem+env(safe-area-inset-bottom))]"
+                  ? "pb-[calc(7.25rem+env(safe-area-inset-bottom))]"
                   : "pb-[352px]"
             }`}
           >
@@ -2793,7 +2900,7 @@ function SpeakEnglishClient() {
           </section>
 
           {showVoiceOnlyPrompt ? (
-            <div className="absolute inset-x-0 bottom-0 z-20 flex min-h-[9.25rem] items-center justify-center border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.84),rgba(215,207,252,0.96))] px-6 pb-[max(0.85rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-18px_42px_rgba(100,82,180,0.10),inset_0_1px_0_rgba(255,255,255,0.58)] backdrop-blur-xl">
+            <div className="absolute inset-x-0 bottom-0 z-20 flex min-h-[7rem] items-center justify-center border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.84),rgba(215,207,252,0.96))] px-6 pb-[max(0.55rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(100,82,180,0.09),inset_0_1px_0_rgba(255,255,255,0.58)] backdrop-blur-xl">
               <button
                 type="button"
                 onClick={handlePrimaryPracticeAction}
@@ -2807,19 +2914,19 @@ function SpeakEnglishClient() {
                   alt=""
                   width={96}
                   height={96}
-                  className="h-24 w-24"
+                  className="h-[4.75rem] w-[4.75rem]"
                 />
               </button>
             </div>
           ) : null}
 
           {hasEnglishAttempt ? (
-            <div className="absolute inset-x-0 bottom-0 z-20 grid min-h-[9.25rem] grid-cols-[1fr_auto_1fr] items-center gap-3 border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.84),rgba(215,207,252,0.96))] px-5 pb-[max(0.85rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-18px_42px_rgba(100,82,180,0.10),inset_0_1px_0_rgba(255,255,255,0.58)] backdrop-blur-xl min-[390px]:gap-4 min-[390px]:px-8">
+            <div className="absolute inset-x-0 bottom-0 z-20 grid min-h-[7rem] grid-cols-[1fr_auto_1fr] items-center gap-3 border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.84),rgba(215,207,252,0.96))] px-5 pb-[max(0.55rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(100,82,180,0.09),inset_0_1px_0_rgba(255,255,255,0.58)] backdrop-blur-xl min-[390px]:gap-4 min-[390px]:px-8">
               <button
                 type="button"
                 aria-label="播放朗读"
                 onClick={() => readStandardEnglish(1)}
-                className="ml-auto flex h-11 min-w-[3.25rem] items-center justify-center rounded-[16px] bg-white/46 px-3 text-[1.15rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_12px_28px_rgba(84,72,146,0.12)] min-[390px]:h-12 min-[390px]:min-w-14 min-[390px]:px-4 min-[390px]:text-[1.25rem]"
+                className="ml-auto flex h-10 min-w-[3rem] items-center justify-center rounded-[15px] bg-white/46 px-3 text-[1.05rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_10px_22px_rgba(84,72,146,0.11)] min-[390px]:h-11 min-[390px]:min-w-[3.25rem] min-[390px]:px-4 min-[390px]:text-[1.15rem]"
               >
                 ▶
               </button>
@@ -2835,7 +2942,7 @@ function SpeakEnglishClient() {
                   alt=""
                   width={96}
                   height={96}
-                  className="h-20 w-20 min-[390px]:h-24 min-[390px]:w-24"
+                  className="h-[4.5rem] w-[4.5rem] min-[390px]:h-[4.75rem] min-[390px]:w-[4.75rem]"
                 />
               </button>
 
@@ -2843,7 +2950,7 @@ function SpeakEnglishClient() {
                 type="button"
                 aria-label="慢速朗读"
                 onClick={() => readStandardEnglish(0.75)}
-                className="mr-auto flex h-11 min-w-[4.75rem] items-center justify-center gap-1.5 rounded-[16px] bg-white/46 px-3 text-[0.92rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_12px_28px_rgba(84,72,146,0.12)] min-[390px]:h-12 min-[390px]:min-w-[5.75rem] min-[390px]:gap-2 min-[390px]:px-4 min-[390px]:text-[1rem]"
+                className="mr-auto flex h-10 min-w-[4.4rem] items-center justify-center gap-1.5 rounded-[15px] bg-white/46 px-3 text-[0.86rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_10px_22px_rgba(84,72,146,0.11)] min-[390px]:h-11 min-[390px]:min-w-[5.25rem] min-[390px]:gap-2 min-[390px]:px-4 min-[390px]:text-[0.94rem]"
               >
                 <span className="text-[1.1rem]">▶</span>
                 <span>0.75x</span>
@@ -2852,201 +2959,185 @@ function SpeakEnglishClient() {
           ) : null}
 
           {showQuickPanel ? (
-            <div className="sf-floating-panel sf-menu-panel absolute left-4 right-4 top-[92px] z-30 p-4">
-              <div className="grid gap-2">
-                {quickPracticeStarters.map((phrase) => (
-                  <div key={phrase} className="grid gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowAccountMenu(false);
+            <div className="absolute inset-x-0 bottom-0 top-[86px] z-40 overflow-y-auto bg-[linear-gradient(180deg,#d8cffc_0%,#ddd5ff_52%,#e7e0ff_100%)] px-11 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-3 text-[#201833]">
+              {showClassicCoursePicker ? (
+                <div className="grid gap-2 py-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowClassicCoursePicker(false);
+                      resetClassicCoursePicker();
+                    }}
+                    className="w-full px-1 pb-3 pt-1 text-left text-[2rem] font-extrabold leading-tight text-[#201833] transition hover:text-[#5b63ff]"
+                  >
+                    经典口语练习
+                  </button>
 
-                        if (phrase === "新表达") {
-                          setShowClassicCoursePicker(false);
-                          resetClassicCoursePicker();
-                          setShowExpressionMenu((current) => !current);
-                          return;
-                        }
+                  <div className="grid gap-1">
+                    {classicCourseCategories.map((category) => {
+                      const isCategoryOpen =
+                        selectedClassicCourseCategoryId === category.id;
 
-                        if (phrase === "经典场景口语练习") {
-                          setShowExpressionMenu(false);
-                          setShowClassicCoursePicker((current) => !current);
-                          resetClassicCoursePicker();
-                          return;
-                        }
+                      return (
+                        <div key={category.id} className="grid gap-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (isCategoryOpen) {
+                                setSelectedClassicCourseCategoryId("");
+                                setSelectedClassicCourseSectionId("");
+                                return;
+                              }
 
-                        setShowQuickPanel(false);
-                      }}
-                      className="rounded-[18px] border border-[#c9bfff] bg-[#f7f4ff] px-4 py-3 text-left text-base font-semibold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
-                    >
-                      <MenuGlyph level={2} />
-                      {phrase}
-                    </button>
+                              setSelectedClassicCourseCategoryId(category.id);
+                              setSelectedClassicCourseSectionId("");
+                            }}
+                            className="w-full px-1 py-2.5 text-left text-[1.42rem] font-extrabold leading-8 text-[#201833] transition hover:text-[#5b63ff]"
+                          >
+                            <MenuGlyph
+                              level={3}
+                              className={`transition-transform ${
+                                isCategoryOpen ? "rotate-90" : ""
+                              }`}
+                            />
+                            {category.label}
+                          </button>
 
-                    {phrase === "新表达" && showExpressionMenu ? (
-                      <div className="grid gap-2 rounded-[18px] border border-[#c9bfff] bg-white p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            window.location.href = "/vocabulary";
-                          }}
-                          className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
-                        >
-                          <span className="min-w-0 truncate">
-                            <MenuGlyph level={3} />
-                            学习新表达
-                          </span>
-                          <span className="shrink-0 text-[1rem] font-bold opacity-60">
-                            ›
-                          </span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            window.location.href = "/vocabulary?library=1";
-                          }}
-                          className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
-                        >
-                          <span className="min-w-0 truncate">
-                            <MenuGlyph level={3} />
-                            我的表达库
-                          </span>
-                          <span className="shrink-0 text-[1rem] font-bold opacity-60">
-                            ›
-                          </span>
-                        </button>
-                      </div>
-                    ) : null}
+                          {isCategoryOpen ? (
+                            <div className="ml-8 grid gap-1">
+                              {category.sections.map((section) => {
+                                const isSectionOpen =
+                                  selectedClassicCourseSectionId === section.id;
 
-                    {phrase === "经典场景口语练习" &&
-                    showClassicCoursePicker ? (
-                      <div className="grid max-h-[22rem] gap-3 overflow-y-auto rounded-[18px] border border-[#c9bfff] bg-white p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-                        <div className="flex items-center gap-2">
-                          {classicCoursePickerView !== "categories" ? (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (classicCoursePickerView === "lessons") {
-                                  setClassicCoursePickerView("sections");
-                                  setSelectedClassicCourseSectionId("");
-                                  return;
-                                }
+                                return (
+                                  <div key={section.id} className="grid gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        if (isSectionOpen) {
+                                          setSelectedClassicCourseSectionId("");
+                                          return;
+                                        }
 
-                                resetClassicCoursePicker();
-                              }}
-                              className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#f7f4ff] text-lg font-bold text-[#201833] hover:bg-[#e9e4ff]"
-                              aria-label="返回上一层"
-                            >
-                              ←
-                            </button>
+                                        setSelectedClassicCourseSectionId(
+                                          section.id
+                                        );
+                                      }}
+                                      className="w-full px-1 py-2 text-left text-[1.2rem] font-extrabold leading-7 text-[#201833] transition hover:text-[#5b63ff]"
+                                    >
+                                      <MenuGlyph
+                                        level={3}
+                                        className={`transition-transform ${
+                                          isSectionOpen ? "rotate-90" : ""
+                                        }`}
+                                      />
+                                      {section.label}
+                                    </button>
+
+                                    {isSectionOpen ? (
+                                      <div className="ml-8 grid gap-0.5">
+                                        {section.lessons.length ? (
+                                          section.lessons.map((lesson) => (
+                                            <button
+                                              key={lesson.id}
+                                              type="button"
+                                              onClick={() =>
+                                                openClassicLesson(
+                                                  lesson.id,
+                                                  lesson.title
+                                                )
+                                              }
+                                              className="w-full px-1 py-1.5 text-left text-[1.02rem] font-semibold leading-6 text-[#201833] transition hover:text-[#5b63ff]"
+                                            >
+                                              {lesson.title}
+                                            </button>
+                                          ))
+                                        ) : (
+                                          <p className="px-1 py-1.5 text-[1rem] font-semibold text-[#4b4267]">
+                                            暂无课程
+                                          </p>
+                                        )}
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                );
+                              })}
+                            </div>
                           ) : null}
-                          <div className="min-w-0">
-                            {selectedClassicCourseCategory ? (
-                              <p className="truncate text-[0.72rem] font-semibold text-[#75689c]">
-                                {selectedClassicCourseCategory.label}
-                                {selectedClassicCourseSection
-                                  ? ` / ${selectedClassicCourseSection.label}`
-                                  : ""}
-                              </p>
-                            ) : null}
-                            <h3 className="truncate text-base font-bold text-[#201833]">
-                              {classicCoursePickerView === "categories"
-                                ? "经典场景口语练习"
-                                : classicCoursePickerView === "sections"
-                                  ? selectedClassicCourseCategory?.label
-                                  : selectedClassicCourseSection?.label}
-                            </h3>
-                          </div>
                         </div>
-
-                        {classicCoursePickerView === "categories" ? (
-                          <div className="grid gap-2">
-                            {classicCourseCategories.map((category) => (
-                              <button
-                                key={category.id}
-                                type="button"
-                                onClick={() => {
-                                  setSelectedClassicCourseCategoryId(category.id);
-                                  setSelectedClassicCourseSectionId("");
-                                  setClassicCoursePickerView("sections");
-                                }}
-                                className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
-                              >
-                                <span className="min-w-0 truncate">
-                                  <MenuGlyph level={3} />
-                                  {category.label}
-                                </span>
-                                <span className="shrink-0 text-[0.72rem] font-semibold opacity-70">
-                                  {category.sections.length} 类 ›
-                                </span>
-                              </button>
-                            ))}
-                          </div>
-                        ) : null}
-
-                        {classicCoursePickerView === "sections" &&
-                        selectedClassicCourseCategory ? (
-                          <div className="grid gap-2">
-                            {selectedClassicCourseCategory.sections.map(
-                              (section) => (
-                                <button
-                                  key={section.id}
-                                  type="button"
-                                  onClick={() => {
-                                    setSelectedClassicCourseSectionId(section.id);
-                                    setClassicCoursePickerView("lessons");
-                                  }}
-                                  className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
-                                >
-                                  <span className="min-w-0 truncate">
-                                    <MenuGlyph level={4} />
-                                    {section.label}
-                                  </span>
-                                  <span className="shrink-0 text-[0.72rem] font-semibold opacity-70">
-                                    {section.lessons.length} 门 ›
-                                  </span>
-                                </button>
-                              )
-                            )}
-                          </div>
-                        ) : null}
-
-                        {classicCoursePickerView === "lessons" &&
-                        selectedClassicCourseSection ? (
-                          <div className="grid gap-2">
-                            {selectedClassicCourseSection.lessons.length ? (
-                              selectedClassicCourseSection.lessons.map(
-                                (lesson) => (
-                                  <button
-                                    key={lesson.id}
-                                    type="button"
-                                    onClick={() =>
-                                      openClassicLesson(lesson.id, lesson.title)
-                                    }
-                                    className="flex w-full items-center justify-between gap-3 rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-left text-sm font-bold leading-5 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.86)] hover:bg-[#e9e4ff]"
-                                  >
-                                    <span className="min-w-0">
-                                      <MenuGlyph level={5} />
-                                      {lesson.title}
-                                    </span>
-                                    <span className="shrink-0 text-[1rem] font-bold opacity-60">
-                                      ›
-                                    </span>
-                                  </button>
-                                )
-                              )
-                            ) : (
-                              <p className="rounded-[16px] bg-[#f7f4ff] px-4 py-3 text-sm font-semibold text-[#4b4267]">
-                                暂无课程
-                              </p>
-                            )}
-                          </div>
-                        ) : null}
-                      </div>
-                    ) : null}
+                      );
+                    })}
                   </div>
-                ))}
-              </div>
+                </div>
+              ) : (
+                <div className="grid gap-3 py-2">
+                  {quickPracticeStarters.map((phrase) => (
+                    <div key={phrase} className="grid gap-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowAccountMenu(false);
+
+                          if (phrase === "新表达") {
+                            setShowClassicCoursePicker(false);
+                            resetClassicCoursePicker();
+                            setShowExpressionMenu((current) => !current);
+                            return;
+                          }
+
+                          if (phrase === "经典场景口语练习") {
+                            setShowExpressionMenu(false);
+                            resetClassicCoursePicker();
+                            setShowClassicCoursePicker(true);
+                            return;
+                          }
+
+                          setShowQuickPanel(false);
+                        }}
+                        className="w-full px-1 py-2.5 text-left text-[1.24rem] font-extrabold leading-7 text-[#201833] transition hover:text-[#5b63ff]"
+                      >
+                        <MenuGlyph level={2} />
+                        {phrase}
+                      </button>
+
+                      {phrase === "新表达" && showExpressionMenu ? (
+                        <div className="ml-8 grid gap-1 py-1.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              window.location.href = "/vocabulary";
+                            }}
+                            className="flex w-full items-center justify-between gap-3 px-1 py-2.5 text-left text-[1.05rem] font-extrabold leading-6 text-[#201833] transition hover:text-[#5b63ff]"
+                          >
+                            <span className="min-w-0 truncate">
+                              <MenuGlyph level={3} />
+                              学习新表达
+                            </span>
+                            <span className="shrink-0 text-[1rem] font-bold opacity-60">
+                              ›
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              window.location.href = "/vocabulary?library=1";
+                            }}
+                            className="flex w-full items-center justify-between gap-3 px-1 py-2.5 text-left text-[1.05rem] font-extrabold leading-6 text-[#201833] transition hover:text-[#5b63ff]"
+                          >
+                            <span className="min-w-0 truncate">
+                              <MenuGlyph level={3} />
+                              我的表达库
+                            </span>
+                            <span className="shrink-0 text-[1rem] font-bold opacity-60">
+                              ›
+                            </span>
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ) : null}
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import ExpressionLearningLimitModal from "@/components/ExpressionLearningLimitModal";
 import {
@@ -13,6 +13,20 @@ import {
   saveVocabularyWords,
   type VocabularyWord,
 } from "@/lib/vocabulary";
+
+type SessionResponse = {
+  user?: {
+    email?: string | null;
+    image?: string | null;
+    name?: string | null;
+  } | null;
+};
+
+const accountAvatarStoragePrefix = "speakflow-account-avatar";
+
+function getAccountAvatarStorageKey(identifier: string) {
+  return `${accountAvatarStoragePrefix}:${identifier || "local-user"}`;
+}
 
 const GENERIC_EXPRESSION_MEANINGS = new Set([
   "",
@@ -105,13 +119,15 @@ function getExpressionNativeMeaning(word: VocabularyWord) {
 
 export default function VocabularyPage() {
   const router = useRouter();
-  const suppressLibraryHintRef = useRef(false);
   const [words, setWords] = useState<VocabularyWord[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showExpressionLibrary, setShowExpressionLibrary] = useState(false);
-  const [showLibraryHint, setShowLibraryHint] = useState(false);
   const [showExpressionLimitModal, setShowExpressionLimitModal] =
     useState(false);
+  const [accountName, setAccountName] = useState("");
+  const [accountEmail, setAccountEmail] = useState("");
+  const [accountImage, setAccountImage] = useState("");
+  const [accountImageFailed, setAccountImageFailed] = useState(false);
 
   useEffect(() => {
     const loadTimer = window.setTimeout(() => {
@@ -127,11 +143,9 @@ export default function VocabularyPage() {
     const searchParams = new URLSearchParams(window.location.search);
     if (searchParams.get("library") !== "1") return;
 
-    suppressLibraryHintRef.current = true;
     window.history.replaceState(null, "", "/vocabulary");
     const openLibraryTimer = window.setTimeout(() => {
       setShowExpressionLibrary(true);
-      setShowLibraryHint(false);
     }, 0);
 
     return () => {
@@ -140,18 +154,37 @@ export default function VocabularyPage() {
   }, []);
 
   useEffect(() => {
-    if (suppressLibraryHintRef.current) return;
+    let cancelled = false;
 
-    const showTimer = window.setTimeout(() => {
-      setShowLibraryHint(true);
-    }, 250);
-    const hideTimer = window.setTimeout(() => {
-      setShowLibraryHint(false);
-    }, 3600);
+    async function loadAccountSession() {
+      try {
+        const response = await fetch("/api/auth/session");
+        const session = (await response.json()) as SessionResponse;
+        if (cancelled) return;
+
+        const nextName = session.user?.name || "";
+        const nextEmail = session.user?.email || session.user?.name || "";
+        const savedAvatar = window.localStorage.getItem(
+          getAccountAvatarStorageKey(nextEmail || nextName)
+        );
+
+        setAccountName(nextName);
+        setAccountEmail(nextEmail);
+        setAccountImage(savedAvatar || session.user?.image || "");
+        setAccountImageFailed(false);
+      } catch {
+        if (!cancelled) {
+          setAccountName("");
+          setAccountEmail("");
+          setAccountImage("");
+        }
+      }
+    }
+
+    void loadAccountSession();
 
     return () => {
-      window.clearTimeout(showTimer);
-      window.clearTimeout(hideTimer);
+      cancelled = true;
     };
   }, []);
 
@@ -171,6 +204,9 @@ export default function VocabularyPage() {
     if (!displayedExpression) return "";
     return displayedExampleText || displayedExpressionText;
   }, [displayedExpression, displayedExampleText, displayedExpressionText]);
+  const accountAvatarLabel = (accountName || accountEmail || "CL")
+    .slice(0, 2)
+    .toUpperCase();
 
   useEffect(() => {
     if (!displayedExpression) return;
@@ -250,12 +286,6 @@ export default function VocabularyPage() {
     }
   }
 
-  function handleDeleteExpression() {
-    if (!displayedExpression) return;
-
-    removeExpressionFromLibrary(displayedExpression);
-  }
-
   return (
     <main className="responsive-page-shell sf-speak-page min-h-[100dvh] overflow-x-hidden text-white">
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-[560px] items-center justify-center p-0 sm:p-4">
@@ -292,26 +322,29 @@ export default function VocabularyPage() {
 
               <button
                 type="button"
-                aria-label="打开表达库"
-                onClick={() => {
-                  setShowExpressionLibrary(true);
-                  setShowLibraryHint(false);
-                }}
-                className="sf-header-button text-[1.25rem] font-semibold text-[#201833]"
+                aria-label="打开账户"
+                onClick={() => router.push("/speak-english?account=1")}
+                className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-[#f7f4ff] text-[0.82rem] font-extrabold text-white shadow-[0_12px_26px_rgba(84,72,146,0.18)]"
               >
-                ...
+                {accountImage && !accountImageFailed ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={accountImage}
+                    alt={accountEmail || "user"}
+                    className="h-full w-full object-cover"
+                    onError={() => setAccountImageFailed(true)}
+                  />
+                ) : (
+                  <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#ffd84d_0%,#f0b912_52%,#e9a70f_100%)] text-[#fff8dd]">
+                    {accountAvatarLabel}
+                  </span>
+                )}
               </button>
             </div>
           </header>
 
-          {showLibraryHint ? (
-            <div className="absolute left-1/2 top-[94px] z-40 w-[min(84%,350px)] -translate-x-1/2 rounded-[20px] border border-white/70 bg-[#fbf9ff] px-5 py-4 text-center text-[0.98rem] font-extrabold leading-6 text-[#201833] shadow-[0_20px_50px_rgba(84,72,146,0.22)]">
-              点击右上角三个点，可以打开表达库。
-            </div>
-          ) : null}
-
           {showExpressionLibrary ? (
-            <div className="absolute inset-x-5 top-[92px] z-50 max-h-[min(72dvh,560px)] overflow-hidden rounded-[24px] border border-[#c9bfff] bg-[#fbf9ff] p-4 text-[#201833] shadow-[0_26px_70px_rgba(84,72,146,0.30)]">
+            <div className="absolute inset-x-5 bottom-[7rem] top-[92px] z-50 flex flex-col overflow-hidden rounded-[24px] border border-[#c9bfff] bg-[#fbf9ff] p-4 text-[#201833] shadow-[0_26px_70px_rgba(84,72,146,0.30)]">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <h3 className="text-[1.15rem] font-extrabold">表达库</h3>
@@ -329,7 +362,7 @@ export default function VocabularyPage() {
                 </button>
               </div>
 
-              <div className="mt-4 max-h-[calc(min(72dvh,560px)-96px)] overflow-y-auto pr-1">
+              <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1">
                 {words.length ? (
                   <div className="grid gap-2">
                     {words.map((word, index) => (
@@ -379,7 +412,7 @@ export default function VocabularyPage() {
             </div>
           ) : null}
 
-          <section className="sf-study-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-4">
+          <section className="sf-study-main sf-vocabulary-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pb-[calc(7.25rem+env(safe-area-inset-bottom))] pt-4">
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
             <div className="mt-5 shrink-0 text-center">
               <h2 className="text-[1.12rem] font-extrabold text-[#6f668a]">
@@ -422,8 +455,8 @@ export default function VocabularyPage() {
             </div>
           </section>
 
-          <div className="relative z-20 mt-2 w-full max-w-[360px] self-center px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-            <div className="flex items-center justify-center gap-4">
+          <div className="absolute inset-x-0 bottom-0 z-20 flex min-h-[7rem] items-center justify-center border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.84),rgba(215,207,252,0.96))] px-6 pb-[max(0.55rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(100,82,180,0.09),inset_0_1px_0_rgba(255,255,255,0.58)] backdrop-blur-xl">
+            <div className="flex w-full max-w-[360px] items-center justify-center gap-4">
               <button
                 type="button"
                 onClick={() => openExpressionAt(Math.max(currentIndex - 1, 0))}
@@ -463,15 +496,6 @@ export default function VocabularyPage() {
                 →
               </button>
             </div>
-            <button
-              type="button"
-              onClick={handleDeleteExpression}
-              disabled={!displayedExpression}
-              className="mx-auto mt-7 flex min-h-12 items-center justify-center gap-2 bg-white/78 px-5 py-3 text-[0.95rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] disabled:opacity-45"
-            >
-              <TrashIcon className="h-4 w-4" />
-              从表达库移除
-            </button>
           </div>
 
         </section>

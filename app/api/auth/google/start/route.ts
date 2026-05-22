@@ -81,9 +81,12 @@ function googleHandoffResponse(url: string, locale: HandoffLocale) {
     <style>
       body {
         margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
+        min-height: 100dvh;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: clamp(7rem, 19dvh, 12rem) 20px 32px;
         background:
           radial-gradient(circle at 12% 4%, rgba(255, 255, 255, 0.42), transparent 30%),
           radial-gradient(circle at 88% 7%, rgba(223, 234, 255, 0.74), transparent 34%),
@@ -92,25 +95,29 @@ function googleHandoffResponse(url: string, locale: HandoffLocale) {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       }
       main {
-        width: min(100vw - 40px, 390px);
-        border: 1px solid rgba(123, 97, 255, 0.18);
-        border-radius: 32px;
-        padding: 34px 24px;
+        width: min(100%, 390px);
+        border: 0;
+        border-radius: 0;
+        padding: 0;
         text-align: center;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(241, 238, 255, 0.42));
-        box-shadow: 0 28px 80px rgba(83, 70, 160, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.72);
-        backdrop-filter: blur(28px);
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
       }
       h1 {
         margin: 0;
-        font-size: 28px;
-        font-weight: 750;
+        font-size: clamp(30px, 8.4vw, 40px);
+        font-weight: 800;
         letter-spacing: -0.03em;
+        background: transparent;
       }
       p {
         color: rgba(32, 24, 51, 0.68);
         line-height: 1.6;
-        margin: 16px 0 26px;
+        margin: 18px 0 28px;
+        font-size: clamp(17px, 4.8vw, 21px);
+        font-weight: 700;
+        background: transparent;
       }
       a {
         display: inline-flex;
