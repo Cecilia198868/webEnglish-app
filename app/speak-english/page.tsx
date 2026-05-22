@@ -1053,9 +1053,9 @@ function SpeakEnglishClient() {
       ),
     [highlightedExpressions, selectedExpression.text]
   );
+  const lastExpressionIndex = expressionVariantLabels.length - 1;
   const hasPreviousExpression = selectedExpressionIndex > 0;
-  const hasNextExpression =
-    selectedExpressionIndex < expressionVariantLabels.length - 1;
+  const hasNextExpression = selectedExpressionIndex < lastExpressionIndex;
   const accountAvatarLabel = (
     accountName || accountEmail || "CL"
   )
@@ -2941,39 +2941,50 @@ function SpeakEnglishClient() {
           ) : null}
 
           {hasEnglishAttempt ? (
-            <div className="absolute inset-x-0 bottom-0 z-20 grid min-h-[7rem] grid-cols-[1fr_auto_1fr] items-center gap-3 border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.84),rgba(215,207,252,0.96))] px-5 pb-[max(0.55rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(100,82,180,0.09),inset_0_1px_0_rgba(255,255,255,0.58)] backdrop-blur-xl min-[390px]:gap-4 min-[390px]:px-8">
+            <div className="sf-free-practice-result-actions sf-expression-actions absolute inset-x-0 bottom-0 z-20 flex min-h-[5.75rem] items-center justify-center border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.78),rgba(215,207,252,0.94))] px-5 pb-[max(0.45rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-10px_24px_rgba(100,82,180,0.08),inset_0_1px_0_rgba(255,255,255,0.52)] backdrop-blur-xl">
+              <button
+                type="button"
+                aria-label="上一种表达"
+                onClick={() =>
+                  setSelectedExpressionIndex((index) => Math.max(index - 1, 0))
+                }
+                disabled={!hasPreviousExpression}
+                className="sf-expression-nav-button grid h-11 w-11 place-items-center rounded-full text-[1.85rem] font-semibold text-[#201833] transition hover:bg-white/28 disabled:text-[#aaa3b5]"
+              >
+                ←
+              </button>
+
               <button
                 type="button"
                 aria-label="播放朗读"
                 onClick={() => readStandardEnglish(1)}
-                className="ml-auto flex h-10 min-w-[3rem] items-center justify-center rounded-[15px] bg-white/46 px-3 text-[1.05rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_10px_22px_rgba(84,72,146,0.11)] min-[390px]:h-11 min-[390px]:min-w-[3.25rem] min-[390px]:px-4 min-[390px]:text-[1.15rem]"
+                className="sf-expression-play-button flex h-11 min-w-[3.55rem] items-center justify-center rounded-[15px] bg-white/46 px-4 text-[1.06rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_9px_18px_rgba(84,72,146,0.1)]"
               >
                 ▶
               </button>
 
               <button
                 type="button"
-                onClick={handlePrimaryPracticeAction}
-                className="grid place-items-center text-[#7f7896] transition"
-                aria-label="点击开始说话"
+                aria-label="慢速朗读"
+                onClick={() => readStandardEnglish(0.5)}
+                className="sf-expression-slow-button flex h-11 min-w-[5.15rem] items-center justify-center gap-1.5 rounded-[15px] bg-white/46 px-4 text-[0.92rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_9px_18px_rgba(84,72,146,0.1)]"
               >
-                <Image
-                  src="/icons/glow-mic.svg"
-                  alt=""
-                  width={96}
-                  height={96}
-                  className="h-[4.5rem] w-[4.5rem] min-[390px]:h-[4.75rem] min-[390px]:w-[4.75rem]"
-                />
+                <span className="text-[1.1rem]">▶</span>
+                <span>0.5x</span>
               </button>
 
               <button
                 type="button"
-                aria-label="慢速朗读"
-                onClick={() => readStandardEnglish(0.75)}
-                className="mr-auto flex h-10 min-w-[4.4rem] items-center justify-center gap-1.5 rounded-[15px] bg-white/46 px-3 text-[0.86rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_10px_22px_rgba(84,72,146,0.11)] min-[390px]:h-11 min-[390px]:min-w-[5.25rem] min-[390px]:gap-2 min-[390px]:px-4 min-[390px]:text-[0.94rem]"
+                aria-label="下一种表达"
+                onClick={() =>
+                  setSelectedExpressionIndex((index) =>
+                    Math.min(index + 1, lastExpressionIndex)
+                  )
+                }
+                disabled={!hasNextExpression}
+                className="sf-expression-nav-button grid h-11 w-11 place-items-center rounded-full text-[1.85rem] font-semibold text-[#201833] transition hover:bg-white/28 disabled:text-[#aaa3b5]"
               >
-                <span className="text-[1.1rem]">▶</span>
-                <span>0.75x</span>
+                →
               </button>
             </div>
           ) : null}

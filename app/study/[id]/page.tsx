@@ -1571,10 +1571,10 @@ export default function StudyPage() {
 
           {showStudyVoiceOnlyPrompt || showExpressionFeedback ? (
             <div
-              className={`sf-study-actions absolute inset-x-0 bottom-0 z-20 grid min-h-[7rem] items-center gap-1 border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.84),rgba(215,207,252,0.96))] px-3 pb-[max(0.55rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(100,82,180,0.09),inset_0_1px_0_rgba(255,255,255,0.58)] backdrop-blur-xl ${
+              className={`sf-study-actions absolute inset-x-0 bottom-0 z-20 grid min-h-[5.35rem] items-center gap-1 border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.78),rgba(215,207,252,0.94))] px-3 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1 shadow-[0_-10px_24px_rgba(100,82,180,0.08),inset_0_1px_0_rgba(255,255,255,0.52)] backdrop-blur-xl ${
                 showExpressionFeedback
-                  ? "grid-cols-[1fr_1fr_auto_1fr_1fr]"
-                  : "grid-cols-[1fr_auto_1fr] px-8"
+                  ? "sf-study-actions-feedback grid-cols-[1fr_1fr_auto_1fr_1fr]"
+                  : "sf-study-actions-voice grid-cols-[1fr_auto_1fr] px-8"
               }`}
             >
               {showExpressionFeedback ? (
@@ -1582,7 +1582,7 @@ export default function StudyPage() {
                   type="button"
                   aria-label="播放朗读"
                   onClick={() => speakEnglish(selectedExpression.text, 1)}
-                  className="ml-auto flex h-10 min-w-[2.9rem] items-center justify-center rounded-[15px] px-1 text-[0.82rem] font-extrabold text-[#201833] transition hover:bg-white/30"
+                  className="sf-study-action-text sf-study-read-button ml-auto flex h-10 min-w-[2.9rem] items-center justify-center rounded-[15px] px-1 text-[0.82rem] font-extrabold text-[#201833] transition hover:bg-white/30"
                 >
                   朗读
                 </button>
@@ -1591,7 +1591,7 @@ export default function StudyPage() {
                 type="button"
                 onClick={handlePrev}
                 disabled={currentIndex === 0}
-                className="ml-auto flex h-11 min-w-[3.6rem] items-center justify-center rounded-[15px] px-1 text-[0.82rem] font-extrabold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                className="sf-study-action-text ml-auto flex h-11 min-w-[3.6rem] items-center justify-center rounded-[15px] px-1 text-[0.82rem] font-extrabold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
                 aria-label="上一句"
               >
                 上一句
@@ -1599,7 +1599,7 @@ export default function StudyPage() {
               <button
                 type="button"
                 onClick={handleEnglishPracticeAction}
-                className="grid place-items-center transition"
+                className="sf-study-mic-button grid place-items-center transition"
                 aria-label={isListening ? "停止语音输入" : "点击开始说话"}
               >
                 <Image
@@ -1614,7 +1614,7 @@ export default function StudyPage() {
                 type="button"
                 onClick={handleNext}
                 disabled={currentIndex >= pairs.length - 1}
-                className="mr-auto flex h-11 min-w-[3.6rem] items-center justify-center rounded-[15px] px-1 text-[0.82rem] font-extrabold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                className="sf-study-action-text mr-auto flex h-11 min-w-[3.6rem] items-center justify-center rounded-[15px] px-1 text-[0.82rem] font-extrabold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
                 aria-label="下一句"
               >
                 下一句
@@ -1624,7 +1624,7 @@ export default function StudyPage() {
                   type="button"
                   aria-label="慢速朗读"
                   onClick={() => speakEnglish(selectedExpression.text, 0.75)}
-                  className="mr-auto flex h-10 min-w-[4rem] items-center justify-center rounded-[15px] px-1 text-[0.76rem] font-extrabold text-[#201833] transition hover:bg-white/30"
+                  className="sf-study-action-text sf-study-slow-button mr-auto flex h-10 min-w-[4rem] items-center justify-center rounded-[15px] px-1 text-[0.76rem] font-extrabold text-[#201833] transition hover:bg-white/30"
                 >
                   慢速朗读
                 </button>

@@ -344,11 +344,13 @@ export default function VocabularyPage() {
           </header>
 
           {showExpressionLibrary ? (
-            <div className="absolute inset-x-5 bottom-[7rem] top-[92px] z-50 flex flex-col overflow-hidden rounded-[24px] border border-[#c9bfff] bg-[#fbf9ff] p-4 text-[#201833] shadow-[0_26px_70px_rgba(84,72,146,0.30)]">
-              <div className="flex items-center justify-between gap-3">
+            <div className="sf-expression-library-panel absolute inset-x-0 bottom-0 top-[86px] z-50 flex flex-col overflow-hidden bg-[linear-gradient(180deg,#d8cffc_0%,#ddd5ff_48%,#e7e0ff_100%)] px-9 pb-[calc(1.2rem+env(safe-area-inset-bottom))] pt-5 text-[#201833]">
+              <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="text-[1.15rem] font-extrabold">表达库</h3>
-                  <p className="mt-1 text-[0.86rem] font-bold text-[#7f7896]">
+                  <h3 className="text-[1.8rem] font-extrabold leading-tight">
+                    表达库
+                  </h3>
+                  <p className="mt-3 text-[1.18rem] font-extrabold text-[#7f7896]">
                     共 {words.length} 个新表达
                   </p>
                 </div>
@@ -356,22 +358,22 @@ export default function VocabularyPage() {
                   type="button"
                   aria-label="关闭表达库"
                   onClick={() => setShowExpressionLibrary(false)}
-                  className="grid h-10 w-10 shrink-0 place-items-center rounded-[16px] bg-[#f1edff] text-[1.35rem] font-extrabold text-[#201833]"
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#ede8ff]/72 text-[1.7rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] transition hover:bg-[#e2d9ff]"
                 >
                   ×
                 </button>
               </div>
 
-              <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1">
+              <div className="sf-expression-library-scroll mt-8 min-h-0 flex-1 overflow-y-auto">
                 {words.length ? (
-                  <div className="grid gap-2">
+                  <div className="grid gap-0">
                     {words.map((word, index) => (
                       <div
                         key={`${word.word}-${word.createdAt}`}
-                        className={`flex items-center gap-3 rounded-[18px] px-4 py-3 transition ${
+                        className={`flex items-center gap-3 border-b border-[#c5b9fa]/62 px-0 py-5 transition ${
                           index === currentIndex
-                            ? "bg-[#e8e3ff] shadow-[inset_0_0_0_1px_rgba(91,140,255,0.22)]"
-                            : "bg-white/72 hover:bg-[#f2efff]"
+                            ? "bg-[#d8d0ff]/46"
+                            : "bg-transparent hover:bg-[#e3dcff]/34"
                         }`}
                       >
                         <button
@@ -381,10 +383,10 @@ export default function VocabularyPage() {
                           }}
                           className="min-w-0 flex-1 text-left"
                         >
-                          <span className="block text-[1.08rem] font-extrabold leading-6 text-[#201833]">
+                          <span className="block text-[1.42rem] font-extrabold leading-8 text-[#201833]">
                             {word.word}
                           </span>
-                          <span className="mt-1 block text-[0.92rem] font-bold leading-6 text-[#7f7896]">
+                          <span className="mt-2 block text-[1.05rem] font-extrabold leading-7 text-[#7f7896]">
                             {getExpressionNativeMeaning(word)}
                           </span>
                         </button>
@@ -396,7 +398,7 @@ export default function VocabularyPage() {
                               keepLibraryOpen: true,
                             })
                           }
-                          className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] bg-white/60 text-[#6f668a] transition hover:bg-[#ffecef] hover:text-[#9b2444]"
+                          className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-transparent text-[#6f668a] transition hover:bg-[#ffecef]/72 hover:text-[#9b2444]"
                         >
                           <TrashIcon className="h-5 w-5" />
                         </button>
@@ -404,7 +406,7 @@ export default function VocabularyPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="rounded-[18px] bg-white/72 px-4 py-5 text-center text-[1rem] font-bold text-[#7f7896]">
+                  <p className="px-4 py-5 text-center text-[1.1rem] font-bold text-[#7f7896]">
                     还没有收藏的新表达。
                   </p>
                 )}
@@ -425,7 +427,7 @@ export default function VocabularyPage() {
 
             <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto pt-7 text-center">
               {displayedExpression ? (
-                <div className="min-h-[280px] w-full max-w-[390px] bg-white/16 px-7 py-8 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.28)]">
+                <div className="min-h-[280px] w-full max-w-[390px] px-7 py-8 text-left">
                   <h3 className="text-[1.65rem] font-extrabold leading-9 text-[#201833]">
                     {displayedExpressionText}
                   </h3>
@@ -455,13 +457,14 @@ export default function VocabularyPage() {
             </div>
           </section>
 
-          <div className="absolute inset-x-0 bottom-0 z-20 flex min-h-[7rem] items-center justify-center border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.84),rgba(215,207,252,0.96))] px-6 pb-[max(0.55rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_30px_rgba(100,82,180,0.09),inset_0_1px_0_rgba(255,255,255,0.58)] backdrop-blur-xl">
-            <div className="flex w-full max-w-[360px] items-center justify-center gap-4">
+          {!showExpressionLibrary ? (
+            <div className="sf-vocabulary-actions sf-expression-actions absolute inset-x-0 bottom-0 z-20 flex min-h-[5.75rem] items-center justify-center border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.78),rgba(215,207,252,0.94))] px-5 pb-[max(0.45rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-10px_24px_rgba(100,82,180,0.08),inset_0_1px_0_rgba(255,255,255,0.52)] backdrop-blur-xl">
+            <div className="sf-expression-actions-inner flex w-full max-w-[330px] items-center justify-center gap-3.5">
               <button
                 type="button"
                 onClick={() => openExpressionAt(Math.max(currentIndex - 1, 0))}
                 disabled={!hasPrevious}
-                className="grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                className="sf-expression-nav-button grid h-11 w-11 place-items-center rounded-full text-[1.85rem] font-semibold text-[#201833] transition hover:bg-white/28 disabled:text-[#aaa3b5]"
                 aria-label="上一个表达"
               >
                 ←
@@ -471,7 +474,7 @@ export default function VocabularyPage() {
                 aria-label="播放朗读"
                 onClick={() => speakExpression(1)}
                 disabled={!displayedExpression}
-                className="flex h-12 items-center gap-2 rounded-[16px] bg-white/45 px-5 text-[1.2rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] disabled:opacity-45"
+                className="sf-expression-play-button flex h-11 min-w-[3.55rem] items-center justify-center gap-2 rounded-[15px] bg-white/46 px-4 text-[1.06rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_9px_18px_rgba(84,72,146,0.1)] disabled:opacity-45"
               >
                 ▶
               </button>
@@ -480,7 +483,7 @@ export default function VocabularyPage() {
                 aria-label="慢速朗读"
                 onClick={() => speakExpression(0.5)}
                 disabled={!displayedExpression}
-                className="flex h-12 items-center gap-2 rounded-[16px] bg-white/45 px-5 text-[1.02rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] disabled:opacity-45"
+                className="sf-expression-slow-button flex h-11 min-w-[5.15rem] items-center justify-center gap-1.5 rounded-[15px] bg-white/46 px-4 text-[0.92rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_9px_18px_rgba(84,72,146,0.1)] disabled:opacity-45"
               >
                 ▶ <span>0.5x</span>
               </button>
@@ -490,13 +493,14 @@ export default function VocabularyPage() {
                   openExpressionAt(Math.min(currentIndex + 1, words.length - 1))
                 }
                 disabled={!hasNext}
-                className="grid h-12 w-12 place-items-center rounded-full text-[2rem] font-semibold text-[#201833] transition hover:bg-white/30 disabled:text-[#aaa3b5]"
+                className="sf-expression-nav-button grid h-11 w-11 place-items-center rounded-full text-[1.85rem] font-semibold text-[#201833] transition hover:bg-white/28 disabled:text-[#aaa3b5]"
                 aria-label="下一个表达"
               >
                 →
               </button>
             </div>
-          </div>
+            </div>
+          ) : null}
 
         </section>
         {showExpressionLimitModal ? (
