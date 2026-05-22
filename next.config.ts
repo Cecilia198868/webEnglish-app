@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
+const devOrigins = ["192.168.88.8", "127.0.0.1", "localhost"];
+
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["192.168.88.8", "127.0.0.1", "localhost"],
+  ...(process.env.NODE_ENV === "production"
+    ? {}
+    : { allowedDevOrigins: devOrigins }),
   async headers() {
     return [
       {
@@ -20,7 +24,6 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
-        port: "",
         pathname: "/**",
       },
     ],
