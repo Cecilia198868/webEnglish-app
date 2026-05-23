@@ -84,7 +84,7 @@ type SessionResponse = {
 type AccountPanelView = "menu" | "account" | "subscription" | "checkout" | "voice";
 type ProPlan = "monthly" | "yearly";
 
-type AccountMenuAction = "subscription" | "voice";
+type AccountMenuAction = "subscription" | "voice" | "terms" | "privacy";
 
 const accountAvatarStoragePrefix = "speakflow-account-avatar";
 const selectedVoiceStorageKey = "speakflow-selected-voice-uri";
@@ -105,7 +105,7 @@ const accountMenuItemMarks = [
   ["⭐", "💳", "↻"],
   ["🎧", "🧠", "🔥", "📊", "⬆️"],
   ["🎨", "🔔", "🔒", "☁️"],
-  ["❓", "⚑", "ℹ️"],
+  ["❓", "⚑", "📄", "🔏", "ℹ️"],
 ] as const;
 
 const accountMenuChildMarks = ["中", "▶", "↪", "1x", "A", "?"] as const;
@@ -220,6 +220,8 @@ const accountPanelCopy = {
         items: [
           { icon: "❓", label: "Help Center" },
           { icon: "⚑", label: "Report an Issue" },
+          { action: "terms", icon: "📄", label: "Terms of Service" },
+          { action: "privacy", icon: "🔏", label: "Privacy Policy" },
           { icon: "ℹ️", label: "About SpeakFlow" },
         ],
       },
@@ -363,6 +365,8 @@ const accountPanelCopy = {
         items: [
           { icon: "❓", label: "帮助中心" },
           { icon: "⚑", label: "报告问题" },
+          { action: "terms", icon: "📄", label: "用户协议" },
+          { action: "privacy", icon: "🔏", label: "隐私政策" },
           { icon: "ℹ️", label: "关于 SpeakFlow" },
         ],
       },
@@ -1427,6 +1431,16 @@ function SpeakEnglishClient() {
     if (action === "voice") {
       setShowAvatarEditor(false);
       setAccountPanelView("voice");
+      return;
+    }
+
+    if (action === "terms") {
+      window.location.href = "/terms";
+      return;
+    }
+
+    if (action === "privacy") {
+      window.location.href = "/privacy";
     }
   }
 
