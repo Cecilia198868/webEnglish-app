@@ -1,6 +1,6 @@
 import { authOptions } from "@/auth";
 import { restoreSubscriptionForEmail } from "@/lib/subscriptionService";
-import { findUserByEmail } from "@/lib/userStore";
+import { findProfileByEmail } from "@/lib/userStore";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import Stripe from "stripe";
@@ -28,8 +28,8 @@ export async function POST() {
       throw new Error("Missing NEXT_PUBLIC_APP_URL");
     }
 
-    const user = await findUserByEmail(email);
-    let stripeCustomerId = user?.stripeCustomerId?.trim() || "";
+    const profile = await findProfileByEmail(email);
+    let stripeCustomerId = profile?.stripeCustomerId?.trim() || "";
 
     if (!stripeCustomerId) {
       const restoredSubscription = await restoreSubscriptionForEmail(email);

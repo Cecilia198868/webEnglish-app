@@ -1,30 +1,131 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+
+export type SubscriptionStatus = "free" | "pro" | "cancels_at_period_end";
 
 export type StoredUser = {
   email: string;
   passwordHash: string;
   createdAt: string;
-  subscriptionStatus?: "free" | "pro" | "cancels_at_period_end";
+  subscriptionStatus?: SubscriptionStatus;
   stripeCustomerId?: string;
   stripeSubscriptionId?: string;
   currentPeriodEnd?: string;
+  cancelAtPeriodEnd?: boolean;
 };
 
-export type UserSubscriptionUpdate = Pick<
-  StoredUser,
-  | "currentPeriodEnd"
-  | "stripeCustomerId"
-  | "stripeSubscriptionId"
-  | "subscriptionStatus"
->;
+export type UserSubscriptionUpdate = {
+  cancelAtPeriodEnd?: boolean;
+  currentPeriodEnd?: string;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  subscriptionStatus: SubscriptionStatus;
+};
+
+type ProfileRow = {
+  cancel_at_period_end?: boolean | null;
+  current_period_end?: string | null;
+  email: string;
+  stripe_customer_id?: string | null;
+  stripe_subscription_id?: string | null;
+  subscription_status?: SubscriptionStatus | null;
+};
 
 const DATA_DIR = path.join(process.cwd(), ".data");
 const USERS_FILE = path.join(DATA_DIR, "users.json");
 
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
+}
+
+function normalizeSubscriptionStatus(
+  subscriptionStatus: unknown
+): SubscriptionStatus {
+  return subscriptionStatus === "pro" ||
+    subscriptionStatus === "cancels_at_period_end"
+    ? subscriptionStatus
+    : "free";
+}
+
+function profileToStoredUser(profile: ProfileRow): StoredUser {
+  return {
+    cancelAtPeriodEnd: Boolean(profile.cancel_at_period_end),
+    createdAt: "",
+    currentPeriodEnd: profile.current_period_end || undefined,
+    email: normalizeEmail(profile.email),
+    passwordHash: "",
+    stripeCustomerId: profile.stripe_customer_id || undefined,
+    stripeSubscriptionId: profile.stripe_subscription_id || undefined,
+    subscriptionStatus: normalizeSubscriptionStatus(profile.subscription_status),
+  };
+}
+
+async function findProfileByColumn(column: string, value: string) {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(
+      "email, subscription_status, stripe_customer_id, stripe_subscription_id, current_period_end, cancel_at_period_end"
+    )
+    .eq(column, value)
+    .maybeSingle<ProfileRow>();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ? profileToStoredUser(data) : null;
+}
+
+export async function findProfileByEmail(email: string) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) return null;
+
+  return findProfileByColumn("email", normalizedEmail);
+}
+
+export async function findProfileByStripeCustomerId(stripeCustomerId: string) {
+  const normalizedStripeCustomerId = stripeCustomerId.trim();
+  if (!normalizedStripeCustomerId) return null;
+
+  return findProfileByColumn("stripe_customer_id", normalizedStripeCustomerId);
+}
+
+export async function upsertProfileSubscriptionByEmail(
+  email: string,
+  data: UserSubscriptionUpdate
+) {
+  const normalizedEmail = normalizeEmail(email);
+  const supabase = getSupabaseAdmin();
+  const cancelAtPeriodEnd =
+    data.cancelAtPeriodEnd ??
+    data.subscriptionStatus === "cancels_at_period_end";
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .upsert(
+      {
+        cancel_at_period_end: cancelAtPeriodEnd,
+        current_period_end: data.currentPeriodEnd || null,
+        email: normalizedEmail,
+        stripe_customer_id: data.stripeCustomerId || null,
+        stripe_subscription_id: data.stripeSubscriptionId || null,
+        subscription_status: data.subscriptionStatus,
+      },
+      { onConflict: "email" }
+    )
+    .select(
+      "email, subscription_status, stripe_customer_id, stripe_subscription_id, current_period_end, cancel_at_period_end"
+    )
+    .single<ProfileRow>();
+
+  if (error) {
+    throw error;
+  }
+
+  return profileToStoredUser(profile);
 }
 
 function hashPassword(password: string) {
@@ -74,18 +175,25 @@ export async function loadUsers() {
 export async function findUserByEmail(email: string) {
   const normalizedEmail = normalizeEmail(email);
   const users = await loadUsers();
-  return users.find((user) => user.email === normalizedEmail) || null;
+  const storedUser = users.find((user) => user.email === normalizedEmail) || null;
+  const profile = await findProfileByEmail(normalizedEmail).catch(() => null);
+
+  if (!storedUser) {
+    return profile;
+  }
+
+  return {
+    ...storedUser,
+    cancelAtPeriodEnd: profile?.cancelAtPeriodEnd,
+    currentPeriodEnd: profile?.currentPeriodEnd,
+    stripeCustomerId: profile?.stripeCustomerId,
+    stripeSubscriptionId: profile?.stripeSubscriptionId,
+    subscriptionStatus: profile?.subscriptionStatus,
+  };
 }
 
 export async function findUserByStripeCustomerId(stripeCustomerId: string) {
-  const normalizedStripeCustomerId = stripeCustomerId.trim();
-  if (!normalizedStripeCustomerId) return null;
-
-  const users = await loadUsers();
-  return (
-    users.find((user) => user.stripeCustomerId === normalizedStripeCustomerId) ||
-    null
-  );
+  return findProfileByStripeCustomerId(stripeCustomerId);
 }
 
 export async function createUser(email: string, password: string) {
@@ -121,33 +229,5 @@ export async function updateUserSubscriptionByEmail(
   email: string,
   data: UserSubscriptionUpdate
 ) {
-  const normalizedEmail = normalizeEmail(email);
-  const users = await loadUsers();
-  const userIndex = users.findIndex((user) => user.email === normalizedEmail);
-  const existingUser =
-    userIndex === -1
-      ? {
-          createdAt: new Date().toISOString(),
-          email: normalizedEmail,
-          passwordHash: "",
-        }
-      : users[userIndex];
-
-  const updatedUser: StoredUser = {
-    ...existingUser,
-    currentPeriodEnd: data.currentPeriodEnd,
-    stripeCustomerId: data.stripeCustomerId,
-    stripeSubscriptionId: data.stripeSubscriptionId,
-    subscriptionStatus: data.subscriptionStatus,
-  };
-
-  if (userIndex === -1) {
-    users.push(updatedUser);
-  } else {
-    users[userIndex] = updatedUser;
-  }
-
-  await writeFile(USERS_FILE, JSON.stringify(users, null, 2), "utf8");
-
-  return updatedUser;
+  return upsertProfileSubscriptionByEmail(email, data);
 }

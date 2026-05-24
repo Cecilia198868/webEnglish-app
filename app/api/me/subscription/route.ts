@@ -1,7 +1,7 @@
 import { authOptions } from "@/auth";
 import {
-  findUserByEmail,
-  updateUserSubscriptionByEmail,
+  findProfileByEmail,
+  upsertProfileSubscriptionByEmail,
 } from "@/lib/userStore";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
@@ -65,19 +65,19 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await findUserByEmail(email);
-  const stripeSubscriptionId = user?.stripeSubscriptionId?.trim() || "";
+  const profile = await findProfileByEmail(email);
+  const stripeSubscriptionId = profile?.stripeSubscriptionId?.trim() || "";
 
   if (!stripeSubscriptionId) {
     return NextResponse.json(
       {
         cancelAtPeriodEnd: null,
-        currentPeriodEnd: user?.currentPeriodEnd || null,
-        stripeCustomerId: user?.stripeCustomerId || "",
-        stripeSubscriptionId: user?.stripeSubscriptionId || "",
+        currentPeriodEnd: profile?.currentPeriodEnd || null,
+        stripeCustomerId: profile?.stripeCustomerId || "",
+        stripeSubscriptionId: profile?.stripeSubscriptionId || "",
         stripeStatus: null,
         subscriptionStatus: normalizeStoredSubscriptionStatus(
-          user?.subscriptionStatus
+          profile?.subscriptionStatus
         ),
       },
       {
@@ -104,11 +104,12 @@ export async function GET() {
   const currentPeriodEnd = getCurrentPeriodEnd(subscription);
   const stripeCustomerId =
     getStripeCustomerId(subscription.customer) ||
-    user?.stripeCustomerId?.trim() ||
+    profile?.stripeCustomerId?.trim() ||
     "";
 
   try {
-    await updateUserSubscriptionByEmail(email, {
+    await upsertProfileSubscriptionByEmail(email, {
+      cancelAtPeriodEnd: subscription.cancel_at_period_end === true,
       currentPeriodEnd: currentPeriodEnd || undefined,
       stripeCustomerId,
       stripeSubscriptionId: subscription.id,

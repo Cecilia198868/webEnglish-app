@@ -1,11 +1,12 @@
 import Stripe from "stripe";
 import {
-  findUserByEmail,
-  updateUserSubscriptionByEmail,
+  findProfileByEmail,
+  upsertProfileSubscriptionByEmail,
   type StoredUser,
 } from "@/lib/userStore";
 
 export type AccountSubscriptionState = {
+  cancelAtPeriodEnd: boolean | null;
   currentPeriodEnd: string | null;
   stripeCustomerId: string;
   stripeSubscriptionId: string;
@@ -26,6 +27,11 @@ function toAccountSubscriptionState(
   user: StoredUser | null | undefined
 ): AccountSubscriptionState {
   return {
+    cancelAtPeriodEnd:
+      user?.cancelAtPeriodEnd ??
+      (user?.subscriptionStatus === "cancels_at_period_end"
+        ? true
+        : null),
     currentPeriodEnd: user?.currentPeriodEnd || null,
     stripeCustomerId: user?.stripeCustomerId || "",
     stripeSubscriptionId: user?.stripeSubscriptionId || "",
@@ -44,6 +50,7 @@ function toStripeSubscriptionState(
   logStripeSubscriptionState(subscription);
 
   return {
+    cancelAtPeriodEnd: subscription.cancel_at_period_end === true,
     currentPeriodEnd: getCurrentPeriodEnd(subscription),
     stripeCustomerId: customerId,
     stripeSubscriptionId: subscription.id,
@@ -207,7 +214,7 @@ async function retrieveStoredSubscription(
 
 export async function restoreSubscriptionForEmail(email: string) {
   const normalizedEmail = email.trim().toLowerCase();
-  const user = await findUserByEmail(normalizedEmail);
+  const user = await findProfileByEmail(normalizedEmail);
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
   if (!stripeSecretKey) {
@@ -234,7 +241,8 @@ export async function restoreSubscriptionForEmail(email: string) {
   );
 
   try {
-    await updateUserSubscriptionByEmail(normalizedEmail, {
+    await upsertProfileSubscriptionByEmail(normalizedEmail, {
+      cancelAtPeriodEnd: restoredSubscription.cancelAtPeriodEnd === true,
       currentPeriodEnd: restoredSubscription.currentPeriodEnd || undefined,
       stripeCustomerId: restoredSubscription.stripeCustomerId,
       stripeSubscriptionId: restoredSubscription.stripeSubscriptionId,
@@ -248,7 +256,7 @@ export async function restoreSubscriptionForEmail(email: string) {
 }
 
 export async function getAccountSubscriptionForEmail(email: string) {
-  const user = await findUserByEmail(email);
+  const user = await findProfileByEmail(email);
   const storedSubscription = toAccountSubscriptionState(user);
 
   if (!process.env.STRIPE_SECRET_KEY) {

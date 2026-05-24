@@ -1,6 +1,6 @@
 import {
-  findUserByStripeCustomerId,
-  updateUserSubscriptionByEmail,
+  findProfileByStripeCustomerId,
+  upsertProfileSubscriptionByEmail,
 } from "@/lib/userStore";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -16,6 +16,7 @@ type SubscriptionPersistencePayload = {
   stripeCustomerId: string;
   stripeSubscriptionId: string;
   subscriptionStatus: EntitlementStatus;
+  cancelAtPeriodEnd: boolean;
 };
 
 function getStripeId(value: string | { id?: string } | null | undefined) {
@@ -57,29 +58,30 @@ function getEntitlementStatus(
 async function saveSubscriptionState(payload: SubscriptionPersistencePayload) {
   const subscriptionData = {
     currentPeriodEnd: payload.currentPeriodEnd || undefined,
+    cancelAtPeriodEnd: payload.cancelAtPeriodEnd,
     stripeCustomerId: payload.stripeCustomerId,
     stripeSubscriptionId: payload.stripeSubscriptionId,
     subscriptionStatus: payload.subscriptionStatus,
   };
 
   if (payload.email) {
-    const updatedUser = await updateUserSubscriptionByEmail(
+    const updatedProfile = await upsertProfileSubscriptionByEmail(
       payload.email,
       subscriptionData
     );
 
-    if (updatedUser) {
+    if (updatedProfile) {
       return;
     }
   }
 
-  const user = await findUserByStripeCustomerId(payload.stripeCustomerId);
+  const profile = await findProfileByStripeCustomerId(payload.stripeCustomerId);
 
-  if (!user) {
+  if (!profile) {
     return;
   }
 
-  await updateUserSubscriptionByEmail(user.email, subscriptionData);
+  await upsertProfileSubscriptionByEmail(profile.email, subscriptionData);
 }
 
 async function persistSubscription(
@@ -104,6 +106,7 @@ async function persistSubscription(
   }
 
   await saveSubscriptionState({
+    cancelAtPeriodEnd: subscription.cancel_at_period_end === true,
     currentPeriodEnd: getCurrentPeriodEnd(subscription),
     email: options.email,
     stripeCustomerId,
@@ -153,14 +156,15 @@ async function handleCheckoutSessionCompleted(
   const currentPeriodEnd = getCurrentPeriodEnd(subscription);
 
   if (resolvedStripeCustomerId) {
-    const updatedUser = await updateUserSubscriptionByEmail(email, {
+    const updatedProfile = await upsertProfileSubscriptionByEmail(email, {
+      cancelAtPeriodEnd: subscription.cancel_at_period_end === true,
       currentPeriodEnd: currentPeriodEnd || undefined,
       stripeCustomerId: resolvedStripeCustomerId,
       stripeSubscriptionId: subscription.id,
       subscriptionStatus: getEntitlementStatus(subscription),
     });
 
-    if (updatedUser) {
+    if (updatedProfile) {
       return;
     }
   }

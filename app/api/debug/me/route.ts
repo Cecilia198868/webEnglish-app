@@ -1,5 +1,5 @@
 import { authOptions } from "@/auth";
-import { findUserByEmail } from "@/lib/userStore";
+import { findProfileByEmail } from "@/lib/userStore";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 
@@ -14,15 +14,16 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await findUserByEmail(email);
+  const profile = await findProfileByEmail(email);
 
   return NextResponse.json(
     {
-      currentPeriodEnd: user?.currentPeriodEnd || null,
+      cancelAtPeriodEnd: profile?.cancelAtPeriodEnd ?? null,
+      currentPeriodEnd: profile?.currentPeriodEnd || null,
       email,
-      stripeCustomerId: user?.stripeCustomerId || "",
-      stripeSubscriptionId: user?.stripeSubscriptionId || "",
-      subscriptionStatus: user?.subscriptionStatus || "free",
+      stripeCustomerId: profile?.stripeCustomerId || "",
+      stripeSubscriptionId: profile?.stripeSubscriptionId || "",
+      subscriptionStatus: profile?.subscriptionStatus || "free",
     },
     {
       headers: {

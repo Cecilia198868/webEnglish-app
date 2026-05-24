@@ -2,7 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import AppleProvider from "next-auth/providers/apple";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { findUserByEmail, validateUserPassword } from "@/lib/userStore";
+import { findProfileByEmail, validateUserPassword } from "@/lib/userStore";
 
 const appleClientId = process.env.APPLE_CLIENT_ID;
 const appleClientSecret = process.env.APPLE_CLIENT_SECRET;
@@ -90,10 +90,10 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token }) {
       const email =
         typeof token.email === "string" ? token.email.trim().toLowerCase() : "";
-      const user = email ? await findUserByEmail(email) : null;
-      const subscriptionStatus = user?.subscriptionStatus;
+      const profile = email ? await findProfileByEmail(email) : null;
+      const subscriptionStatus = profile?.subscriptionStatus;
 
-      token.currentPeriodEnd = user?.currentPeriodEnd || null;
+      token.currentPeriodEnd = profile?.currentPeriodEnd || null;
       token.subscriptionStatus =
         subscriptionStatus === "pro" ||
         subscriptionStatus === "cancels_at_period_end"
