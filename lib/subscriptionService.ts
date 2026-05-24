@@ -17,6 +17,11 @@ type SelectedStripeSubscription = {
   subscription: Stripe.Subscription;
 };
 
+function getStripeId(value: string | { id?: string } | null | undefined) {
+  if (!value) return "";
+  return typeof value === "string" ? value : value.id || "";
+}
+
 function toAccountSubscriptionState(
   user: StoredUser | null | undefined
 ): AccountSubscriptionState {
@@ -36,6 +41,8 @@ function toStripeSubscriptionState(
   customerId: string,
   subscription: Stripe.Subscription
 ): AccountSubscriptionState {
+  logStripeSubscriptionState(subscription);
+
   return {
     currentPeriodEnd: getCurrentPeriodEnd(subscription),
     stripeCustomerId: customerId,
@@ -44,8 +51,32 @@ function toStripeSubscriptionState(
   };
 }
 
+function logStripeSubscriptionState(subscription: Stripe.Subscription) {
+  const subscriptionWithPeriodEnd = subscription as Stripe.Subscription & {
+    current_period_end?: number | null;
+  };
+
+  console.log("Stripe subscription status:", subscription.status);
+  console.log(
+    "Stripe subscription cancel_at_period_end:",
+    subscription.cancel_at_period_end
+  );
+  console.log(
+    "Stripe subscription current_period_end:",
+    subscriptionWithPeriodEnd.current_period_end ??
+      subscription.items.data[0]?.current_period_end ??
+      null
+  );
+}
+
 function getCurrentPeriodEnd(subscription: Stripe.Subscription) {
-  const currentPeriodEnd = subscription.items.data[0]?.current_period_end;
+  const subscriptionWithPeriodEnd = subscription as Stripe.Subscription & {
+    current_period_end?: number | null;
+  };
+  const currentPeriodEnd =
+    subscriptionWithPeriodEnd.current_period_end ||
+    subscription.items.data[0]?.current_period_end;
+
   return currentPeriodEnd
     ? new Date(currentPeriodEnd * 1000).toISOString()
     : null;
@@ -144,6 +175,36 @@ async function findSubscriptionByEmail(
   return latestActiveSubscription || latestFallbackSubscription;
 }
 
+async function retrieveStoredSubscription(
+  stripe: Stripe,
+  user: StoredUser | null
+): Promise<SelectedStripeSubscription | null> {
+  const stripeSubscriptionId = user?.stripeSubscriptionId?.trim();
+
+  if (!stripeSubscriptionId) {
+    return null;
+  }
+
+  try {
+    const subscription =
+      await stripe.subscriptions.retrieve(stripeSubscriptionId);
+    const customerId =
+      getStripeId(subscription.customer) || user?.stripeCustomerId?.trim() || "";
+
+    if (!customerId) {
+      return null;
+    }
+
+    return {
+      customerId,
+      subscription,
+    };
+  } catch (error) {
+    console.error("Retrieve stored Stripe subscription failed:", error);
+    return null;
+  }
+}
+
 export async function restoreSubscriptionForEmail(email: string) {
   const normalizedEmail = email.trim().toLowerCase();
   const user = await findUserByEmail(normalizedEmail);
@@ -154,11 +215,13 @@ export async function restoreSubscriptionForEmail(email: string) {
   }
 
   const stripe = new Stripe(stripeSecretKey);
-  const selectedSubscription = await findSubscriptionByEmail(
-    stripe,
-    normalizedEmail,
-    user?.stripeCustomerId
-  );
+  const selectedSubscription =
+    (await retrieveStoredSubscription(stripe, user)) ||
+    (await findSubscriptionByEmail(
+      stripe,
+      normalizedEmail,
+      user?.stripeCustomerId
+    ));
 
   if (!selectedSubscription) {
     return toAccountSubscriptionState(user);
