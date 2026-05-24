@@ -42,13 +42,23 @@ type LocalLessonData = {
 type SubscriptionStatus = "free" | "pro" | "cancels_at_period_end";
 
 type AccountSubscriptionResponse = {
+  cancelAtPeriodEnd?: boolean | null;
   currentPeriodEnd?: string | null;
   subscriptionStatus?: SubscriptionStatus;
 };
 
 function normalizeSubscriptionStatus(
-  subscriptionStatus?: SubscriptionStatus | null
+  subscriptionStatus?: SubscriptionStatus | null,
+  cancelAtPeriodEnd?: boolean | null
 ): SubscriptionStatus {
+  if (
+    cancelAtPeriodEnd === true &&
+    (subscriptionStatus === "pro" ||
+      subscriptionStatus === "cancels_at_period_end")
+  ) {
+    return "cancels_at_period_end";
+  }
+
   return subscriptionStatus === "pro" ||
     subscriptionStatus === "cancels_at_period_end"
     ? subscriptionStatus
@@ -883,7 +893,8 @@ export default function StudyPage() {
         if (cancelled) return;
 
         const nextSubscriptionStatus = normalizeSubscriptionStatus(
-          data.subscriptionStatus
+          data.subscriptionStatus,
+          data.cancelAtPeriodEnd
         );
 
         setAccountSubscriptionStatus(nextSubscriptionStatus);
@@ -1249,7 +1260,8 @@ export default function StudyPage() {
       if (response.ok) {
         const data = (await response.json()) as AccountSubscriptionResponse;
         const nextSubscriptionStatus = normalizeSubscriptionStatus(
-          data.subscriptionStatus
+          data.subscriptionStatus,
+          data.cancelAtPeriodEnd
         );
 
         setAccountSubscriptionStatus(nextSubscriptionStatus);

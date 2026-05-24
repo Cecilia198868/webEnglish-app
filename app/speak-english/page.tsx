@@ -104,16 +104,27 @@ type SessionResponse = {
 };
 
 type AccountSubscriptionResponse = {
+  cancelAtPeriodEnd?: boolean | null;
   currentPeriodEnd?: string | null;
   email?: string;
+  stripeStatus?: string | null;
   stripeCustomerId?: string;
   stripeSubscriptionId?: string;
   subscriptionStatus?: SubscriptionStatus;
 };
 
 function normalizeSubscriptionStatus(
-  subscriptionStatus?: SubscriptionStatus | null
+  subscriptionStatus?: SubscriptionStatus | null,
+  cancelAtPeriodEnd?: boolean | null
 ): SubscriptionStatus {
+  if (
+    cancelAtPeriodEnd === true &&
+    (subscriptionStatus === "pro" ||
+      subscriptionStatus === "cancels_at_period_end")
+  ) {
+    return "cancels_at_period_end";
+  }
+
   return subscriptionStatus === "pro" ||
     subscriptionStatus === "cancels_at_period_end"
     ? subscriptionStatus
@@ -2286,6 +2297,10 @@ function SpeakEnglishClient() {
           const periodEndDate = new Date(accountCurrentPeriodEnd);
           if (Number.isNaN(periodEndDate.getTime())) return "";
 
+          if (hasCanceledAtPeriodEnd) {
+            return periodEndDate.toISOString().slice(0, 10);
+          }
+
           const formattedDate = periodEndDate.toLocaleDateString(
             language === "en" ? "en-US" : "zh-CN",
             {
@@ -2539,11 +2554,16 @@ function SpeakEnglishClient() {
 
         if (cancelled) return;
 
+        const nextSubscriptionStatus = normalizeSubscriptionStatus(
+          data.subscriptionStatus,
+          data.cancelAtPeriodEnd
+        );
+
         setAccountSubscriptionStatus(
-          normalizeSubscriptionStatus(data.subscriptionStatus)
+          nextSubscriptionStatus
         );
         setAccountCurrentPeriodEnd(data.currentPeriodEnd || "");
-        if (hasProAccess(normalizeSubscriptionStatus(data.subscriptionStatus))) {
+        if (hasProAccess(nextSubscriptionStatus)) {
           setShowFreePracticeLimitModal(false);
         }
       } catch {
@@ -2702,7 +2722,8 @@ function SpeakEnglishClient() {
       if (response.ok) {
         const data = (await response.json()) as AccountSubscriptionResponse;
         const nextSubscriptionStatus = normalizeSubscriptionStatus(
-          data.subscriptionStatus
+          data.subscriptionStatus,
+          data.cancelAtPeriodEnd
         );
 
         setAccountSubscriptionStatus(nextSubscriptionStatus);
@@ -2857,7 +2878,8 @@ function SpeakEnglishClient() {
 
       const subscriptionData = data as AccountSubscriptionResponse;
       const nextSubscriptionStatus = normalizeSubscriptionStatus(
-        subscriptionData.subscriptionStatus
+        subscriptionData.subscriptionStatus,
+        subscriptionData.cancelAtPeriodEnd
       );
 
       setAccountSubscriptionStatus(nextSubscriptionStatus);
