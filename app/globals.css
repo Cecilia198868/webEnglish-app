@@ -2259,3 +2259,122 @@ body {
     animation: none !important;
   }
 }
+
+html[data-speakflow-font-size="small"] {
+  font-size: 15px;
+}
+
+html[data-speakflow-font-size="standard"] {
+  font-size: 16px;
+}
+
+html[data-speakflow-font-size="large"] {
+  font-size: 17.5px;
+}
+
+html[data-speakflow-theme="dark"],
+html[data-speakflow-theme="dark"] body {
+  background:
+    radial-gradient(circle at 12% 4%, rgba(123, 97, 255, 0.28), transparent 30%),
+    radial-gradient(circle at 88% 7%, rgba(91, 140, 255, 0.2), transparent 34%),
+    linear-gradient(180deg, #0b0618 0%, #130b24 52%, #060513 100%) !important;
+  color: #f7f1ff !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-brand-page,
+html[data-speakflow-theme="dark"] .sf-speak-page,
+html[data-speakflow-theme="dark"] .responsive-page-shell,
+main.sf-speak-page[data-speakflow-theme="dark"] {
+  background:
+    radial-gradient(circle at 9% 0%, rgba(123, 97, 255, 0.28), transparent 31%),
+    radial-gradient(circle at 86% 5%, rgba(91, 140, 255, 0.2), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(124, 52, 190, 0.2), transparent 44%),
+    linear-gradient(180deg, #0f0820 0%, #181029 47%, #080714 100%) !important;
+  color: #f7f1ff !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-speak-phone,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-speak-phone {
+  border-color: rgba(199, 180, 255, 0.24) !important;
+  background:
+    linear-gradient(180deg, rgba(38, 24, 65, 0.82), rgba(13, 9, 31, 0.92)),
+    radial-gradient(circle at 20% 0%, rgba(123, 97, 255, 0.3), transparent 34%),
+    radial-gradient(circle at 88% 18%, rgba(91, 140, 255, 0.22), transparent 34%) !important;
+  box-shadow:
+    0 36px 96px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-account-panel,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-account-panel {
+  background: linear-gradient(180deg, rgba(25, 16, 48, 0.98), rgba(15, 10, 31, 0.98)) !important;
+  color: #f7f1ff !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-account-panel :where(h1, h2, h3, h4, p, span, label, button, li, div),
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-account-panel :where(h1, h2, h3, h4, p, span, label, button, li, div) {
+  color: #f7f1ff;
+}
+
+html[data-speakflow-theme="dark"] .sf-account-panel :where([class*="text-[#7f7896]"], [class*="text-[#4b4267]"], [class*="text-[#5f5680]"]),
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-account-panel :where([class*="text-[#7f7896]"], [class*="text-[#4b4267]"], [class*="text-[#5f5680]"]) {
+  color: rgba(237, 230, 255, 0.72) !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-account-panel :where([class*="text-[#201833]"]),
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-account-panel :where([class*="text-[#201833]"]) {
+  color: #f7f1ff !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-account-panel :where([class*="bg-white"], [class*="bg-[#fbf9ff]"], [class*="bg-[#efeaff]"], [class*="bg-[#f7f4ff]"]),
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-account-panel :where([class*="bg-white"], [class*="bg-[#fbf9ff]"], [class*="bg-[#efeaff]"], [class*="bg-[#f7f4ff]"]) {
+  border-color: rgba(211, 198, 255, 0.16) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 38px rgba(0, 0, 0, 0.24) !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-account-panel :where(input, textarea, select),
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-account-panel :where(input, textarea, select) {
+  border-color: rgba(211, 198, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #f7f1ff !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-account-panel :where(input, textarea, select)::placeholder,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-account-panel :where(input, textarea, select)::placeholder {
+  color: rgba(237, 230, 255, 0.48) !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-header-button,
+html[data-speakflow-theme="dark"] .sf-footer-button,
+html[data-speakflow-theme="dark"] .sf-key,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-header-button,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-footer-button,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-key {
+  border-color: rgba(211, 198, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #f7f1ff !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-header-button span::before,
+html[data-speakflow-theme="dark"] .sf-header-button span::after,
+html[data-speakflow-theme="dark"] .sf-header-button span span,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-header-button span::before,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-header-button span::after,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-header-button span span {
+  background: #f3edff !important;
+}
+
+html[data-speakflow-theme="dark"] .sf-floating-panel,
+html[data-speakflow-theme="dark"] .sf-keyboard-panel,
+html[data-speakflow-theme="dark"] .sf-composer,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-floating-panel,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-keyboard-panel,
+main.sf-speak-page[data-speakflow-theme="dark"] .sf-composer {
+  border-color: rgba(211, 198, 255, 0.18) !important;
+  background:
+    linear-gradient(180deg, rgba(35, 25, 62, 0.82), rgba(16, 11, 34, 0.9)),
+    rgba(15, 10, 31, 0.74) !important;
+}

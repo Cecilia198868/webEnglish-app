@@ -109,12 +109,94 @@ type AccountSubscriptionResponse = {
   subscriptionStatus?: "free" | "pro";
 };
 
-type AccountPanelView = "menu" | "account" | "subscription" | "checkout" | "voice";
+type AccountPanelView =
+  | "menu"
+  | "account"
+  | "subscription"
+  | "checkout"
+  | "voice"
+  | "manageSubscription"
+  | "helpCenter"
+  | "reportIssue"
+  | "aboutSpeakFlow"
+  | "appearance"
+  | "fontSize";
 type ProPlan = "monthly" | "yearly";
+type AppearancePreference = "light" | "dark" | "system";
+type EffectiveAppearance = "light" | "dark";
+type FontSizePreference = "small" | "standard" | "large";
 
-type AccountMenuAction = "subscription" | "voice" | "terms" | "privacy";
+type AccountMenuAction =
+  | "subscription"
+  | "voice"
+  | "manageSubscription"
+  | "helpCenter"
+  | "reportIssue"
+  | "aboutSpeakFlow"
+  | "appearance"
+  | "fontSize"
+  | "terms"
+  | "privacy";
+
+type AccountMenuItem = {
+  action?: AccountMenuAction;
+  children?: readonly string[];
+  icon?: string;
+  label: string;
+  trailing?: string;
+};
+
+type AccountMenuSection = {
+  items: readonly AccountMenuItem[];
+  title: string;
+};
+
+type AccountHomeRow = {
+  action?: AccountMenuAction;
+  badge?: string;
+  danger?: boolean;
+  icon: AccountMenuIconName;
+  label: string;
+  onClick?: () => void;
+};
+
+type AccountHomeGroup = {
+  rows: readonly AccountHomeRow[];
+  title?: string;
+};
+
+type AccountMenuIconName =
+  | "star"
+  | "card"
+  | "refresh"
+  | "headphones"
+  | "font"
+  | "globe"
+  | "moon"
+  | "bell"
+  | "cloud"
+  | "help"
+  | "chat"
+  | "file"
+  | "lock"
+  | "info"
+  | "logout";
+
+type HelpCenterArticle = {
+  body: readonly string[];
+  bullets?: readonly string[];
+  title: string;
+};
+
+type HelpCenterSection = {
+  articles: readonly HelpCenterArticle[];
+  description: string;
+  title: string;
+};
 
 const accountAvatarStoragePrefix = "speakflow-account-avatar";
+const appearancePreferenceStorageKey = "speakflow-appearance-preference";
+const fontSizePreferenceStorageKey = "speakflow-font-size-preference";
 const selectedVoiceStorageKey = "speakflow-selected-voice-uri";
 const speechSilenceDelayMs = 1000;
 const englishSpeechSilenceDelayMs = 2000;
@@ -136,41 +218,122 @@ function getSpeechSilenceDelay(stage: PracticeStage) {
   return englishSpeechSilenceDelayMs;
 }
 
-const accountMenuItemMarks = [
-  ["⭐", "💳", "↻"],
-  ["🎧", "🧠", "🔥", "📊", "⬆️"],
-  ["🎨", "🔔", "🔒", "☁️"],
-  ["❓", "⚑", "📄", "🔏", "ℹ️"],
-] as const;
-
-const accountMenuChildMarks = ["中", "▶", "↪", "1x", "A", "?"] as const;
-
-function getAccountMenuItemMark(sectionIndex: number, itemIndex: number) {
-  return accountMenuItemMarks[sectionIndex]?.[itemIndex] || "•";
+function isAppearancePreference(value: string): value is AppearancePreference {
+  return value === "light" || value === "dark" || value === "system";
 }
 
-function getAccountMenuChildMark(childIndex: number) {
-  return accountMenuChildMarks[childIndex] || "•";
+function isFontSizePreference(value: string): value is FontSizePreference {
+  return value === "small" || value === "standard" || value === "large";
 }
 
-function AccountMenuMark({
+function AccountLineIcon({
   danger = false,
-  value,
+  name,
 }: {
   danger?: boolean;
-  value: string;
+  name: AccountMenuIconName;
 }) {
+  const className = `h-8 w-8 ${danger ? "text-[#ff3b5f]" : "text-[#8264ff]"}`;
+
+  if (name === "font") {
+    return (
+      <span
+        aria-hidden="true"
+        className={`grid h-8 w-8 place-items-center font-[var(--font-sora)] text-[1.55rem] font-semibold leading-none ${
+          danger ? "text-[#ff3b5f]" : "text-[#8264ff]"
+        }`}
+      >
+        Aa
+      </span>
+    );
+  }
+
   return (
-    <span
+    <svg
       aria-hidden="true"
-      className={`grid h-8 w-8 shrink-0 place-items-center text-[1.28rem] font-black leading-none ${
-        danger
-          ? "text-[#d33b46]"
-          : "text-[#201833]"
-      }`}
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2.2"
+      viewBox="0 0 32 32"
     >
-      {value}
-    </span>
+      {name === "star" ? (
+        <path d="m16 4.6 3.45 7 7.73 1.12-5.59 5.45 1.32 7.7L16 22.23 9.09 25.87l1.32-7.7-5.59-5.45 7.73-1.12L16 4.6Z" />
+      ) : null}
+      {name === "card" ? (
+        <>
+          <rect height="18" rx="2.8" width="22" x="5" y="7" />
+          <path d="M5 13h22M9.5 20h3.5M17 20h4.5" />
+        </>
+      ) : null}
+      {name === "refresh" ? (
+        <>
+          <path d="M8.1 11.2A9 9 0 1 1 7 18.9" />
+          <path d="M8.1 6.2v5h5" />
+        </>
+      ) : null}
+      {name === "headphones" ? (
+        <>
+          <path d="M7 18v-2a9 9 0 0 1 18 0v2" />
+          <path d="M7 18v5a2 2 0 0 0 2 2h2v-9H9a2 2 0 0 0-2 2ZM25 18v5a2 2 0 0 1-2 2h-2v-9h2a2 2 0 0 1 2 2Z" />
+        </>
+      ) : null}
+      {name === "globe" ? (
+        <>
+          <circle cx="16" cy="16" r="10.5" />
+          <path d="M5.5 16h21M16 5.5c3 3 4.4 6.5 4.4 10.5S19 23.5 16 26.5M16 5.5c-3 3-4.4 6.5-4.4 10.5S13 23.5 16 26.5" />
+        </>
+      ) : null}
+      {name === "moon" ? (
+        <path d="M23.7 21.8A10 10 0 0 1 10.2 8.3 10.3 10.3 0 1 0 23.7 21.8Z" />
+      ) : null}
+      {name === "bell" ? (
+        <>
+          <path d="M9 23h14l-1.5-2.4V15a5.5 5.5 0 0 0-11 0v5.6L9 23Z" />
+          <path d="M13.4 25a3 3 0 0 0 5.2 0" />
+        </>
+      ) : null}
+      {name === "cloud" ? (
+        <path d="M10.4 23.5h12.2a5 5 0 0 0 .4-10 7.2 7.2 0 0 0-13.8-1.8A5.9 5.9 0 0 0 10.4 23.5Z" />
+      ) : null}
+      {name === "help" ? (
+        <>
+          <circle cx="16" cy="16" r="10.5" />
+          <path d="M12.9 13a3.3 3.3 0 0 1 6.2 1.6c0 2.9-3.4 2.8-3.4 5.2M16 24h.02" />
+        </>
+      ) : null}
+      {name === "chat" ? (
+        <>
+          <path d="M7 9.8A4.8 4.8 0 0 1 11.8 5h8.4A4.8 4.8 0 0 1 25 9.8v6.4a4.8 4.8 0 0 1-4.8 4.8h-7.4L7 26V9.8Z" />
+          <path d="M12 13h.02M16 13h.02M20 13h.02" />
+        </>
+      ) : null}
+      {name === "file" ? (
+        <>
+          <path d="M9 5h9l5 5v17H9V5Z" />
+          <path d="M18 5v6h5M13 16h6M13 21h6" />
+        </>
+      ) : null}
+      {name === "lock" ? (
+        <>
+          <rect height="13" rx="2.5" width="18" x="7" y="14" />
+          <path d="M11 14v-3a5 5 0 0 1 10 0v3M16 19v3" />
+        </>
+      ) : null}
+      {name === "info" ? (
+        <>
+          <circle cx="16" cy="16" r="10.5" />
+          <path d="M16 14v7M16 10.5h.02" />
+        </>
+      ) : null}
+      {name === "logout" ? (
+        <>
+          <path d="M13 6H8v20h5M18 11l5 5-5 5M23 16H12" />
+        </>
+      ) : null}
+    </svg>
   );
 }
 
@@ -216,52 +379,43 @@ const accountPanelCopy = {
             label: "SpeakFlow Pro",
             trailing: "Not subscribed",
           },
-          { action: "subscription", icon: "💳", label: "Manage Subscription" },
-          { icon: "↻", label: "Restore Purchases" },
-        ],
-      },
-      {
-        title: "Learning",
-        items: [
-          { action: "voice", icon: "🎧", label: "Voice" },
           {
-            children: [
-              "Show Chinese by default",
-              "Auto-play English",
-              "Auto-advance to next sentence",
-              "Speech speed",
-              "Font size",
-              "Long press to reveal answer",
-            ],
-            icon: "🧠",
-            label: "Learning Settings",
+            action: "manageSubscription",
+            icon: "💳",
+            label: "Manage Subscription",
           },
-          { icon: "🔥", label: "Learning Goals" },
-          { icon: "📊", label: "Learning Records" },
-          { action: "subscription", icon: "⬆️", label: "Upgrade to Pro" },
         ],
       },
       {
         title: "Settings",
         items: [
-          { icon: "🎨", label: "Appearance" },
+          { action: "voice", icon: "🎧", label: "Voice" },
+          { action: "fontSize", icon: "🔤", label: "Font Size" },
+          { icon: "🌐", label: "Interface Language" },
+          { action: "appearance", icon: "🎨", label: "Appearance" },
           { icon: "🔔", label: "Notifications" },
-          { icon: "🔒", label: "Privacy & Security" },
-          { icon: "☁️", label: "Data Sync" },
+          { icon: "☁️", label: "Data Management" },
         ],
       },
       {
         title: "Help",
         items: [
-          { icon: "❓", label: "Help Center" },
-          { icon: "⚑", label: "Report an Issue" },
+          { action: "helpCenter", icon: "❓", label: "Help Center" },
+          { action: "reportIssue", icon: "⚑", label: "Contact & Feedback" },
           { action: "terms", icon: "📄", label: "Terms of Service" },
           { action: "privacy", icon: "🔏", label: "Privacy Policy" },
-          { icon: "ℹ️", label: "About SpeakFlow" },
+          { action: "aboutSpeakFlow", icon: "ℹ️", label: "About SpeakFlow" },
         ],
       },
-    ],
+    ] as readonly AccountMenuSection[],
+    aboutSpeakFlowTitle: "About SpeakFlow",
     accountSecurity: "Account & Security",
+    appearanceTitle: "Appearance",
+    billingPortalDescription:
+      "Manage your plan, payment method, invoices, and cancellation on Stripe's secure page.",
+    billingPortalPrimary: "Open subscription management",
+    billingPortalStatusNote:
+      "After you finish in Stripe, you will return to SpeakFlow automatically.",
     billingNoteMonthly: "Monthly billing",
     cancelSafety: "Cancel anytime · Secure payment",
     checkoutSafety: "Secure payment · Cancel anytime",
@@ -277,12 +431,19 @@ const accountPanelCopy = {
     fallbackEmail: "No email connected",
     fallbackUser: "SpeakFlow User",
     help: "Help",
+    helpCenterTitle: "Help Center",
+    fontSizeTitle: "Font Size",
     included: "Plan includes",
     invalidImage: "Please choose an image file",
     imageReadFailed: "Could not read the avatar. Please choose again.",
     learningData: "Learning Data",
     loginSecurity: "Login & Security",
     member: "Membership",
+    currentPlan: "Current plan",
+    manageSubscription: "Manage Subscription",
+    manageSubscriptionTitle: "Manage Subscription",
+    noBillingPortal:
+      "No Stripe subscription is linked to this account. If you already paid, sign in with the purchase email and restore purchases.",
     notSubscribed: "Not subscribed",
     other: "Other",
     openAccountMenu: "Open account menu",
@@ -338,13 +499,20 @@ const accountPanelCopy = {
       },
     },
     proTagline: "Turn English input into real expression",
-    restorePurchases: "Restore Purchases",
+    restorePurchaseDescription:
+      "If you already paid but this device still shows Free, refresh the subscription saved for your current login email.",
+    restorePurchaseEmpty: "No active Pro subscription was found for this account.",
+    restorePurchaseFailed: "Unable to restore purchases. Please try again.",
+    restorePurchasePrimary: "Restore purchases",
+    restorePurchaseSuccess: "SpeakFlow Pro has been restored.",
+    reportIssueTitle: "Contact & Feedback",
     returnAccountMenu: "Back to account menu",
     returnProPage: "Back to Pro page",
     save: "Save",
     saveAvatarFailed: "Save failed. Please choose a smaller image.",
     settings: "Settings",
     signOut: "Sign Out",
+    signedInAs: "Signed in as",
     subscriptionTitle: "Subscription",
     chooseAvatarFirst: "Please choose an avatar first",
     changeAvatar: "Change Avatar",
@@ -361,52 +529,38 @@ const accountPanelCopy = {
             label: "SpeakFlow Pro",
             trailing: "未订阅",
           },
-          { action: "subscription", icon: "💳", label: "管理订阅" },
-          { icon: "↻", label: "恢复购买" },
-        ],
-      },
-      {
-        title: "学习",
-        items: [
-          { action: "voice", icon: "🎧", label: "声音" },
-          {
-            children: [
-              "默认显示中文",
-              "自动播放英文",
-              "自动进入下一句",
-              "语速",
-              "字体大小",
-              "长按显示答案",
-            ],
-            icon: "🧠",
-            label: "学习设置",
-          },
-          { icon: "🔥", label: "学习目标" },
-          { icon: "📊", label: "学习记录" },
-          { action: "subscription", icon: "⬆️", label: "升级到 Pro" },
+          { action: "manageSubscription", icon: "💳", label: "管理订阅" },
         ],
       },
       {
         title: "设置",
         items: [
-          { icon: "🎨", label: "外观" },
+          { action: "voice", icon: "🎧", label: "声音" },
+          { action: "fontSize", icon: "🔤", label: "字体大小" },
+          { icon: "🌐", label: "界面语言" },
+          { action: "appearance", icon: "🎨", label: "外观" },
           { icon: "🔔", label: "通知" },
-          { icon: "🔒", label: "隐私与安全" },
-          { icon: "☁️", label: "数据同步" },
+          { icon: "☁️", label: "数据管理" },
         ],
       },
       {
         title: "帮助",
         items: [
-          { icon: "❓", label: "帮助中心" },
-          { icon: "⚑", label: "报告问题" },
+          { action: "helpCenter", icon: "❓", label: "帮助中心" },
+          { action: "reportIssue", icon: "⚑", label: "联系与反馈" },
           { action: "terms", icon: "📄", label: "用户协议" },
           { action: "privacy", icon: "🔏", label: "隐私政策" },
-          { icon: "ℹ️", label: "关于 SpeakFlow" },
+          { action: "aboutSpeakFlow", icon: "ℹ️", label: "关于 SpeakFlow" },
         ],
       },
-    ],
+    ] as readonly AccountMenuSection[],
+    aboutSpeakFlowTitle: "关于 SpeakFlow",
     accountSecurity: "账户与安全",
+    appearanceTitle: "外观",
+    billingPortalDescription:
+      "在 Stripe 安全页面中更换套餐、取消订阅、更新付款方式或查看账单。",
+    billingPortalPrimary: "打开订阅管理",
+    billingPortalStatusNote: "在 Stripe 完成管理后，会自动回到 SpeakFlow。",
     billingNoteMonthly: "按月计费",
     cancelSafety: "可随时取消 · 安全支付保障",
     checkoutSafety: "安全支付保障 · 可随时取消订阅",
@@ -422,12 +576,19 @@ const accountPanelCopy = {
     fallbackEmail: "未绑定邮箱",
     fallbackUser: "SpeakFlow 用户",
     help: "帮助",
+    helpCenterTitle: "帮助中心",
+    fontSizeTitle: "字体大小",
     included: "套餐包含",
     invalidImage: "请选择图片文件",
     imageReadFailed: "头像读取失败，请重新选择",
     learningData: "学习数据",
     loginSecurity: "登录与安全",
     member: "会员",
+    currentPlan: "当前套餐",
+    manageSubscription: "管理订阅",
+    manageSubscriptionTitle: "管理订阅",
+    noBillingPortal:
+      "当前账号还没有关联可管理的 Stripe 订阅。如果你已经付款，请用付款时的邮箱登录后点击恢复购买。",
     notSubscribed: "未订阅",
     other: "其他",
     openAccountMenu: "打开账户菜单",
@@ -482,34 +643,771 @@ const accountPanelCopy = {
       },
     },
     proTagline: "让英语真正从“输入”变成“输出”",
-    restorePurchases: "恢复购买",
+    restorePurchaseDescription:
+      "如果你已经付款，但这台设备仍显示未订阅，请用当前登录邮箱刷新订阅状态。",
+    restorePurchaseEmpty: "没有找到这个账号的有效 Pro 订阅。",
+    restorePurchaseFailed: "恢复购买失败，请稍后再试。",
+    restorePurchasePrimary: "恢复购买",
+    restorePurchaseSuccess: "已恢复 SpeakFlow Pro。",
+    reportIssueTitle: "联系与反馈",
     returnAccountMenu: "返回账户菜单",
     returnProPage: "返回 Pro 页面",
     save: "Save",
     saveAvatarFailed: "保存失败，请换一张更小的图片",
     settings: "设置",
     signOut: "退出登录",
+    signedInAs: "当前账号",
     subscriptionTitle: "订阅",
     chooseAvatarFirst: "请先选择头像",
     changeAvatar: "更换头像",
   },
 } as const;
 
-function getDefaultCollapsedAccountMenuItems() {
-  const collapsedItems = new Set<string>();
+const helpCenterContent: Record<
+  "en" | "zh-CN",
+  {
+    intro: string;
+    quickStart: readonly string[];
+    quickStartTitle: string;
+    sections: readonly HelpCenterSection[];
+  }
+> = {
+  en: {
+    intro:
+      "SpeakFlow is built for one job: help you turn real thoughts into spoken English you can actually use. The best practice loop is simple: say your idea in Chinese, try it in English, compare with SpeakFlow's recommendation, listen, repeat, then continue the conversation.",
+    quickStartTitle: "Best way to start",
+    quickStart: [
+      "Open the speaking screen and tap the microphone.",
+      "Say one complete idea in Chinese, for example: The yogurt is too sour.",
+      "When the Chinese sentence appears, tap the microphone again and say it in English.",
+      "Study the recommended expression, use normal and slow playback, then answer the AI follow-up.",
+      "Tap highlighted words or phrases you want to keep in your expression bank.",
+    ],
+    sections: [
+      {
+        title: "Core Practice Flow",
+        description:
+          "Use SpeakFlow as a speaking coach, not as a translation box.",
+        articles: [
+          {
+            title: "Why do I say Chinese first?",
+            body: [
+              "Most learners already know what they want to say, but freeze when they need to say it in English. Speaking Chinese first lets SpeakFlow capture your real meaning before you practice the English.",
+              "After that, the app shows the Chinese sentence again and asks you to say it in English. This forces active recall, which is much better than only reading an answer.",
+            ],
+          },
+          {
+            title: "What happens after I say English?",
+            body: [
+              "SpeakFlow shows your expression first, then gives a recommended expression. You can compare your English with a clearer, more natural version.",
+              "You can play the English at normal speed or slow speed. Use slow playback for pronunciation, then use normal speed to build speaking rhythm.",
+            ],
+          },
+          {
+            title: "What should I do with the AI follow-up?",
+            body: [
+              "When the AI asks a follow-up question, answer that question instead of starting a new topic. This is how the practice becomes a real conversation.",
+              "If you do not know what to say, use a simple answer first. A short, honest answer is better than waiting for a perfect sentence.",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Training Modes",
+        description:
+          "Choose the mode based on how much support you want today.",
+        articles: [
+          {
+            title: "AI Guided Expression",
+            body: [
+              "Use this when you do not know what to say. The AI suggests the next Chinese sentence based on the scene, emotional flow, daily realism, and your level.",
+              "You can follow the suggested Chinese sentence or ignore it and say your own idea. The goal is to keep you speaking without getting stuck.",
+            ],
+            bullets: [
+              "Good for beginners and tired days.",
+              "Good for building topic continuity.",
+              "Good when you want the app to lead the conversation.",
+            ],
+          },
+          {
+            title: "Free speaking practice",
+            body: [
+              "Use this when you already have something in mind. Say the Chinese thought, try the English, then continue from the AI reply.",
+              "This mode is strongest when you answer the AI's question directly. For example, if the AI asks Why do your eyes hurt?, answer with the reason instead of changing topics.",
+            ],
+          },
+          {
+            title: "Classic scenario practice",
+            body: [
+              "Classic scenarios are for useful daily situations such as banking, government services, driving, customer service, and travel-style conversations.",
+              "Use them when you want practical phrases for a predictable real-life situation.",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Expressions and Vocabulary",
+        description:
+          "Build your personal expression bank from the sentences you actually need.",
+        articles: [
+          {
+            title: "What are highlighted expressions?",
+            body: [
+              "Bright highlighted words or phrases are expressions worth learning. They are usually useful chunks, not isolated grammar points.",
+              "Tap a highlighted phrase to save it. Saved expressions can become material for later review and practice.",
+            ],
+          },
+          {
+            title: "Can I save a single word?",
+            body: [
+              "Yes. If you see a word you want to remember, tap the word. SpeakFlow saves it as vocabulary and keeps the source sentence when available.",
+              "This is useful because words are easier to remember when they stay connected to the sentence where you needed them.",
+            ],
+          },
+          {
+            title: "How should I use saved expressions?",
+            body: [
+              "Do not only memorize the phrase. Say a new sentence with it. If you saved too sour, try: This coffee is too bitter, This soup is too salty, or This bag is too heavy.",
+              "The goal is flexible use, not passive collection.",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Microphone, Playback, and Voice",
+        description:
+          "Most speaking problems come from browser permission, silence timing, or audio output.",
+        articles: [
+          {
+            title: "The microphone does not work",
+            body: [
+              "Check the browser microphone permission first. On Chrome or Edge, click the lock icon near the address bar and allow microphone access for this site.",
+              "If you use an external microphone or Bluetooth headset, make sure the correct input device is selected in your system settings before opening SpeakFlow.",
+            ],
+          },
+          {
+            title: "The app stops listening before I finish",
+            body: [
+              "Speak in one steady sentence when possible. Long pauses can make the browser speech recognizer think you are finished.",
+              "If the page moves on too early, tap the microphone again and repeat the sentence. SpeakFlow is designed for repeated attempts, so one imperfect capture is not a failure.",
+            ],
+          },
+          {
+            title: "I cannot hear playback",
+            body: [
+              "Check system volume, browser tab mute, and the selected output device. Some browsers also block audio until you have clicked or tapped the page once.",
+              "You can change the English playback voice from Account, Settings, Voice.",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Account and Subscription",
+        description:
+          "Use the same login email for practice, payment, and restoration.",
+        articles: [
+          {
+            title: "What does SpeakFlow Pro unlock?",
+            body: [
+              "Pro removes free practice limits and is intended for learners who want regular AI speaking practice, more AI conversation, and more course generation.",
+              "If your account is Pro, the free practice completion popup should not block speaking practice.",
+            ],
+          },
+          {
+            title: "How do I manage my subscription?",
+            body: [
+              "Open Account, Manage Subscription. SpeakFlow sends you to Stripe's secure customer portal, where you can update payment method, review invoices, change plan, or cancel.",
+              "After finishing in Stripe, you return to SpeakFlow and the app refreshes your account status.",
+            ],
+          },
+          {
+            title: "How do I restore a purchase?",
+            body: [
+              "Open Account, Restore Purchases. SpeakFlow checks the subscription linked to your current login email and updates your local Pro status.",
+              "If restoration says no active subscription was found, confirm that you are logged in with the same email used during checkout.",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Common Learning Problems",
+        description:
+          "These are normal issues. Use them as signals for how to practice next.",
+        articles: [
+          {
+            title: "The AI's English is different from mine. Was I wrong?",
+            body: [
+              "Not always. There are many correct ways to say the same idea. Treat SpeakFlow's version as a recommended expression: clearer, more natural, or easier to reuse.",
+              "If your meaning is understandable, repeat the recommended version once, then continue the conversation.",
+            ],
+          },
+          {
+            title: "The sentence is too hard",
+            body: [
+              "Shorten the idea. Instead of trying to say a long Chinese sentence in one perfect English sentence, split it into two.",
+              "For example: Fruit is too much trouble. I have to wash it and cut it. This is often more natural than forcing one long sentence.",
+            ],
+          },
+          {
+            title: "I do not know how to answer the AI",
+            body: [
+              "Answer with a reason, preference, feeling, example, or next action. These five answer types keep almost any conversation moving.",
+              "Example: Because..., I prefer..., I feel..., For example..., Maybe I will...",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Privacy and Data",
+        description:
+          "SpeakFlow keeps the product focused on learning and uses payment systems for payment data.",
+        articles: [
+          {
+            title: "Does SpeakFlow store my card information?",
+            body: [
+              "No. Card payment and subscription management are handled by Stripe. SpeakFlow stores subscription status and Stripe IDs needed to recognize your Pro account.",
+            ],
+          },
+          {
+            title: "Why does SpeakFlow need my email?",
+            body: [
+              "Your email connects login, subscription status, restore purchases, and your account display. Using the same email is important for payment recognition.",
+            ],
+          },
+          {
+            title: "What should I include when reporting a problem?",
+            body: [
+              "Include what you were trying to do, the exact screen, your browser, whether you are Pro or Free, and one example sentence if the issue is related to speech recognition or AI output.",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  "zh-CN": {
+    intro:
+      "SpeakFlow 的核心目标很简单：帮你把真实想法变成能开口说出来的英语。最有效的练习循环是：先用中文说出想法，再看着中文说英文，对比 AI 推荐表达，听朗读，跟读，然后继续回答 AI 的追问。",
+    quickStartTitle: "最推荐的开始方式",
+    quickStart: [
+      "进入口语练习界面，点击底部麦克风。",
+      "先说一句完整中文，例如：酸奶太酸了。",
+      "页面出现这句中文后，再点麦克风，看着中文说英文。",
+      "学习推荐表达，用正常朗读和慢速朗读跟读，然后回答 AI 的追问。",
+      "看到亮色标出的词组或单词时，可以点击收藏进表达库。",
+    ],
+    sections: [
+      {
+        title: "核心练习流程",
+        description: "把 SpeakFlow 当成口语陪练，而不是普通翻译器。",
+        articles: [
+          {
+            title: "为什么要先说中文？",
+            body: [
+              "很多学习者不是没有想法，而是想法到了嘴边，不知道怎么变成英语。先说中文，可以让 SpeakFlow 抓住你真正想表达的意思。",
+              "接着页面会重新显示这句中文，让你看着中文说英文。这一步是主动回忆，比直接看答案有效得多。",
+            ],
+          },
+          {
+            title: "我说完英文后会发生什么？",
+            body: [
+              "SpeakFlow 会先显示你的表达，再给出推荐表达。你可以对比自己的英文和更清楚、更自然的说法。",
+              "你可以听正常速度朗读，也可以听慢速朗读。慢速用来练发音，正常速度用来练真实说话节奏。",
+            ],
+          },
+          {
+            title: "AI 继续问我时，我应该怎么做？",
+            body: [
+              "当 AI 问出追问时，最好直接回答这个问题，不要重新换一个话题。这样练习才会变成真正的聊天。",
+              "如果不知道怎么说，先说一个简单答案。一个短而真实的回答，比一直等完美句子更有价值。",
+            ],
+          },
+        ],
+      },
+      {
+        title: "训练模式",
+        description: "根据当天需要的辅助程度选择模式。",
+        articles: [
+          {
+            title: "AI 引导表达",
+            body: [
+              "当你不知道说什么时，用 AI 引导表达。AI 会根据情景连续性、情绪递进、日常真实感和你的水平，推荐下一句中文。",
+              "你可以照着 AI 推荐的中文说，也可以不采用建议，继续说自己脑子里的内容。它的作用是让你不断有话可说。",
+            ],
+            bullets: [
+              "适合初学者和状态比较累的时候。",
+              "适合练一个话题的连续表达。",
+              "适合让 AI 带着你一步一步开口。",
+            ],
+          },
+          {
+            title: "自由口语练习",
+            body: [
+              "当你本来就有想法时，用自由练习。你先说中文，再尝试说英文，然后接着 AI 的回复继续聊。",
+              "这个模式最重要的是回答 AI 的问题。例如 AI 问 Why do your eyes hurt?，你就回答原因，而不是换新话题。",
+            ],
+          },
+          {
+            title: "经典场景口语练习",
+            body: [
+              "经典场景适合银行、政府办事、开车、客服、生活服务等可预期的真实场景。",
+              "当你想准备某个实际生活场景时，可以优先用经典场景练高频句子。",
+            ],
+          },
+        ],
+      },
+      {
+        title: "表达库和单词收藏",
+        description: "把你真正需要的句子，沉淀成自己的表达库。",
+        articles: [
+          {
+            title: "亮色词组是什么意思？",
+            body: [
+              "AI 会把值得掌握的词组用亮色标出来。这些通常是可以直接套用的表达块，而不是孤立语法点。",
+              "点击亮色词组，就可以收藏进表达库。以后复习时，这些表达会更贴近你真实想说的话。",
+            ],
+          },
+          {
+            title: "可以只收藏一个单词吗？",
+            body: [
+              "可以。看到某个单词想记住时，直接点这个单词就可以收藏。系统会尽量保留它所在的句子。",
+              "单词放在原句里更容易记住，因为你记住的是使用场景，不只是中文意思。",
+            ],
+          },
+          {
+            title: "收藏后应该怎么学？",
+            body: [
+              "不要只背词组本身，要用它造新句。比如收藏了 too sour，可以继续练：This coffee is too bitter. This soup is too salty. This bag is too heavy.",
+              "表达库的目标不是越收越多，而是让你能在新场景里灵活说出来。",
+            ],
+          },
+        ],
+      },
+      {
+        title: "麦克风、朗读和声音",
+        description: "口语问题多数和浏览器权限、停顿时间、音频输出有关。",
+        articles: [
+          {
+            title: "麦克风不能用怎么办？",
+            body: [
+              "先检查浏览器麦克风权限。Chrome 或 Edge 里可以点击地址栏旁边的锁形图标，允许这个网站使用麦克风。",
+              "如果你用外接麦克风或蓝牙耳机，打开 SpeakFlow 前，先确认系统设置里选中了正确的输入设备。",
+            ],
+          },
+          {
+            title: "我还没说完，页面就跳走了怎么办？",
+            body: [
+              "尽量用稳定的一句话说完。停顿太久时，浏览器语音识别可能会判断你已经说完。",
+              "如果提前结束，重新点麦克风再说一次就可以。SpeakFlow 本来就是用来反复尝试的，一次识别不完美不算失败。",
+            ],
+          },
+          {
+            title: "听不到朗读怎么办？",
+            body: [
+              "检查系统音量、浏览器标签页是否静音、输出设备是否正确。有些浏览器需要你先点击页面一次，才允许播放声音。",
+              "你也可以在账户里的 设置、声音 中切换英文朗读声音。",
+            ],
+          },
+        ],
+      },
+      {
+        title: "账户和订阅",
+        description: "登录、付款、恢复购买最好始终使用同一个邮箱。",
+        articles: [
+          {
+            title: "SpeakFlow Pro 有什么作用？",
+            body: [
+              "Pro 会解除免费练习限制，适合需要长期进行 AI 口语练习、AI 对话和课程生成的学习者。",
+              "如果账户已经是 Pro，练习页面不应该再用免费次数弹窗阻止你继续练习。",
+            ],
+          },
+          {
+            title: "如何管理订阅？",
+            body: [
+              "打开 账户、管理订阅。SpeakFlow 会跳转到 Stripe 的安全管理页面，你可以更新付款方式、查看账单、更换套餐或取消订阅。",
+              "在 Stripe 完成操作后，会返回 SpeakFlow，并刷新你的账户订阅状态。",
+            ],
+          },
+          {
+            title: "如何恢复购买？",
+            body: [
+              "打开 账户、恢复购买。SpeakFlow 会检查当前登录邮箱对应的订阅，并把 Pro 状态更新到本地账户。",
+              "如果提示没有找到有效订阅，请确认你现在登录的邮箱，就是付款时使用的邮箱。",
+            ],
+          },
+        ],
+      },
+      {
+        title: "常见学习问题",
+        description: "这些问题很正常，可以用来判断下一步怎么练。",
+        articles: [
+          {
+            title: "AI 给的英文和我说的不一样，是我错了吗？",
+            body: [
+              "不一定。同一个意思可以有很多正确说法。SpeakFlow 给的是推荐表达，通常更清楚、更自然，或者更容易复用。",
+              "如果你的表达能被理解，就先跟读一遍推荐表达，然后继续聊天，不要停在纠错焦虑里。",
+            ],
+          },
+          {
+            title: "句子太难，说不出来怎么办？",
+            body: [
+              "把中文意思拆短。不要强迫自己把很长的中文塞进一句完美英文里，可以拆成两句。",
+              "例如：Fruit is too much trouble. I have to wash it and cut it. 这比硬凑一个长句更自然。",
+            ],
+          },
+          {
+            title: "不知道怎么回答 AI 怎么办？",
+            body: [
+              "可以从原因、喜好、感受、例子、下一步行动这五个方向回答。几乎所有聊天都能靠这五类回答继续下去。",
+              "常用开头包括：Because..., I prefer..., I feel..., For example..., Maybe I will...",
+            ],
+          },
+        ],
+      },
+      {
+        title: "隐私和数据",
+        description: "SpeakFlow 会尽量把数据用途限制在学习和账户识别上。",
+        articles: [
+          {
+            title: "SpeakFlow 会保存我的银行卡信息吗？",
+            body: [
+              "不会。银行卡付款和订阅管理由 Stripe 处理。SpeakFlow 只保存识别 Pro 账户所需的订阅状态和 Stripe ID。",
+            ],
+          },
+          {
+            title: "为什么需要邮箱？",
+            body: [
+              "邮箱用来连接登录、订阅状态、恢复购买和账户展示。付款和登录使用同一个邮箱，才能正确识别 Pro。",
+            ],
+          },
+          {
+            title: "报告问题时应该提供什么？",
+            body: [
+              "请说明你当时想做什么、在哪个界面、使用什么浏览器、账号是 Pro 还是免费，以及一条相关例句。",
+              "如果是语音识别或 AI 表达问题，提供你说的原句会更容易排查。",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+};
 
-  Object.values(accountPanelCopy).forEach(({ accountMenuSections }) => {
-    accountMenuSections.forEach((section) => {
-      section.items.forEach((item) => {
-        if ("children" in item && item.children?.length) {
-          collapsedItems.add(`${section.title}-${item.label}`);
-        }
-      });
-    });
-  });
+const supportFeedbackContent = {
+  en: {
+    categories: [
+      { label: "Payment or Pro status", value: "payment" },
+      { label: "Microphone or playback", value: "voice" },
+      { label: "AI expression quality", value: "ai_expression" },
+      { label: "Practice flow", value: "practice_flow" },
+      { label: "Account or login", value: "account" },
+      { label: "Suggestion", value: "suggestion" },
+      { label: "Other", value: "other" },
+    ],
+    contactEmail: "Reply email",
+    contactPlaceholder: "you@example.com",
+    description:
+      "Use this to contact SpeakFlow about bugs, payment issues, Pro status, voice problems, AI output, or product suggestions.",
+    detailHelp:
+      "Helpful details: what you were doing, the exact screen, browser, Pro or Free status, and one example sentence if speech or AI output was involved.",
+    error: "Unable to send feedback. Please try again.",
+    message: "What happened?",
+    messagePlaceholder:
+      "Describe the issue or suggestion. If possible, include the sentence you were practicing and what you expected.",
+    page: "Related screen",
+    pagePlaceholder: "For example: Free speaking practice, Pro page, Checkout",
+    required: "Please describe the issue in more detail.",
+    submit: "Send feedback",
+    submitting: "Sending...",
+    success:
+      "Feedback sent. SpeakFlow has saved your message and will review it.",
+    type: "Issue type",
+  },
+  "zh-CN": {
+    categories: [
+      { label: "付款或 Pro 状态", value: "payment" },
+      { label: "麦克风或朗读", value: "voice" },
+      { label: "AI 表达质量", value: "ai_expression" },
+      { label: "练习流程", value: "practice_flow" },
+      { label: "账户或登录", value: "account" },
+      { label: "功能建议", value: "suggestion" },
+      { label: "其他", value: "other" },
+    ],
+    contactEmail: "回复邮箱",
+    contactPlaceholder: "you@example.com",
+    description:
+      "这里就是用户联系 SpeakFlow 的入口。付款异常、Pro 状态、麦克风、朗读、AI 表达、功能建议，都可以从这里发给你。",
+    detailHelp:
+      "最好写清楚：当时在做什么、在哪个界面、使用什么浏览器、账号是 Pro 还是免费；如果和语音或 AI 表达有关，附上一条例句最有用。",
+    error: "反馈发送失败，请稍后再试。",
+    message: "具体问题",
+    messagePlaceholder:
+      "请描述遇到的问题或建议。可以写下正在练习的句子，以及你原本期待的结果。",
+    page: "相关界面",
+    pagePlaceholder: "例如：自由表达、Pro 页面、付款页面",
+    required: "请把问题描述得更具体一点。",
+    submit: "发送反馈",
+    submitting: "正在发送...",
+    success: "反馈已发送。SpeakFlow 已保存你的消息，会尽快查看。",
+    type: "问题类型",
+  },
+} as const;
 
-  return collapsedItems;
-}
+const displaySettingsContent = {
+  en: {
+    appearanceDescription:
+      "Choose how SpeakFlow looks on this device. System follows your browser or operating system appearance.",
+    appearanceOptions: [
+      {
+        description: "A soft lavender interface for daytime practice.",
+        label: "Light",
+        value: "light",
+      },
+      {
+        description: "A darker interface for low-light practice.",
+        label: "Dark",
+        value: "dark",
+      },
+      {
+        description: "Automatically match your device setting.",
+        label: "Follow system",
+        value: "system",
+      },
+    ] as const,
+    effectiveDark: "Currently using dark appearance.",
+    effectiveLight: "Currently using light appearance.",
+    fontSizeDescription:
+      "Adjust the reading size used across SpeakFlow on this device.",
+    fontSizeOptions: [
+      {
+        description: "More compact text for smaller screens.",
+        label: "Small",
+        value: "small",
+      },
+      {
+        description: "Balanced size for everyday practice.",
+        label: "Standard",
+        value: "standard",
+      },
+      {
+        description: "Larger text for easier reading.",
+        label: "Large",
+        value: "large",
+      },
+    ] as const,
+    saved: "Saved on this device.",
+  },
+  "zh-CN": {
+    appearanceDescription:
+      "选择 SpeakFlow 在这台设备上的显示方式。跟随系统会自动使用浏览器或系统的明暗设置。",
+    appearanceOptions: [
+      {
+        description: "柔和的浅色界面，适合白天练习。",
+        label: "浅色",
+        value: "light",
+      },
+      {
+        description: "更暗的界面，适合光线较暗时练习。",
+        label: "深色",
+        value: "dark",
+      },
+      {
+        description: "自动跟随设备或浏览器设置。",
+        label: "跟随系统",
+        value: "system",
+      },
+    ] as const,
+    effectiveDark: "当前实际使用深色外观。",
+    effectiveLight: "当前实际使用浅色外观。",
+    fontSizeDescription: "调整 SpeakFlow 在这台设备上的整体文字大小。",
+    fontSizeOptions: [
+      {
+        description: "文字更紧凑，适合小屏幕。",
+        label: "小",
+        value: "small",
+      },
+      {
+        description: "日常练习推荐的平衡大小。",
+        label: "标准",
+        value: "standard",
+      },
+      {
+        description: "文字更大，更容易阅读。",
+        label: "大",
+        value: "large",
+      },
+    ] as const,
+    saved: "已保存到这台设备。",
+  },
+} satisfies Record<
+  "en" | "zh-CN",
+  {
+    appearanceDescription: string;
+    appearanceOptions: readonly {
+      description: string;
+      label: string;
+      value: AppearancePreference;
+    }[];
+    effectiveDark: string;
+    effectiveLight: string;
+    fontSizeDescription: string;
+    fontSizeOptions: readonly {
+      description: string;
+      label: string;
+      value: FontSizePreference;
+    }[];
+    saved: string;
+  }
+>;
+
+const accountHomeContent = {
+  en: {
+    account: "Account",
+    contactFeedback: "Contact & Feedback",
+    dataAndSecurity: "Data & Security",
+    dataManagement: "Data Management",
+    fontSize: "Font Size",
+    help: "Help",
+    helpCenter: "Help Center",
+    interfaceLanguage: "Interface Language",
+    learningExperience: "Learning Experience",
+    notifications: "Notifications",
+    privacyPolicy: "Privacy Policy",
+    signOut: "Sign Out",
+    terms: "Terms of Service",
+  },
+  "zh-CN": {
+    account: "账户",
+    contactFeedback: "联系与反馈",
+    dataAndSecurity: "数据与安全",
+    dataManagement: "数据管理",
+    fontSize: "字体大小",
+    help: "帮助",
+    helpCenter: "帮助中心",
+    interfaceLanguage: "界面语言",
+    learningExperience: "学习体验",
+    notifications: "通知",
+    privacyPolicy: "隐私政策",
+    signOut: "退出登录",
+    terms: "用户协议",
+  },
+} as const;
+
+const aboutSpeakFlowContent = {
+  en: {
+    intro:
+      "SpeakFlow is an AI speaking practice app for learners who understand English input but still struggle to speak naturally. It helps you turn real thoughts into usable spoken English through guided practice, feedback, listening, and repetition.",
+    principlesTitle: "What SpeakFlow believes",
+    principles: [
+      "Speaking improves when practice starts from your own meaning, not from memorized textbook sentences.",
+      "A useful English sentence should be clear, natural, repeatable, and connected to a real situation.",
+      "Good AI practice should keep the conversation moving instead of only correcting isolated mistakes.",
+      "Vocabulary is easier to remember when it is saved from sentences you actually wanted to say.",
+    ],
+    sections: [
+      {
+        body: [
+          "SpeakFlow is designed around a simple loop: say your idea in Chinese, try to say it in English, compare with a recommended expression, listen at normal and slow speed, then continue the conversation.",
+          "This loop trains active speaking. You are not only reading English. You are practicing the moment when a thought has to become a sentence.",
+        ],
+        title: "What this app is for",
+      },
+      {
+        body: [
+          "AI Guided Expression helps when you do not know what to say next. It suggests the next Chinese idea based on the scene, emotional flow, daily realism, and your level.",
+          "Free speaking practice is for your own thoughts. You say the Chinese idea, try the English, then answer the AI follow-up so the exchange becomes a real conversation.",
+          "Classic scenario practice focuses on predictable real-life situations, such as banking, government services, driving, and everyday communication.",
+        ],
+        title: "Main learning tools",
+      },
+      {
+        body: [
+          "SpeakFlow highlights useful words and phrases in recommended sentences. Tap them to save them into your expression bank.",
+          "The goal is not to collect as many words as possible. The goal is to build a personal library of expressions you can use again in real speech.",
+        ],
+        title: "Expression bank",
+      },
+      {
+        body: [
+          "SpeakFlow is not meant to replace a human teacher, and it is not a general chatbot. It is a focused speaking trainer.",
+          "Compared with open-ended chat, SpeakFlow gives learners a more structured path: Chinese meaning, English attempt, recommended expression, playback, follow-up, and vocabulary capture.",
+        ],
+        title: "How it is different",
+      },
+      {
+        body: [
+          "SpeakFlow Pro removes free practice limits and supports regular AI speaking practice, AI conversation, and course generation.",
+          "Payments and subscription management are handled through Stripe. SpeakFlow stores only the subscription information needed to recognize your Pro account.",
+        ],
+        title: "Pro and privacy",
+      },
+      {
+        body: [
+          "If you have a question, payment issue, microphone problem, or product suggestion, use Contact & Feedback in the Help section.",
+          "Real learner feedback is important because SpeakFlow is built around practical speaking problems, not abstract feature lists.",
+        ],
+        title: "Contact",
+      },
+    ],
+    tagline: "Voice practice for real expression.",
+  },
+  "zh-CN": {
+    intro:
+      "SpeakFlow 是一个 AI 口语练习软件，适合那些能看懂不少英语、但真正开口时仍然卡住的学习者。它通过引导、反馈、朗读和重复，帮助你把真实想法变成能说出口的英语。",
+    principlesTitle: "SpeakFlow 的学习理念",
+    principles: [
+      "口语练习应该从你自己的意思出发，而不是只背课本句子。",
+      "一句有用的英文，应该清楚、自然、能复用，并且连接真实生活场景。",
+      "好的 AI 口语练习，不只是纠错，还应该让对话继续往前走。",
+      "从自己真正想说的句子里收藏词汇和表达，会比孤立背单词更容易记住。",
+    ],
+    sections: [
+      {
+        body: [
+          "SpeakFlow 围绕一个简单循环设计：先用中文说出想法，再尝试说英文，对比推荐表达，听正常和慢速朗读，然后继续回答 AI 的追问。",
+          "这个流程训练的是主动开口。你不是只看英语，而是在练习“脑子里的意思变成英文句子”的那一刻。",
+        ],
+        title: "这个软件用来做什么",
+      },
+      {
+        body: [
+          "AI 引导表达适合不知道说什么的时候。AI 会根据情景连续性、情绪递进、日常真实感和你的水平，推荐下一句中文。",
+          "自由口语练习适合你已经有想法的时候。你先说中文，再尝试英文，然后回答 AI 的追问，让练习变成真实聊天。",
+          "经典场景口语练习适合银行、政府办事、开车、日常沟通等可预期的真实生活场景。",
+        ],
+        title: "主要学习工具",
+      },
+      {
+        body: [
+          "SpeakFlow 会在推荐表达里用亮色标出值得掌握的词和词组。点击后，就可以收藏进表达库。",
+          "表达库的目标不是越收越多，而是沉淀一套你自己真的会在口语里再次用到的表达。",
+        ],
+        title: "表达库",
+      },
+      {
+        body: [
+          "SpeakFlow 不是为了取代真人老师，也不是普通泛聊天机器人。它更像一个专注的口语训练场。",
+          "和开放式聊天相比，SpeakFlow 给学习者更清晰的路径：中文意思、英文尝试、推荐表达、朗读、追问、表达收藏。",
+        ],
+        title: "它和普通聊天有什么不同",
+      },
+      {
+        body: [
+          "SpeakFlow Pro 会解除免费练习限制，支持更长期的 AI 口语练习、AI 对话和课程生成。",
+          "付款和订阅管理由 Stripe 处理。SpeakFlow 只保存识别 Pro 账户所需的订阅信息。",
+        ],
+        title: "Pro 和隐私",
+      },
+      {
+        body: [
+          "如果你有问题、付款异常、麦克风问题或功能建议，可以在帮助里的“联系与反馈”提交。",
+          "真实学习者的反馈很重要，因为 SpeakFlow 是围绕实际开口问题做出来的，不是为了堆功能清单。",
+        ],
+        title: "联系",
+      },
+    ],
+    tagline: "为真实表达而设计的英语口语练习。",
+  },
+} as const;
 
 declare global {
   interface Window {
@@ -1171,12 +2069,26 @@ function SpeakEnglishClient() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [accountPanelView, setAccountPanelView] =
     useState<AccountPanelView>("menu");
-  const [collapsedAccountMenuItems, setCollapsedAccountMenuItems] = useState<
-    Set<string>
-  >(() => getDefaultCollapsedAccountMenuItems());
+  const [appearancePreference, setAppearancePreference] =
+    useState<AppearancePreference>("system");
+  const [effectiveAppearance, setEffectiveAppearance] =
+    useState<EffectiveAppearance>("light");
+  const [fontSizePreference, setFontSizePreference] =
+    useState<FontSizePreference>("standard");
   const [selectedProPlan, setSelectedProPlan] = useState<ProPlan>("yearly");
   const [isStartingCheckout, setIsStartingCheckout] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
+  const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);
+  const [billingPortalNotice, setBillingPortalNotice] = useState("");
+  const [isRestoringPurchases, setIsRestoringPurchases] = useState(false);
+  const [restorePurchaseNotice, setRestorePurchaseNotice] = useState("");
+  const [supportIssueType, setSupportIssueType] = useState("payment");
+  const [supportContactEmail, setSupportContactEmail] = useState("");
+  const [supportRelatedPage, setSupportRelatedPage] = useState("");
+  const [supportMessage, setSupportMessage] = useState("");
+  const [supportNotice, setSupportNotice] = useState("");
+  const [isSubmittingSupportFeedback, setIsSubmittingSupportFeedback] =
+    useState(false);
   const [accountName, setAccountName] = useState("");
   const [accountEmail, setAccountEmail] = useState("");
   const [accountImage, setAccountImage] = useState("");
@@ -1227,7 +2139,11 @@ function SpeakEnglishClient() {
       : baseInputValue;
   const currentMode = modeMeta[keyboardMode];
   const accountCopy = accountPanelCopy[language];
-  const accountMenuSections = accountCopy.accountMenuSections;
+  const helpCenter = helpCenterContent[language];
+  const supportFeedback = supportFeedbackContent[language];
+  const aboutSpeakFlow = aboutSpeakFlowContent[language];
+  const displaySettings = displaySettingsContent[language];
+  const accountHome = accountHomeContent[language];
   const proFeatureItems = accountCopy.proFeatures;
   const voiceMenuItemLabel = language === "en" ? "Voice" : "声音";
   const isAiGuidedMode = trainingGroundMode === "guided";
@@ -1315,6 +2231,18 @@ function SpeakEnglishClient() {
   const accountPanelTitle =
     accountPanelView === "subscription"
       ? accountCopy.subscriptionTitle
+      : accountPanelView === "manageSubscription"
+        ? accountCopy.manageSubscriptionTitle
+      : accountPanelView === "helpCenter"
+        ? accountCopy.helpCenterTitle
+      : accountPanelView === "reportIssue"
+        ? accountCopy.reportIssueTitle
+      : accountPanelView === "aboutSpeakFlow"
+        ? accountCopy.aboutSpeakFlowTitle
+      : accountPanelView === "appearance"
+        ? accountCopy.appearanceTitle
+      : accountPanelView === "fontSize"
+        ? accountCopy.fontSizeTitle
       : accountPanelView === "voice"
         ? voiceMenuItemLabel
       : accountCopy.accountTitle;
@@ -1335,7 +2263,7 @@ function SpeakEnglishClient() {
   const accountSubscriptionBadgeClass = isAccountPro
     ? "bg-[#e8fff5] text-[#14845f]"
     : "bg-[#efeaff] text-[#7460e8]";
-  const accountCurrentPeriodEndLabel =
+  const accountCurrentPeriodEndDateLabel =
     isAccountPro && accountCurrentPeriodEnd
       ? (() => {
           const periodEndDate = new Date(accountCurrentPeriodEnd);
@@ -1350,17 +2278,114 @@ function SpeakEnglishClient() {
             }
           );
 
-          return language === "en"
-            ? `Renews ${formattedDate}`
-            : `到期时间 ${formattedDate}`;
+          return formattedDate;
         })()
       : "";
+  const accountCurrentPeriodEndLabel = accountCurrentPeriodEndDateLabel
+    ? language === "en"
+      ? `Renews ${accountCurrentPeriodEndDateLabel}`
+      : `\u5230\u671f\u65f6\u95f4 ${accountCurrentPeriodEndDateLabel}`
+    : "";
+  const subscriptionManagementCopy =
+    language === "en"
+      ? {
+          cancelDescription:
+            "Cancel or manage billing securely in Stripe.",
+          cancelSubscription: "Cancel Subscription",
+          currentPlan: "Current plan",
+          expiration: "Expiration",
+          freePlan: "SpeakFlow Free",
+          noExpiration: "No expiration date yet",
+          opening: "Opening...",
+          proPlan: "SpeakFlow Pro",
+          restoreDescription:
+            "Refresh Pro status for this login email.",
+          restoring: "Restoring...",
+        }
+      : {
+          cancelDescription:
+            "\u5728 Stripe \u5b89\u5168\u9875\u9762\u53d6\u6d88\u8ba2\u9605\u6216\u7ba1\u7406\u4ed8\u6b3e\u3002",
+          cancelSubscription: "\u53d6\u6d88\u8ba2\u9605",
+          currentPlan: "\u5f53\u524d\u5957\u9910",
+          expiration: "\u5230\u671f\u65f6\u95f4",
+          freePlan: "SpeakFlow \u514d\u8d39\u7248",
+          noExpiration: "\u6682\u65e0\u5230\u671f\u65f6\u95f4",
+          opening: "\u6b63\u5728\u6253\u5f00...",
+          proPlan: "SpeakFlow Pro",
+          restoreDescription:
+            "\u7528\u5f53\u524d\u767b\u5f55\u90ae\u7bb1\u5237\u65b0 Pro \u8ba2\u9605\u72b6\u6001\u3002",
+          restoring: "\u6b63\u5728\u6062\u590d...",
+        };
+  const accountPlanName = isAccountPro
+    ? subscriptionManagementCopy.proPlan
+    : subscriptionManagementCopy.freePlan;
+  const accountCurrentPeriodEndValue =
+    accountCurrentPeriodEndDateLabel || subscriptionManagementCopy.noExpiration;
   const avatarEditorImage =
     avatarPreview || (accountImageFailed ? "" : accountImage);
 
   useEffect(() => {
     hasEnglishAttemptRef.current = hasEnglishAttempt;
   }, [hasEnglishAttempt]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const savedAppearance = window.localStorage.getItem(
+      appearancePreferenceStorageKey
+    );
+    const savedFontSize = window.localStorage.getItem(
+      fontSizePreferenceStorageKey
+    );
+
+    if (savedAppearance && isAppearancePreference(savedAppearance)) {
+      setAppearancePreference(savedAppearance);
+    }
+
+    if (savedFontSize && isFontSizePreference(savedFontSize)) {
+      setFontSizePreference(savedFontSize);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const root = document.documentElement;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const applyAppearance = () => {
+      const nextEffectiveAppearance =
+        appearancePreference === "system"
+          ? mediaQuery.matches
+            ? "dark"
+            : "light"
+          : appearancePreference;
+
+      setEffectiveAppearance(nextEffectiveAppearance);
+      root.dataset.speakflowAppearance = appearancePreference;
+      root.dataset.speakflowTheme = nextEffectiveAppearance;
+      window.localStorage.setItem(
+        appearancePreferenceStorageKey,
+        appearancePreference
+      );
+    };
+
+    applyAppearance();
+
+    if (appearancePreference !== "system") return;
+
+    mediaQuery.addEventListener("change", applyAppearance);
+
+    return () => {
+      mediaQuery.removeEventListener("change", applyAppearance);
+    };
+  }, [appearancePreference]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    document.documentElement.dataset.speakflowFontSize = fontSizePreference;
+    window.localStorage.setItem(fontSizePreferenceStorageKey, fontSizePreference);
+  }, [fontSizePreference]);
 
   useEffect(() => {
     messageRef.current = message;
@@ -1540,7 +2565,6 @@ function SpeakEnglishClient() {
     } else if (shouldOpenAccount) {
       setShowAccountMenu(true);
       setAccountPanelView("menu");
-      setCollapsedAccountMenuItems(getDefaultCollapsedAccountMenuItems());
     }
     window.history.replaceState(null, "", "/speak-english");
 
@@ -1682,6 +2706,46 @@ function SpeakEnglishClient() {
       return;
     }
 
+    if (action === "manageSubscription") {
+      setBillingPortalNotice("");
+      setRestorePurchaseNotice("");
+      setShowAvatarEditor(false);
+      setAccountPanelView("manageSubscription");
+      return;
+    }
+
+    if (action === "helpCenter") {
+      setShowAvatarEditor(false);
+      setAccountPanelView("helpCenter");
+      return;
+    }
+
+    if (action === "reportIssue") {
+      setShowAvatarEditor(false);
+      setSupportNotice("");
+      setSupportContactEmail((current) => current || accountEmail);
+      setAccountPanelView("reportIssue");
+      return;
+    }
+
+    if (action === "aboutSpeakFlow") {
+      setShowAvatarEditor(false);
+      setAccountPanelView("aboutSpeakFlow");
+      return;
+    }
+
+    if (action === "appearance") {
+      setShowAvatarEditor(false);
+      setAccountPanelView("appearance");
+      return;
+    }
+
+    if (action === "fontSize") {
+      setShowAvatarEditor(false);
+      setAccountPanelView("fontSize");
+      return;
+    }
+
     if (action === "voice") {
       setShowAvatarEditor(false);
       setAccountPanelView("voice");
@@ -1695,6 +2759,146 @@ function SpeakEnglishClient() {
 
     if (action === "privacy") {
       window.location.href = "/privacy";
+    }
+  }
+
+  async function openBillingPortal() {
+    if (isOpeningBillingPortal) return;
+
+    setIsOpeningBillingPortal(true);
+    setBillingPortalNotice("");
+    let didRedirect = false;
+
+    try {
+      const response = await fetch("/api/stripe/portal", {
+        method: "POST",
+      });
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: unknown;
+        url?: unknown;
+      };
+      const url = typeof data.url === "string" ? data.url : "";
+
+      if (!response.ok || !url) {
+        const errorMessage =
+          response.status === 400
+            ? accountCopy.noBillingPortal
+            : typeof data.error === "string" && data.error.trim()
+              ? data.error
+              : accountCopy.noBillingPortal;
+        throw new Error(errorMessage);
+      }
+
+      didRedirect = true;
+      window.location.href = url;
+    } catch (error) {
+      setBillingPortalNotice(
+        error instanceof Error && error.message
+          ? error.message
+          : accountCopy.noBillingPortal
+      );
+    } finally {
+      if (!didRedirect) {
+        setIsOpeningBillingPortal(false);
+      }
+    }
+  }
+
+  async function restoreAccountPurchases() {
+    if (isRestoringPurchases) return;
+
+    setIsRestoringPurchases(true);
+    setRestorePurchaseNotice("");
+
+    try {
+      const response = await fetch("/api/stripe/restore", {
+        method: "POST",
+      });
+      const data = (await response.json().catch(() => ({}))) as
+        | AccountSubscriptionResponse
+        | { error?: unknown };
+
+      if (!response.ok) {
+        const errorMessage =
+          "error" in data && typeof data.error === "string" && data.error.trim()
+            ? data.error
+            : accountCopy.restorePurchaseFailed;
+        throw new Error(errorMessage);
+      }
+
+      const subscriptionData = data as AccountSubscriptionResponse;
+      const nextSubscriptionStatus =
+        subscriptionData.subscriptionStatus === "pro" ? "pro" : "free";
+
+      setAccountSubscriptionStatus(nextSubscriptionStatus);
+      setAccountCurrentPeriodEnd(subscriptionData.currentPeriodEnd || "");
+      setAccountSubscriptionRefreshKey(Date.now());
+
+      if (nextSubscriptionStatus === "pro") {
+        setShowFreePracticeLimitModal(false);
+        setRestorePurchaseNotice(accountCopy.restorePurchaseSuccess);
+      } else {
+        setRestorePurchaseNotice(accountCopy.restorePurchaseEmpty);
+      }
+    } catch (error) {
+      setRestorePurchaseNotice(
+        error instanceof Error && error.message
+          ? error.message
+          : accountCopy.restorePurchaseFailed
+      );
+    } finally {
+      setIsRestoringPurchases(false);
+    }
+  }
+
+  async function submitSupportFeedback() {
+    if (isSubmittingSupportFeedback) return;
+
+    const trimmedMessage = supportMessage.trim();
+
+    if (trimmedMessage.length < 6) {
+      setSupportNotice(supportFeedback.required);
+      return;
+    }
+
+    setIsSubmittingSupportFeedback(true);
+    setSupportNotice("");
+
+    try {
+      const response = await fetch("/api/support/feedback", {
+        body: JSON.stringify({
+          contactEmail: supportContactEmail,
+          issueType: supportIssueType,
+          language,
+          message: trimmedMessage,
+          page: supportRelatedPage,
+        }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: unknown;
+      };
+
+      if (!response.ok) {
+        throw new Error(
+          typeof data.error === "string" && data.error.trim()
+            ? data.error
+            : supportFeedback.error
+        );
+      }
+
+      setSupportNotice(supportFeedback.success);
+      setSupportMessage("");
+      setSupportRelatedPage("");
+    } catch (error) {
+      setSupportNotice(
+        error instanceof Error && error.message
+          ? error.message
+          : supportFeedback.error
+      );
+    } finally {
+      setIsSubmittingSupportFeedback(false);
     }
   }
 
@@ -1736,20 +2940,6 @@ function SpeakEnglishClient() {
       window.alert(errorMessage);
       setIsStartingCheckout(false);
     }
-  }
-
-  function toggleAccountMenuItem(menuItemKey: string) {
-    setCollapsedAccountMenuItems((current) => {
-      const next = new Set(current);
-
-      if (next.has(menuItemKey)) {
-        next.delete(menuItemKey);
-      } else {
-        next.add(menuItemKey);
-      }
-
-      return next;
-    });
   }
 
   function openAvatarEditor() {
@@ -2595,8 +3785,62 @@ function SpeakEnglishClient() {
     setMessage("Handwriting was added to the practice line");
   }
 
+  const accountHomeGroups: AccountHomeGroup[] = [
+    {
+      rows: [
+        {
+          action: "subscription",
+          badge: accountSubscriptionLabel,
+          icon: "star",
+          label: "SpeakFlow Pro",
+        },
+        {
+          action: "manageSubscription",
+          icon: "card",
+          label: accountCopy.manageSubscription,
+        },
+      ],
+    },
+    {
+      rows: [
+        { action: "voice", icon: "headphones", label: voiceMenuItemLabel },
+        { action: "fontSize", icon: "font", label: accountHome.fontSize },
+        { icon: "globe", label: accountHome.interfaceLanguage },
+        { action: "appearance", icon: "moon", label: accountCopy.appearanceTitle },
+        { icon: "bell", label: accountHome.notifications },
+      ],
+      title: accountHome.learningExperience,
+    },
+    {
+      rows: [{ icon: "cloud", label: accountHome.dataManagement }],
+      title: accountHome.dataAndSecurity,
+    },
+    {
+      rows: [
+        { action: "helpCenter", icon: "help", label: accountHome.helpCenter },
+        {
+          action: "reportIssue",
+          icon: "chat",
+          label: accountHome.contactFeedback,
+        },
+        { action: "terms", icon: "file", label: accountHome.terms },
+        { action: "privacy", icon: "lock", label: accountHome.privacyPolicy },
+        {
+          action: "aboutSpeakFlow",
+          icon: "info",
+          label: accountCopy.aboutSpeakFlowTitle,
+        },
+      ],
+      title: accountHome.help,
+    },
+  ];
+
   return (
-    <main className="responsive-page-shell sf-speak-page min-h-[100dvh] overflow-x-hidden text-white">
+    <main
+      className="responsive-page-shell sf-speak-page min-h-[100dvh] overflow-x-hidden text-white"
+      data-speakflow-font-size={fontSizePreference}
+      data-speakflow-theme={effectiveAppearance}
+    >
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-[520px] items-center justify-center p-2 sm:p-4">
         <section className="sf-speak-phone relative flex h-[calc(100dvh-16px)] min-h-[calc(100dvh-16px)] w-full max-w-[430px] flex-col overflow-hidden rounded-[34px] sm:min-h-[720px]">
           <div className="pointer-events-none absolute left-1/2 top-[19%] z-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full border border-[#91dcff]/10" />
@@ -2653,9 +3897,6 @@ function SpeakEnglishClient() {
                     const next = !current;
                     if (next) {
                       setAccountPanelView("menu");
-                      setCollapsedAccountMenuItems(
-                        getDefaultCollapsedAccountMenuItems()
-                      );
                     } else {
                       setShowAvatarEditor(false);
                     }
@@ -2688,8 +3929,14 @@ function SpeakEnglishClient() {
 
           {showAccountMenu ? (
             <div className="sf-account-panel absolute inset-0 z-50 flex flex-col bg-[linear-gradient(180deg,#f0eaff_0%,#f7f3ff_100%)] px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-2xl">
-              {accountPanelView === "subscription" ||
-              accountPanelView === "checkout" ? (
+              {accountPanelView === "menu" ? null : accountPanelView === "subscription" ||
+              accountPanelView === "checkout" ||
+              accountPanelView === "manageSubscription" ||
+              accountPanelView === "helpCenter" ||
+              accountPanelView === "reportIssue" ||
+              accountPanelView === "aboutSpeakFlow" ||
+              accountPanelView === "appearance" ||
+              accountPanelView === "fontSize" ? (
                 <div className="grid shrink-0 grid-cols-[2.75rem_1fr_2.75rem] items-center gap-3">
                   <button
                     type="button"
@@ -2710,7 +3957,9 @@ function SpeakEnglishClient() {
                   <h2 className="truncate text-center text-[1.25rem] font-extrabold text-[#201833]">
                     {accountPanelView === "checkout"
                       ? accountCopy.confirmSubscription
-                      : "SpeakFlow Pro"}
+                      : accountPanelView === "subscription"
+                        ? "SpeakFlow Pro"
+                        : accountPanelTitle}
                   </h2>
                   <span />
                 </div>
@@ -2743,19 +3992,17 @@ function SpeakEnglishClient() {
               ) : (
                 <div className="flex shrink-0 items-center justify-between gap-4">
                   <div className="flex min-w-0 items-center gap-3">
-                    {accountPanelView !== "menu" ? (
-                      <button
-                        type="button"
-                        aria-label={accountCopy.returnAccountMenu}
-                        onClick={() => {
-                          setShowAvatarEditor(false);
-                          setAccountPanelView("menu");
-                        }}
-                        className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
-                      >
-                        ←
-                      </button>
-                    ) : null}
+                    <button
+                      type="button"
+                      aria-label={accountCopy.returnAccountMenu}
+                      onClick={() => {
+                        setShowAvatarEditor(false);
+                        setAccountPanelView("menu");
+                      }}
+                      className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+                    >
+                      ←
+                    </button>
                     <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full border border-white/80 bg-[#f7f4ff] text-[0.95rem] font-extrabold text-white shadow-[0_14px_28px_rgba(84,72,146,0.18)]">
                       {accountImage && !accountImageFailed ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -2797,100 +4044,92 @@ function SpeakEnglishClient() {
 
               <div
                 className={`sf-account-panel-scroll min-h-0 flex-1 overflow-y-auto ${
-                  accountPanelView === "account" ? "mt-10 pr-0" : "mt-7 pr-1"
+                  accountPanelView === "menu"
+                    ? "mt-0 pr-0"
+                    : accountPanelView === "account"
+                      ? "mt-10 pr-0"
+                      : "mt-7 pr-1"
                 }`}
               >
                 {accountPanelView === "menu" ? (
-                  <>
-                    {accountMenuSections.map((section, sectionIndex) => (
-                      <section key={section.title} className="py-4">
-                        <h3 className="px-1 pb-3 text-[1.08rem] font-extrabold leading-[1.5] text-[#7f7896]">
-                          {section.title}
-                        </h3>
-                        <div className="grid gap-1">
-                          {section.items.map((item, itemIndex) => {
-                            const menuItemKey = `${section.title}-${item.label}`;
-                            const childItems =
-                              "children" in item ? item.children : undefined;
-                            const hasChildren = Boolean(childItems?.length);
-                            const isCollapsed =
-                              hasChildren &&
-                              collapsedAccountMenuItems.has(menuItemKey);
-                            const itemMark =
-                              "icon" in item && item.icon
-                                ? item.icon
-                                : getAccountMenuItemMark(sectionIndex, itemIndex);
-                            const configuredTrailingText =
-                              "trailing" in item &&
-                              typeof item.trailing === "string"
-                                ? item.trailing
-                                : "";
-                            const trailingText =
-                              item.label === "SpeakFlow Pro"
-                                ? accountSubscriptionLabel
-                                : configuredTrailingText;
+                  <div className="pb-5 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setAccountPanelView("account")}
+                      className="mb-5 flex min-h-[6.1rem] w-full items-center gap-4 rounded-[28px] bg-white/82 px-5 py-5 text-left shadow-[0_22px_60px_rgba(84,72,146,0.12)] ring-1 ring-white/88"
+                    >
+                      <span className="grid h-[4.65rem] w-[4.65rem] shrink-0 place-items-center overflow-hidden rounded-full bg-[#f7f4ff] text-[1rem] font-extrabold text-white shadow-[0_14px_28px_rgba(84,72,146,0.16)]">
+                        {accountImage && !accountImageFailed ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={accountImage}
+                            alt={accountEmail || "user"}
+                            className="h-full w-full object-cover"
+                            onError={() => setAccountImageFailed(true)}
+                          />
+                        ) : (
+                          <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#8b67ff_0%,#5f91ff_100%)] text-white">
+                            {accountAvatarLabel}
+                          </span>
+                        )}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-[1.55rem] font-black leading-8 text-[#201833]">
+                          {accountHome.account}
+                        </span>
+                        <span className="mt-1 block truncate text-[1rem] font-bold leading-6 text-[#8f88a2]">
+                          {accountEmail || accountCopy.fallbackEmail}
+                        </span>
+                      </span>
+                      <span className="shrink-0 text-[2.2rem] font-light leading-none text-[#7f7896]">
+                        ›
+                      </span>
+                    </button>
 
-                            return (
-                              <div key={menuItemKey} className="">
-                                <button
-                                  type="button"
-                                  aria-expanded={hasChildren ? !isCollapsed : undefined}
-                                  onClick={() => {
-                                    if (hasChildren) {
-                                      toggleAccountMenuItem(menuItemKey);
-                                      return;
-                                    }
+                    {accountHomeGroups.map((group) => (
+                      <section key={group.title || "membership"} className="mt-6">
+                        {group.title ? (
+                          <h3 className="mb-3 px-2 text-[1.08rem] font-black leading-6 text-[#7c7399]">
+                            {group.title}
+                          </h3>
+                        ) : null}
+                        <div className="overflow-hidden rounded-[24px] bg-white/86 shadow-[0_18px_50px_rgba(84,72,146,0.1)] ring-1 ring-white/88">
+                          {group.rows.map((row, rowIndex) => (
+                            <button
+                              key={`${group.title || "account"}-${row.label}`}
+                              type="button"
+                              onClick={() => {
+                                if (row.onClick) {
+                                  row.onClick();
+                                  return;
+                                }
 
-                                    handleAccountMenuAction(
-                                      "action" in item ? item.action : undefined
-                                    );
-                                  }}
-                                  className="flex min-h-[3.85rem] w-full items-center gap-3 px-1 py-3.5 text-left text-[1.18rem] font-extrabold leading-[1.5] text-[#201833] transition hover:text-[#5b63ff]"
-                                >
-                                  <AccountMenuMark value={itemMark} />
-                                  <span className="min-w-0 flex-1 truncate">
-                                    {item.label}
-                                  </span>
-                                  {trailingText ? (
-                                    <span className="shrink-0 px-2 text-[0.96rem] font-extrabold leading-[1.5] text-[#7460e8]">
-                                      {trailingText}
-                                    </span>
-                                  ) : null}
-                                  {hasChildren ? (
-                                    <span
-                                      className={`shrink-0 text-[1.3rem] font-extrabold leading-none text-[#7f7896] transition-transform ${
-                                        isCollapsed ? "-rotate-90" : ""
-                                      }`}
-                                    >
-                                      ⌄
-                                    </span>
-                                  ) : "action" in item && item.action ? (
-                                    <span className="shrink-0 text-[1.45rem] font-semibold leading-none text-[#7f7896]">
-                                      ›
-                                    </span>
-                                  ) : null}
-                                </button>
-
-                                {hasChildren && !isCollapsed ? (
-                                  <div className="pb-2 pl-11 pr-1">
-                                    <div className="grid gap-1">
-                                      {childItems?.map((child, childIndex) => (
-                                        <div
-                                          key={child}
-                                          className="flex min-h-11 items-center gap-3 text-[1.05rem] font-bold leading-[1.5] text-[#7f7896]"
-                                        >
-                                          <AccountMenuMark
-                                            value={getAccountMenuChildMark(childIndex)}
-                                          />
-                                          <span>{child}</span>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                ) : null}
-                              </div>
-                            );
-                          })}
+                                handleAccountMenuAction(row.action);
+                              }}
+                              className={`flex min-h-[4.55rem] w-full items-center gap-4 px-5 py-3.5 text-left transition hover:bg-[#f8f5ff]/80 ${
+                                rowIndex ? "border-t border-[#ece8f6]" : ""
+                              }`}
+                            >
+                              <span className="grid h-10 w-10 shrink-0 place-items-center">
+                                <AccountLineIcon danger={row.danger} name={row.icon} />
+                              </span>
+                              <span
+                                className={`min-w-0 flex-1 truncate text-[1.18rem] font-extrabold leading-7 ${
+                                  row.danger ? "text-[#ff3b5f]" : "text-[#201833]"
+                                }`}
+                              >
+                                {row.label}
+                              </span>
+                              {row.badge ? (
+                                <span className="shrink-0 rounded-full bg-[#f0ebff] px-3.5 py-1.5 text-[0.95rem] font-extrabold leading-none text-[#8264ff]">
+                                  {row.badge}
+                                </span>
+                              ) : null}
+                              <span className="shrink-0 text-[2rem] font-light leading-none text-[#7f7896]">
+                                ›
+                              </span>
+                            </button>
+                          ))}
                         </div>
                       </section>
                     ))}
@@ -2898,12 +4137,421 @@ function SpeakEnglishClient() {
                     <button
                       type="button"
                       onClick={() => void signOut({ callbackUrl: "/" })}
-                      className="mb-2 mt-3 flex min-h-[3.85rem] w-full items-center gap-3 px-1 py-3 text-left text-[1.16rem] font-extrabold leading-[1.5] text-[#d33b46] transition hover:text-[#ad2430]"
+                      className="mt-6 flex min-h-[4.35rem] w-full items-center gap-4 rounded-[24px] bg-white/86 px-5 py-3.5 text-left shadow-[0_18px_50px_rgba(84,72,146,0.1)] ring-1 ring-white/88 transition hover:bg-[#fff8fb]"
                     >
-                      <AccountMenuMark danger value="🚪" />
-                      <span>{accountCopy.signOut}</span>
+                      <span className="grid h-10 w-10 shrink-0 place-items-center">
+                        <AccountLineIcon danger name="logout" />
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-[1.18rem] font-extrabold leading-7 text-[#ff3b5f]">
+                        {accountHome.signOut}
+                      </span>
                     </button>
-                  </>
+                  </div>
+                ) : accountPanelView === "helpCenter" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[28px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <div className="flex items-start gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          ❓
+                        </span>
+                        <div>
+                          <h3 className="text-[1.36rem] font-black leading-7 text-[#201833]">
+                            {accountCopy.helpCenterTitle}
+                          </h3>
+                          <p className="mt-2 text-[0.96rem] font-bold leading-7 text-[#4b4267]">
+                            {helpCenter.intro}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 rounded-[24px] bg-white/68 px-5 py-5 shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                      <h3 className="text-[1.08rem] font-black text-[#201833]">
+                        {helpCenter.quickStartTitle}
+                      </h3>
+                      <div className="mt-4 grid gap-3">
+                        {helpCenter.quickStart.map((step, index) => (
+                          <div
+                            key={step}
+                            className="grid grid-cols-[2rem_1fr] gap-3 text-left"
+                          >
+                            <span className="grid h-8 w-8 place-items-center rounded-full bg-[#efeaff] text-[0.86rem] font-black text-[#7460e8]">
+                              {index + 1}
+                            </span>
+                            <p className="pt-0.5 text-[0.94rem] font-bold leading-6 text-[#4b4267]">
+                              {step}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-5 grid gap-4">
+                      {helpCenter.sections.map((section) => (
+                        <section
+                          key={section.title}
+                          className="rounded-[24px] bg-white/64 px-5 py-5 shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85"
+                        >
+                          <h3 className="text-[1.12rem] font-black leading-7 text-[#201833]">
+                            {section.title}
+                          </h3>
+                          <p className="mt-1 text-[0.88rem] font-bold leading-6 text-[#7f7896]">
+                            {section.description}
+                          </p>
+
+                          <div className="mt-4 grid gap-3">
+                            {section.articles.map((article) => (
+                              <article
+                                key={article.title}
+                                className="rounded-[20px] bg-[#fbf9ff]/76 px-4 py-4 ring-1 ring-white/80"
+                              >
+                                <h4 className="text-[1rem] font-black leading-6 text-[#201833]">
+                                  {article.title}
+                                </h4>
+                                <div className="mt-2 grid gap-2">
+                                  {article.body.map((paragraph) => (
+                                    <p
+                                      key={paragraph}
+                                      className="text-[0.9rem] font-semibold leading-6 text-[#4b4267]"
+                                    >
+                                      {paragraph}
+                                    </p>
+                                  ))}
+                                </div>
+                                {article.bullets?.length ? (
+                                  <ul className="mt-3 grid gap-2">
+                                    {article.bullets.map((bullet) => (
+                                      <li
+                                        key={bullet}
+                                        className="flex gap-2 text-[0.88rem] font-bold leading-6 text-[#5f5680]"
+                                      >
+                                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#7460e8]" />
+                                        <span>{bullet}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                ) : null}
+                              </article>
+                            ))}
+                          </div>
+                        </section>
+                      ))}
+                    </div>
+                  </section>
+                ) : accountPanelView === "reportIssue" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[28px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <div className="flex items-start gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          ⚑
+                        </span>
+                        <div>
+                          <h3 className="text-[1.36rem] font-black leading-7 text-[#201833]">
+                            {accountCopy.reportIssueTitle}
+                          </h3>
+                          <p className="mt-2 text-[0.96rem] font-bold leading-7 text-[#4b4267]">
+                            {supportFeedback.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <form
+                      className="mt-4 grid gap-4"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        void submitSupportFeedback();
+                      }}
+                    >
+                      <label className="grid gap-2 rounded-[22px] bg-white/68 px-4 py-4 shadow-[0_14px_34px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                        <span className="text-[0.92rem] font-black text-[#201833]">
+                          {supportFeedback.type}
+                        </span>
+                        <select
+                          value={supportIssueType}
+                          onChange={(event) =>
+                            setSupportIssueType(event.target.value)
+                          }
+                          className="min-h-12 rounded-[18px] border border-[#e8e2ff] bg-[#fbf9ff] px-4 text-[0.96rem] font-extrabold text-[#201833] outline-none focus:border-[#8b67ff]"
+                        >
+                          {supportFeedback.categories.map((category) => (
+                            <option key={category.value} value={category.value}>
+                              {category.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      <label className="grid gap-2 rounded-[22px] bg-white/68 px-4 py-4 shadow-[0_14px_34px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                        <span className="text-[0.92rem] font-black text-[#201833]">
+                          {supportFeedback.contactEmail}
+                        </span>
+                        <input
+                          type="email"
+                          value={supportContactEmail}
+                          onChange={(event) =>
+                            setSupportContactEmail(event.target.value)
+                          }
+                          placeholder={supportFeedback.contactPlaceholder}
+                          className="min-h-12 rounded-[18px] border border-[#e8e2ff] bg-[#fbf9ff] px-4 text-[0.96rem] font-extrabold text-[#201833] outline-none placeholder:text-[#aaa0c4] focus:border-[#8b67ff]"
+                        />
+                        {accountEmail ? (
+                          <span className="text-[0.78rem] font-bold leading-5 text-[#7f7896]">
+                            {language === "en"
+                              ? `Signed in as ${accountEmail}`
+                              : `当前登录：${accountEmail}`}
+                          </span>
+                        ) : null}
+                      </label>
+
+                      <label className="grid gap-2 rounded-[22px] bg-white/68 px-4 py-4 shadow-[0_14px_34px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                        <span className="text-[0.92rem] font-black text-[#201833]">
+                          {supportFeedback.page}
+                        </span>
+                        <input
+                          type="text"
+                          value={supportRelatedPage}
+                          onChange={(event) =>
+                            setSupportRelatedPage(event.target.value)
+                          }
+                          placeholder={supportFeedback.pagePlaceholder}
+                          className="min-h-12 rounded-[18px] border border-[#e8e2ff] bg-[#fbf9ff] px-4 text-[0.96rem] font-extrabold text-[#201833] outline-none placeholder:text-[#aaa0c4] focus:border-[#8b67ff]"
+                        />
+                      </label>
+
+                      <label className="grid gap-2 rounded-[22px] bg-white/68 px-4 py-4 shadow-[0_14px_34px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                        <span className="text-[0.92rem] font-black text-[#201833]">
+                          {supportFeedback.message}
+                        </span>
+                        <textarea
+                          value={supportMessage}
+                          onChange={(event) => setSupportMessage(event.target.value)}
+                          placeholder={supportFeedback.messagePlaceholder}
+                          rows={7}
+                          className="min-h-[10rem] resize-none rounded-[18px] border border-[#e8e2ff] bg-[#fbf9ff] px-4 py-3 text-[0.96rem] font-bold leading-6 text-[#201833] outline-none placeholder:text-[#aaa0c4] focus:border-[#8b67ff]"
+                        />
+                        <span className="text-[0.78rem] font-bold leading-5 text-[#7f7896]">
+                          {supportFeedback.detailHelp}
+                        </span>
+                      </label>
+
+                      {supportNotice ? (
+                        <p
+                          className={`rounded-[18px] bg-white/66 px-4 py-3 text-center text-[0.88rem] font-bold leading-6 ring-1 ring-white/80 ${
+                            supportNotice === supportFeedback.success
+                              ? "text-[#14845f]"
+                              : "text-[#d33b46]"
+                          }`}
+                        >
+                          {supportNotice}
+                        </p>
+                      ) : null}
+
+                      <button
+                        type="submit"
+                        disabled={isSubmittingSupportFeedback}
+                        aria-busy={isSubmittingSupportFeedback}
+                        className="flex min-h-[3.9rem] w-full items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#6f55ff_0%,#a549ff_58%,#c85cff_100%)] px-5 text-[1.05rem] font-extrabold text-white shadow-[0_20px_44px_rgba(126,92,255,0.28)] transition disabled:opacity-70"
+                      >
+                        {isSubmittingSupportFeedback
+                          ? supportFeedback.submitting
+                          : supportFeedback.submit}
+                      </button>
+                    </form>
+                  </section>
+                ) : accountPanelView === "aboutSpeakFlow" ? (
+                  <section className="pb-8">
+                    <div className="relative overflow-hidden rounded-[30px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <span className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#8b67ff]/10 blur-3xl" />
+                      <div className="relative flex items-start gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          ℹ️
+                        </span>
+                        <div>
+                          <h3 className="text-[1.36rem] font-black leading-7 text-[#201833]">
+                            SpeakFlow
+                          </h3>
+                          <p className="mt-1 text-[0.9rem] font-black text-[#7460e8]">
+                            {aboutSpeakFlow.tagline}
+                          </p>
+                          <p className="mt-3 text-[0.96rem] font-bold leading-7 text-[#4b4267]">
+                            {aboutSpeakFlow.intro}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 rounded-[24px] bg-white/68 px-5 py-5 shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                      <h3 className="text-[1.08rem] font-black text-[#201833]">
+                        {aboutSpeakFlow.principlesTitle}
+                      </h3>
+                      <div className="mt-4 grid gap-3">
+                        {aboutSpeakFlow.principles.map((principle) => (
+                          <div
+                            key={principle}
+                            className="flex gap-3 text-[0.94rem] font-bold leading-6 text-[#4b4267]"
+                          >
+                            <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#7460e8]" />
+                            <span>{principle}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-5 grid gap-4">
+                      {aboutSpeakFlow.sections.map((section) => (
+                        <section
+                          key={section.title}
+                          className="rounded-[24px] bg-white/64 px-5 py-5 shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85"
+                        >
+                          <h3 className="text-[1.08rem] font-black leading-7 text-[#201833]">
+                            {section.title}
+                          </h3>
+                          <div className="mt-3 grid gap-2">
+                            {section.body.map((paragraph) => (
+                              <p
+                                key={paragraph}
+                                className="text-[0.92rem] font-semibold leading-6 text-[#4b4267]"
+                              >
+                                {paragraph}
+                              </p>
+                            ))}
+                          </div>
+                        </section>
+                      ))}
+                    </div>
+                  </section>
+                ) : accountPanelView === "appearance" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[28px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <div className="flex items-start gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          🎨
+                        </span>
+                        <div>
+                          <h3 className="text-[1.36rem] font-black leading-7 text-[#201833]">
+                            {accountCopy.appearanceTitle}
+                          </h3>
+                          <p className="mt-2 text-[0.96rem] font-bold leading-7 text-[#4b4267]">
+                            {displaySettings.appearanceDescription}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-3">
+                      {displaySettings.appearanceOptions.map((option) => {
+                        const isSelected = appearancePreference === option.value;
+
+                        return (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setAppearancePreference(option.value)}
+                            className={`flex min-h-[4.65rem] w-full items-center gap-3 rounded-[22px] px-4 py-4 text-left transition ${
+                              isSelected
+                                ? "border-2 border-[#8b67ff] bg-white/86 shadow-[0_18px_44px_rgba(126,92,255,0.14)]"
+                                : "border border-[#e8e2ff] bg-white/66 shadow-[0_12px_30px_rgba(84,72,146,0.08)]"
+                            }`}
+                          >
+                            <span
+                              className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[0.9rem] font-extrabold ${
+                                isSelected
+                                  ? "bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] text-white"
+                                  : "border-2 border-[#c7bddf] text-transparent"
+                              }`}
+                            >
+                              ✓
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-[1rem] font-extrabold text-[#201833]">
+                                {option.label}
+                              </span>
+                              <span className="mt-1 block text-[0.84rem] font-bold leading-5 text-[#7f7896]">
+                                {option.description}
+                              </span>
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <p className="mt-4 rounded-[18px] bg-white/66 px-4 py-3 text-center text-[0.86rem] font-bold leading-6 text-[#7f7896] ring-1 ring-white/80">
+                      {effectiveAppearance === "dark"
+                        ? displaySettings.effectiveDark
+                        : displaySettings.effectiveLight}{" "}
+                      {displaySettings.saved}
+                    </p>
+                  </section>
+                ) : accountPanelView === "fontSize" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[28px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <div className="flex items-start gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          🔤
+                        </span>
+                        <div>
+                          <h3 className="text-[1.36rem] font-black leading-7 text-[#201833]">
+                            {accountCopy.fontSizeTitle}
+                          </h3>
+                          <p className="mt-2 text-[0.96rem] font-bold leading-7 text-[#4b4267]">
+                            {displaySettings.fontSizeDescription}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-3">
+                      {displaySettings.fontSizeOptions.map((option) => {
+                        const isSelected = fontSizePreference === option.value;
+
+                        return (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setFontSizePreference(option.value)}
+                            className={`flex min-h-[4.65rem] w-full items-center gap-3 rounded-[22px] px-4 py-4 text-left transition ${
+                              isSelected
+                                ? "border-2 border-[#8b67ff] bg-white/86 shadow-[0_18px_44px_rgba(126,92,255,0.14)]"
+                                : "border border-[#e8e2ff] bg-white/66 shadow-[0_12px_30px_rgba(84,72,146,0.08)]"
+                            }`}
+                          >
+                            <span
+                              className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[0.9rem] font-extrabold ${
+                                isSelected
+                                  ? "bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] text-white"
+                                  : "border-2 border-[#c7bddf] text-transparent"
+                              }`}
+                            >
+                              ✓
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-[1rem] font-extrabold text-[#201833]">
+                                {option.label}
+                              </span>
+                              <span className="mt-1 block text-[0.84rem] font-bold leading-5 text-[#7f7896]">
+                                {option.description}
+                              </span>
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="mt-4 rounded-[22px] bg-white/66 px-5 py-5 text-center shadow-[0_14px_34px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                      <p className="text-[0.86rem] font-bold text-[#7f7896]">
+                        {displaySettings.saved}
+                      </p>
+                      <p className="mt-2 text-[1.05rem] font-black leading-7 text-[#201833]">
+                        SpeakFlow voice practice
+                      </p>
+                      <p className="mt-1 text-[0.92rem] font-bold leading-6 text-[#4b4267]">
+                        {language === "en"
+                          ? "Say one real thought, then practice it in English."
+                          : "说出一个真实想法，然后练成英文。"}
+                      </p>
+                    </div>
+                  </section>
                 ) : accountPanelView === "voice" ? (
                   <section className="pb-8">
                     <div className="rounded-[24px] bg-white/72 px-5 py-5 shadow-[0_18px_44px_rgba(84,72,146,0.12)] ring-1 ring-white/85">
@@ -3030,28 +4678,18 @@ function SpeakEnglishClient() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setAccountPanelView("subscription")}
-                        className="flex min-h-[4.25rem] w-full items-center gap-4 border-b border-[#e8e2ff] px-5 py-4 text-left"
+                        onClick={() => {
+                          setBillingPortalNotice("");
+                          setRestorePurchaseNotice("");
+                          setAccountPanelView("manageSubscription");
+                        }}
+                        className="flex min-h-[4.25rem] w-full items-center gap-4 px-5 py-4 text-left"
                       >
                         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[14px] bg-[#efeaff] text-[1.2rem] text-[#7460e8]">
                           ▭
                         </span>
                         <span className="min-w-0 flex-1 truncate text-[1.08rem] font-extrabold">
-                          {accountCopy.subscriptionTitle}
-                        </span>
-                        <span className="text-[1.75rem] font-semibold text-[#7f7896]">
-                          ›
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        className="flex min-h-[4.25rem] w-full items-center gap-4 px-5 py-4 text-left"
-                      >
-                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[14px] bg-[#efeaff] text-[1.2rem] text-[#7460e8]">
-                          ↻
-                        </span>
-                        <span className="min-w-0 flex-1 truncate text-[1.08rem] font-extrabold">
-                          {accountCopy.restorePurchases}
+                          {accountCopy.manageSubscription}
                         </span>
                         <span className="text-[1.75rem] font-semibold text-[#7f7896]">
                           ›
@@ -3118,6 +4756,136 @@ function SpeakEnglishClient() {
                         </span>
                       </button>
                     </div>
+                  </section>
+                ) : accountPanelView === "manageSubscription" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[28px] border border-white/80 bg-white/78 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <div className="flex items-center gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          <AccountLineIcon name="card" />
+                        </span>
+                        <div className="min-w-0">
+                          <h3 className="text-[1.3rem] font-black leading-7 text-[#201833]">
+                            {accountCopy.manageSubscription}
+                          </h3>
+                          <p className="mt-1 text-[0.86rem] font-extrabold text-[#7f7896]">
+                            Stripe
+                          </p>
+                        </div>
+                      </div>
+
+                      <p className="mt-5 text-[0.98rem] font-bold leading-7 text-[#4b4267]">
+                        {accountCopy.billingPortalDescription}
+                      </p>
+
+                      <div className="mt-5 overflow-hidden rounded-[22px] bg-[#fbf9ff]/78 ring-1 ring-white/85">
+                        <div className="flex items-center justify-between gap-4 px-4 py-4">
+                          <span className="text-[0.9rem] font-extrabold text-[#7f7896]">
+                            {subscriptionManagementCopy.currentPlan}
+                          </span>
+                          <span className="min-w-0 text-right">
+                            <span className="block truncate text-[1rem] font-black text-[#201833]">
+                              {accountPlanName}
+                            </span>
+                            <span
+                              className={`mt-1 inline-flex rounded-full px-3 py-1 text-[0.82rem] font-extrabold ${accountSubscriptionBadgeClass}`}
+                            >
+                              {accountSubscriptionLabel}
+                            </span>
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between gap-4 border-t border-[#ece8f6] px-4 py-4">
+                          <span className="text-[0.9rem] font-extrabold text-[#7f7896]">
+                            {subscriptionManagementCopy.expiration}
+                          </span>
+                          <span className="min-w-0 truncate text-right text-[0.98rem] font-black text-[#201833]">
+                            {accountCurrentPeriodEndValue}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 overflow-hidden rounded-[24px] bg-white/84 shadow-[0_18px_50px_rgba(84,72,146,0.1)] ring-1 ring-white/88">
+                      <button
+                        type="button"
+                        onClick={() => void openBillingPortal()}
+                        disabled={isOpeningBillingPortal || !isAccountPro}
+                        aria-busy={isOpeningBillingPortal}
+                        className="flex min-h-[4.7rem] w-full items-center gap-4 px-5 py-4 text-left transition hover:bg-[#fff8fb] disabled:opacity-55"
+                      >
+                        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[16px] bg-[#fff0f3] text-[1.55rem] font-black leading-none text-[#ff3b5f]">
+                          ×
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-[1.05rem] font-black leading-6 text-[#201833]">
+                            {subscriptionManagementCopy.cancelSubscription}
+                          </span>
+                          <span className="mt-1 block text-[0.82rem] font-bold leading-5 text-[#7f7896]">
+                            {subscriptionManagementCopy.cancelDescription}
+                          </span>
+                        </span>
+                        <span
+                          className={`shrink-0 leading-none text-[#7f7896] ${
+                            isOpeningBillingPortal
+                              ? "max-w-[5.7rem] truncate text-[0.78rem] font-extrabold"
+                              : "text-[1.8rem] font-light"
+                          }`}
+                        >
+                          {isOpeningBillingPortal
+                            ? subscriptionManagementCopy.opening
+                            : "›"}
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void restoreAccountPurchases()}
+                        disabled={isRestoringPurchases}
+                        aria-busy={isRestoringPurchases}
+                        className="flex min-h-[4.7rem] w-full items-center gap-4 border-t border-[#ece8f6] px-5 py-4 text-left transition hover:bg-[#f8f5ff]/80 disabled:opacity-70"
+                      >
+                        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[16px] bg-[#efeaff] text-[#7460e8]">
+                          <AccountLineIcon name="refresh" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-[1.05rem] font-black leading-6 text-[#201833]">
+                            {accountCopy.restorePurchasePrimary}
+                          </span>
+                          <span className="mt-1 block text-[0.82rem] font-bold leading-5 text-[#7f7896]">
+                            {subscriptionManagementCopy.restoreDescription}
+                          </span>
+                        </span>
+                        <span
+                          className={`shrink-0 leading-none text-[#7f7896] ${
+                            isRestoringPurchases
+                              ? "max-w-[5.7rem] truncate text-[0.78rem] font-extrabold"
+                              : "text-[1.8rem] font-light"
+                          }`}
+                        >
+                          {isRestoringPurchases
+                            ? subscriptionManagementCopy.restoring
+                            : "›"}
+                        </span>
+                      </button>
+                    </div>
+
+                    {billingPortalNotice ? (
+                      <p className="mt-3 rounded-[18px] bg-white/66 px-4 py-3 text-center text-[0.88rem] font-bold leading-6 text-[#d33b46] ring-1 ring-white/80">
+                        {billingPortalNotice}
+                      </p>
+                    ) : null}
+                    {restorePurchaseNotice ? (
+                      <p
+                        className={`mt-3 rounded-[18px] bg-white/66 px-4 py-3 text-center text-[0.88rem] font-bold leading-6 ring-1 ring-white/80 ${
+                          isAccountPro ? "text-[#14845f]" : "text-[#d33b46]"
+                        }`}
+                      >
+                        {restorePurchaseNotice}
+                      </p>
+                    ) : null}
+                    <p className="mt-4 text-center text-[0.86rem] font-bold leading-6 text-[#7f7896]">
+                      {accountCopy.billingPortalStatusNote}
+                    </p>
                   </section>
                 ) : accountPanelView !== "checkout" ? (
                   <section className="pb-8">
