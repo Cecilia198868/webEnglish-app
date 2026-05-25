@@ -27,6 +27,8 @@ type NotificationRow = {
   user_email: string;
 };
 
+const HIDDEN_NOTIFICATION_TITLE_PREFIX = "__speakflow_internal:";
+
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
 }
@@ -137,7 +139,14 @@ export async function listNotificationsForUser(userEmail: string) {
     throw error;
   }
 
-  return (data || []).map((row) => rowToNotification(row as NotificationRow));
+  return (data || [])
+    .filter((row) => {
+      const notificationRow = row as NotificationRow;
+      return !notificationRow.title.startsWith(
+        HIDDEN_NOTIFICATION_TITLE_PREFIX
+      );
+    })
+    .map((row) => rowToNotification(row as NotificationRow));
 }
 
 export async function markNotificationAsRead(

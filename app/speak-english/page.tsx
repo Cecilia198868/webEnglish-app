@@ -2804,6 +2804,11 @@ function SpeakEnglishClient() {
         });
       })()
     : "";
+  const referralCodeDisplayLabel = referralState?.referralCode
+    ? referralState.referralCode.length > 24
+      ? `${referralState.referralCode.slice(0, 12)}...${referralState.referralCode.slice(-6)}`
+      : referralState.referralCode
+    : "";
   const accountSubscriptionDisplayLabel = isLoadingAccountSubscription
     ? accountSubscriptionLabel
     : hasCanceledAtPeriodEnd
@@ -5064,9 +5069,9 @@ function SpeakEnglishClient() {
                               <span className="text-[0.88rem] font-black text-[#7f7896]">
                                 {referrals.inviteLink}
                               </span>
-                              {referralState.referralCode ? (
+                              {referralCodeDisplayLabel ? (
                                 <span className="rounded-full bg-[#efeaff] px-3 py-1 text-[0.78rem] font-black text-[#7460e8]">
-                                  {referrals.code}: {referralState.referralCode}
+                                  {referrals.code}: {referralCodeDisplayLabel}
                                 </span>
                               ) : null}
                             </div>
@@ -5461,7 +5466,7 @@ function SpeakEnglishClient() {
                         type="button"
                         onClick={() => void savePhoneTransferBackup()}
                         disabled={isPreparingPhoneTransferBackup}
-                        className="mt-4 min-h-12 w-full rounded-[18px] bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] px-4 text-[0.98rem] font-black text-white shadow-[0_16px_34px_rgba(126,92,255,0.22)] transition disabled:opacity-60"
+                        className="mt-4 min-h-12 w-full rounded-[18px] bg-[linear-gradient(135deg,#4f2fff_0%,#7437ff_52%,#9b34e8_100%)] px-4 text-[0.98rem] font-black !text-white shadow-[0_16px_34px_rgba(92,58,214,0.3)] transition disabled:opacity-60 disabled:!text-white/80"
                       >
                         {isPreparingPhoneTransferBackup
                           ? phoneTransfer.saving
@@ -5515,7 +5520,7 @@ function SpeakEnglishClient() {
                         type="button"
                         onClick={() => phoneTransferFileInputRef.current?.click()}
                         disabled={isRestoringPhoneTransferBackup}
-                        className="mt-4 min-h-12 w-full rounded-[18px] bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] px-4 text-[0.98rem] font-black text-white shadow-[0_16px_34px_rgba(126,92,255,0.22)] transition disabled:opacity-60"
+                        className="mt-4 min-h-12 w-full rounded-[18px] bg-[linear-gradient(135deg,#4f2fff_0%,#7437ff_52%,#9b34e8_100%)] px-4 text-[0.98rem] font-black !text-white shadow-[0_16px_34px_rgba(92,58,214,0.3)] transition disabled:opacity-60 disabled:!text-white/80"
                       >
                         {isRestoringPhoneTransferBackup
                           ? phoneTransfer.saving

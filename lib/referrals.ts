@@ -1,4 +1,4 @@
-import { randomBytes } from "node:crypto";
+import { createHmac, randomBytes } from "node:crypto";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
 export const INVITEE_SIGNUP_BONUS_DAYS = 7;
@@ -38,6 +38,33 @@ type ReferralRow = {
   inviter_rewarded_at?: string | null;
 };
 
+type ReferralLedgerKind =
+  | "invitee_registered"
+  | "invitee_signup_bonus"
+  | "inviter_paid_reward";
+
+type ReferralLedgerRecord = {
+  awardedAt?: string;
+  bonusProUntil?: string | null;
+  inviteeEmail?: string;
+  inviterEmail?: string;
+  kind: ReferralLedgerKind;
+  referralCode?: string;
+  stripeSubscriptionId?: string;
+};
+
+type ReferralLedgerRow = {
+  created_at: string;
+  id: string;
+  message: string;
+  title: string;
+  type: string;
+  user_email: string;
+};
+
+const REFERRAL_LEDGER_TITLE = "__speakflow_internal:referral";
+const SIGNED_REFERRAL_CODE_VERSION = "SFV1";
+
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
 }
@@ -45,9 +72,8 @@ function normalizeEmail(email: string) {
 function normalizeReferralCode(referralCode?: string | null) {
   return (referralCode || "")
     .trim()
-    .replace(/[^a-zA-Z0-9_-]/g, "")
-    .slice(0, 48)
-    .toUpperCase();
+    .replace(/[^a-zA-Z0-9_.-]/g, "")
+    .slice(0, 160);
 }
 
 function addDays(date: Date, days: number) {
@@ -71,6 +97,143 @@ function laterIso(left?: string | null, right?: string | null) {
   if (!Number.isFinite(rightTime)) return left || null;
 
   return leftTime >= rightTime ? left || null : right || null;
+}
+
+function getReferralSigningSecret() {
+  return (
+    process.env.NEXTAUTH_SECRET ||
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    "speakflow-referral-code-v1"
+  );
+}
+
+function createReferralSignature(email: string) {
+  return createHmac("sha256", getReferralSigningSecret())
+    .update(email)
+    .digest("base64url")
+    .slice(0, 18);
+}
+
+function createSignedReferralCode(email: string) {
+  const normalizedEmail = normalizeEmail(email);
+  const encodedEmail = Buffer.from(normalizedEmail, "utf8").toString(
+    "base64url"
+  );
+
+  return `${SIGNED_REFERRAL_CODE_VERSION}.${encodedEmail}.${createReferralSignature(
+    normalizedEmail
+  )}`;
+}
+
+function getEmailFromSignedReferralCode(referralCode: string) {
+  const [version, encodedEmail, signature] = normalizeReferralCode(
+    referralCode
+  ).split(".");
+
+  if (version !== SIGNED_REFERRAL_CODE_VERSION || !encodedEmail || !signature) {
+    return "";
+  }
+
+  try {
+    const email = normalizeEmail(
+      Buffer.from(encodedEmail, "base64url").toString("utf8")
+    );
+
+    return email && createReferralSignature(email) === signature ? email : "";
+  } catch {
+    return "";
+  }
+}
+
+function parseReferralLedgerRecord(row: ReferralLedgerRow) {
+  if (row.title !== REFERRAL_LEDGER_TITLE) return null;
+
+  try {
+    const parsed = JSON.parse(row.message) as ReferralLedgerRecord;
+
+    if (
+      parsed.kind === "invitee_registered" ||
+      parsed.kind === "invitee_signup_bonus" ||
+      parsed.kind === "inviter_paid_reward"
+    ) {
+      return parsed;
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
+function uniqueCount(values: string[]) {
+  return new Set(values.filter(Boolean)).size;
+}
+
+async function listReferralLedgerRecords(userEmail: string) {
+  const normalizedEmail = normalizeEmail(userEmail);
+  if (!normalizedEmail) return [];
+
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("id, user_email, title, message, type, created_at")
+    .eq("user_email", normalizedEmail)
+    .eq("type", "system")
+    .eq("title", REFERRAL_LEDGER_TITLE)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return ((data || []) as ReferralLedgerRow[])
+    .map((row) => parseReferralLedgerRecord(row))
+    .filter((record): record is ReferralLedgerRecord => Boolean(record));
+}
+
+async function createReferralLedgerRecord(
+  userEmail: string,
+  record: ReferralLedgerRecord
+) {
+  const normalizedEmail = normalizeEmail(userEmail);
+  if (!normalizedEmail) return;
+
+  const existingRecords = await listReferralLedgerRecords(normalizedEmail);
+  const isDuplicate = existingRecords.some((existingRecord) => {
+    if (existingRecord.kind !== record.kind) return false;
+
+    if (record.kind === "invitee_signup_bonus") return true;
+
+    return (
+      normalizeEmail(existingRecord.inviteeEmail || "") ===
+      normalizeEmail(record.inviteeEmail || "")
+    );
+  });
+
+  if (isDuplicate) return;
+
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.from("notifications").insert({
+    is_read: true,
+    message: JSON.stringify(record),
+    title: REFERRAL_LEDGER_TITLE,
+    type: "system",
+    user_email: normalizedEmail,
+  });
+
+  if (error) {
+    throw error;
+  }
+}
+
+async function getLedgerBonusProUntilForEmail(email: string) {
+  const records = await listReferralLedgerRecords(email);
+
+  return records.reduce<string | null>((latestBonusUntil, record) => {
+    if (!record.bonusProUntil) return latestBonusUntil;
+
+    return laterIso(latestBonusUntil, record.bonusProUntil);
+  }, null);
 }
 
 function isSupabaseErrorLike(error: unknown): error is SupabaseErrorLike {
@@ -115,6 +278,128 @@ function createInviteLink(referralCode: string, origin?: string) {
   return cleanBaseUrl
     ? `${cleanBaseUrl}/register?ref=${encodeURIComponent(referralCode)}`
     : `/register?ref=${encodeURIComponent(referralCode)}`;
+}
+
+async function registerReferralInLedger(
+  inviteeEmail: string,
+  referralCode: string
+) {
+  const normalizedInviteeEmail = normalizeEmail(inviteeEmail);
+  const inviterEmail = getEmailFromSignedReferralCode(referralCode);
+
+  if (!inviterEmail || inviterEmail === normalizedInviteeEmail) {
+    return { bonusGranted: false, bonusProUntil: null };
+  }
+
+  const existingInviteeRecords = await listReferralLedgerRecords(
+    normalizedInviteeEmail
+  );
+  const existingInviteeBonus = existingInviteeRecords.find(
+    (record) => record.kind === "invitee_signup_bonus"
+  );
+
+  if (existingInviteeBonus) {
+    return {
+      bonusGranted: false,
+      bonusProUntil: existingInviteeBonus.bonusProUntil || null,
+    };
+  }
+
+  const bonusProUntil = addDays(new Date(), INVITEE_SIGNUP_BONUS_DAYS);
+
+  await Promise.all([
+    createReferralLedgerRecord(normalizedInviteeEmail, {
+      bonusProUntil,
+      inviterEmail,
+      kind: "invitee_signup_bonus",
+      referralCode,
+    }),
+    createReferralLedgerRecord(inviterEmail, {
+      inviteeEmail: normalizedInviteeEmail,
+      inviterEmail,
+      kind: "invitee_registered",
+      referralCode,
+    }),
+  ]);
+
+  return { bonusGranted: true, bonusProUntil };
+}
+
+async function getReferralAccountStateFromLedger(
+  email: string,
+  origin?: string
+) {
+  const normalizedEmail = normalizeEmail(email);
+  const records = await listReferralLedgerRecords(normalizedEmail);
+  const bonusProUntil = futureIso(await getLedgerBonusProUntilForEmail(email));
+  const inviteeSignupBonus = records.find(
+    (record) => record.kind === "invitee_signup_bonus"
+  );
+  const referralCode = createSignedReferralCode(normalizedEmail);
+
+  return {
+    available: true,
+    bonusProUntil,
+    inviteLink: createInviteLink(referralCode, origin),
+    invitedCount: uniqueCount(
+      records
+        .filter((record) => record.kind === "invitee_registered")
+        .map((record) => normalizeEmail(record.inviteeEmail || ""))
+    ),
+    paidRewardCount: uniqueCount(
+      records
+        .filter((record) => record.kind === "inviter_paid_reward")
+        .map((record) => normalizeEmail(record.inviteeEmail || ""))
+    ),
+    referralCode,
+    referredByEmail: inviteeSignupBonus?.inviterEmail || null,
+    signupBonusUntil: futureIso(inviteeSignupBonus?.bonusProUntil),
+  } satisfies ReferralAccountState;
+}
+
+async function rewardInviterInLedger(
+  inviteeEmail: string,
+  stripeSubscriptionId: string
+) {
+  const normalizedInviteeEmail = normalizeEmail(inviteeEmail);
+  const inviteeRecords = await listReferralLedgerRecords(normalizedInviteeEmail);
+  const inviteeSignupBonus = inviteeRecords.find(
+    (record) => record.kind === "invitee_signup_bonus"
+  );
+  const inviterEmail = normalizeEmail(inviteeSignupBonus?.inviterEmail || "");
+
+  if (!inviterEmail || inviterEmail === normalizedInviteeEmail) {
+    return false;
+  }
+
+  const inviterRecords = await listReferralLedgerRecords(inviterEmail);
+  const wasRewarded = inviterRecords.some(
+    (record) =>
+      record.kind === "inviter_paid_reward" &&
+      normalizeEmail(record.inviteeEmail || "") === normalizedInviteeEmail
+  );
+
+  if (wasRewarded) {
+    return false;
+  }
+
+  const currentBonusUntil = await getLedgerBonusProUntilForEmail(inviterEmail);
+  const rewardBaseDate =
+    futureIso(currentBonusUntil) !== null
+      ? new Date(currentBonusUntil as string)
+      : new Date();
+  const bonusProUntil = addDays(rewardBaseDate, INVITER_PAID_REWARD_DAYS);
+
+  await createReferralLedgerRecord(inviterEmail, {
+    awardedAt: new Date().toISOString(),
+    bonusProUntil,
+    inviteeEmail: normalizedInviteeEmail,
+    inviterEmail,
+    kind: "inviter_paid_reward",
+    stripeSubscriptionId,
+  });
+
+  return true;
 }
 
 async function createUniqueReferralCode() {
@@ -189,6 +474,8 @@ export async function getBonusProUntilForEmail(email: string) {
   const normalizedEmail = normalizeEmail(email);
   if (!normalizedEmail) return null;
 
+  let profileBonusUntil: string | null = null;
+
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -201,12 +488,21 @@ export async function getBonusProUntilForEmail(email: string) {
       throw error;
     }
 
-    return data?.bonus_pro_until || null;
+    profileBonusUntil = data?.bonus_pro_until || null;
   } catch (error) {
-    if (isMissingReferralSchemaError(error)) {
-      return null;
+    if (!isMissingReferralSchemaError(error)) {
+      throw error;
     }
+  }
 
+  try {
+    const ledgerBonusUntil = await getLedgerBonusProUntilForEmail(
+      normalizedEmail
+    );
+
+    return laterIso(profileBonusUntil, ledgerBonusUntil);
+  } catch (error) {
+    if (profileBonusUntil) return profileBonusUntil;
     throw error;
   }
 }
@@ -230,16 +526,45 @@ export async function registerReferralForNewUser(
     .maybeSingle<{ email: string }>();
 
   if (inviterError) {
+    if (isMissingReferralSchemaError(inviterError)) {
+      return registerReferralInLedger(
+        normalizedInviteeEmail,
+        normalizedReferralCode
+      );
+    }
+
     throw inviterError;
   }
 
-  const inviterEmail = normalizeEmail(inviter?.email || "");
+  const inviterEmail =
+    normalizeEmail(inviter?.email || "") ||
+    getEmailFromSignedReferralCode(normalizedReferralCode);
 
   if (!inviterEmail || inviterEmail === normalizedInviteeEmail) {
     return { bonusGranted: false, bonusProUntil: null };
   }
 
-  const inviteeProfile = await ensureReferralProfile(normalizedInviteeEmail);
+  if (!inviter?.email) {
+    return registerReferralInLedger(
+      normalizedInviteeEmail,
+      normalizedReferralCode
+    );
+  }
+
+  let inviteeProfile: Awaited<ReturnType<typeof ensureReferralProfile>>;
+
+  try {
+    inviteeProfile = await ensureReferralProfile(normalizedInviteeEmail);
+  } catch (error) {
+    if (isMissingReferralSchemaError(error)) {
+      return registerReferralInLedger(
+        normalizedInviteeEmail,
+        normalizedReferralCode
+      );
+    }
+
+    throw error;
+  }
 
   if (inviteeProfile.referredByEmail) {
     return {
@@ -266,6 +591,13 @@ export async function registerReferralForNewUser(
     );
 
   if (profileError) {
+    if (isMissingReferralSchemaError(profileError)) {
+      return registerReferralInLedger(
+        normalizedInviteeEmail,
+        normalizedReferralCode
+      );
+    }
+
     throw profileError;
   }
 
@@ -277,6 +609,13 @@ export async function registerReferralForNewUser(
   });
 
   if (insertError && insertError.code !== "23505") {
+    if (isMissingReferralSchemaError(insertError)) {
+      return registerReferralInLedger(
+        normalizedInviteeEmail,
+        normalizedReferralCode
+      );
+    }
+
     throw insertError;
   }
 
@@ -324,7 +663,7 @@ export async function getReferralAccountState(email: string, origin?: string) {
     } satisfies ReferralAccountState;
   } catch (error) {
     if (isMissingReferralSchemaError(error)) {
-      return createUnavailableReferralState();
+      return getReferralAccountStateFromLedger(normalizedEmail, origin);
     }
 
     throw error;
@@ -347,12 +686,14 @@ export async function rewardInviterForPaidReferral(
     .maybeSingle<ReferralRow>();
 
   if (referralError) {
-    if (isMissingReferralSchemaError(referralError)) return false;
+    if (isMissingReferralSchemaError(referralError)) {
+      return rewardInviterInLedger(normalizedInviteeEmail, stripeSubscriptionId);
+    }
     throw referralError;
   }
 
   if (!referral || referral.inviter_rewarded_at) {
-    return false;
+    return rewardInviterInLedger(normalizedInviteeEmail, stripeSubscriptionId);
   }
 
   const { data: claimedReferral, error: claimError } = await supabase
@@ -383,6 +724,10 @@ export async function rewardInviterForPaidReferral(
     .maybeSingle<ReferralProfileRow>();
 
   if (profileError) {
+    if (isMissingReferralSchemaError(profileError)) {
+      return rewardInviterInLedger(normalizedInviteeEmail, stripeSubscriptionId);
+    }
+
     throw profileError;
   }
 
@@ -403,6 +748,10 @@ export async function rewardInviterForPaidReferral(
     );
 
   if (updateProfileError) {
+    if (isMissingReferralSchemaError(updateProfileError)) {
+      return rewardInviterInLedger(normalizedInviteeEmail, stripeSubscriptionId);
+    }
+
     throw updateProfileError;
   }
 
