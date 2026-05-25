@@ -10,6 +10,11 @@ export type SubscriptionNotificationState = {
   subscriptionStatus: SubscriptionNotificationStatus;
 };
 
+export type SubscriptionNotificationMessage = {
+  message: string;
+  title: string;
+};
+
 function formatPeriodEnd(value: string | null) {
   if (!value) return "";
 
@@ -22,6 +27,37 @@ function formatPeriodEnd(value: string | null) {
     timeZone: "UTC",
     year: "numeric",
   });
+}
+
+export function getSubscriptionNotificationMessages(
+  state: SubscriptionNotificationState
+): SubscriptionNotificationMessage[] {
+  if (
+    state.subscriptionStatus !== "pro" &&
+    state.subscriptionStatus !== "cancels_at_period_end"
+  ) {
+    return [];
+  }
+
+  const messages: SubscriptionNotificationMessage[] = [
+    {
+      message: "你已成功订阅 SpeakFlow Pro。现在可以使用全部 Pro 功能。",
+      title: "SpeakFlow Pro 已开通",
+    },
+  ];
+
+  if (state.subscriptionStatus === "cancels_at_period_end") {
+    const periodEndLabel = formatPeriodEnd(state.currentPeriodEnd);
+
+    messages.push({
+      message: periodEndLabel
+        ? `你的订阅已取消。Pro 权益仍可使用到 ${periodEndLabel}。`
+        : "你的订阅已取消。Pro 权益仍可使用到当前订阅周期结束。",
+      title: "订阅已取消",
+    });
+  }
+
+  return messages;
 }
 
 async function ensureSubscriptionNotification(
@@ -40,29 +76,13 @@ export async function ensureSubscriptionNotificationsForState(
   userEmail: string,
   state: SubscriptionNotificationState
 ) {
-  if (
-    state.subscriptionStatus !== "pro" &&
-    state.subscriptionStatus !== "cancels_at_period_end"
-  ) {
-    return;
-  }
-
-  await ensureSubscriptionNotification(
-    userEmail,
-    "SpeakFlow Pro 已开通",
-    "你已成功订阅 SpeakFlow Pro。现在可以使用全部 Pro 功能。"
-  );
-
-  if (state.subscriptionStatus !== "cancels_at_period_end") {
-    return;
-  }
-
-  const periodEndLabel = formatPeriodEnd(state.currentPeriodEnd);
-  await ensureSubscriptionNotification(
-    userEmail,
-    "订阅已取消",
-    periodEndLabel
-      ? `你的订阅已取消。Pro 权益仍可使用到 ${periodEndLabel}。`
-      : "你的订阅已取消。Pro 权益仍可使用到当前订阅周期结束。"
+  await Promise.all(
+    getSubscriptionNotificationMessages(state).map((notification) =>
+      ensureSubscriptionNotification(
+        userEmail,
+        notification.title,
+        notification.message
+      )
+    )
   );
 }
