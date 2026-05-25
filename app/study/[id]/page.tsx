@@ -314,6 +314,7 @@ export default function StudyPage() {
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [lessonTitle, setLessonTitle] = useState("");
+  const [hasLoadedLesson, setHasLoadedLesson] = useState(false);
   const [localLessonSequence, setLocalLessonSequence] = useState<Lesson[]>([]);
   const [pairs, setPairs] = useState<SentencePair[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -446,6 +447,7 @@ export default function StudyPage() {
   }
 
   const loadLesson = useCallback(() => {
+    setHasLoadedLesson(false);
     const data = loadLessonsData();
     setLocalLessonSequence(data.lessons || []);
     const found = data.lessons.find((item) => item.id === lessonId) || null;
@@ -462,6 +464,7 @@ export default function StudyPage() {
         setMessage("没有找到这节课");
         setLesson(null);
         setPairs([]);
+        setHasLoadedLesson(true);
         return;
       }
 
@@ -477,6 +480,7 @@ export default function StudyPage() {
       setLiveTranscript("");
       setExpressionVariants([]);
       setSelectedExpressionIndex(0);
+      setHasLoadedLesson(true);
       return;
     }
 
@@ -506,6 +510,7 @@ export default function StudyPage() {
     setLiveTranscript("");
     setExpressionVariants([]);
     setSelectedExpressionIndex(0);
+    setHasLoadedLesson(true);
   }, [lessonId, progressKey]);
 
   function saveProgress(index: number) {
@@ -1398,11 +1403,11 @@ export default function StudyPage() {
     lessonSequenceIndex >= 0 && lessonSequenceIndex < lessonSequence.length - 1
       ? lessonSequence[lessonSequenceIndex + 1]
       : null;
-  const sentenceProgressText = `第 ${pairs.length ? currentIndex + 1 : 0} / ${
-    pairs.length
-  } 句`;
-  const showStudyPrompt = !spokenDisplay && !showEnglish;
-  const showStudyListeningPrompt = isListening;
+  const sentenceProgressText = hasLoadedLesson
+    ? `第 ${pairs.length ? currentIndex + 1 : 0} / ${pairs.length} 句`
+    : "";
+  const showStudyPrompt = hasLoadedLesson && !spokenDisplay && !showEnglish;
+  const showStudyListeningPrompt = hasLoadedLesson && isListening;
   const showStudyVoiceOnlyPrompt = showStudyPrompt || showStudyListeningPrompt;
   const showExpressionFeedback = Boolean(spokenDisplay) && !showStudyListeningPrompt;
   const expressionVariantsForDisplay = expressionVariants.length
@@ -1542,7 +1547,7 @@ export default function StudyPage() {
                     : "justify-start py-5"
               }`}
             >
-              {showStudyListeningPrompt || showStudyPrompt ? (
+              {!hasLoadedLesson ? null : showStudyListeningPrompt || showStudyPrompt ? (
                 <>
                   <div className="w-full max-w-[430px] bg-white/10 px-5 py-5 text-left">
                     <h2 className="text-[1.75rem] font-extrabold leading-[1.5] text-[#201833]">

@@ -113,6 +113,7 @@ export default function VocabularyPage() {
   const [accountEmail, setAccountEmail] = useState("");
   const [accountImage, setAccountImage] = useState("");
   const [accountImageFailed, setAccountImageFailed] = useState(false);
+  const [hasLoadedVocabulary, setHasLoadedVocabulary] = useState(false);
   const [loadingExampleTranslationFor, setLoadingExampleTranslationFor] =
     useState("");
 
@@ -127,6 +128,7 @@ export default function VocabularyPage() {
   useEffect(() => {
     const loadTimer = window.setTimeout(() => {
       setWords([...loadVocabularyWords()].reverse());
+      setHasLoadedVocabulary(true);
     }, 0);
 
     return () => {
@@ -183,7 +185,9 @@ export default function VocabularyPage() {
     };
   }, []);
 
-  const progressText = `你已经学会了 ${words.length} 个表达`;
+  const progressText = hasLoadedVocabulary
+    ? `\u4f60\u5df2\u7ecf\u5b66\u4f1a\u4e86 ${words.length} \u4e2a\u8868\u8fbe`
+    : "";
   const hasPrevious = currentIndex > 0;
   const hasNext = currentIndex < words.length - 1;
   const visibleWords = words;
@@ -475,11 +479,11 @@ export default function VocabularyPage() {
                       </div>
                     ))}
                   </div>
-                ) : (
+                ) : hasLoadedVocabulary ? (
                   <p className="px-4 py-5 text-center text-[1.1rem] font-bold text-[#7f7896]">
                     还没有收藏的新表达。
                   </p>
-                )}
+                ) : null}
               </div>
             </div>
           ) : null}
@@ -538,7 +542,7 @@ export default function VocabularyPage() {
                     </p>
                   )}
                 </div>
-              ) : (
+              ) : hasLoadedVocabulary ? (
                 <div className="mt-20 max-w-[340px] text-center">
                   <h3 className="text-[1.5rem] font-extrabold text-[#201833]">
                     还没有学到的新表达
@@ -547,7 +551,7 @@ export default function VocabularyPage() {
                     在练习页点击英文单词后，就会保存到这里。
                   </p>
                 </div>
-              )}
+              ) : null}
             </div>
           </section>
 
