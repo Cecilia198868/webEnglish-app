@@ -128,6 +128,41 @@ export async function upsertProfileSubscriptionByEmail(
   return profileToStoredUser(profile);
 }
 
+export async function upsertProfileStripeCustomerByEmail(
+  email: string,
+  stripeCustomerId: string
+) {
+  const normalizedEmail = normalizeEmail(email);
+  const existingProfile = await findProfileByEmail(normalizedEmail).catch(
+    () => null
+  );
+  const supabase = getSupabaseAdmin();
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .upsert(
+      {
+        cancel_at_period_end: existingProfile?.cancelAtPeriodEnd ?? false,
+        current_period_end: existingProfile?.currentPeriodEnd || null,
+        email: normalizedEmail,
+        stripe_customer_id: stripeCustomerId,
+        stripe_subscription_id: existingProfile?.stripeSubscriptionId || null,
+        subscription_status: existingProfile?.subscriptionStatus || "free",
+      },
+      { onConflict: "email" }
+    )
+    .select(
+      "email, subscription_status, stripe_customer_id, stripe_subscription_id, current_period_end, cancel_at_period_end"
+    )
+    .single<ProfileRow>();
+
+  if (error) {
+    throw error;
+  }
+
+  return profileToStoredUser(profile);
+}
+
 function hashPassword(password: string) {
   const salt = randomBytes(16).toString("hex");
   const hash = scryptSync(password, salt, 64).toString("hex");

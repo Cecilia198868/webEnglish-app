@@ -1,4 +1,5 @@
 import { authOptions } from "@/auth";
+import { upsertProfileStripeCustomerByEmail } from "@/lib/userStore";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import Stripe from "stripe";
@@ -52,10 +53,25 @@ export async function POST(req: Request) {
     const stripe = new Stripe(stripeSecretKey);
     console.log("creating checkout for email:", email);
 
+    const customers = await stripe.customers.list({
+      email,
+      limit: 1,
+    });
+    const stripeCustomer =
+      customers.data[0] ||
+      (await stripe.customers.create({
+        email,
+        metadata: {
+          email,
+        },
+      }));
+
+    await upsertProfileStripeCustomerByEmail(email, stripeCustomer.id);
+
     const session = await stripe.checkout.sessions.create({
       cancel_url: `${appUrl}/speak-english?pro=1&checkout=cancel`,
       client_reference_id: email,
-      customer_email: email,
+      customer: stripeCustomer.id,
       line_items: [
         {
           price: priceId,

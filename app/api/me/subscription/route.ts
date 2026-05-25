@@ -89,35 +89,71 @@ async function retrieveSubscriptionById(
   };
 }
 
-async function findLatestSubscriptionForCustomer(
+function compareSubscriptionCreated(
+  left: SelectedStripeSubscription,
+  right: SelectedStripeSubscription
+) {
+  return right.subscription.created - left.subscription.created;
+}
+
+function addSubscriptionCandidate(
+  candidates: Map<string, SelectedStripeSubscription>,
+  stripeCustomerId: string,
+  subscription: Stripe.Subscription
+) {
+  if (!candidates.has(subscription.id)) {
+    candidates.set(subscription.id, {
+      stripeCustomerId,
+      subscription,
+    });
+  }
+}
+
+async function addCustomerSubscriptions(
   stripe: Stripe,
-  stripeCustomerId: string
+  stripeCustomerId: string,
+  candidates: Map<string, SelectedStripeSubscription>
 ) {
   const subscriptions = await stripe.subscriptions.list({
     customer: stripeCustomerId,
-    limit: 10,
+    limit: 100,
     status: "all",
   });
-  const sortedSubscriptions = subscriptions.data.sort(
-    (left, right) => right.created - left.created
-  );
 
-  return (
-    sortedSubscriptions.find(
-      (subscription) =>
-        subscription.status === "active" || subscription.status === "trialing"
-    ) ||
-    sortedSubscriptions[0] ||
-    null
-  );
+  subscriptions.data.forEach((subscription) => {
+    addSubscriptionCandidate(candidates, stripeCustomerId, subscription);
+  });
 }
 
-async function findSubscriptionByEmail(
+async function findBestSubscriptionForAccount(
   stripe: Stripe,
   email: string,
-  storedStripeCustomerId = ""
+  storedStripeCustomerId = "",
+  storedStripeSubscriptionId = ""
 ): Promise<SelectedStripeSubscription | null> {
   const stripeCustomerIds = new Set<string>();
+  const candidates = new Map<string, SelectedStripeSubscription>();
+
+  if (storedStripeSubscriptionId.trim()) {
+    try {
+      const storedSubscription = await retrieveSubscriptionById(
+        stripe,
+        storedStripeSubscriptionId.trim(),
+        storedStripeCustomerId.trim()
+      );
+
+      if (storedSubscription) {
+        addSubscriptionCandidate(
+          candidates,
+          storedSubscription.stripeCustomerId,
+          storedSubscription.subscription
+        );
+        stripeCustomerIds.add(storedSubscription.stripeCustomerId);
+      }
+    } catch (error) {
+      console.error("Retrieve stored Stripe subscription failed:", error);
+    }
+  }
 
   if (storedStripeCustomerId.trim()) {
     stripeCustomerIds.add(storedStripeCustomerId.trim());
@@ -132,44 +168,27 @@ async function findSubscriptionByEmail(
     stripeCustomerIds.add(customer.id);
   });
 
-  let latestActiveSubscription: SelectedStripeSubscription | null = null;
-  let latestFallbackSubscription: SelectedStripeSubscription | null = null;
-
   for (const stripeCustomerId of stripeCustomerIds) {
-    const subscription = await findLatestSubscriptionForCustomer(
-      stripe,
-      stripeCustomerId
-    );
-
-    if (!subscription) continue;
-
-    const selectedSubscription = {
-      stripeCustomerId,
-      subscription,
-    };
-
-    if (
-      subscription.status === "active" ||
-      subscription.status === "trialing"
-    ) {
-      if (
-        !latestActiveSubscription ||
-        subscription.created > latestActiveSubscription.subscription.created
-      ) {
-        latestActiveSubscription = selectedSubscription;
-      }
-      continue;
-    }
-
-    if (
-      !latestFallbackSubscription ||
-      subscription.created > latestFallbackSubscription.subscription.created
-    ) {
-      latestFallbackSubscription = selectedSubscription;
+    try {
+      await addCustomerSubscriptions(stripe, stripeCustomerId, candidates);
+    } catch (error) {
+      console.error("List Stripe customer subscriptions failed:", error);
     }
   }
 
-  return latestActiveSubscription || latestFallbackSubscription;
+  const allSubscriptions = Array.from(candidates.values());
+  const activeSubscriptions = allSubscriptions
+    .filter(
+      ({ subscription }) =>
+        subscription.status === "active" || subscription.status === "trialing"
+    )
+    .sort(compareSubscriptionCreated);
+
+  if (activeSubscriptions[0]) {
+    return activeSubscriptions[0];
+  }
+
+  return allSubscriptions.sort(compareSubscriptionCreated)[0] || null;
 }
 
 export async function GET() {
@@ -192,17 +211,12 @@ export async function GET() {
   }
 
   const stripe = new Stripe(stripeSecretKey);
-  const selectedStripeSubscription = stripeSubscriptionId
-    ? await retrieveSubscriptionById(
-        stripe,
-        stripeSubscriptionId,
-        profile?.stripeCustomerId?.trim() || ""
-      )
-    : await findSubscriptionByEmail(
-        stripe,
-        email,
-        profile?.stripeCustomerId?.trim() || ""
-      );
+  const selectedStripeSubscription = await findBestSubscriptionForAccount(
+    stripe,
+    email,
+    profile?.stripeCustomerId?.trim() || "",
+    stripeSubscriptionId
+  );
 
   if (!selectedStripeSubscription) {
     return NextResponse.json(
