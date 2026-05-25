@@ -8,7 +8,7 @@ const termsContent = {
     title: "Terms of Service",
     updated: "Last updated: May 23, 2026",
     intro:
-      "Welcome to SpeakFlow. These Terms of Service explain the rules for using SpeakFlow, including our language learning, speech practice, vocabulary, course creation, and AI-assisted learning features.",
+      "Welcome to SpeakFlow. These Terms of Service explain the rules for using SpeakFlow, including our language learning, speech practice, vocabulary, course creation, AI-assisted learning, interface settings, notification inbox, phone transfer, and account management features.",
     sections: [
       {
         title: "1. Acceptance of These Terms",
@@ -22,6 +22,7 @@ const termsContent = {
         body: [
           "SpeakFlow is an English speaking practice app. It may help users generate practice sentences, transform user input into English expressions, create learning courses, review vocabulary, practice pronunciation, and save expressions or words to a personal library.",
           "Some content may be generated or assisted by AI. AI-generated content can be useful for practice, but it may be incomplete, inaccurate, or unsuitable for a particular situation. You are responsible for checking important information before relying on it.",
+          "SpeakFlow may also provide account settings such as interface language, notification inbox, phone transfer backup and restore, subscription management, and account deletion request flows.",
         ],
       },
       {
@@ -29,6 +30,7 @@ const termsContent = {
         body: [
           "You may need an account to use certain features. You are responsible for keeping your login information secure and for activity under your account.",
           "You agree to provide accurate information and to update it when necessary. Do not use another person's account without permission.",
+          "Account deletion requests may require identity verification before records are removed, especially when subscription or payment records are involved.",
         ],
       },
       {
@@ -36,6 +38,7 @@ const termsContent = {
         body: [
           "You may submit text, speech, audio, course material, vocabulary, profile information, or other content to SpeakFlow. You keep ownership of your content.",
           "You give SpeakFlow permission to process your content as needed to provide the app's features, such as transcription, translation, feedback, pronunciation practice, course generation, vocabulary storage, and syncing where available.",
+          "If you use phone transfer backup or restore, you are responsible for choosing where to save or share the backup file and for keeping it secure.",
           "Do not submit content that is illegal, harmful, abusive, deceptive, infringing, or that violates another person's privacy or rights.",
         ],
       },
@@ -71,7 +74,7 @@ const termsContent = {
         title: "9. Privacy",
         body: [
           "Your use of SpeakFlow is also governed by our Privacy Policy. The Privacy Policy explains how information may be collected, used, stored, and protected.",
-          "If you use speech, audio, AI, or account features, your content may need to be processed to provide those features.",
+          "If you use speech, audio, AI, account, notification inbox, interface language, or phone transfer features, your content or account status may need to be processed to provide those features.",
         ],
       },
       {
@@ -122,7 +125,7 @@ const termsContent = {
     title: "用户协议",
     updated: "最后更新日期：2026 年 5 月 23 日",
     intro:
-      "欢迎使用 SpeakFlow。本用户协议说明您使用 SpeakFlow 时需要遵守的规则，包括语言学习、口语练习、表达库、课程生成以及 AI 辅助学习等功能。",
+      "欢迎使用 SpeakFlow。本用户协议说明您使用 SpeakFlow 时需要遵守的规则，包括语言学习、口语练习、表达库、课程生成、AI 辅助学习、界面设置、通知收件箱、更换手机和账号管理等功能。",
     sections: [
       {
         title: "1. 接受本协议",
@@ -136,6 +139,7 @@ const termsContent = {
         body: [
           "SpeakFlow 是一款英语口语练习应用。它可以帮助用户生成练习句子、把用户输入转换成英文表达、创建学习课程、复习词汇、练习发音，并把表达或单词保存到个人表达库。",
           "部分内容可能由 AI 生成或辅助生成。AI 内容适合用于学习练习，但可能不完整、不准确，或不适合特定场景。重要信息请您自行核实。",
+          "SpeakFlow 也可能提供界面语言、通知收件箱、更换手机备份与恢复、订阅管理和删除账号请求等账户设置功能。",
         ],
       },
       {
@@ -143,6 +147,7 @@ const termsContent = {
         body: [
           "部分功能可能需要账户。您需要妥善保管登录信息，并对您账户下的活动负责。",
           "您同意提供准确的信息，并在需要时及时更新。未经允许，请勿使用他人的账户。",
+          "删除账号请求可能需要先核对身份，尤其是在涉及订阅或付款记录时。",
         ],
       },
       {
@@ -150,6 +155,7 @@ const termsContent = {
         body: [
           "您可能会向 SpeakFlow 提交文字、语音、音频、课程材料、词汇、头像资料或其他内容。您仍然拥有您提交内容的权利。",
           "为了提供应用功能，您授权 SpeakFlow 在必要范围内处理您的内容，例如转写、翻译、反馈、发音练习、课程生成、词汇保存以及可用情况下的数据同步。",
+          "如果您使用更换手机的备份或恢复功能，您需要自行选择备份文件保存或分享的位置，并妥善保管备份文件。",
           "请勿提交违法、有害、骚扰、欺骗、侵权，或侵犯他人隐私和权利的内容。",
         ],
       },
@@ -185,7 +191,7 @@ const termsContent = {
         title: "9. 隐私",
         body: [
           "您使用 SpeakFlow 也受我们的隐私政策约束。隐私政策说明信息如何被收集、使用、存储和保护。",
-          "如果您使用语音、音频、AI 或账户功能，您的内容可能需要被处理，以便提供相应功能。",
+          "如果您使用语音、音频、AI、账户、通知收件箱、界面语言或更换手机功能，您的内容或账户状态可能需要被处理，以便提供相应功能。",
         ],
       },
       {

@@ -1,7 +1,9 @@
 import {
+  findProfileByEmail,
   findProfileByStripeCustomerId,
   upsertProfileSubscriptionByEmail,
 } from "@/lib/userStore";
+import { createNotification } from "@/lib/notifications";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -17,6 +19,12 @@ type SubscriptionPersistencePayload = {
   stripeSubscriptionId: string;
   subscriptionStatus: EntitlementStatus;
   cancelAtPeriodEnd: boolean;
+};
+
+type SubscriptionPersistenceResult = {
+  email: string;
+  nextSubscriptionStatus: EntitlementStatus;
+  previousSubscriptionStatus?: EntitlementStatus;
 };
 
 function getStripeId(value: string | { id?: string } | null | undefined) {
@@ -65,23 +73,39 @@ async function saveSubscriptionState(payload: SubscriptionPersistencePayload) {
   };
 
   if (payload.email) {
+    const previousProfile = await findProfileByEmail(payload.email).catch(
+      () => null
+    );
     const updatedProfile = await upsertProfileSubscriptionByEmail(
       payload.email,
       subscriptionData
     );
 
     if (updatedProfile) {
-      return;
+      return {
+        email: updatedProfile.email,
+        nextSubscriptionStatus: payload.subscriptionStatus,
+        previousSubscriptionStatus: previousProfile?.subscriptionStatus,
+      } satisfies SubscriptionPersistenceResult;
     }
   }
 
   const profile = await findProfileByStripeCustomerId(payload.stripeCustomerId);
 
   if (!profile) {
-    return;
+    return null;
   }
 
-  await upsertProfileSubscriptionByEmail(profile.email, subscriptionData);
+  const updatedProfile = await upsertProfileSubscriptionByEmail(
+    profile.email,
+    subscriptionData
+  );
+
+  return {
+    email: updatedProfile.email,
+    nextSubscriptionStatus: payload.subscriptionStatus,
+    previousSubscriptionStatus: profile.subscriptionStatus,
+  } satisfies SubscriptionPersistenceResult;
 }
 
 async function persistSubscription(
@@ -102,10 +126,10 @@ async function persistSubscription(
   const stripeSubscriptionId = subscription.id;
 
   if (!stripeCustomerId || !stripeSubscriptionId) {
-    return;
+    return null;
   }
 
-  await saveSubscriptionState({
+  return saveSubscriptionState({
     cancelAtPeriodEnd: subscription.cancel_at_period_end === true,
     currentPeriodEnd: getCurrentPeriodEnd(subscription),
     email: options.email,
@@ -113,6 +137,18 @@ async function persistSubscription(
     stripeSubscriptionId,
     subscriptionStatus,
   });
+}
+
+async function createNotificationSafely(
+  userEmail: string,
+  title: string,
+  message: string
+) {
+  try {
+    await createNotification(userEmail, title, message, "subscription");
+  } catch (error) {
+    console.error("Create subscription notification failed", error);
+  }
 }
 
 function getCheckoutSessionEmail(session: Stripe.Checkout.Session) {
@@ -146,6 +182,7 @@ async function handleCheckoutSessionCompleted(
   const resolvedStripeCustomerId =
     stripeCustomerId || getStripeId(subscription.customer);
   const currentPeriodEnd = getCurrentPeriodEnd(subscription);
+  const previousProfile = await findProfileByEmail(email).catch(() => null);
 
   if (resolvedStripeCustomerId) {
     const updatedProfile = await upsertProfileSubscriptionByEmail(email, {
@@ -157,14 +194,31 @@ async function handleCheckoutSessionCompleted(
     });
 
     if (updatedProfile) {
+      if (previousProfile?.subscriptionStatus !== "pro") {
+        await createNotificationSafely(
+          updatedProfile.email,
+          "SpeakFlow Pro \u5df2\u5f00\u901a",
+          "\u4f60\u5df2\u6210\u529f\u8ba2\u9605 SpeakFlow Pro\u3002\u73b0\u5728\u53ef\u4ee5\u4f7f\u7528\u5168\u90e8 Pro \u529f\u80fd\u3002"
+        );
+      }
       return;
     }
   }
 
-  await persistSubscription(subscription, {
+  const result = await persistSubscription(subscription, {
     email,
     stripeCustomerId: resolvedStripeCustomerId,
   });
+
+  if (result?.email) {
+    if (result.previousSubscriptionStatus !== "pro") {
+      await createNotificationSafely(
+        result.email,
+        "SpeakFlow Pro \u5df2\u5f00\u901a",
+        "\u4f60\u5df2\u6210\u529f\u8ba2\u9605 SpeakFlow Pro\u3002\u73b0\u5728\u53ef\u4ee5\u4f7f\u7528\u5168\u90e8 Pro \u529f\u80fd\u3002"
+      );
+    }
+  }
 }
 
 async function handleStripeEvent(stripe: Stripe, event: Stripe.Event) {
@@ -177,7 +231,22 @@ async function handleStripeEvent(stripe: Stripe, event: Stripe.Event) {
       break;
     case "customer.subscription.created":
     case "customer.subscription.updated":
-      await persistSubscription(event.data.object as Stripe.Subscription);
+      {
+        const result = await persistSubscription(
+          event.data.object as Stripe.Subscription
+        );
+        if (
+          result?.email &&
+          result.nextSubscriptionStatus === "cancels_at_period_end" &&
+          result.previousSubscriptionStatus !== "cancels_at_period_end"
+        ) {
+          await createNotificationSafely(
+            result.email,
+            "\u8ba2\u9605\u5df2\u53d6\u6d88",
+            "\u4f60\u7684\u8ba2\u9605\u5df2\u53d6\u6d88\u3002Pro \u6743\u76ca\u4ecd\u53ef\u4f7f\u7528\u5230\u5f53\u524d\u8ba2\u9605\u5468\u671f\u7ed3\u675f\u3002"
+          );
+        }
+      }
       break;
     case "customer.subscription.deleted":
       await persistSubscription(event.data.object as Stripe.Subscription, {

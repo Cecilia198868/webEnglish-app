@@ -21,6 +21,7 @@ import {
   isFreePracticeLimitReached,
   recordFreePracticeCompletion,
 } from "@/lib/freePracticeLimit";
+import type { AppLanguage } from "@/lib/i18n";
 
 type KeyboardMode = "zh" | "en" | "handwriting" | "symbols";
 type PracticeStage = "native" | "english";
@@ -135,12 +136,24 @@ type AccountPanelView =
   | "helpCenter"
   | "reportIssue"
   | "aboutSpeakFlow"
+  | "phoneTransfer"
+  | "accountManagement"
   | "appearance"
+  | "interfaceLanguage"
+  | "notifications"
   | "fontSize";
 type ProPlan = "monthly" | "yearly";
 type AppearancePreference = "light" | "dark" | "system";
 type EffectiveAppearance = "light" | "dark";
 type FontSizePreference = "small" | "standard" | "large";
+
+type InterfaceLanguageOption = {
+  code: string;
+  englishName: string;
+  localName: string;
+  region: string;
+  uiLanguage?: AppLanguage;
+};
 
 type AccountMenuAction =
   | "subscription"
@@ -149,7 +162,11 @@ type AccountMenuAction =
   | "helpCenter"
   | "reportIssue"
   | "aboutSpeakFlow"
+  | "phoneTransfer"
+  | "accountManagement"
   | "appearance"
+  | "interfaceLanguage"
+  | "notifications"
   | "fontSize"
   | "terms"
   | "privacy";
@@ -179,6 +196,25 @@ type AccountHomeRow = {
 type AccountHomeGroup = {
   rows: readonly AccountHomeRow[];
   title?: string;
+};
+
+type NotificationInboxItem = {
+  body: string;
+  id: string;
+  sender: string;
+  tag: string;
+  time: string;
+  title: string;
+  tone: "blue" | "green" | "orange" | "purple";
+  unread?: boolean;
+};
+
+type PhoneTransferBackup = {
+  app: "SpeakFlow";
+  backupType: "learning-content";
+  exportedAt: string;
+  localStorage: Record<string, string>;
+  version: 1;
 };
 
 type AccountMenuIconName =
@@ -214,6 +250,29 @@ const accountAvatarStoragePrefix = "speakflow-account-avatar";
 const appearancePreferenceStorageKey = "speakflow-appearance-preference";
 const fontSizePreferenceStorageKey = "speakflow-font-size-preference";
 const selectedVoiceStorageKey = "speakflow-selected-voice-uri";
+const phoneTransferBackupMimeType = "application/json";
+const phoneTransferBackupExactKeys = new Set([
+  "currentLessonTitle",
+  "english-app-base-language",
+  "english-app-data",
+  "english-app-language",
+  "english-app-lessons",
+  "lastStudyProgress",
+  "selected-voice-name",
+  "speakflow-appearance-preference",
+  "speakflow-font-size-preference",
+  "speakflow-free-expression-learning",
+  "speakflow-selected-voice-uri",
+  "study-gap-seconds",
+  "study-prep-seconds",
+  "vocabulary_group_mastery",
+  "vocabulary_words",
+]);
+const phoneTransferBackupKeyPrefixes = [
+  "lesson-progress-",
+  "speakflow-account-avatar:",
+  "speakflow-free-practice-usage:",
+];
 const speechSilenceDelayMs = 1000;
 const englishSpeechSilenceDelayMs = 2000;
 const speechNoInputTimeoutMs = 12000;
@@ -240,6 +299,92 @@ function isAppearancePreference(value: string): value is AppearancePreference {
 
 function isFontSizePreference(value: string): value is FontSizePreference {
   return value === "small" || value === "standard" || value === "large";
+}
+
+function shouldIncludePhoneTransferStorageKey(key: string) {
+  return (
+    phoneTransferBackupExactKeys.has(key) ||
+    phoneTransferBackupKeyPrefixes.some((prefix) => key.startsWith(prefix))
+  );
+}
+
+function createPhoneTransferBackup(): PhoneTransferBackup {
+  const localStorageData: Record<string, string> = {};
+
+  for (let index = 0; index < window.localStorage.length; index += 1) {
+    const key = window.localStorage.key(index);
+    if (!key || !shouldIncludePhoneTransferStorageKey(key)) continue;
+
+    const value = window.localStorage.getItem(key);
+    if (typeof value === "string") {
+      localStorageData[key] = value;
+    }
+  }
+
+  return {
+    app: "SpeakFlow",
+    backupType: "learning-content",
+    exportedAt: new Date().toISOString(),
+    localStorage: localStorageData,
+    version: 1,
+  };
+}
+
+function parsePhoneTransferBackup(rawText: string): PhoneTransferBackup {
+  const parsed = JSON.parse(rawText) as Partial<PhoneTransferBackup>;
+
+  if (
+    parsed.app !== "SpeakFlow" ||
+    parsed.backupType !== "learning-content" ||
+    parsed.version !== 1 ||
+    !parsed.localStorage ||
+    typeof parsed.localStorage !== "object"
+  ) {
+    throw new Error("Invalid SpeakFlow backup file");
+  }
+
+  const localStorageData: Record<string, string> = {};
+
+  Object.entries(parsed.localStorage).forEach(([key, value]) => {
+    if (
+      shouldIncludePhoneTransferStorageKey(key) &&
+      typeof value === "string"
+    ) {
+      localStorageData[key] = value;
+    }
+  });
+
+  return {
+    app: "SpeakFlow",
+    backupType: "learning-content",
+    exportedAt:
+      typeof parsed.exportedAt === "string"
+        ? parsed.exportedAt
+        : new Date().toISOString(),
+    localStorage: localStorageData,
+    version: 1,
+  };
+}
+
+function restorePhoneTransferBackup(backup: PhoneTransferBackup) {
+  Object.entries(backup.localStorage).forEach(([key, value]) => {
+    if (shouldIncludePhoneTransferStorageKey(key)) {
+      window.localStorage.setItem(key, value);
+    }
+  });
+}
+
+function getPhoneTransferBackupFileName() {
+  return `speakflow-learning-backup-${new Date().toISOString().slice(0, 10)}.json`;
+}
+
+function CloseGlyph({ className = "" }: { className?: string }) {
+  return (
+    <span aria-hidden="true" className={`relative block h-4 w-4 ${className}`}>
+      <span className="absolute left-1/2 top-1/2 h-[2.4px] w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-current" />
+      <span className="absolute left-1/2 top-1/2 h-[2.4px] w-4 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full bg-current" />
+    </span>
+  );
 }
 
 function AccountLineIcon({
@@ -818,6 +963,41 @@ const helpCenterContent: Record<
         ],
       },
       {
+        title: "Settings and Device Management",
+        description:
+          "Use Account settings to change devices, language, notification preferences, and account records.",
+        articles: [
+          {
+            title: "How do I switch phones?",
+            body: [
+              "Open Account, Switch Phones. On the old phone, save the learning backup and share it to your new phone through WeChat, AirDrop, email, Google Drive, Files, or another share option.",
+              "On the new phone, open Switch Phones and choose the backup file. SpeakFlow restores local courses, vocabulary, progress, and settings saved in the backup.",
+            ],
+          },
+          {
+            title: "How do I change the interface language?",
+            body: [
+              "Open Account, Interface Language. English and Simplified Chinese are available now, and more translation packs are listed as planned languages.",
+              "This changes SpeakFlow menus, account pages, and settings on the current device.",
+            ],
+          },
+          {
+            title: "What appears in Notifications?",
+            body: [
+              "Open Account, Notifications to read system messages from SpeakFlow, including subscription changes, billing status, account security, and support replies.",
+              "For example, if you cancel a subscription but still have Pro access until the period end, SpeakFlow shows that message here.",
+            ],
+          },
+          {
+            title: "Where is account management?",
+            body: [
+              "Open Account, Account Management under Data & Security. It shows your contact email, login guidance, and the account deletion request entry.",
+              "Deletion requests go through Contact & Feedback so SpeakFlow can verify identity before removing account records.",
+            ],
+          },
+        ],
+      },
+      {
         title: "Account and Subscription",
         description:
           "Use the same login email for practice, payment, and restoration.",
@@ -1026,6 +1206,41 @@ const helpCenterContent: Record<
         ],
       },
       {
+        title: "设置与设备管理",
+        description:
+          "在账户设置里处理更换手机、界面语言、通知偏好和账号管理。",
+        articles: [
+          {
+            title: "如何更换手机？",
+            body: [
+              "打开 账户、更换手机。在旧手机上保存学习内容，然后通过微信、AirDrop、邮件、Google Drive 或文件分享发送到新手机。",
+              "在新手机上打开更换手机，选择备份文件即可恢复本地课程、单词、学习进度和设置。",
+            ],
+          },
+          {
+            title: "如何更改界面语言？",
+            body: [
+              "打开 账户、界面语言。目前英文和简体中文可用，其他语言会作为计划中的翻译包显示。",
+              "这会改变当前设备上 SpeakFlow 的菜单、账户页和设置页语言。",
+            ],
+          },
+          {
+            title: "通知里会出现什么？",
+            body: [
+              "打开 账户、通知，可以查看 SpeakFlow 发给你的系统消息，包括订阅变动、账单状态、账号安全和客服回复。",
+              "例如，用户取消订阅但 Pro 权限仍可使用到到期日时，这里会显示清楚的提醒。",
+            ],
+          },
+          {
+            title: "账号管理在哪里？",
+            body: [
+              "打开 账户、数据与安全、账号管理。这里会显示联系邮箱、登录安全说明和删除账号入口。",
+              "删除账号会先进入联系与反馈，这样 SpeakFlow 可以先核对身份再处理。",
+            ],
+          },
+        ],
+      },
+      {
         title: "账户和订阅",
         description: "登录、付款、恢复购买最好始终使用同一个邮箱。",
         articles: [
@@ -1115,6 +1330,10 @@ const supportFeedbackContent = {
       { label: "Microphone or playback", value: "voice" },
       { label: "AI expression quality", value: "ai_expression" },
       { label: "Practice flow", value: "practice_flow" },
+      { label: "Switch phones or backup", value: "phone_transfer" },
+      { label: "Interface language", value: "interface_language" },
+      { label: "Notifications", value: "notifications" },
+      { label: "Account management or deletion", value: "account_management" },
       { label: "Account or login", value: "account" },
       { label: "Suggestion", value: "suggestion" },
       { label: "Other", value: "other" },
@@ -1122,15 +1341,16 @@ const supportFeedbackContent = {
     contactEmail: "Reply email",
     contactPlaceholder: "you@example.com",
     description:
-      "Use this to contact SpeakFlow about bugs, payment issues, Pro status, voice problems, AI output, or product suggestions.",
+      "Use this to contact SpeakFlow about bugs, payment issues, Pro status, voice problems, phone transfer, interface language, notifications, account management, AI output, or product suggestions.",
     detailHelp:
-      "Helpful details: what you were doing, the exact screen, browser, Pro or Free status, and one example sentence if speech or AI output was involved.",
+      "Helpful details: what you were doing, the exact screen, browser, Pro or Free status, device type, and one example sentence if speech or AI output was involved.",
     error: "Unable to send feedback. Please try again.",
     message: "What happened?",
     messagePlaceholder:
       "Describe the issue or suggestion. If possible, include the sentence you were practicing and what you expected.",
     page: "Related screen",
-    pagePlaceholder: "For example: Free speaking practice, Pro page, Checkout",
+    pagePlaceholder:
+      "For example: Switch Phones, Interface Language, Notifications, Account Management, Pro page",
     required: "Please describe the issue in more detail.",
     submit: "Send feedback",
     submitting: "Sending...",
@@ -1144,6 +1364,10 @@ const supportFeedbackContent = {
       { label: "麦克风或朗读", value: "voice" },
       { label: "AI 表达质量", value: "ai_expression" },
       { label: "练习流程", value: "practice_flow" },
+      { label: "更换手机或备份", value: "phone_transfer" },
+      { label: "界面语言", value: "interface_language" },
+      { label: "通知", value: "notifications" },
+      { label: "账号管理或删除", value: "account_management" },
       { label: "账户或登录", value: "account" },
       { label: "功能建议", value: "suggestion" },
       { label: "其他", value: "other" },
@@ -1151,15 +1375,15 @@ const supportFeedbackContent = {
     contactEmail: "回复邮箱",
     contactPlaceholder: "you@example.com",
     description:
-      "这里就是用户联系 SpeakFlow 的入口。付款异常、Pro 状态、麦克风、朗读、AI 表达、功能建议，都可以从这里发给你。",
+      "这里是用户联系 SpeakFlow 的入口。付款异常、Pro 状态、麦克风、更换手机、界面语言、通知、账号管理、AI 表达和功能建议，都可以从这里发给你。",
     detailHelp:
-      "最好写清楚：当时在做什么、在哪个界面、使用什么浏览器、账号是 Pro 还是免费；如果和语音或 AI 表达有关，附上一条例句最有用。",
+      "最好写清楚：当时在做什么、在哪个界面、用什么浏览器或手机、账号是 Pro 还是免费；如果和语音或 AI 表达有关，附上一条例句最有用。",
     error: "反馈发送失败，请稍后再试。",
     message: "具体问题",
     messagePlaceholder:
       "请描述遇到的问题或建议。可以写下正在练习的句子，以及你原本期待的结果。",
     page: "相关界面",
-    pagePlaceholder: "例如：自由表达、Pro 页面、付款页面",
+    pagePlaceholder: "例如：更换手机、界面语言、通知、账号管理、Pro 页面",
     required: "请把问题描述得更具体一点。",
     submit: "发送反馈",
     submitting: "正在发送...",
@@ -1167,6 +1391,42 @@ const supportFeedbackContent = {
     type: "问题类型",
   },
 } as const;
+
+const interfaceLanguageOptions: readonly InterfaceLanguageOption[] = [
+  {
+    code: "en",
+    englishName: "English",
+    localName: "English",
+    region: "Global",
+    uiLanguage: "en",
+  },
+  {
+    code: "zh-CN",
+    englishName: "Chinese (Simplified)",
+    localName: "\u7b80\u4f53\u4e2d\u6587",
+    region: "Asia-Pacific",
+    uiLanguage: "zh-CN",
+  },
+  { code: "es", englishName: "Spanish", localName: "Espa\u00f1ol", region: "Americas / Europe" },
+  { code: "pt-BR", englishName: "Portuguese (Brazil)", localName: "Portugu\u00eas", region: "Americas" },
+  { code: "fr", englishName: "French", localName: "Fran\u00e7ais", region: "Europe / Africa" },
+  { code: "de", englishName: "German", localName: "Deutsch", region: "Europe" },
+  { code: "ja", englishName: "Japanese", localName: "\u65e5\u672c\u8a9e", region: "Asia-Pacific" },
+  { code: "ko", englishName: "Korean", localName: "\ud55c\uad6d\uc5b4", region: "Asia-Pacific" },
+  { code: "vi", englishName: "Vietnamese", localName: "Ti\u1ebfng Vi\u1ec7t", region: "Asia-Pacific" },
+  { code: "id", englishName: "Indonesian", localName: "Bahasa Indonesia", region: "Asia-Pacific" },
+  { code: "th", englishName: "Thai", localName: "\u0e44\u0e17\u0e22", region: "Asia-Pacific" },
+  { code: "hi", englishName: "Hindi", localName: "\u0939\u093f\u0928\u094d\u0926\u0940", region: "South Asia" },
+  { code: "ar", englishName: "Arabic", localName: "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", region: "Middle East / Africa" },
+  { code: "tr", englishName: "Turkish", localName: "T\u00fcrk\u00e7e", region: "Europe / Middle East" },
+  { code: "ru", englishName: "Russian", localName: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439", region: "Europe / Asia" },
+  { code: "it", englishName: "Italian", localName: "Italiano", region: "Europe" },
+  { code: "nl", englishName: "Dutch", localName: "Nederlands", region: "Europe" },
+  { code: "pl", englishName: "Polish", localName: "Polski", region: "Europe" },
+  { code: "uk", englishName: "Ukrainian", localName: "\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430", region: "Europe" },
+  { code: "sv", englishName: "Swedish", localName: "Svenska", region: "Europe" },
+  { code: "he", englishName: "Hebrew", localName: "\u05e2\u05d1\u05e8\u05d9\u05ea", region: "Middle East" },
+];
 
 const displaySettingsContent = {
   en: {
@@ -1210,6 +1470,13 @@ const displaySettingsContent = {
         value: "large",
       },
     ] as const,
+    interfaceLanguageAvailable: "Available now",
+    interfaceLanguageComingSoon: "Translation pack planned",
+    interfaceLanguageCurrent: "Current interface language",
+    interfaceLanguageDescription:
+      "Choose the language used by SpeakFlow's menus, account screens, and settings. Only completed translation packs can be selected.",
+    interfaceLanguageMore:
+      "More interface languages are listed so global learners can see what is planned next.",
     saved: "Saved on this device.",
   },
   "zh-CN": {
@@ -1252,6 +1519,13 @@ const displaySettingsContent = {
         value: "large",
       },
     ] as const,
+    interfaceLanguageAvailable: "\u73b0\u5728\u53ef\u7528",
+    interfaceLanguageComingSoon: "\u7ffb\u8bd1\u5305\u8ba1\u5212\u4e2d",
+    interfaceLanguageCurrent: "\u5f53\u524d\u754c\u9762\u8bed\u8a00",
+    interfaceLanguageDescription:
+      "\u9009\u62e9 SpeakFlow \u83dc\u5355\u3001\u8d26\u6237\u9875\u548c\u8bbe\u7f6e\u9875\u4f7f\u7528\u7684\u754c\u9762\u8bed\u8a00\u3002\u53ea\u6709\u5df2\u5b8c\u6210\u7ffb\u8bd1\u7684\u8bed\u8a00\u53ef\u4ee5\u5207\u6362\u3002",
+    interfaceLanguageMore:
+      "\u66f4\u591a\u754c\u9762\u8bed\u8a00\u5df2\u5217\u5165\u8ba1\u5212\uff0c\u65b9\u4fbf\u9762\u5411\u5168\u7403\u7528\u6237\u9010\u6b65\u6269\u5c55\u3002",
     saved: "已保存到这台设备。",
   },
 } satisfies Record<
@@ -1271,13 +1545,198 @@ const displaySettingsContent = {
       label: string;
       value: FontSizePreference;
     }[];
+    interfaceLanguageAvailable: string;
+    interfaceLanguageComingSoon: string;
+    interfaceLanguageCurrent: string;
+    interfaceLanguageDescription: string;
+    interfaceLanguageMore: string;
     saved: string;
   }
 >;
 
+const notificationSettingsContent = {
+  en: {
+    activeProBody:
+      "Your SpeakFlow Pro access is active. Subscription and billing changes will appear here.",
+    activeProTitle: "SpeakFlow Pro is active",
+    canceledBodyPrefix:
+      "Your subscription has been canceled, but your Pro access remains available until",
+    canceledBodySuffix: "You can keep using Pro features before that date.",
+    canceledTitle: "Your subscription has been canceled",
+    description:
+      "System messages, subscription updates, account security, and support replies from SpeakFlow appear here.",
+    emptyBody:
+      "Subscription updates, support replies, security alerts, and important system messages will appear in this inbox.",
+    emptyTitle: "No new notifications",
+    inboxTitle: "Inbox",
+    justNow: "Just now",
+    read: "Read",
+    senderSupport: "SpeakFlow Support",
+    senderSystem: "SpeakFlow System",
+    systemBody:
+      "Notifications now work like an inbox. Important messages from SpeakFlow will be collected here instead of being mixed with settings.",
+    systemTag: "System",
+    systemTitle: "Notification inbox is ready",
+    tagAccount: "Account",
+    tagSubscription: "Subscription",
+    unread: "Unread",
+  },
+  "zh-CN": {
+    activeProBody:
+      "\u4f60\u7684 SpeakFlow Pro \u6743\u9650\u6b63\u5e38\u751f\u6548\u3002\u8ba2\u9605\u548c\u8d26\u5355\u53d8\u52a8\u4f1a\u663e\u793a\u5728\u8fd9\u91cc\u3002",
+    activeProTitle: "SpeakFlow Pro \u5df2\u751f\u6548",
+    canceledBodyPrefix:
+      "\u60a8\u7684\u8ba2\u9605\u5df2\u53d6\u6d88\uff0c\u4f46 Pro \u6743\u9650\u4ecd\u53ef\u4e00\u76f4\u4f7f\u7528\u5230",
+    canceledBodySuffix:
+      "\u5728\u6b64\u65e5\u671f\u524d\uff0c\u6240\u6709 Pro \u529f\u80fd\u4e0d\u53d7\u5f71\u54cd\u3002",
+    canceledTitle: "\u60a8\u7684\u8ba2\u9605\u5df2\u53d6\u6d88",
+    description:
+      "SpeakFlow \u53d1\u7ed9\u4f60\u7684\u7cfb\u7edf\u6d88\u606f\u3001\u8ba2\u9605\u53d8\u52a8\u3001\u8d26\u6237\u5b89\u5168\u548c\u5ba2\u670d\u56de\u590d\u4f1a\u663e\u793a\u5728\u8fd9\u91cc\u3002",
+    emptyBody:
+      "\u8ba2\u9605\u53d8\u52a8\u3001\u5ba2\u670d\u56de\u590d\u3001\u5b89\u5168\u63d0\u9192\u548c\u91cd\u8981\u7cfb\u7edf\u6d88\u606f\u4f1a\u51fa\u73b0\u5728\u8fd9\u4e2a\u6536\u4ef6\u7bb1\u91cc\u3002",
+    emptyTitle: "\u6682\u65e0\u65b0\u901a\u77e5",
+    inboxTitle: "\u6536\u4ef6\u7bb1",
+    justNow: "\u521a\u521a",
+    read: "\u5df2\u8bfb",
+    senderSupport: "SpeakFlow \u5ba2\u670d",
+    senderSystem: "SpeakFlow \u7cfb\u7edf",
+    systemBody:
+      "\u901a\u77e5\u5df2\u6539\u4e3a\u6536\u4ef6\u7bb1\u5f62\u5f0f\u3002SpeakFlow \u7684\u91cd\u8981\u6d88\u606f\u4f1a\u7edf\u4e00\u6536\u5728\u8fd9\u91cc\uff0c\u4e0d\u518d\u548c\u8bbe\u7f6e\u5f00\u5173\u6df7\u5728\u4e00\u8d77\u3002",
+    systemTag: "\u7cfb\u7edf",
+    systemTitle: "\u901a\u77e5\u6536\u4ef6\u7bb1\u5df2\u542f\u7528",
+    tagAccount: "\u8d26\u6237",
+    tagSubscription: "\u8ba2\u9605",
+    unread: "\u672a\u8bfb",
+  },
+} satisfies Record<
+  "en" | "zh-CN",
+  {
+    activeProBody: string;
+    activeProTitle: string;
+    canceledBodyPrefix: string;
+    canceledBodySuffix: string;
+    canceledTitle: string;
+    description: string;
+    emptyBody: string;
+    emptyTitle: string;
+    inboxTitle: string;
+    justNow: string;
+    read: string;
+    senderSupport: string;
+    senderSystem: string;
+    systemBody: string;
+    systemTag: string;
+    systemTitle: string;
+    tagAccount: string;
+    tagSubscription: string;
+    unread: string;
+  }
+>;
+
+const phoneTransferContent = {
+  en: {
+    backupSaved:
+      "Saved. Send this backup file to your new phone, then restore it there.",
+    chooseBackup: "Choose backup file",
+    description:
+      "Before switching phones, save your learning content. After installing SpeakFlow on the new phone, restore the backup file.",
+    exportHelp:
+      "After saving, share the backup through WeChat, AirDrop, email, Google Drive, Files, or any app your phone offers.",
+    exportTitle: "Save learning content",
+    importHelp:
+      "On the new phone, choose the SpeakFlow backup file you received. Your courses, vocabulary, progress, and settings will be restored.",
+    importTitle: "Restore learning content",
+    invalidFile: "This is not a valid SpeakFlow backup file.",
+    newPhone: "New phone",
+    oldPhone: "Old phone",
+    restoreSuccess:
+      "Restored. Reopen your courses or vocabulary page to see the recovered content.",
+    saveButton: "Save to phone",
+    saving: "Saving...",
+    shareAgain: "Share backup file",
+    shareChannels: ["WeChat", "AirDrop", "Email", "Google Drive", "Files"],
+    sharingFailed:
+      "The backup was created, but sharing was not available. It has been downloaded instead.",
+    subtitle:
+      "Save, share, then restore. You do not need to find a hidden folder.",
+    title: "Switch Phones",
+  },
+  "zh-CN": {
+    backupSaved:
+      "\u4fdd\u5b58\u6210\u529f\u3002\u8bf7\u5c06\u8fd9\u4e2a\u5907\u4efd\u6587\u4ef6\u53d1\u9001\u5230\u4f60\u7684\u65b0\u624b\u673a\uff0c\u7136\u540e\u5728\u65b0\u624b\u673a\u4e0a\u6062\u590d\u3002",
+    chooseBackup: "\u9009\u62e9\u5907\u4efd\u6587\u4ef6",
+    description:
+      "\u6362\u624b\u673a\u524d\uff0c\u8bf7\u5148\u4fdd\u5b58\u5b66\u4e60\u5185\u5bb9\u3002\u65b0\u624b\u673a\u5b89\u88c5 SpeakFlow \u540e\uff0c\u518d\u6062\u590d\u5373\u53ef\u3002",
+    exportHelp:
+      "\u4fdd\u5b58\u540e\uff0c\u53ef\u901a\u8fc7\u5fae\u4fe1\u3001AirDrop\u3001\u90ae\u4ef6\u3001Google Drive \u6216\u6587\u4ef6\u53d1\u9001\u5230\u65b0\u624b\u673a\u3002",
+    exportTitle: "\u4fdd\u5b58\u5b66\u4e60\u5185\u5bb9",
+    importHelp:
+      "\u5728\u65b0\u624b\u673a\u4e0a\uff0c\u9009\u62e9\u4f60\u6536\u5230\u7684 SpeakFlow \u5907\u4efd\u6587\u4ef6\u3002\u8bfe\u7a0b\u3001\u5355\u8bcd\u3001\u5b66\u4e60\u8fdb\u5ea6\u548c\u8bbe\u7f6e\u4f1a\u88ab\u6062\u590d\u3002",
+    importTitle: "\u6062\u590d\u5b66\u4e60\u5185\u5bb9",
+    invalidFile: "\u8fd9\u4e0d\u662f\u6709\u6548\u7684 SpeakFlow \u5907\u4efd\u6587\u4ef6\u3002",
+    newPhone: "\u65b0\u624b\u673a",
+    oldPhone: "\u65e7\u624b\u673a",
+    restoreSuccess:
+      "\u6062\u590d\u6210\u529f\u3002\u91cd\u65b0\u6253\u5f00\u8bfe\u7a0b\u6216\u5355\u8bcd\u9875\uff0c\u5c31\u80fd\u770b\u5230\u6062\u590d\u7684\u5185\u5bb9\u3002",
+    saveButton: "\u4fdd\u5b58\u5230\u624b\u673a",
+    saving: "\u6b63\u5728\u4fdd\u5b58...",
+    shareAgain: "\u5206\u4eab\u5907\u4efd\u6587\u4ef6",
+    shareChannels: ["\u5fae\u4fe1", "AirDrop", "\u90ae\u4ef6", "Google Drive", "\u6587\u4ef6"],
+    sharingFailed:
+      "\u5907\u4efd\u5df2\u521b\u5efa\uff0c\u4f46\u5f53\u524d\u8bbe\u5907\u65e0\u6cd5\u76f4\u63a5\u5206\u4eab\u3002\u5df2\u6539\u4e3a\u4e0b\u8f7d\u5907\u4efd\u6587\u4ef6\u3002",
+    subtitle:
+      "\u4fdd\u5b58\u3001\u5206\u4eab\u3001\u65b0\u624b\u673a\u6062\u590d\u3002\u4e0d\u9700\u8981\u81ea\u5df1\u627e\u6587\u4ef6\u5939\u3002",
+    title: "\u66f4\u6362\u624b\u673a",
+  },
+} as const;
+
+const accountManagementContent = {
+  en: {
+    contactEmailDescription:
+      "This is the login email SpeakFlow uses for subscription status, support replies, and account identification.",
+    contactEmailTitle: "Contact email",
+    deleteButton: "Request account deletion",
+    deleteDescription:
+      "Account deletion is permanent. SpeakFlow support will verify the request before removing account records and subscription links.",
+    deleteMessage:
+      "I want to delete my SpeakFlow account. Please help me verify and process this request.",
+    deleteTitle: "Delete account",
+    description:
+      "Manage the account details that affect login, support contact, and account removal.",
+    feedbackPageName: "Account Management",
+    loginSecurityDescription:
+      "Use the same sign-in email for practice, subscription management, and purchase restoration. Do not share your login session with others.",
+    loginSecurityTitle: "Login and security",
+    supportNote:
+      "For now, deletion requests are handled through Contact & Feedback so support can verify identity and protect paid accounts.",
+    title: "Account Management",
+  },
+  "zh-CN": {
+    contactEmailDescription:
+      "\u8fd9\u662f SpeakFlow \u7528\u6765\u8bc6\u522b\u767b\u5f55\u3001\u8ba2\u9605\u72b6\u6001\u3001\u5ba2\u670d\u56de\u590d\u548c\u8d26\u6237\u8bb0\u5f55\u7684\u90ae\u7bb1\u3002",
+    contactEmailTitle: "\u8054\u7cfb\u65b9\u5f0f",
+    deleteButton: "\u7533\u8bf7\u5220\u9664\u8d26\u53f7",
+    deleteDescription:
+      "\u5220\u9664\u8d26\u53f7\u662f\u4e0d\u53ef\u6062\u590d\u7684\u64cd\u4f5c\u3002SpeakFlow \u9700\u8981\u5148\u6838\u5bf9\u8eab\u4efd\uff0c\u518d\u5904\u7406\u8d26\u6237\u8bb0\u5f55\u548c\u8ba2\u9605\u5173\u8054\u3002",
+    deleteMessage:
+      "\u6211\u60f3\u5220\u9664\u6211\u7684 SpeakFlow \u8d26\u53f7\uff0c\u8bf7\u5e2e\u6211\u6838\u5bf9\u5e76\u5904\u7406\u8fd9\u4e2a\u8bf7\u6c42\u3002",
+    deleteTitle: "\u5220\u9664\u8d26\u53f7",
+    description:
+      "\u7ba1\u7406\u4e0e\u767b\u5f55\u3001\u5ba2\u670d\u8054\u7cfb\u548c\u8d26\u53f7\u5220\u9664\u76f8\u5173\u7684\u4fe1\u606f\u3002",
+    feedbackPageName: "\u8d26\u53f7\u7ba1\u7406",
+    loginSecurityDescription:
+      "\u8bf7\u7528\u540c\u4e00\u4e2a\u90ae\u7bb1\u767b\u5f55\u7ec3\u4e60\u3001\u7ba1\u7406\u8ba2\u9605\u548c\u6062\u590d\u8d2d\u4e70\u3002\u4e0d\u8981\u628a\u767b\u5f55\u72b6\u6001\u5206\u4eab\u7ed9\u5176\u4ed6\u4eba\u3002",
+    loginSecurityTitle: "\u767b\u5f55\u4e0e\u5b89\u5168",
+    supportNote:
+      "\u76ee\u524d\u5220\u9664\u8bf7\u6c42\u4f1a\u901a\u8fc7\u300c\u8054\u7cfb\u4e0e\u53cd\u9988\u300d\u5904\u7406\uff0c\u8fd9\u6837\u53ef\u4ee5\u5148\u6838\u5bf9\u8eab\u4efd\uff0c\u907f\u514d\u4ed8\u8d39\u8d26\u53f7\u88ab\u8bef\u5220\u3002",
+    title: "\u8d26\u53f7\u7ba1\u7406",
+  },
+} as const;
+
 const accountHomeContent = {
   en: {
     account: "Account",
+    accountManagement: "Account Management",
     contactFeedback: "Contact & Feedback",
     dataAndSecurity: "Data & Security",
     dataManagement: "Data Management",
@@ -1287,12 +1746,14 @@ const accountHomeContent = {
     interfaceLanguage: "Interface Language",
     learningExperience: "Learning Experience",
     notifications: "Notifications",
+    phoneTransfer: "Switch Phones",
     privacyPolicy: "Privacy Policy",
     signOut: "Sign Out",
     terms: "Terms of Service",
   },
   "zh-CN": {
     account: "账户",
+    accountManagement: "\u8d26\u53f7\u7ba1\u7406",
     contactFeedback: "联系与反馈",
     dataAndSecurity: "数据与安全",
     dataManagement: "数据管理",
@@ -1302,6 +1763,7 @@ const accountHomeContent = {
     interfaceLanguage: "界面语言",
     learningExperience: "学习体验",
     notifications: "通知",
+    phoneTransfer: "\u66f4\u6362\u624b\u673a",
     privacyPolicy: "隐私政策",
     signOut: "退出登录",
     terms: "用户协议",
@@ -1318,6 +1780,7 @@ const aboutSpeakFlowContent = {
       "A useful English sentence should be clear, natural, repeatable, and connected to a real situation.",
       "Good AI practice should keep the conversation moving instead of only correcting isolated mistakes.",
       "Vocabulary is easier to remember when it is saved from sentences you actually wanted to say.",
+      "Account settings should make practical tasks easy: changing phones, choosing interface language, reading system notifications, and managing account records.",
     ],
     sections: [
       {
@@ -1341,6 +1804,13 @@ const aboutSpeakFlowContent = {
           "The goal is not to collect as many words as possible. The goal is to build a personal library of expressions you can use again in real speech.",
         ],
         title: "Expression bank",
+      },
+      {
+        body: [
+          "Switch Phones exports a learning backup that can be shared directly to a new phone, then restored from the backup file.",
+          "Interface Language, Notifications, and Account Management keep global learners in control of the app language, system messages, support contact, and account deletion requests.",
+        ],
+        title: "Account settings",
       },
       {
         body: [
@@ -1375,6 +1845,7 @@ const aboutSpeakFlowContent = {
       "一句有用的英文，应该清楚、自然、能复用，并且连接真实生活场景。",
       "好的 AI 口语练习，不只是纠错，还应该让对话继续往前走。",
       "从自己真正想说的句子里收藏词汇和表达，会比孤立背单词更容易记住。",
+      "账户设置应该让真实任务变简单：更换手机、选择界面语言、查看系统通知和处理账号记录。",
     ],
     sections: [
       {
@@ -1398,6 +1869,13 @@ const aboutSpeakFlowContent = {
           "表达库的目标不是越收越多，而是沉淀一套你自己真的会在口语里再次用到的表达。",
         ],
         title: "表达库",
+      },
+      {
+        body: [
+          "更换手机会导出学习备份，保存后可以直接分享给新手机，再从备份文件恢复。",
+          "界面语言、通知和账号管理让全球用户可以控制软件语言、系统消息、客服联系方式和删除账号请求。",
+        ],
+        title: "账户设置",
       },
       {
         body: [
@@ -2026,11 +2504,13 @@ export default function SpeakEnglishPage() {
 }
 
 function SpeakEnglishClient() {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const avatarFileInputRef = useRef<HTMLInputElement | null>(null);
+  const phoneTransferBackupFileRef = useRef<File | null>(null);
+  const phoneTransferFileInputRef = useRef<HTMLInputElement | null>(null);
   const isDrawingRef = useRef(false);
   const speechBufferRef = useRef("");
   const shouldCommitSpeechRef = useRef(false);
@@ -2091,6 +2571,12 @@ function SpeakEnglishClient() {
     useState<EffectiveAppearance>("light");
   const [fontSizePreference, setFontSizePreference] =
     useState<FontSizePreference>("standard");
+  const [phoneTransferNotice, setPhoneTransferNotice] = useState("");
+  const [phoneTransferBackupName, setPhoneTransferBackupName] = useState("");
+  const [isPreparingPhoneTransferBackup, setIsPreparingPhoneTransferBackup] =
+    useState(false);
+  const [isRestoringPhoneTransferBackup, setIsRestoringPhoneTransferBackup] =
+    useState(false);
   const [selectedProPlan, setSelectedProPlan] = useState<ProPlan>("yearly");
   const [isStartingCheckout, setIsStartingCheckout] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
@@ -2159,7 +2645,13 @@ function SpeakEnglishClient() {
   const supportFeedback = supportFeedbackContent[language];
   const aboutSpeakFlow = aboutSpeakFlowContent[language];
   const displaySettings = displaySettingsContent[language];
+  const notificationSettings = notificationSettingsContent[language];
+  const phoneTransfer = phoneTransferContent[language];
+  const accountManagement = accountManagementContent[language];
   const accountHome = accountHomeContent[language];
+  const currentInterfaceLanguage =
+    interfaceLanguageOptions.find((option) => option.uiLanguage === language) ||
+    interfaceLanguageOptions[0];
   const proFeatureItems = accountCopy.proFeatures;
   const voiceMenuItemLabel = language === "en" ? "Voice" : "声音";
   const isAiGuidedMode = trainingGroundMode === "guided";
@@ -2255,8 +2747,16 @@ function SpeakEnglishClient() {
         ? accountCopy.reportIssueTitle
       : accountPanelView === "aboutSpeakFlow"
         ? accountCopy.aboutSpeakFlowTitle
+      : accountPanelView === "phoneTransfer"
+        ? phoneTransfer.title
+      : accountPanelView === "accountManagement"
+        ? accountManagement.title
       : accountPanelView === "appearance"
         ? accountCopy.appearanceTitle
+      : accountPanelView === "interfaceLanguage"
+        ? accountHome.interfaceLanguage
+      : accountPanelView === "notifications"
+        ? accountHome.notifications
       : accountPanelView === "fontSize"
         ? accountCopy.fontSizeTitle
       : accountPanelView === "voice"
@@ -2356,6 +2856,51 @@ function SpeakEnglishClient() {
     : subscriptionManagementCopy.freePlan;
   const accountCurrentPeriodEndValue =
     accountCurrentPeriodEndDateLabel || subscriptionManagementCopy.noExpiration;
+  const notificationPeriodEndLabel =
+    accountCurrentPeriodEndDateLabel ||
+    (language === "en"
+      ? "the end of your current billing period"
+      : "\u5f53\u524d\u8ba1\u8d39\u5468\u671f\u7ed3\u675f");
+  const notificationInboxItems: NotificationInboxItem[] = [
+    ...(hasCanceledAtPeriodEnd
+      ? [
+          {
+            body:
+              language === "en"
+                ? `${notificationSettings.canceledBodyPrefix} ${notificationPeriodEndLabel}. ${notificationSettings.canceledBodySuffix}`
+                : `${notificationSettings.canceledBodyPrefix} ${notificationPeriodEndLabel}\u3002${notificationSettings.canceledBodySuffix}`,
+            id: "subscription-canceled",
+            sender: notificationSettings.senderSystem,
+            tag: notificationSettings.tagSubscription,
+            time: notificationSettings.justNow,
+            title: notificationSettings.canceledTitle,
+            tone: "orange" as const,
+            unread: true,
+          },
+        ]
+      : isAccountPro
+        ? [
+            {
+              body: notificationSettings.activeProBody,
+              id: "subscription-active",
+              sender: notificationSettings.senderSystem,
+              tag: notificationSettings.tagSubscription,
+              time: notificationSettings.justNow,
+              title: notificationSettings.activeProTitle,
+              tone: "green" as const,
+            },
+          ]
+        : []),
+    {
+      body: notificationSettings.systemBody,
+      id: "notification-inbox-ready",
+      sender: notificationSettings.senderSystem,
+      tag: notificationSettings.systemTag,
+      time: notificationSettings.justNow,
+      title: notificationSettings.systemTitle,
+      tone: "purple",
+    },
+  ];
   const avatarEditorImage =
     avatarPreview || (accountImageFailed ? "" : accountImage);
 
@@ -2678,6 +3223,102 @@ function SpeakEnglishClient() {
     setSelectedClassicCourseSectionId("");
   }
 
+  function downloadPhoneTransferBackup(file: File) {
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name;
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  async function sharePhoneTransferBackup(file: File) {
+    const shareData = {
+      files: [file],
+      text:
+        language === "en"
+          ? "SpeakFlow learning backup"
+          : "SpeakFlow 学习内容备份",
+      title: "SpeakFlow",
+    };
+    const shareNavigator = navigator as Navigator & {
+      canShare?: (data: ShareData) => boolean;
+      share?: (data: ShareData) => Promise<void>;
+    };
+
+    if (
+      shareNavigator.share &&
+      (!shareNavigator.canShare || shareNavigator.canShare(shareData))
+    ) {
+      await shareNavigator.share(shareData);
+      return;
+    }
+
+    downloadPhoneTransferBackup(file);
+  }
+
+  async function savePhoneTransferBackup() {
+    if (typeof window === "undefined" || isPreparingPhoneTransferBackup) return;
+
+    setIsPreparingPhoneTransferBackup(true);
+    setPhoneTransferNotice("");
+
+    try {
+      const backup = createPhoneTransferBackup();
+      const file = new File(
+        [JSON.stringify(backup, null, 2)],
+        getPhoneTransferBackupFileName(),
+        { type: phoneTransferBackupMimeType }
+      );
+
+      phoneTransferBackupFileRef.current = file;
+      setPhoneTransferBackupName(file.name);
+      setPhoneTransferNotice(phoneTransfer.backupSaved);
+
+      try {
+        await sharePhoneTransferBackup(file);
+      } catch {
+        downloadPhoneTransferBackup(file);
+        setPhoneTransferNotice(phoneTransfer.sharingFailed);
+      }
+    } catch {
+      setPhoneTransferNotice(phoneTransfer.invalidFile);
+    } finally {
+      setIsPreparingPhoneTransferBackup(false);
+    }
+  }
+
+  async function shareSavedPhoneTransferBackup() {
+    const file = phoneTransferBackupFileRef.current;
+
+    if (!file) {
+      await savePhoneTransferBackup();
+      return;
+    }
+
+    try {
+      await sharePhoneTransferBackup(file);
+    } catch {
+      downloadPhoneTransferBackup(file);
+      setPhoneTransferNotice(phoneTransfer.sharingFailed);
+    }
+  }
+
+  async function restorePhoneTransferBackupFile(file: File) {
+    setIsRestoringPhoneTransferBackup(true);
+    setPhoneTransferNotice("");
+
+    try {
+      const backup = parsePhoneTransferBackup(await file.text());
+      restorePhoneTransferBackup(backup);
+      setPhoneTransferNotice(phoneTransfer.restoreSuccess);
+    } catch {
+      setPhoneTransferNotice(phoneTransfer.invalidFile);
+    } finally {
+      setIsRestoringPhoneTransferBackup(false);
+    }
+  }
+
   function showFreePracticeLimit() {
     setShowFreePracticeLimitModal(true);
   }
@@ -2711,6 +3352,16 @@ function SpeakEnglishClient() {
     if (hasProAccess(accountSubscriptionStatus)) return;
 
     recordFreePracticeCompletion("free", freePracticeRoundIdRef.current);
+  }
+
+  function requestAccountDeletion() {
+    setShowAvatarEditor(false);
+    setSupportIssueType("account_management");
+    setSupportContactEmail((current) => current || accountEmail);
+    setSupportRelatedPage(accountManagement.feedbackPageName);
+    setSupportMessage(accountManagement.deleteMessage);
+    setSupportNotice("");
+    setAccountPanelView("reportIssue");
   }
 
   function handleAccountMenuAction(action?: AccountMenuAction) {
@@ -2747,15 +3398,39 @@ function SpeakEnglishClient() {
       return;
     }
 
+    if (action === "phoneTransfer") {
+      setShowAvatarEditor(false);
+      setAccountPanelView("phoneTransfer");
+      return;
+    }
+
+    if (action === "accountManagement") {
+      setShowAvatarEditor(false);
+      setAccountPanelView("accountManagement");
+      return;
+    }
+
     if (action === "appearance") {
       setShowAvatarEditor(false);
       setAccountPanelView("appearance");
       return;
     }
 
+    if (action === "interfaceLanguage") {
+      setShowAvatarEditor(false);
+      setAccountPanelView("interfaceLanguage");
+      return;
+    }
+
     if (action === "fontSize") {
       setShowAvatarEditor(false);
       setAccountPanelView("fontSize");
+      return;
+    }
+
+    if (action === "notifications") {
+      setShowAvatarEditor(false);
+      window.location.href = "/notifications";
       return;
     }
 
@@ -3813,14 +4488,29 @@ function SpeakEnglishClient() {
       rows: [
         { action: "voice", icon: "headphones", label: voiceMenuItemLabel },
         { action: "fontSize", icon: "font", label: accountHome.fontSize },
-        { icon: "globe", label: accountHome.interfaceLanguage },
+        {
+          action: "interfaceLanguage",
+          icon: "globe",
+          label: accountHome.interfaceLanguage,
+        },
         { action: "appearance", icon: "moon", label: accountCopy.appearanceTitle },
-        { icon: "bell", label: accountHome.notifications },
+        { action: "notifications", icon: "bell", label: accountHome.notifications },
       ],
       title: accountHome.learningExperience,
     },
     {
-      rows: [{ icon: "cloud", label: accountHome.dataManagement }],
+      rows: [
+        {
+          action: "phoneTransfer",
+          icon: "cloud",
+          label: accountHome.phoneTransfer,
+        },
+        {
+          action: "accountManagement",
+          icon: "lock",
+          label: accountHome.accountManagement,
+        },
+      ],
       title: accountHome.dataAndSecurity,
     },
     {
@@ -3937,13 +4627,32 @@ function SpeakEnglishClient() {
 
           {showAccountMenu ? (
             <div className="sf-account-panel absolute inset-0 z-50 flex flex-col bg-[linear-gradient(180deg,#f0eaff_0%,#f7f3ff_100%)] px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-2xl">
-              {accountPanelView === "menu" ? null : accountPanelView === "subscription" ||
+              {accountPanelView === "menu" ? (
+                <div className="flex shrink-0 justify-end">
+                  <button
+                    type="button"
+                    aria-label={accountCopy.closeAccountMenu}
+                    onClick={() => {
+                      setShowAccountMenu(false);
+                      setAccountPanelView("menu");
+                      setShowAvatarEditor(false);
+                    }}
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/65 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.78),0_10px_24px_rgba(84,72,146,0.1)]"
+                  >
+                    <CloseGlyph />
+                  </button>
+                </div>
+              ) : accountPanelView === "subscription" ||
               accountPanelView === "checkout" ||
               accountPanelView === "manageSubscription" ||
               accountPanelView === "helpCenter" ||
               accountPanelView === "reportIssue" ||
               accountPanelView === "aboutSpeakFlow" ||
+              accountPanelView === "phoneTransfer" ||
+              accountPanelView === "accountManagement" ||
               accountPanelView === "appearance" ||
+              accountPanelView === "interfaceLanguage" ||
+              accountPanelView === "notifications" ||
               accountPanelView === "fontSize" ? (
                 <div className="grid shrink-0 grid-cols-[2.75rem_1fr_2.75rem] items-center gap-3">
                   <button
@@ -3992,9 +4701,9 @@ function SpeakEnglishClient() {
                       setAccountPanelView("menu");
                       setShowAvatarEditor(false);
                     }}
-                    className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.35rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/65 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.78),0_10px_24px_rgba(84,72,146,0.1)]"
                   >
-                    ×
+                    <CloseGlyph />
                   </button>
                 </div>
               ) : (
@@ -4043,9 +4752,9 @@ function SpeakEnglishClient() {
                       setAccountPanelView("menu");
                       setShowAvatarEditor(false);
                     }}
-                    className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[1.45rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/65 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.78),0_10px_24px_rgba(84,72,146,0.1)]"
                   >
-                    ×
+                    <CloseGlyph />
                   </button>
                 </div>
               )}
@@ -4053,7 +4762,7 @@ function SpeakEnglishClient() {
               <div
                 className={`sf-account-panel-scroll min-h-0 flex-1 overflow-y-auto ${
                   accountPanelView === "menu"
-                    ? "mt-0 pr-0"
+                    ? "mt-4 pr-0"
                     : accountPanelView === "account"
                       ? "mt-10 pr-0"
                       : "mt-7 pr-1"
@@ -4061,11 +4770,7 @@ function SpeakEnglishClient() {
               >
                 {accountPanelView === "menu" ? (
                   <div className="pb-5 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => setAccountPanelView("account")}
-                      className="mb-5 flex min-h-[6.1rem] w-full items-center gap-4 rounded-[28px] bg-white/82 px-5 py-5 text-left shadow-[0_22px_60px_rgba(84,72,146,0.12)] ring-1 ring-white/88"
-                    >
+                    <div className="mb-5 flex min-h-[6.1rem] w-full items-center gap-4 rounded-[28px] bg-white/82 px-5 py-5 text-left shadow-[0_22px_60px_rgba(84,72,146,0.12)] ring-1 ring-white/88">
                       <span className="grid h-[4.65rem] w-[4.65rem] shrink-0 place-items-center overflow-hidden rounded-full bg-[#f7f4ff] text-[1rem] font-extrabold text-white shadow-[0_14px_28px_rgba(84,72,146,0.16)]">
                         {accountImage && !accountImageFailed ? (
                           // eslint-disable-next-line @next/next/no-img-element
@@ -4089,10 +4794,10 @@ function SpeakEnglishClient() {
                           {accountEmail || accountCopy.fallbackEmail}
                         </span>
                       </span>
-                      <span className="shrink-0 text-[2.2rem] font-light leading-none text-[#7f7896]">
+                      <span className="hidden shrink-0 text-[2.2rem] font-light leading-none text-[#7f7896]">
                         ›
                       </span>
-                    </button>
+                    </div>
 
                     {accountHomeGroups.map((group) => (
                       <section key={group.title || "membership"} className="mt-6">
@@ -4447,6 +5152,169 @@ function SpeakEnglishClient() {
                       ))}
                     </div>
                   </section>
+                ) : accountPanelView === "phoneTransfer" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[28px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <div className="flex items-start gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          <AccountLineIcon name="cloud" />
+                        </span>
+                        <div>
+                          <h3 className="text-[1.36rem] font-black leading-7 text-[#201833]">
+                            {phoneTransfer.title}
+                          </h3>
+                          <p className="mt-2 text-[0.96rem] font-bold leading-7 text-[#4b4267]">
+                            {phoneTransfer.description}
+                          </p>
+                          <p className="mt-2 text-[0.86rem] font-extrabold leading-6 text-[#8264ff]">
+                            {phoneTransfer.subtitle}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 rounded-[26px] bg-white/72 px-5 py-5 shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                      <span className="rounded-full bg-[#efeaff] px-3 py-1 text-[0.78rem] font-extrabold text-[#8264ff]">
+                        {phoneTransfer.oldPhone}
+                      </span>
+                      <h3 className="mt-4 text-[1.12rem] font-black leading-7 text-[#201833]">
+                        ① {phoneTransfer.exportTitle}
+                      </h3>
+                      <p className="mt-2 text-[0.92rem] font-bold leading-6 text-[#7f7896]">
+                        {phoneTransfer.exportHelp}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => void savePhoneTransferBackup()}
+                        disabled={isPreparingPhoneTransferBackup}
+                        className="mt-4 min-h-12 w-full rounded-[18px] bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] px-4 text-[0.98rem] font-black text-white shadow-[0_16px_34px_rgba(126,92,255,0.22)] transition disabled:opacity-60"
+                      >
+                        {isPreparingPhoneTransferBackup
+                          ? phoneTransfer.saving
+                          : phoneTransfer.saveButton}
+                      </button>
+                      {phoneTransferBackupName ? (
+                        <button
+                          type="button"
+                          onClick={() => void shareSavedPhoneTransferBackup()}
+                          className="mt-3 min-h-11 w-full rounded-[16px] bg-[#efeaff] px-4 text-[0.92rem] font-black text-[#7460e8] transition hover:bg-[#e8e0ff]"
+                        >
+                          {phoneTransfer.shareAgain}
+                        </button>
+                      ) : null}
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {phoneTransfer.shareChannels.map((channel) => (
+                          <span
+                            key={channel}
+                            className="rounded-full bg-[#fbf9ff] px-3 py-1 text-[0.72rem] font-extrabold text-[#7f7896] ring-1 ring-[#e8e2ff]"
+                          >
+                            {channel}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 rounded-[26px] bg-white/72 px-5 py-5 shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                      <span className="rounded-full bg-[#efeaff] px-3 py-1 text-[0.78rem] font-extrabold text-[#8264ff]">
+                        {phoneTransfer.newPhone}
+                      </span>
+                      <h3 className="mt-4 text-[1.12rem] font-black leading-7 text-[#201833]">
+                        ② {phoneTransfer.importTitle}
+                      </h3>
+                      <p className="mt-2 text-[0.92rem] font-bold leading-6 text-[#7f7896]">
+                        {phoneTransfer.importHelp}
+                      </p>
+                      <input
+                        ref={phoneTransferFileInputRef}
+                        type="file"
+                        accept=".json,application/json"
+                        className="hidden"
+                        onChange={(event) => {
+                          const file = event.currentTarget.files?.[0];
+                          event.currentTarget.value = "";
+                          if (file) {
+                            void restorePhoneTransferBackupFile(file);
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => phoneTransferFileInputRef.current?.click()}
+                        disabled={isRestoringPhoneTransferBackup}
+                        className="mt-4 min-h-12 w-full rounded-[18px] bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] px-4 text-[0.98rem] font-black text-white shadow-[0_16px_34px_rgba(126,92,255,0.22)] transition disabled:opacity-60"
+                      >
+                        {isRestoringPhoneTransferBackup
+                          ? phoneTransfer.saving
+                          : phoneTransfer.chooseBackup}
+                      </button>
+                    </div>
+
+                    {phoneTransferNotice ? (
+                      <p className="mt-4 rounded-[18px] bg-white/68 px-4 py-3 text-center text-[0.86rem] font-extrabold leading-6 text-[#4b4267] ring-1 ring-white/80">
+                        {phoneTransferNotice}
+                      </p>
+                    ) : null}
+                  </section>
+                ) : accountPanelView === "accountManagement" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[28px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <div className="flex items-start gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          <AccountLineIcon name="lock" />
+                        </span>
+                        <div>
+                          <h3 className="text-[1.36rem] font-black leading-7 text-[#201833]">
+                            {accountManagement.title}
+                          </h3>
+                          <p className="mt-2 text-[0.96rem] font-bold leading-7 text-[#4b4267]">
+                            {accountManagement.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 overflow-hidden rounded-[24px] bg-white/76 shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                      <div className="px-5 py-5">
+                        <p className="text-[0.86rem] font-extrabold text-[#7f7896]">
+                          {accountManagement.contactEmailTitle}
+                        </p>
+                        <p className="mt-2 break-all text-[1.04rem] font-black leading-6 text-[#201833]">
+                          {accountEmail || accountCopy.fallbackEmail}
+                        </p>
+                        <p className="mt-2 text-[0.86rem] font-bold leading-6 text-[#7f7896]">
+                          {accountManagement.contactEmailDescription}
+                        </p>
+                      </div>
+                      <div className="border-t border-[#ece8f6] px-5 py-5">
+                        <p className="text-[1rem] font-black text-[#201833]">
+                          {accountManagement.loginSecurityTitle}
+                        </p>
+                        <p className="mt-2 text-[0.88rem] font-bold leading-6 text-[#7f7896]">
+                          {accountManagement.loginSecurityDescription}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 rounded-[24px] bg-white/76 px-5 py-5 shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                      <p className="text-[1rem] font-black text-[#ff3b5f]">
+                        {accountManagement.deleteTitle}
+                      </p>
+                      <p className="mt-2 text-[0.88rem] font-bold leading-6 text-[#7f7896]">
+                        {accountManagement.deleteDescription}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={requestAccountDeletion}
+                        className="mt-4 min-h-12 w-full rounded-[18px] bg-[#fff0f3] px-4 text-[0.98rem] font-black text-[#ff3b5f] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] transition hover:bg-[#ffe7ed]"
+                      >
+                        {accountManagement.deleteButton}
+                      </button>
+                    </div>
+
+                    <p className="mt-4 rounded-[18px] bg-white/66 px-4 py-3 text-center text-[0.84rem] font-bold leading-6 text-[#7f7896] ring-1 ring-white/80">
+                      {accountManagement.supportNote}
+                    </p>
+                  </section>
                 ) : accountPanelView === "appearance" ? (
                   <section className="pb-8">
                     <div className="rounded-[28px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
@@ -4508,6 +5376,189 @@ function SpeakEnglishClient() {
                         : displaySettings.effectiveLight}{" "}
                       {displaySettings.saved}
                     </p>
+                  </section>
+                ) : accountPanelView === "interfaceLanguage" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[28px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <div className="flex items-start gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          <AccountLineIcon name="globe" />
+                        </span>
+                        <div>
+                          <h3 className="text-[1.36rem] font-black leading-7 text-[#201833]">
+                            {accountHome.interfaceLanguage}
+                          </h3>
+                          <p className="mt-2 text-[0.96rem] font-bold leading-7 text-[#4b4267]">
+                            {displaySettings.interfaceLanguageDescription}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 rounded-[22px] bg-white/70 px-4 py-4 shadow-[0_14px_34px_rgba(84,72,146,0.09)] ring-1 ring-white/85">
+                      <span className="block text-[0.8rem] font-extrabold uppercase leading-5 text-[#7f7896]">
+                        {displaySettings.interfaceLanguageCurrent}
+                      </span>
+                      <span className="mt-1 block text-[1.08rem] font-black leading-6 text-[#201833]">
+                        {currentInterfaceLanguage.localName}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 grid gap-3">
+                      {interfaceLanguageOptions.map((option) => {
+                        const isAvailable = Boolean(option.uiLanguage);
+                        const isSelected = option.uiLanguage === language;
+
+                        return (
+                          <button
+                            key={option.code}
+                            type="button"
+                            disabled={!isAvailable}
+                            onClick={() => {
+                              if (option.uiLanguage) {
+                                setLanguage(option.uiLanguage);
+                              }
+                            }}
+                            className={`flex min-h-[4.9rem] w-full items-center gap-3 rounded-[22px] px-4 py-4 text-left transition ${
+                              isSelected
+                                ? "border-2 border-[#8b67ff] bg-white/88 shadow-[0_18px_44px_rgba(126,92,255,0.14)]"
+                                : isAvailable
+                                  ? "border border-[#e8e2ff] bg-white/66 shadow-[0_12px_30px_rgba(84,72,146,0.08)] hover:bg-white/84"
+                                  : "border border-[#ece8f6] bg-white/46 opacity-72"
+                            }`}
+                          >
+                            <span
+                              className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[0.82rem] font-extrabold ${
+                                isSelected
+                                  ? "bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] text-white"
+                                  : isAvailable
+                                    ? "border-2 border-[#c7bddf] text-transparent"
+                                    : "bg-[#f2eef9] text-[#aaa0bd]"
+                              }`}
+                            >
+                              {isSelected ? "\u2713" : isAvailable ? "\u2713" : ""}
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-[1rem] font-extrabold text-[#201833]">
+                                {option.localName}
+                              </span>
+                              <span className="mt-1 block truncate text-[0.82rem] font-bold leading-5 text-[#7f7896]">
+                                {option.englishName} / {option.region}
+                              </span>
+                            </span>
+                            <span
+                              className={`max-w-[7.8rem] shrink-0 rounded-full px-2.5 py-1 text-center text-[0.68rem] font-extrabold leading-4 ${
+                                isAvailable
+                                  ? "bg-[#e8fff5] text-[#14845f]"
+                                  : "bg-[#f0ebff] text-[#8264ff]"
+                              }`}
+                            >
+                              {isAvailable
+                                ? displaySettings.interfaceLanguageAvailable
+                                : displaySettings.interfaceLanguageComingSoon}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <p className="mt-4 rounded-[18px] bg-white/66 px-4 py-3 text-center text-[0.86rem] font-bold leading-6 text-[#7f7896] ring-1 ring-white/80">
+                      {displaySettings.interfaceLanguageMore}
+                    </p>
+                  </section>
+                ) : accountPanelView === "notifications" ? (
+                  <section className="pb-8">
+                    <div className="rounded-[28px] border border-white/80 bg-white/76 px-5 py-6 shadow-[0_22px_58px_rgba(84,72,146,0.13)] ring-1 ring-[#efeaff]">
+                      <div className="flex items-start gap-3">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                          <AccountLineIcon name="bell" />
+                        </span>
+                        <div>
+                          <h3 className="text-[1.36rem] font-black leading-7 text-[#201833]">
+                            {accountHome.notifications}
+                          </h3>
+                          <p className="mt-2 text-[0.96rem] font-bold leading-7 text-[#4b4267]">
+                            {notificationSettings.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 flex items-center justify-between px-1">
+                      <h3 className="text-[0.94rem] font-extrabold text-[#7c7399]">
+                        {notificationSettings.inboxTitle}
+                      </h3>
+                      <span className="rounded-full bg-white/70 px-3 py-1 text-[0.74rem] font-extrabold text-[#8264ff] ring-1 ring-white/85">
+                        {notificationInboxItems.length}
+                      </span>
+                    </div>
+
+                    {notificationInboxItems.length ? (
+                      <div className="mt-3 overflow-hidden rounded-[26px] bg-white/78 shadow-[0_18px_48px_rgba(84,72,146,0.11)] ring-1 ring-white/88">
+                        {notificationInboxItems.map((item, index) => {
+                          const toneClass =
+                            item.tone === "orange"
+                              ? "bg-[#fff7ea] text-[#b45d05] ring-[#ffdca8]"
+                              : item.tone === "green"
+                                ? "bg-[#ecfff7] text-[#14845f] ring-[#c8f3df]"
+                                : item.tone === "blue"
+                                  ? "bg-[#eef6ff] text-[#3b6ed6] ring-[#d6e7ff]"
+                                  : "bg-[#f0ebff] text-[#7460e8] ring-[#e2d8ff]";
+
+                          return (
+                            <article
+                              key={item.id}
+                              className={`px-5 py-5 ${
+                                index ? "border-t border-[#ece8f6]" : ""
+                              }`}
+                            >
+                              <div className="flex items-start gap-3">
+                                <span
+                                  className={`mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-[16px] text-[0.82rem] font-black ring-1 ${toneClass}`}
+                                >
+                                  {item.unread ? "\u2022" : "\u2713"}
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <span className="truncate text-[0.8rem] font-extrabold text-[#7f7896]">
+                                      {item.sender}
+                                    </span>
+                                    <span
+                                      className={`rounded-full px-2.5 py-1 text-[0.68rem] font-extrabold leading-none ${toneClass}`}
+                                    >
+                                      {item.tag}
+                                    </span>
+                                    {item.unread ? (
+                                      <span className="rounded-full bg-[#fff2db] px-2.5 py-1 text-[0.68rem] font-extrabold leading-none text-[#b45d05]">
+                                        {notificationSettings.unread}
+                                      </span>
+                                    ) : null}
+                                  </div>
+                                  <h4 className="mt-2 text-[1.06rem] font-black leading-6 text-[#201833]">
+                                    {item.title}
+                                  </h4>
+                                  <p className="mt-2 text-[0.9rem] font-bold leading-6 text-[#5f5680]">
+                                    {item.body}
+                                  </p>
+                                  <p className="mt-3 text-[0.76rem] font-extrabold text-[#9a91ad]">
+                                    {item.time}
+                                  </p>
+                                </div>
+                              </div>
+                            </article>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="mt-3 rounded-[26px] bg-white/72 px-5 py-8 text-center shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
+                        <p className="text-[1.06rem] font-black text-[#201833]">
+                          {notificationSettings.emptyTitle}
+                        </p>
+                        <p className="mt-2 text-[0.9rem] font-bold leading-6 text-[#7f7896]">
+                          {notificationSettings.emptyBody}
+                        </p>
+                      </div>
+                    )}
                   </section>
                 ) : accountPanelView === "fontSize" ? (
                   <section className="pb-8">
