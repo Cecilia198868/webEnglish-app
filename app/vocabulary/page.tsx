@@ -142,6 +142,14 @@ export default function VocabularyPage() {
   const [accountImageFailed, setAccountImageFailed] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    window.localStorage.removeItem("speakflow-appearance-preference");
+    delete document.documentElement.dataset.speakflowAppearance;
+    delete document.documentElement.dataset.speakflowTheme;
+  }, []);
+
+  useEffect(() => {
     const loadTimer = window.setTimeout(() => {
       setWords([...loadVocabularyWords()].reverse());
     }, 0);

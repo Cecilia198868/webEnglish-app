@@ -40,7 +40,6 @@ type LocalLessonData = {
 };
 
 type SubscriptionStatus = "free" | "pro" | "cancels_at_period_end";
-type AppearancePreference = "light" | "dark" | "system";
 
 type AccountSubscriptionResponse = {
   cancelAtPeriodEnd?: boolean | null;
@@ -66,16 +65,11 @@ function hasProAccess(subscriptionStatus: SubscriptionStatus) {
   return subscriptionStatus !== "free";
 }
 
-function isAppearancePreference(value: string): value is AppearancePreference {
-  return value === "light" || value === "dark" || value === "system";
-}
-
 function createAccountSubscriptionUrl() {
   return `/api/me/subscription?t=${Date.now()}`;
 }
 
 const LESSONS_STORAGE_KEY = "english-app-lessons";
-const appearancePreferenceStorageKey = "speakflow-appearance-preference";
 const DB_NAME = "english-learning-app-db";
 const DB_VERSION = 1;
 const AUDIO_STORE_NAME = "audios";
@@ -428,33 +422,9 @@ export default function StudyPage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const root = document.documentElement;
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const applyAppearance = () => {
-      const savedAppearance = window.localStorage.getItem(
-        appearancePreferenceStorageKey
-      );
-      const appearancePreference =
-        savedAppearance && isAppearancePreference(savedAppearance)
-          ? savedAppearance
-          : "system";
-      const effectiveAppearance =
-        appearancePreference === "system"
-          ? mediaQuery.matches
-            ? "dark"
-            : "light"
-          : appearancePreference;
-
-      root.dataset.speakflowAppearance = appearancePreference;
-      root.dataset.speakflowTheme = effectiveAppearance;
-    };
-
-    applyAppearance();
-    mediaQuery.addEventListener("change", applyAppearance);
-
-    return () => {
-      mediaQuery.removeEventListener("change", applyAppearance);
-    };
+    window.localStorage.removeItem("speakflow-appearance-preference");
+    delete document.documentElement.dataset.speakflowAppearance;
+    delete document.documentElement.dataset.speakflowTheme;
   }, []);
 
   function clearAutoTimer() {
