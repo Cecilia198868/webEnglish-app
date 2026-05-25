@@ -13,12 +13,12 @@ export default function HomePageClient() {
 
           <div className="sf-home-logo relative z-10 mx-auto">
             <Image
-              src="/brand/speakflow-mark.png"
+              src="/brand/speakflow-app-icon.png"
               alt="SpeakFlow"
-              width={499}
-              height={272}
+              width={512}
+              height={512}
               priority
-              sizes="(max-width: 760px) 34vw, 150px"
+              sizes="(max-width: 760px) 24vw, 116px"
               className="h-auto w-full"
             />
           </div>

@@ -1429,8 +1429,8 @@ body {
 }
 
 .sf-home-logo {
-  width: clamp(110px, 14vw, 156px);
-  margin-bottom: 1.7rem;
+  width: clamp(88px, 10vw, 116px);
+  margin-bottom: 1.2rem;
   filter:
     drop-shadow(0 16px 24px rgba(91, 112, 255, 0.16))
     drop-shadow(0 5px 10px rgba(191, 94, 229, 0.08));
@@ -1721,8 +1721,8 @@ body {
   }
 
   .sf-home-logo {
-    width: clamp(96px, 30vw, 132px);
-    margin-bottom: 1.45rem;
+    width: clamp(82px, 24vw, 108px);
+    margin-bottom: 1.15rem;
   }
 
   .sf-home-title {
