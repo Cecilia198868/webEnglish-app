@@ -95,11 +95,9 @@ type SubscriptionStatus = "free" | "pro" | "cancels_at_period_end";
 
 type SessionResponse = {
   user?: {
-    currentPeriodEnd?: string | null;
     email?: string | null;
     image?: string | null;
     name?: string | null;
-    subscriptionStatus?: SubscriptionStatus;
   } | null;
 };
 
@@ -117,11 +115,7 @@ function normalizeSubscriptionStatus(
   subscriptionStatus?: SubscriptionStatus | null,
   cancelAtPeriodEnd?: boolean | null
 ): SubscriptionStatus {
-  if (
-    cancelAtPeriodEnd === true &&
-    (subscriptionStatus === "pro" ||
-      subscriptionStatus === "cancels_at_period_end")
-  ) {
+  if (cancelAtPeriodEnd === true) {
     return "cancels_at_period_end";
   }
 
@@ -2121,6 +2115,8 @@ function SpeakEnglishClient() {
   const [accountImageFailed, setAccountImageFailed] = useState(false);
   const [accountSubscriptionStatus, setAccountSubscriptionStatus] =
     useState<SubscriptionStatus>("free");
+  const [accountCancelAtPeriodEnd, setAccountCancelAtPeriodEnd] =
+    useState(false);
   const [accountCurrentPeriodEnd, setAccountCurrentPeriodEnd] = useState("");
   const [isLoadingAccountSubscription, setIsLoadingAccountSubscription] =
     useState(false);
@@ -2277,6 +2273,7 @@ function SpeakEnglishClient() {
     (accountEmail ? accountEmail.split("@")[0] : accountCopy.fallbackUser);
   const selectedProPlanDetails = accountCopy.proPlans[selectedProPlan];
   const hasCanceledAtPeriodEnd =
+    accountCancelAtPeriodEnd ||
     accountSubscriptionStatus === "cancels_at_period_end";
   const isAccountPro = hasProAccess(accountSubscriptionStatus);
   const accountSubscriptionLabel = isLoadingAccountSubscription
@@ -2289,7 +2286,9 @@ function SpeakEnglishClient() {
         : "已订阅"
       : accountCopy.notSubscribed;
   const accountSubscriptionBadgeClass = isAccountPro
-    ? "bg-[#e8fff5] text-[#14845f]"
+    ? hasCanceledAtPeriodEnd
+      ? "bg-[#fff2db] text-[#b45d05]"
+      : "bg-[#e8fff5] text-[#14845f]"
     : "bg-[#efeaff] text-[#7460e8]";
   const accountCurrentPeriodEndDateLabel =
     isAccountPro && accountCurrentPeriodEnd
@@ -2316,8 +2315,8 @@ function SpeakEnglishClient() {
   const accountCurrentPeriodEndLabel = accountCurrentPeriodEndDateLabel
     ? hasCanceledAtPeriodEnd
       ? language === "en"
-        ? `Ends ${accountCurrentPeriodEndDateLabel}`
-        : `\u5c06\u4e8e ${accountCurrentPeriodEndDateLabel} \u5230\u671f`
+        ? `Usable until ${accountCurrentPeriodEndDateLabel}`
+        : `\u81f3 ${accountCurrentPeriodEndDateLabel} \u524d\u4ecd\u53ef\u4f7f\u7528`
       : language === "en"
         ? `Renews ${accountCurrentPeriodEndDateLabel}`
         : `\u5230\u671f\u65f6\u95f4 ${accountCurrentPeriodEndDateLabel}`
@@ -2515,10 +2514,6 @@ function SpeakEnglishClient() {
         setAccountEmail(nextEmail);
         setAccountImage(savedAvatar || session.user?.image || "");
         setAccountImageFailed(false);
-        setAccountSubscriptionStatus(
-          normalizeSubscriptionStatus(session.user?.subscriptionStatus)
-        );
-        setAccountCurrentPeriodEnd(session.user?.currentPeriodEnd || "");
       } catch {
         if (!cancelled) {
           setAccountName("");
@@ -2559,9 +2554,8 @@ function SpeakEnglishClient() {
           data.cancelAtPeriodEnd
         );
 
-        setAccountSubscriptionStatus(
-          nextSubscriptionStatus
-        );
+        setAccountSubscriptionStatus(nextSubscriptionStatus);
+        setAccountCancelAtPeriodEnd(data.cancelAtPeriodEnd === true);
         setAccountCurrentPeriodEnd(data.currentPeriodEnd || "");
         if (hasProAccess(nextSubscriptionStatus)) {
           setShowFreePracticeLimitModal(false);
@@ -2569,6 +2563,7 @@ function SpeakEnglishClient() {
       } catch {
         if (!cancelled) {
           setAccountSubscriptionStatus("free");
+          setAccountCancelAtPeriodEnd(false);
           setAccountCurrentPeriodEnd("");
         }
       } finally {
@@ -2727,6 +2722,7 @@ function SpeakEnglishClient() {
         );
 
         setAccountSubscriptionStatus(nextSubscriptionStatus);
+        setAccountCancelAtPeriodEnd(data.cancelAtPeriodEnd === true);
         setAccountCurrentPeriodEnd(data.currentPeriodEnd || "");
 
         if (hasProAccess(nextSubscriptionStatus)) {
@@ -2883,6 +2879,7 @@ function SpeakEnglishClient() {
       );
 
       setAccountSubscriptionStatus(nextSubscriptionStatus);
+      setAccountCancelAtPeriodEnd(subscriptionData.cancelAtPeriodEnd === true);
       setAccountCurrentPeriodEnd(subscriptionData.currentPeriodEnd || "");
       setAccountSubscriptionRefreshKey(Date.now());
 
