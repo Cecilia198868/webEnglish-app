@@ -2707,6 +2707,13 @@ function SpeakEnglishClient() {
     showNativeCompletePrompt ||
     showListeningPrompt ||
     showFreeConversationAnswerPrompt;
+  const showPracticeKeyboardPanel =
+    hasPracticeActivity &&
+    !hasEnglishAttempt &&
+    !showNativeConfirmationPrompt &&
+    !showNativeCompletePrompt &&
+    !showListeningPrompt &&
+    !showFreeConversationAnswerPrompt;
   const showAiGuidedNudge = hasEnglishAttempt && !isAiGuidedMode;
   const expressionVariantsForDisplay = expressionVariants.length
     ? expressionVariants
@@ -6557,7 +6564,7 @@ function SpeakEnglishClient() {
             className={`sf-free-practice-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pt-6 ${
               hasEnglishAttempt ? "sf-free-practice-result-main" : ""
             } ${
-              !showVoiceOnlyPrompt && !hasEnglishAttempt
+              showPracticeKeyboardPanel
                 ? "sf-free-practice-keyboard-main"
                 : ""
             } ${
@@ -6565,7 +6572,9 @@ function SpeakEnglishClient() {
                 ? "pb-[calc(5.8rem+env(safe-area-inset-bottom))]"
                 : hasEnglishAttempt
                   ? "pb-[calc(6.8rem+env(safe-area-inset-bottom))]"
-                  : "pb-[352px]"
+                  : showPracticeKeyboardPanel
+                    ? "pb-[352px]"
+                    : "pb-[max(1.25rem,env(safe-area-inset-bottom))]"
             }`}
           >
             <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
@@ -6626,6 +6635,8 @@ function SpeakEnglishClient() {
 
             <div
               className={`sf-free-practice-content flex min-h-0 flex-1 flex-col items-center overflow-y-auto text-left ${
+                showNativeConfirmationPrompt ? "sf-native-confirmation-content" : ""
+              } ${
                 showVoiceOnlyPrompt
                   ? "justify-start pt-28"
                   : hasEnglishAttempt
@@ -6681,11 +6692,11 @@ function SpeakEnglishClient() {
                   </>
                 )
               ) : showNativeConfirmationPrompt ? (
-                <div className="w-full max-w-[360px]">
-                  <p className="text-[1.05rem] font-extrabold leading-6 text-[#6b4dff]">
+                <div className="sf-native-confirmation-card w-full max-w-[360px]">
+                  <p className="sf-native-confirmation-label text-[1.05rem] font-extrabold leading-6 text-[#6b4dff]">
                     你想表达的是：
                   </p>
-                  <label className="mt-4 block rounded-[22px] border border-[#d9d0ff] bg-white/58 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.72),0_14px_34px_rgba(84,72,146,0.08)]">
+                  <label className="sf-native-confirmation-input mt-4 block rounded-[22px] border border-[#d9d0ff] bg-white/58 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.72),0_14px_34px_rgba(84,72,146,0.08)]">
                     <textarea
                       value={nativeSpeech}
                       onChange={(event) =>
@@ -6693,13 +6704,13 @@ function SpeakEnglishClient() {
                       }
                       rows={3}
                       lang="zh-CN"
-                      className="block min-h-[7.5rem] w-full resize-none bg-transparent text-[1.55rem] font-extrabold leading-[2.15rem] text-[#201833] outline-none"
+                      className="sf-native-confirmation-textarea block min-h-[7.5rem] w-full resize-none bg-transparent text-[1.55rem] font-extrabold leading-[2.15rem] text-[#201833] outline-none"
                     />
                   </label>
-                  <p className="mt-4 text-[0.96rem] font-bold leading-6 text-[#7f7896]">
+                  <p className="sf-native-confirmation-help mt-4 text-[0.96rem] font-bold leading-6 text-[#7f7896]">
                     如果识别错了，可以直接修改，或者重新说一遍。
                   </p>
-                  <div className="mt-5 grid grid-cols-2 gap-3">
+                  <div className="sf-native-confirmation-actions mt-5 grid grid-cols-2 gap-3">
                     <button
                       type="button"
                       onClick={retryNativeSpeech}
@@ -7294,12 +7305,12 @@ function SpeakEnglishClient() {
 
                           setShowQuickPanel(false);
                         }}
-                        className="w-full px-1 py-2.5 text-left text-[1.24rem] font-extrabold leading-7 text-[#201833] transition hover:text-[#5b63ff]"
+                        className="grid w-full grid-cols-[1.75rem_minmax(0,1fr)] items-start gap-x-3 px-1 py-2.5 text-left text-[1.24rem] font-extrabold leading-7 text-[#201833] transition hover:text-[#5b63ff]"
                       >
                         <MenuGlyph level={2} />
-                        <span className="inline-flex flex-col align-top">
-                          <span>{item.title}</span>
-                          <span className="ml-7 mt-1 text-[0.82rem] font-bold leading-5 text-[#7f7896]">
+                        <span className="min-w-0">
+                          <span className="block">{item.title}</span>
+                          <span className="mt-1 block text-[0.82rem] font-bold leading-5 text-[#7f7896]">
                             {item.description}
                           </span>
                         </span>
@@ -7346,12 +7357,7 @@ function SpeakEnglishClient() {
             </div>
           ) : null}
 
-          {hasPracticeActivity &&
-          !hasEnglishAttempt &&
-          !showNativeConfirmationPrompt &&
-          !showNativeCompletePrompt &&
-          !showListeningPrompt &&
-          !showFreeConversationAnswerPrompt ? (
+          {showPracticeKeyboardPanel ? (
           <div className="sf-keyboard-panel absolute inset-x-0 bottom-0 z-20 rounded-t-[32px] px-3 pb-3 pt-3 text-[#fffaff]">
             <div className="sf-composer mb-3 p-2">
               <div className="flex items-end gap-2">

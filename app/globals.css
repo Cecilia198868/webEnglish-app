@@ -816,6 +816,33 @@ body {
     padding-top: clamp(0.65rem, 1.8dvh, 1rem) !important;
   }
 
+  .sf-speak-phone .sf-native-confirmation-content {
+    padding-top: clamp(1.9rem, 6dvh, 3.5rem) !important;
+  }
+
+  .sf-speak-phone .sf-native-confirmation-input {
+    margin-top: 0.9rem !important;
+    padding: 0.85rem 0.95rem !important;
+    border-radius: 20px !important;
+  }
+
+  .sf-speak-phone .sf-native-confirmation-textarea {
+    min-height: clamp(7rem, 18dvh, 8.6rem) !important;
+    font-size: clamp(1.34rem, 6.6vw, 1.58rem) !important;
+    line-height: 1.32 !important;
+  }
+
+  .sf-speak-phone .sf-native-confirmation-help {
+    margin-top: 0.9rem !important;
+    font-size: clamp(0.9rem, 4vw, 0.98rem) !important;
+    line-height: 1.55 !important;
+  }
+
+  .sf-speak-phone .sf-native-confirmation-actions {
+    margin-top: 0.9rem !important;
+    gap: 0.75rem !important;
+  }
+
   .sf-speak-phone .sf-free-practice-user-card {
     margin-top: 0.7rem !important;
     padding: 0.85rem 1rem !important;
@@ -924,6 +951,23 @@ body {
 
   .sf-speak-phone .sf-free-practice-result-content {
     padding-top: 0.5rem !important;
+  }
+
+  .sf-speak-phone .sf-native-confirmation-content {
+    padding-top: clamp(1rem, 3.2dvh, 2rem) !important;
+  }
+
+  .sf-speak-phone .sf-native-confirmation-input {
+    margin-top: 0.65rem !important;
+  }
+
+  .sf-speak-phone .sf-native-confirmation-textarea {
+    min-height: clamp(6rem, 16dvh, 7.5rem) !important;
+  }
+
+  .sf-speak-phone .sf-native-confirmation-help,
+  .sf-speak-phone .sf-native-confirmation-actions {
+    margin-top: 0.7rem !important;
   }
 
   .sf-speak-phone .sf-free-practice-standard-block {
