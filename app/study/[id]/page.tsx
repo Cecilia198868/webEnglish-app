@@ -1560,8 +1560,8 @@ export default function StudyPage() {
           <div className="pointer-events-none absolute left-1/2 top-[21%] z-0 h-[460px] w-[460px] -translate-x-1/2 rounded-full border border-[#91dcff]/10" />
           <div className="pointer-events-none absolute left-1/2 top-[31%] z-0 h-[310px] w-[310px] -translate-x-1/2 rounded-full border border-[#b799ff]/10" />
 
-          <header className="relative z-10 shrink-0 px-7 pt-8">
-            <div className="flex items-center justify-between">
+          <header className="sf-app-topbar relative z-10 shrink-0 px-7 pt-8">
+            <div className="sf-app-topbar-inner flex items-center justify-between">
               <button
                 type="button"
                 aria-label="返回课程列表"
@@ -1573,7 +1573,7 @@ export default function StudyPage() {
                 </span>
               </button>
 
-              <div className="flex items-center gap-2">
+              <div className="sf-app-brand flex items-center gap-2">
                 <SpeakFlowBrandMark />
                 <div>
                   <h1 className="text-[1.05rem] font-semibold leading-none text-[#201833]">

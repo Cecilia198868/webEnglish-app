@@ -88,7 +88,7 @@ export default function AccountAvatarButton({
       type="button"
       aria-label={ariaLabel}
       onClick={handleClick}
-      className={`grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-[#f7f4ff] text-[0.82rem] font-extrabold text-white shadow-[0_12px_26px_rgba(84,72,146,0.18)] ${className}`}
+      className={`sf-app-avatar-button grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-[#f7f4ff] text-[0.82rem] font-extrabold text-white shadow-[0_12px_26px_rgba(84,72,146,0.18)] ${className}`}
     >
       {accountImage && !accountImageFailed ? (
         // eslint-disable-next-line @next/next/no-img-element

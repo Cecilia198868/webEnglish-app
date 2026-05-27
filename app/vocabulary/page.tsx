@@ -541,8 +541,8 @@ export default function VocabularyPage() {
           <div className="pointer-events-none absolute left-1/2 top-[21%] z-0 h-[460px] w-[460px] -translate-x-1/2 rounded-full border border-[#91dcff]/10" />
           <div className="pointer-events-none absolute left-1/2 top-[31%] z-0 h-[310px] w-[310px] -translate-x-1/2 rounded-full border border-[#b799ff]/10" />
 
-          <header className="relative z-10 shrink-0 px-7 pt-8">
-            <div className="flex items-center justify-between">
+          <header className="sf-app-topbar relative z-10 shrink-0 px-7 pt-8">
+            <div className="sf-app-topbar-inner flex items-center justify-between">
               <button
                 type="button"
                 aria-label="返回菜单"
@@ -554,7 +554,7 @@ export default function VocabularyPage() {
                 </span>
               </button>
 
-              <div className="flex items-center gap-2">
+              <div className="sf-app-brand flex items-center gap-2">
                 <SpeakFlowBrandMark />
                 <div>
                   <h1 className="text-[1.05rem] font-semibold leading-none text-[#201833]">
@@ -570,7 +570,7 @@ export default function VocabularyPage() {
                 type="button"
                 aria-label="打开账户"
                 onClick={openAccountFromVocabulary}
-                className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-[#f7f4ff] text-[0.82rem] font-extrabold text-white shadow-[0_12px_26px_rgba(84,72,146,0.18)]"
+                className="sf-app-avatar-button grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-[#f7f4ff] text-[0.82rem] font-extrabold text-white shadow-[0_12px_26px_rgba(84,72,146,0.18)]"
               >
                 {accountImage && !accountImageFailed ? (
                   // eslint-disable-next-line @next/next/no-img-element

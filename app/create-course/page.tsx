@@ -877,8 +877,8 @@ export default function CreateCoursePage() {
           <div className="pointer-events-none absolute left-1/2 top-[32%] z-0 h-[470px] w-[470px] -translate-x-1/2 rounded-full border border-[#91dcff]/10" />
           <div className="pointer-events-none absolute left-1/2 top-[38%] z-0 h-[340px] w-[340px] -translate-x-1/2 rounded-full border border-[#b799ff]/12" />
 
-          <header className="relative z-10 shrink-0 px-6 pt-7">
-            <div className="flex items-center justify-between">
+          <header className="sf-app-topbar relative z-10 shrink-0 px-6 pt-7">
+            <div className="sf-app-topbar-inner flex items-center justify-between">
               <button
                 type="button"
                 aria-label={importView === "home" ? "返回菜单" : "返回上一页"}
@@ -888,7 +888,7 @@ export default function CreateCoursePage() {
                 {importView === "home" ? <MenuIcon /> : <BackArrowIcon />}
               </button>
 
-              <div className="flex items-center gap-2">
+              <div className="sf-app-brand flex items-center gap-2">
                 <SpeakFlowBrandMark />
                 <div>
                   <h1 className="text-[1.05rem] font-semibold leading-none text-[#201833]">

@@ -459,6 +459,11 @@ const accountPanelCopy = {
             label: "Manage Subscription",
           },
           {
+            action: "accountManagement",
+            icon: "🔏",
+            label: "Account Management",
+          },
+          {
             action: "referrals",
             icon: "🎁",
             label: "Invite Friends",
@@ -472,12 +477,6 @@ const accountPanelCopy = {
           { action: "fontSize", icon: "🔤", label: "Font Size" },
           { icon: "🌐", label: "Interface Language" },
           { icon: "🔔", label: "Notifications" },
-        ],
-      },
-      {
-        title: "Data & Security",
-        items: [
-          { action: "accountManagement", icon: "🔏", label: "Account Management" },
         ],
       },
       {
@@ -612,6 +611,7 @@ const accountPanelCopy = {
             trailing: "未订阅",
           },
           { action: "manageSubscription", icon: "💳", label: "管理订阅" },
+          { action: "accountManagement", icon: "🔏", label: "账号管理" },
           { action: "referrals", icon: "🎁", label: "邀请好友" },
         ],
       },
@@ -622,12 +622,6 @@ const accountPanelCopy = {
           { action: "fontSize", icon: "🔤", label: "字体大小" },
           { icon: "🌐", label: "界面语言" },
           { icon: "🔔", label: "通知" },
-        ],
-      },
-      {
-        title: "数据与安全",
-        items: [
-          { action: "accountManagement", icon: "🔏", label: "账号管理" },
         ],
       },
       {
@@ -1837,6 +1831,38 @@ const pinyinDictionary: Record<string, string[]> = {
 const defaultChineseCandidates = ["？", "！", "我", "你", "好", "这", "谢谢"];
 const defaultFreeLearningPrompt = "用中文说出你想表达的内容";
 const handwritingCandidates = ["我", "你", "好", "吗", "谢", "爱", "说"];
+const freePracticeLandingSteps = [
+  {
+    description: "说出你想表达的内容，尽量具体",
+    icon: "mic",
+    step: "1",
+    title: "点击麦克风，说出中文",
+  },
+  {
+    description: "尝试用英语表达这句话",
+    icon: "mic",
+    step: "2",
+    title: "点击麦克风，说出英文",
+  },
+  {
+    description: "多种表达方式对比，帮你优化",
+    icon: "sparkle",
+    step: "3",
+    title: "AI 给出地道英语表达",
+  },
+  {
+    description: "跟读练习，收藏生词和实用表达",
+    icon: "book",
+    step: "4",
+    title: "朗读准确英文，收藏词汇",
+  },
+] as const;
+
+const freePracticeLandingChips = [
+  { icon: "bulb", label: "获取灵感" },
+  { icon: "book", label: "例句参考" },
+  { icon: "translate", label: "翻译助手" },
+] as const;
 const quickPracticeStarters: Array<{
   id: "guided" | "expression" | "classic";
   title: string;
@@ -2290,64 +2316,76 @@ type ClassicMenuCardVisual = {
   accent: string;
   background: string;
   icon: string;
+  iconBackground?: string;
 };
 
 const defaultClassicMenuCardVisual: ClassicMenuCardVisual = {
   accent: "#735cff",
-  background: "linear-gradient(135deg,#f8f5ff 0%,#eef2ff 100%)",
+  background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#f7f5ff 100%)",
   icon: "\u8bfe",
+  iconBackground: "#f0edff",
 };
 
 const classicMenuCardVisuals: Record<string, ClassicMenuCardVisual> = {
   "finance-government": {
-    accent: "#d89216",
-    background: "linear-gradient(135deg,#fff8e8 0%,#fff0d0 58%,#fffaf2 100%)",
+    accent: "#5b63ff",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#f7f5ff 100%)",
     icon: "\u91d1",
+    iconBackground: "#eeeaff",
   },
   "shopping-consumption": {
-    accent: "#8b5cf6",
-    background: "linear-gradient(135deg,#f8f2ff 0%,#efe4ff 58%,#fff7fb 100%)",
+    accent: "#7b61ff",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#faf7ff 100%)",
     icon: "\u8d2d",
+    iconBackground: "#f0eaff",
   },
   "restaurant-takeout": {
-    accent: "#d74777",
-    background: "linear-gradient(135deg,#fff2f6 0%,#ffe6ee 58%,#fff8f0 100%)",
+    accent: "#ec5b9f",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#fff7fb 100%)",
     icon: "\u9910",
+    iconBackground: "#ffeaf4",
   },
   "transportation-travel": {
-    accent: "#3478d8",
-    background: "linear-gradient(135deg,#eef6ff 0%,#e3eeff 58%,#f5fbff 100%)",
+    accent: "#2f8de4",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#f5fbff 100%)",
     icon: "\u884c",
+    iconBackground: "#e8f4ff",
   },
   "housing-home": {
-    accent: "#21a08d",
-    background: "linear-gradient(135deg,#effcf8 0%,#dff7f1 58%,#f7fffc 100%)",
+    accent: "#0fa37d",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#f3fffb 100%)",
     icon: "\u4f4f",
+    iconBackground: "#ddf8ef",
   },
   "health-medical": {
-    accent: "#31a86b",
-    background: "linear-gradient(135deg,#effdf4 0%,#dff7e7 58%,#f8fff9 100%)",
+    accent: "#2ab99b",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#f3fffa 100%)",
     icon: "\u533b",
+    iconBackground: "#dcf7ef",
   },
   "service-repair": {
-    accent: "#d8791f",
-    background: "linear-gradient(135deg,#fff6ea 0%,#ffe8cd 58%,#fffaf3 100%)",
+    accent: "#f26f26",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#fff7ef 100%)",
     icon: "\u4fee",
+    iconBackground: "#fff0e6",
   },
   "education-work-social": {
-    accent: "#6654df",
-    background: "linear-gradient(135deg,#f4f2ff 0%,#e7e5ff 58%,#f8f9ff 100%)",
+    accent: "#735cff",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#f8f6ff 100%)",
     icon: "\u5b66",
+    iconBackground: "#eeeaff",
   },
   guided: {
-    accent: "#6654df",
-    background: "linear-gradient(135deg,#ebe8ff 0%,#d8d4ff 58%,#f2f6ff 100%)",
+    accent: "#7b61ff",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#faf8ff 100%)",
     icon: "AI",
+    iconBackground: "#f0eaff",
   },
   expression: {
-    accent: "#1689d8",
-    background: "linear-gradient(135deg,#eaf7ff 0%,#d5efff 58%,#f2fbff 100%)",
+    accent: "#2d99f0",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 64%,#f4fbff 100%)",
     icon: "\u65b0",
+    iconBackground: "#e5f4ff",
   },
 };
 
@@ -2356,6 +2394,225 @@ function getClassicCourseLessonCount(category: ClassicCourseCategory) {
     (total, section) =>
       total + section.lessons.filter((lesson) => Boolean(lesson.id)).length,
     0
+  );
+}
+
+function ClassicMenuArrow({ accent }: { accent: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#eef0fa] bg-white shadow-[0_8px_18px_rgba(84,72,146,0.08)] transition group-hover:translate-x-0.5"
+      style={{ color: accent }}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        className="h-4 w-4"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.7"
+      >
+        <path d="m9 5 7 7-7 7" />
+      </svg>
+    </span>
+  );
+}
+
+function ClassicMenuIcon({
+  accent,
+  id,
+}: {
+  accent: string;
+  id: string;
+}) {
+  if (id === "guided") {
+    return (
+      <span
+        aria-hidden="true"
+        className="font-[var(--font-sora)] text-[1.18rem] font-black leading-none"
+        style={{ color: accent }}
+      >
+        AI
+      </span>
+    );
+  }
+
+  const iconProps = {
+    className: "h-6 w-6",
+    fill: "none",
+    stroke: "currentColor",
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    strokeWidth: 2.2,
+    viewBox: "0 0 24 24",
+  };
+
+  return (
+    <svg aria-hidden="true" style={{ color: accent }} {...iconProps}>
+      {id === "finance-government" ? (
+        <>
+          <path d="M3.5 10h17L12 4.8 3.5 10Z" />
+          <path d="M5.5 19h13M4.5 21h15M7 10v8M11 10v8M15 10v8M19 10v8" />
+        </>
+      ) : id === "bank-finance" || id === "public-services" ? (
+        <>
+          <path d="M3.5 10h17L12 4.8 3.5 10Z" />
+          <path d="M5.5 19h13M4.5 21h15M7 10v8M11 10v8M15 10v8M19 10v8" />
+        </>
+      ) : id === "identity-immigration" ? (
+        <>
+          <path d="M7 4.5h10a1.5 1.5 0 0 1 1.5 1.5v12A1.5 1.5 0 0 1 17 19.5H7A1.5 1.5 0 0 1 5.5 18V6A1.5 1.5 0 0 1 7 4.5Z" />
+          <path d="M9 8h6M9 16h6" />
+          <path d="M10 12.2a2 2 0 0 1 4 0" />
+          <path d="M9.1 14.3h5.8" />
+        </>
+      ) : id === "driver-vehicle" ? (
+        <>
+          <path d="M6.5 17h11M7 17v2M17 17v2M5.5 13.5h13" />
+          <path d="M6.6 7.5h10.8l1.1 6v3.5h-13v-3.5l1.1-6Z" />
+          <path d="M8.5 14.8h.1M15.4 14.8h.1" />
+        </>
+      ) : id === "insurance-consulting" ? (
+        <>
+          <path d="M12 21s7-3.2 7-9.2V6.5L12 4 5 6.5v5.3C5 17.8 12 21 12 21Z" />
+          <path d="m9.2 12.3 1.9 1.9 3.8-4.4" />
+        </>
+      ) : id === "insurance-traffic-safety" ? (
+        <>
+          <path d="M9 4.5h6l1.2 11h-8.4L9 4.5Z" />
+          <path d="M7 19.5h10M8.2 15.5h7.6M8.6 9h6.8" />
+        </>
+      ) : id === "tax-government-forms" ? (
+        <>
+          <path d="M7 4.5h7l3 3v12H7v-15Z" />
+          <path d="M14 4.5v3h3M9.5 12h5M9.5 15h5M9.5 9h2" />
+        </>
+      ) : id === "all-finance-government" ? (
+        <>
+          <path d="M5 5h5v5H5zM14 5h5v5h-5zM5 14h5v5H5zM14 14h5v5h-5z" />
+        </>
+      ) : id === "shopping-consumption" ? (
+        <>
+          <path d="M6.5 9h11l1 11h-13l1-11Z" />
+          <path d="M9 9a3 3 0 0 1 6 0" />
+        </>
+      ) : id === "restaurant-takeout" ? (
+        <>
+          <path d="M7 4v16M4.5 4v5.5a2.5 2.5 0 0 0 5 0V4" />
+          <path d="M16 4v16M16 4c2.2 1 3.5 2.8 3.5 5.2V11H16" />
+        </>
+      ) : id === "transportation-travel" ? (
+        <>
+          <path d="M6.5 17h11M7 17v2M17 17v2M5.5 13.5h13" />
+          <path d="M6.6 7.5h10.8l1.1 6v3.5h-13v-3.5l1.1-6Z" />
+          <path d="M8.5 14.8h.1M15.4 14.8h.1" />
+        </>
+      ) : id === "housing-home" ? (
+        <>
+          <path d="m4 11 8-6.5 8 6.5" />
+          <path d="M6.5 10v9h11v-9" />
+          <path d="M10 19v-5h4v5" />
+        </>
+      ) : id === "health-medical" ? (
+        <>
+          <path d="M12 21s7-3.2 7-9.2V6.5L12 4 5 6.5v5.3C5 17.8 12 21 12 21Z" />
+          <path d="M12 8.6v6.8M8.6 12h6.8" />
+        </>
+      ) : id === "service-repair" ? (
+        <>
+          <path d="M14.5 5.5a4.6 4.6 0 0 0 4.8 6.5l-7.5 7.5a2.2 2.2 0 0 1-3.1-3.1l7.5-7.5a4.6 4.6 0 0 0-1.7-3.4Z" />
+          <path d="m5 7 3 3M4.5 4.5l3 3" />
+        </>
+      ) : id === "education-work-social" ? (
+        <>
+          <path d="m3.5 8.5 8.5-4 8.5 4-8.5 4-8.5-4Z" />
+          <path d="M7 10.4v4.1c1.4 1.3 3 2 5 2s3.6-.7 5-2v-4.1" />
+          <path d="M20.5 9v5" />
+        </>
+      ) : (
+        <>
+          <path d="M5 6.5h14v9H9l-4 3v-12Z" />
+          <path d="M9 11h.1M12 11h.1M15 11h.1" />
+        </>
+      )}
+    </svg>
+  );
+}
+
+function ClassicMenuHeroVisual() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute right-[-0.75rem] top-7 hidden h-[9.5rem] w-[11rem] min-[390px]:block"
+    >
+      <span className="absolute right-0 top-3 h-[7.5rem] w-[8.8rem] rotate-[13deg] rounded-[2.4rem] bg-[#eeeaff]/82" />
+      <span className="absolute left-4 top-6 h-[5.8rem] w-[6.7rem] rotate-[8deg] rounded-[1.4rem] border border-[#a99bff]/50 bg-[#e4ddff]/64 shadow-[0_18px_36px_rgba(123,97,255,0.2)]" />
+      <span className="absolute left-[3.4rem] top-[3.2rem] grid h-[5.6rem] w-[6.5rem] -rotate-[8deg] place-items-center rounded-[1.35rem] border border-white/82 bg-white/78 shadow-[0_20px_44px_rgba(84,72,146,0.2)] backdrop-blur-md">
+        <span className="relative grid h-[3.9rem] w-[4.6rem] place-items-center rounded-full bg-white text-[#735cff] shadow-[0_10px_24px_rgba(84,72,146,0.14)]">
+          <span className="absolute -bottom-1.5 left-4 h-4 w-4 rotate-45 bg-white" />
+          <span className="relative flex gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-current" />
+            <span className="h-2 w-2 rounded-full bg-current" />
+            <span className="h-2 w-2 rounded-full bg-current" />
+          </span>
+        </span>
+      </span>
+      <span className="absolute left-1 top-3 text-[1.2rem] font-black text-white">
+        ✦
+      </span>
+      <span className="absolute right-8 top-1 text-[0.8rem] font-black text-white">
+        ✦
+      </span>
+    </div>
+  );
+}
+
+function FreePracticeLandingIcon({
+  icon,
+}: {
+  icon: (typeof freePracticeLandingSteps)[number]["icon"] | "bulb" | "translate";
+}) {
+  const commonProps = {
+    className: "h-8 w-8",
+    fill: "none",
+    stroke: "currentColor",
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    strokeWidth: 2.2,
+    viewBox: "0 0 24 24",
+  };
+
+  return (
+    <svg aria-hidden="true" {...commonProps}>
+      {icon === "mic" ? (
+        <>
+          <path d="M12 4.5a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0v-5a3 3 0 0 0-3-3Z" />
+          <path d="M6.5 11.5a5.5 5.5 0 0 0 11 0M12 17v3M9 20h6" />
+        </>
+      ) : icon === "sparkle" ? (
+        <>
+          <path d="M12 3.8 14.4 9l5.2 2.4-5.2 2.4L12 19l-2.4-5.2-5.2-2.4L9.6 9 12 3.8Z" />
+          <path d="m18.4 4.8.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6.6-1.4Z" />
+        </>
+      ) : icon === "book" ? (
+        <>
+          <path d="M5 5.5h5.2A2.8 2.8 0 0 1 13 8.3v11.2a2.8 2.8 0 0 0-2.8-2.8H5V5.5Z" />
+          <path d="M19 5.5h-5.2A2.8 2.8 0 0 0 11 8.3v11.2a2.8 2.8 0 0 1 2.8-2.8H19V5.5Z" />
+        </>
+      ) : icon === "bulb" ? (
+        <>
+          <path d="M15.5 14.8c1.1-.9 2-2.4 2-4.1a5.5 5.5 0 0 0-11 0c0 1.7.9 3.2 2 4.1.7.6 1 1.2 1 2v.2h5v-.2c0-.8.3-1.4 1-2Z" />
+          <path d="M9.5 20h5M10 17h4" />
+        </>
+      ) : (
+        <>
+          <path d="M5 5h6v6H5zM13 13h6v6h-6z" />
+          <path d="M14 5h2.5A2.5 2.5 0 0 1 19 7.5V10M10 19H7.5A2.5 2.5 0 0 1 5 16.5V14" />
+          <path d="m15 7 1.5-1.5L18 7M9 17l-1.5 1.5L6 17" />
+        </>
+      )}
+    </svg>
   );
 }
 
@@ -2446,41 +2703,60 @@ const financeGovernmentSectionDescriptions: Record<string, string> = {
 
 const financeGovernmentSectionVisuals: Record<string, ClassicMenuCardVisual> = {
   "bank-finance": {
-    accent: "#d89216",
-    background: "linear-gradient(135deg,#fff8e8 0%,#fff0d0 58%,#fffaf2 100%)",
+    accent: "#735cff",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 62%,#f7f5ff 100%)",
     icon: "\u94f6",
+    iconBackground: "#eeeaff",
   },
   "driver-vehicle": {
-    accent: "#25a58e",
-    background: "linear-gradient(135deg,#effcf8 0%,#ddf6ef 58%,#f7fffc 100%)",
+    accent: "#14a980",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 62%,#f2fffa 100%)",
     icon: "\u8f66",
+    iconBackground: "#ddf8ef",
   },
   "identity-immigration": {
-    accent: "#477edb",
-    background: "linear-gradient(135deg,#eef6ff 0%,#e2edff 58%,#f8fbff 100%)",
+    accent: "#438ce8",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 62%,#f4f9ff 100%)",
     icon: "\u8bc1",
+    iconBackground: "#e8f3ff",
   },
   "insurance-consulting": {
-    accent: "#d64b84",
-    background: "linear-gradient(135deg,#fff1f6 0%,#ffe5ef 58%,#fff8fb 100%)",
+    accent: "#ef4d8b",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 62%,#fff5fa 100%)",
     icon: "\u4fdd",
+    iconBackground: "#ffe8f3",
   },
   "insurance-traffic-safety": {
-    accent: "#d8a21b",
-    background: "linear-gradient(135deg,#fff9e8 0%,#ffefc7 58%,#fffaf2 100%)",
+    accent: "#f28a00",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 62%,#fff8ed 100%)",
     icon: "\u5b89",
+    iconBackground: "#fff0d8",
   },
   "public-services": {
-    accent: "#7c5ce6",
-    background: "linear-gradient(135deg,#f5f2ff 0%,#e8e2ff 58%,#fbf9ff 100%)",
+    accent: "#b654e4",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 62%,#fff7ff 100%)",
     icon: "\u653f",
+    iconBackground: "#faeaff",
   },
   "tax-government-forms": {
-    accent: "#3478d8",
-    background: "linear-gradient(135deg,#eef6ff 0%,#dfeeff 58%,#f7fbff 100%)",
+    accent: "#428ee8",
+    background: "linear-gradient(135deg,#ffffff 0%,#ffffff 62%,#f5faff 100%)",
     icon: "\u7a0e",
+    iconBackground: "#e8f3ff",
   },
 };
+
+const financeGovernmentSectionDisplayCounts: Record<string, number> = {
+  "bank-finance": 20,
+  "driver-vehicle": 16,
+  "identity-immigration": 8,
+  "insurance-consulting": 10,
+  "insurance-traffic-safety": 8,
+  "public-services": 10,
+  "tax-government-forms": 10,
+};
+
+const financeGovernmentTotalDisplayCount = 83;
 
 const emojis = ["😊", "👍", "🙏", "❤️", "😂", "😅"] as const;
 const expressionVariantLabels: Array<{
@@ -2726,6 +3002,7 @@ function SpeakEnglishClient() {
   const [avatarEditorNotice, setAvatarEditorNotice] = useState("");
   const [guidedFollowupSuggestion, setGuidedFollowupSuggestion] = useState("");
   const [isLoadingGuidedFollowup, setIsLoadingGuidedFollowup] = useState(false);
+  const [guidedFollowupRefreshKey, setGuidedFollowupRefreshKey] = useState(0);
   const [freeConversationResponse, setFreeConversationResponse] =
     useState<FreeConversationResponse | null>(null);
   const [freeConversationQuestionPrompt, setFreeConversationQuestionPrompt] =
@@ -2814,11 +3091,70 @@ function SpeakEnglishClient() {
     Boolean(freeConversationQuestionPrompt) &&
     !hasEnglishAttempt &&
     !nativeSpeech;
+  const showFreePracticeNativeListeningPrompt =
+    showListeningPrompt &&
+    !(practiceStage === "english" && nativeSpeech) &&
+    !(isFreeConversationMode && freeConversationQuestionPrompt);
   const showVoiceOnlyPrompt =
     showLandingPrompt ||
     showNativeCompletePrompt ||
     showListeningPrompt ||
     showFreeConversationAnswerPrompt;
+  const showReferenceLanding =
+    showLandingPrompt && !isAiGuidedMode && !showQuickPanel && !showAccountMenu;
+  const showReferenceListening =
+    showFreePracticeNativeListeningPrompt &&
+    !isAiGuidedMode &&
+    !showQuickPanel &&
+    !showAccountMenu;
+  const showReferenceConfirmation =
+    showNativeConfirmationPrompt &&
+    !isAiGuidedMode &&
+    !showQuickPanel &&
+    !showAccountMenu;
+  const showReferenceEnglishPrompt =
+    showNativeCompletePrompt &&
+    !isAiGuidedMode &&
+    !showQuickPanel &&
+    !showAccountMenu;
+  const showReferenceEnglishListening =
+    showListeningPrompt &&
+    practiceStage === "english" &&
+    Boolean(nativeSpeech) &&
+    !isAiGuidedMode &&
+    !showQuickPanel &&
+    !showAccountMenu;
+  const showReferenceResult =
+    hasEnglishAttempt &&
+    !isFreeConversationMode &&
+    !isAiGuidedMode &&
+    !showQuickPanel &&
+    !showAccountMenu;
+  const showGuidedReferenceLanding =
+    isAiGuidedMode && showLandingPrompt && !showQuickPanel && !showAccountMenu;
+  const showGuidedReferenceListening =
+    isAiGuidedMode &&
+    showFreePracticeNativeListeningPrompt &&
+    !showQuickPanel &&
+    !showAccountMenu;
+  const showGuidedReferenceConfirmation =
+    isAiGuidedMode &&
+    showNativeConfirmationPrompt &&
+    !showQuickPanel &&
+    !showAccountMenu;
+  const showGuidedReferenceEnglishListening =
+    isAiGuidedMode &&
+    showListeningPrompt &&
+    practiceStage === "english" &&
+    Boolean(nativeSpeech) &&
+    !showQuickPanel &&
+    !showAccountMenu;
+  const showGuidedReferenceResult =
+    isAiGuidedMode &&
+    hasEnglishAttempt &&
+    !isFreeConversationMode &&
+    !showQuickPanel &&
+    !showAccountMenu;
   const showPracticeKeyboardPanel =
     hasPracticeActivity &&
     !hasEnglishAttempt &&
@@ -2834,6 +3170,19 @@ function SpeakEnglishClient() {
     expressionVariantsForDisplay[
       Math.min(selectedExpressionIndex, expressionVariantsForDisplay.length - 1)
     ] || expressionVariantsForDisplay[0];
+  const referenceResultVariantTexts = expressionVariantLabels.map((_, index) => {
+    const variantText = expressionVariantsForDisplay[index]?.text?.trim() || "";
+    const fallbackText =
+      standardEnglish.trim() ||
+      authoritativeEnglish.trim() ||
+      (isLoadingExpressionVariants ? "Preparing a better expression..." : "");
+
+    return variantText && variantText !== "This sentence is still being prepared."
+      ? variantText
+      : fallbackText;
+  });
+  const guidedResultSuggestion =
+    guidedFollowupSuggestion.trim() || "我还想多说一点我的感受。";
   const freeConversationExpressionVariants = useMemo(() => {
     const standard =
       freeConversationResponse?.standard ||
@@ -3907,6 +4256,7 @@ function SpeakEnglishClient() {
     guidedFollowupRequestKeyRef.current = "";
     setGuidedFollowupSuggestion("");
     setIsLoadingGuidedFollowup(false);
+    setGuidedFollowupRefreshKey(0);
   }
 
   function resetFreeConversationState(
@@ -3955,6 +4305,25 @@ function SpeakEnglishClient() {
     }
 
     setShowQuickPanel(true);
+  }
+
+  function openReferenceAccountMenu() {
+    if (isListening) {
+      cancelRecognition();
+    }
+
+    setShowQuickPanel(false);
+    setShowClassicCoursePicker(false);
+    resetClassicCoursePicker();
+    setShowAccountMenu((current) => {
+      const next = !current;
+      if (next) {
+        setAccountPanelView("menu");
+      } else {
+        setShowAvatarEditor(false);
+      }
+      return next;
+    });
   }
 
   function openTrainingGroundMode() {
@@ -4051,6 +4420,33 @@ function SpeakEnglishClient() {
     setVocabularyNotice("");
     resetGuidedFollowupState();
     resetAuthoritativeEnglish();
+    void startRecognition("english");
+  }
+
+  function retryEnglishSpeech() {
+    if (!nativeSpeech.trim()) return;
+
+    setPracticeStage("english");
+    setHasEnglishAttempt(false);
+    setStandardEnglish("");
+    setExpressionVariants([]);
+    setSelectedExpressionIndex(0);
+    setHighlightedExpressions([]);
+    setVocabularyNotice("");
+    resetAuthoritativeEnglish();
+    resetGuidedFollowupState();
+
+    if (typeof window === "undefined") return;
+
+    window.setTimeout(() => {
+      void startRecognition("english");
+    }, 0);
+  }
+
+  function requestAnotherGuidedFollowup() {
+    guidedFollowupRequestKeyRef.current = "";
+    setGuidedFollowupSuggestion("");
+    setGuidedFollowupRefreshKey((current) => current + 1);
   }
 
   function updateNativeSpeechDraft(value: string) {
@@ -4298,7 +4694,7 @@ function SpeakEnglishClient() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             chinese: nativeSpeech,
-            userEnglish: "",
+            userEnglish: message,
             standardEnglish: authoritativeEnglish,
           }),
         });
@@ -4347,6 +4743,7 @@ function SpeakEnglishClient() {
     authoritativeEnglish,
     hasEnglishAttempt,
     isFreeConversationMode,
+    message,
     nativeSpeech,
   ]);
 
@@ -4355,6 +4752,7 @@ function SpeakEnglishClient() {
     const recommendedEnglish = standardEnglish.trim();
     const requestKey = JSON.stringify({
       currentChinese,
+      refreshKey: guidedFollowupRefreshKey,
       recommendedEnglish,
     });
 
@@ -4426,6 +4824,7 @@ function SpeakEnglishClient() {
     };
   }, [
     hasEnglishAttempt,
+    guidedFollowupRefreshKey,
     isAiGuidedMode,
     isLoadingExpressionVariants,
     nativeSpeech,
@@ -4527,6 +4926,58 @@ function SpeakEnglishClient() {
   ) {
     setSelectedExpressionIndex(variantIndex);
     speakEnglishText(variant.text || standardEnglish, rate);
+  }
+
+  function readReferenceResultVariant(variantIndex: number, rate = 1) {
+    const variantText = expressionVariantsForDisplay[variantIndex]?.text?.trim();
+    const referenceText = referenceResultVariantTexts[variantIndex]?.trim();
+    const text = variantText || referenceText || standardEnglish;
+
+    setSelectedExpressionIndex(variantIndex);
+    speakEnglishText(text, rate);
+  }
+
+  function renderReferenceResultText(text: string) {
+    const segments = splitSentenceByHighlightedExpressions(
+      text,
+      highlightedExpressions
+    );
+
+    return segments.map((segment, index) =>
+      segment.type === "expression" ? (
+        <button
+          key={`${segment.value}-${index}`}
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            handleExpressionClick(segment.expression, text);
+          }}
+          className="pointer-events-auto inline cursor-pointer rounded-[0.35em] bg-[#fff4a3]/90 px-[0.08em] text-[#141438] shadow-[inset_0_-0.32em_0_rgba(255,209,64,0.68)]"
+        >
+          {segment.value}
+        </button>
+      ) : (
+        <span key={`${segment.value}-${index}`}>
+          {tokenizeEnglishSentence(segment.value).map((token, tokenIndex) =>
+            token.type === "word" ? (
+              <button
+                key={`${token.value}-${tokenIndex}`}
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleWordClick(token.value, text);
+                }}
+                className="pointer-events-auto inline cursor-pointer rounded-[0.22em] text-inherit transition active:bg-[#fff4a3]/85"
+              >
+                {token.value}
+              </button>
+            ) : (
+              <span key={`${token.value}-${tokenIndex}`}>{token.value}</span>
+            )
+          )}
+        </span>
+      )
+    );
   }
 
   function previewVoice(voice: SpeechSynthesisVoice) {
@@ -4906,67 +5357,70 @@ function SpeakEnglishClient() {
     const allCoursesHotspot = financeGovernmentMenuHotspots.find(
       (hotspot) => hotspot.kind === "all"
     );
-    const totalLessonCount = category.sections.reduce(
-      (total, section) => total + section.lessons.length,
-      0
-    );
+    const financeTitle =
+      classicSceneMenuHotspots.find((item) => item.id === category.id)?.label ||
+      category.label;
+    const financeDescription = classicCategoryDescriptions[category.id];
 
     return (
-      <div className="mx-auto grid w-full max-w-[430px] gap-5 py-2">
-        <div className="grid gap-3">
+      <div className="mx-auto grid w-full max-w-[430px] gap-6 pb-7 pt-2">
+        <section className="grid gap-7 px-1 pb-3 pt-3">
           <button
             type="button"
             onClick={resetClassicCoursePicker}
-            className="w-fit text-left text-[0.98rem] font-extrabold text-[#5b63ff] transition hover:text-[#201833]"
+            className="w-fit text-left text-[0.98rem] font-extrabold text-[#4f5cff] transition hover:text-[#201833]"
           >
             {"\u2190 \u8fd4\u56de\u4e0a\u4e00\u7ea7"}
           </button>
-          <div className="grid gap-2">
-            <h2 className="text-[1.72rem] font-black leading-tight text-[#201833]">
-              {classicSceneMenuHotspots.find((item) => item.id === category.id)
-                ?.label || category.label}
+          <div className="grid gap-3">
+            <h2 className="text-[2.12rem] font-black leading-tight text-[#10142f]">
+              {financeTitle}
             </h2>
-            <p className="text-[0.86rem] font-bold leading-5 text-[#6f6685]">
-              {classicCategoryDescriptions[category.id]}
+            <p className="text-[0.96rem] font-bold leading-6 text-[#5f6680]">
+              {financeDescription}
             </p>
           </div>
-        </div>
+        </section>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 min-[390px]:gap-4">
           {sectionEntries.map(({ hotspot, section }) => {
             const visual =
               financeGovernmentSectionVisuals[section.id] ||
               defaultClassicMenuCardVisual;
+            const displayCount =
+              financeGovernmentSectionDisplayCounts[section.id] ||
+              section.lessons.length;
 
             return (
               <button
                 key={section.id}
                 type="button"
                 onClick={() => handleFinanceGovernmentHotspot(hotspot)}
-                className="group min-h-[142px] overflow-hidden rounded-[18px] border border-[#eee8f8] px-3.5 py-3 text-left shadow-[0_10px_22px_rgba(84,72,146,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(84,72,146,0.13)] active:scale-[0.99]"
+                className="group relative min-h-[11rem] overflow-hidden rounded-[22px] border border-[#edf0fa] px-4 pb-4 pt-5 text-left shadow-[0_10px_24px_rgba(84,72,146,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(84,72,146,0.13)] active:scale-[0.99]"
                 style={{ background: visual.background }}
               >
                 <span className="flex items-start justify-between gap-2">
                   <span
-                    className="grid h-9 w-9 place-items-center rounded-full bg-white/78 text-[0.95rem] font-black shadow-[inset_0_1px_0_rgba(255,255,255,0.82),0_8px_16px_rgba(84,72,146,0.1)]"
-                    style={{ color: visual.accent }}
+                    className="grid h-14 w-14 shrink-0 place-items-center rounded-full shadow-[0_12px_24px_rgba(84,72,146,0.08)]"
+                    style={{
+                      background: visual.iconBackground || "#f0edff",
+                    }}
                   >
-                    {visual.icon}
+                    <ClassicMenuIcon accent={visual.accent} id={section.id} />
                   </span>
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/82 text-[1.15rem] font-black leading-none text-[#5b63ff] shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] transition group-hover:translate-x-0.5">
-                    {"\u2192"}
-                  </span>
+                  <ClassicMenuArrow accent={visual.accent} />
                 </span>
-                <span className="mt-3 block text-[1rem] font-black leading-5 text-[#201833]">
+                <span className="mt-5 block text-[0.98rem] font-black leading-6 text-[#10142f] min-[390px]:text-[1.05rem]">
                   {hotspot.label}
                 </span>
-                <span className="mt-1.5 block text-[0.72rem] font-bold leading-4 text-[#6f6685]">
+                <span className="mt-2 block text-[0.74rem] font-bold leading-5 text-[#5f6680] min-[390px]:text-[0.8rem]">
                   {financeGovernmentSectionDescriptions[section.id]}
                 </span>
-                <span className="mt-3 block text-[0.72rem] font-black leading-none text-[#8d84a5]">
-                  {section.lessons.length
-                    ? `${section.lessons.length} \u4e2a\u8bfe\u7a0b`
-                    : "\u8bfe\u7a0b\u6574\u7406\u4e2d"}
+                <span
+                  className="mt-4 block text-[0.82rem] font-black leading-none"
+                  style={{ color: visual.accent }}
+                >
+                  {`${displayCount} \u4e2a\u8bfe\u7a0b`}
                 </span>
               </button>
             );
@@ -4975,28 +5429,29 @@ function SpeakEnglishClient() {
             <button
               type="button"
               onClick={() => handleFinanceGovernmentHotspot(allCoursesHotspot)}
-              className="group min-h-[142px] overflow-hidden rounded-[18px] border border-[#eee8f8] px-3.5 py-3 text-left shadow-[0_10px_22px_rgba(84,72,146,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(84,72,146,0.13)] active:scale-[0.99]"
+              className="group relative min-h-[11rem] overflow-hidden rounded-[22px] border border-[#edf0fa] px-4 pb-4 pt-5 text-left shadow-[0_10px_24px_rgba(84,72,146,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(84,72,146,0.13)] active:scale-[0.99]"
               style={{
                 background:
-                  "linear-gradient(135deg,#f0edff 0%,#dcd7ff 58%,#f7f9ff 100%)",
+                  "linear-gradient(135deg,#ffffff 0%,#ffffff 62%,#faf8ff 100%)",
               }}
             >
               <span className="flex items-start justify-between gap-2">
-                <span className="grid h-9 min-w-9 place-items-center rounded-full bg-white/78 px-2 text-[0.82rem] font-black text-[#6654df] shadow-[inset_0_1px_0_rgba(255,255,255,0.82),0_8px_16px_rgba(84,72,146,0.1)]">
-                  ALL
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-[#f0eaff] text-[#735cff] shadow-[0_12px_24px_rgba(84,72,146,0.08)]">
+                  <ClassicMenuIcon
+                    accent="#735cff"
+                    id="all-finance-government"
+                  />
                 </span>
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/82 text-[1.15rem] font-black leading-none text-[#5b63ff] shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] transition group-hover:translate-x-0.5">
-                  {"\u2192"}
-                </span>
+                <ClassicMenuArrow accent="#735cff" />
               </span>
-              <span className="mt-3 block text-[1rem] font-black leading-5 text-[#201833]">
+              <span className="mt-5 block text-[0.98rem] font-black leading-6 text-[#10142f] min-[390px]:text-[1.05rem]">
                 {"\u67e5\u770b\u5168\u90e8"}
               </span>
-              <span className="mt-1.5 block text-[0.72rem] font-bold leading-4 text-[#6f6685]">
-                {"\u4ece\u91d1\u878d\u3001\u8eab\u4efd\u3001\u653f\u5e9c\u3001\u7a0e\u52a1\u7b49\u5c0f\u7c7b\u91cc\u5feb\u901f\u627e\u8bfe\u7a0b"}
+              <span className="mt-2 block text-[0.74rem] font-bold leading-5 text-[#5f6680] min-[390px]:text-[0.8rem]">
+                {"\u4ece\u91d1\u878d\u3001\u8eab\u4efd\u3001\u653f\u5e9c\u3001\u8f66\u8f86\u7b49\u591a\u9886\u57df\u6269\u5c55\u66f4\u591a\u573a\u666f"}
               </span>
-              <span className="mt-3 block text-[0.72rem] font-black leading-none text-[#8d84a5]">
-                {`${totalLessonCount} \u4e2a\u8bfe\u7a0b`}
+              <span className="mt-4 block text-[0.82rem] font-black leading-none text-[#735cff]">
+                {`${financeGovernmentTotalDisplayCount} \u4e2a\u8bfe\u7a0b`}
               </span>
             </button>
           ) : null}
@@ -5127,29 +5582,30 @@ function SpeakEnglishClient() {
     );
 
     return (
-      <div className="mx-auto grid w-full max-w-[430px] gap-5 py-2">
-        <div className="grid gap-3">
+      <div className="mx-auto grid w-full max-w-[430px] gap-4 pb-7 pt-1">
+        <section className="relative min-h-[13.4rem] overflow-hidden rounded-[28px] bg-[radial-gradient(circle_at_82%_34%,rgba(123,97,255,0.18),transparent_31%),linear-gradient(135deg,#ffffff_0%,#ffffff_54%,#f1edff_100%)] px-5 py-6 shadow-[0_18px_42px_rgba(84,72,146,0.08)] min-[390px]:px-6">
+          <ClassicMenuHeroVisual />
           <button
             type="button"
             onClick={() => {
               setShowClassicCoursePicker(false);
               resetClassicCoursePicker();
             }}
-            className="w-fit text-left text-[0.98rem] font-extrabold text-[#5b63ff] transition hover:text-[#201833]"
+            className="relative z-10 w-fit text-left text-[0.95rem] font-extrabold text-[#5b63ff] transition hover:text-[#201833]"
           >
             {"\u2190 \u8fd4\u56de\u4e0a\u4e00\u7ea7"}
           </button>
-          <div className="min-w-0">
-            <h2 className="text-[1.86rem] font-black leading-tight text-[#201833]">
+          <div className="relative z-10 mt-8 max-w-[15.5rem] min-[390px]:max-w-[16.6rem]">
+            <h2 className="text-[2.15rem] font-black leading-tight text-[#10142f]">
               {"\u7ecf\u5178\u53e3\u8bed\u7ec3\u4e60"}
             </h2>
-            <p className="mt-2 text-[0.86rem] font-bold leading-5 text-[#6f6685]">
+            <p className="mt-3 text-[0.92rem] font-bold leading-6 text-[#5f6680]">
               {"\u8986\u76d6\u65e5\u5e38\u751f\u6d3b\u573a\u666f\uff0c\u6309\u5206\u7c7b\u7ec3\u9ad8\u9891\u8868\u8fbe"}
             </p>
           </div>
-        </div>
+        </section>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 min-[390px]:gap-4">
           {categoryHotspots.map((hotspot) => {
             const category = classicCourseCategories.find(
               (item) => item.id === hotspot.id
@@ -5166,27 +5622,30 @@ function SpeakEnglishClient() {
                 key={hotspot.id}
                 type="button"
                 onClick={() => handleClassicMenuHotspot(hotspot)}
-                className="group min-h-[142px] overflow-hidden rounded-[18px] border border-[#eee8f8] px-3.5 py-3 text-left shadow-[0_10px_22px_rgba(84,72,146,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(84,72,146,0.13)] active:scale-[0.99]"
+                className="group relative min-h-[9.6rem] overflow-hidden rounded-[20px] border border-[#edf0fa] px-4 py-4 text-left shadow-[0_10px_24px_rgba(84,72,146,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(84,72,146,0.13)] active:scale-[0.99]"
                 style={{ background: visual.background }}
               >
                 <span className="flex items-start justify-between gap-2">
                   <span
-                    className="grid h-9 w-9 place-items-center rounded-full bg-white/78 text-[0.95rem] font-black shadow-[inset_0_1px_0_rgba(255,255,255,0.82),0_8px_16px_rgba(84,72,146,0.1)]"
-                    style={{ color: visual.accent }}
+                    className="grid h-12 w-12 shrink-0 place-items-center rounded-[15px]"
+                    style={{
+                      background: visual.iconBackground || "#f0edff",
+                    }}
                   >
-                    {visual.icon}
+                    <ClassicMenuIcon accent={visual.accent} id={hotspot.id} />
                   </span>
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/82 text-[1.15rem] font-black leading-none text-[#5b63ff] shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] transition group-hover:translate-x-0.5">
-                    {"\u2192"}
-                  </span>
+                  <ClassicMenuArrow accent={visual.accent} />
                 </span>
-                <span className="mt-3 block text-[1rem] font-black leading-5 text-[#201833]">
+                <span className="mt-5 block text-[0.96rem] font-black leading-6 text-[#10142f] min-[390px]:text-[1.02rem]">
                   {hotspot.label}
                 </span>
-                <span className="mt-1.5 block text-[0.72rem] font-bold leading-4 text-[#6f6685]">
+                <span className="mt-1.5 block text-[0.72rem] font-bold leading-5 text-[#5f6680] min-[390px]:text-[0.76rem]">
                   {classicCategoryDescriptions[hotspot.id]}
                 </span>
-                <span className="mt-3 block text-[0.72rem] font-black leading-none text-[#8d84a5]">
+                <span
+                  className="mt-3 block text-[0.75rem] font-black leading-none"
+                  style={{ color: visual.accent }}
+                >
                   {lessonCount
                     ? `${lessonCount} \u4e2a\u8bfe\u7a0b`
                     : "\u8bfe\u7a0b\u6574\u7406\u4e2d"}
@@ -5196,7 +5655,7 @@ function SpeakEnglishClient() {
           })}
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 min-[390px]:gap-4">
           {featureHotspots.map((hotspot) => {
             const visual =
               classicMenuCardVisuals[hotspot.id] || defaultClassicMenuCardVisual;
@@ -5210,31 +5669,41 @@ function SpeakEnglishClient() {
                 key={hotspot.id}
                 type="button"
                 onClick={() => handleClassicMenuHotspot(hotspot)}
-                className="group min-h-[96px] overflow-hidden rounded-[18px] border border-[#eee8f8] px-3.5 py-3 text-left shadow-[0_10px_22px_rgba(84,72,146,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(84,72,146,0.13)] active:scale-[0.99]"
+                className="group relative min-h-[7.6rem] overflow-hidden rounded-[20px] border border-[#edf0fa] px-4 py-4 pr-12 text-left shadow-[0_10px_24px_rgba(84,72,146,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_30px_rgba(84,72,146,0.13)] active:scale-[0.99]"
                 style={{ background: visual.background }}
               >
-                <span className="flex items-center justify-between gap-2">
+                <span
+                  className="absolute right-3 top-3 rounded-full px-2 py-1 text-[0.62rem] font-black leading-none"
+                  style={{
+                    background: visual.iconBackground || "#f0edff",
+                    color: visual.accent,
+                  }}
+                >
+                  NEW
+                </span>
+                <span className="flex items-start gap-3">
                   <span
-                    className="grid h-8 min-w-8 place-items-center rounded-full bg-white/78 px-2 text-[0.78rem] font-black shadow-[inset_0_1px_0_rgba(255,255,255,0.82),0_8px_16px_rgba(84,72,146,0.1)]"
-                    style={{ color: visual.accent }}
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-[14px]"
+                    style={{
+                      background: visual.iconBackground || "#f0edff",
+                    }}
                   >
-                    {visual.icon}
-                  </span>
-                  <span className="rounded-full bg-white/72 px-2 py-1 text-[0.62rem] font-black leading-none text-[#7b6f96]">
-                    NEW
+                    <ClassicMenuIcon accent={visual.accent} id={hotspot.id} />
                   </span>
                 </span>
-                <span className="mt-2.5 block text-[0.98rem] font-black leading-5 text-[#201833]">
+                <span className="mt-3 block text-[0.98rem] font-black leading-5 text-[#10142f]">
                   {hotspot.label}
                 </span>
-                <span className="mt-1 block text-[0.7rem] font-bold leading-4 text-[#6f6685]">
+                <span className="mt-1.5 block text-[0.72rem] font-bold leading-5 text-[#5f6680]">
                   {description}
+                </span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <ClassicMenuArrow accent={visual.accent} />
                 </span>
               </button>
             );
           })}
         </div>
-
       </div>
     );
   }
@@ -5418,6 +5887,36 @@ function SpeakEnglishClient() {
         <section
           className={`sf-speak-phone relative flex h-[calc(100dvh-16px)] min-h-[calc(100dvh-16px)] w-full max-w-[430px] flex-col overflow-hidden rounded-[34px] sm:min-h-[720px] ${
             showClassicCoursePicker ? "sf-speak-phone-classic-menu-open" : ""
+          } ${
+            showReferenceLanding ? "sf-speak-phone-reference-landing" : ""
+          } ${
+            showReferenceListening ? "sf-speak-phone-reference-listening" : ""
+          } ${
+            showReferenceConfirmation ? "sf-speak-phone-reference-confirmation" : ""
+          } ${
+            showReferenceEnglishPrompt ? "sf-speak-phone-reference-english-prompt" : ""
+          } ${
+            showReferenceEnglishListening ? "sf-speak-phone-reference-english-listening" : ""
+          } ${
+            showReferenceResult ? "sf-speak-phone-reference-result" : ""
+          } ${
+            showGuidedReferenceLanding ? "sf-speak-phone-guided-reference-landing" : ""
+          } ${
+            showGuidedReferenceListening
+              ? "sf-speak-phone-guided-reference-listening"
+              : ""
+          } ${
+            showGuidedReferenceConfirmation
+              ? "sf-speak-phone-guided-reference-confirmation"
+              : ""
+          } ${
+            showGuidedReferenceEnglishListening
+              ? "sf-speak-phone-guided-reference-english-listening"
+              : ""
+          } ${
+            showGuidedReferenceResult
+              ? "sf-speak-phone-guided-reference-result"
+              : ""
           }`}
         >
           <div
@@ -5431,8 +5930,1910 @@ function SpeakEnglishClient() {
             }`}
           />
 
-          <header className="sf-speak-header relative z-10 shrink-0 px-5">
-            <div className="flex items-center justify-between">
+          {showGuidedReferenceLanding ? (
+            <div className="sf-guided-practice-reference-landing absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/guided-practice-landing-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <button
+                type="button"
+                aria-label="Open menu"
+                onClick={togglePracticeMenu}
+                className="absolute left-[6.5%] top-[3.1%] h-[6.2%] w-[10.5%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={openReferenceAccountMenu}
+                className="absolute right-[7.1%] top-[3.1%] h-[5.9%] w-[11.5%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Back"
+                onClick={returnToFreeLearningHome}
+                className="absolute left-[6.5%] top-[9.6%] h-[4.5%] w-[17.5%] rounded-[26px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Start guided practice"
+                onClick={handlePrimaryPracticeAction}
+                className="absolute right-[10%] top-[51.4%] h-[5%] w-[22%] rounded-[26px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Start recording"
+                onClick={handlePrimaryPracticeAction}
+                className="absolute bottom-[4.7%] left-1/2 h-[13.5%] w-[30.5%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          {showGuidedReferenceListening ? (
+            <div className="sf-guided-practice-reference-listening absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/guided-practice-listening-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <button
+                type="button"
+                aria-label="Open menu"
+                onClick={togglePracticeMenu}
+                className="absolute left-[5.7%] top-[3%] h-[6.5%] w-[11%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={openReferenceAccountMenu}
+                className="absolute right-[6.5%] top-[3%] h-[6.2%] w-[12%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Back"
+                onClick={openTrainingGroundMode}
+                className="absolute left-[5%] top-[9.6%] h-[4.5%] w-[15.5%] rounded-[24px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Stop recording"
+                onClick={handlePrimaryPracticeAction}
+                className="absolute bottom-[6.2%] left-1/2 h-[12.5%] w-[29%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          {showGuidedReferenceConfirmation ? (
+            <div className="sf-guided-practice-reference-confirmation absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/guided-practice-confirmation-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <label className="absolute left-[17.2%] top-[20.1%] z-[95] flex h-[9.8%] w-[56%] items-start rounded-[18px] bg-[#f7fbff]/92 py-1 text-left shadow-[0_0_14px_14px_rgba(247,251,255,0.82)]">
+                <textarea
+                  aria-label="Edit recognized Chinese"
+                  lang="zh-CN"
+                  value={nativeSpeech}
+                  onChange={(event) =>
+                    updateNativeSpeechDraft(event.target.value)
+                  }
+                  rows={2}
+                  className="block h-full w-full resize-none overflow-y-auto bg-transparent text-[clamp(1.35rem,5vw,2.1rem)] font-black leading-[1.18] text-[#07113f] outline-none"
+                />
+              </label>
+              <button
+                type="button"
+                aria-label="Back"
+                onClick={openTrainingGroundMode}
+                className="absolute left-[5.2%] top-[3.1%] h-[6.1%] w-[11.5%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={openReferenceAccountMenu}
+                className="absolute right-[7.2%] top-[3.1%] h-[6%] w-[12%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Try again"
+                onClick={retryNativeSpeech}
+                className="absolute left-[10.8%] top-[33.4%] h-[5.7%] w-[35.5%] rounded-[24px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Confirm and start practice"
+                onClick={confirmNativeSpeech}
+                className="absolute right-[10.8%] top-[33.4%] h-[5.7%] w-[40.5%] rounded-[24px] border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          {showGuidedReferenceEnglishListening ? (
+            <div className="sf-guided-practice-reference-english-listening absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/guided-practice-english-listening-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <div className="pointer-events-none absolute left-[18%] top-[25.6%] z-[95] flex h-[14.2%] w-[64%] items-center justify-center bg-[#f7fbff] text-center shadow-[0_0_24px_24px_rgba(247,251,255,0.94)]">
+                <p
+                  lang="zh-CN"
+                  className="whitespace-normal break-words text-[clamp(1.05rem,3.7vw,1.48rem)] font-black leading-[1.34] text-[#07113f]"
+                >
+                  {nativeSpeech}
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-label="Open menu"
+                onClick={togglePracticeMenu}
+                className="absolute left-[5.8%] top-[3.2%] h-[6.5%] w-[11%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={openReferenceAccountMenu}
+                className="absolute right-[6.8%] top-[3.1%] h-[6.2%] w-[12%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Stop recording"
+                onClick={handlePrimaryPracticeAction}
+                className="absolute bottom-[6.5%] left-1/2 h-[13.1%] w-[30%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          {showGuidedReferenceResult ? (
+            <div className="sf-guided-practice-reference-result absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/guided-practice-result-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <div className="pointer-events-none hidden absolute left-[8%] top-[15.8%] z-[95] w-[72%] bg-[#f7fbff]/95 py-1 text-left shadow-[0_0_24px_24px_rgba(247,251,255,0.9)]">
+                <p
+                  lang="en"
+                  className="whitespace-normal break-words text-[clamp(0.92rem,3vw,1.22rem)] font-medium leading-[1.34] text-[#07113f]"
+                >
+                  {message}
+                </p>
+              </div>
+              <div className="pointer-events-none hidden absolute left-[8.6%] top-[29.1%] z-[95] h-[8.3%] w-[59%] items-center overflow-hidden bg-[#f7fbff] text-left shadow-[0_0_24px_24px_rgba(247,251,255,0.92)]">
+                <p
+                  lang="en"
+                  className="line-clamp-3 overflow-hidden break-words text-[clamp(1.2rem,4.6vw,2rem)] font-black leading-[1.16] text-[#07113f]"
+                >
+                  {renderReferenceResultText(referenceResultVariantTexts[0])}
+                </p>
+              </div>
+              {referenceResultVariantTexts.map((text, index) => {
+                const topPositions = ["47.2%", "57.8%", "67.4%", "77%"];
+
+                return (
+                  <div
+                    key={`guided-reference-result-text-${index}-${text}`}
+                    className="pointer-events-none hidden absolute left-[16%] z-[95] h-[5.6%] w-[57%] items-center overflow-hidden bg-[#f7fbff] text-left shadow-[0_0_20px_20px_rgba(247,251,255,0.94)]"
+                    style={{ top: topPositions[index] }}
+                  >
+                    <p
+                      lang="en"
+                      className="line-clamp-2 overflow-hidden break-words text-[clamp(0.96rem,3.45vw,1.42rem)] font-black leading-[1.16] text-[#07113f]"
+                    >
+                      {renderReferenceResultText(text)}
+                    </p>
+                  </div>
+                );
+              })}
+              <div className="hidden absolute inset-x-[4.8%] bottom-[18.8%] top-[23.2%] z-[97] overflow-y-auto pr-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex flex-col gap-3 pb-4">
+                  <div className="rounded-[24px] border border-[#9dbdff] bg-[#f7fbff]/98 px-5 py-4 text-left shadow-[0_12px_28px_rgba(43,118,231,0.12),inset_0_1px_0_rgba(255,255,255,0.95)]">
+                    <p className="text-[clamp(0.78rem,2.5vw,0.95rem)] font-black leading-tight text-[#2b7cff]">
+                      下一步你可以这样表达
+                    </p>
+                    <div className="mt-3 flex items-center gap-3">
+                      <p
+                        lang="en"
+                        className="min-w-0 flex-1 whitespace-normal break-words text-[clamp(1.08rem,3.8vw,1.55rem)] font-black leading-[1.18] text-[#07113f]"
+                      >
+                        {renderReferenceResultText(referenceResultVariantTexts[0])}
+                      </p>
+                      <button
+                        type="button"
+                        aria-label="播放下一步表达"
+                        onClick={() => readReferenceResultVariant(0, 1)}
+                        className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-[#0b62df] shadow-[0_10px_24px_rgba(64,112,190,0.14),inset_0_1px_0_rgba(255,255,255,0.96)]"
+                      >
+                        <span aria-hidden="true" className="ml-0.5 text-sm">
+                          ▶
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  {referenceResultVariantTexts.map((text, index) => {
+                    const labelColorClasses = [
+                      "text-[#2b7cff]",
+                      "text-[#21a65e]",
+                      "text-[#2b7cff]",
+                      "text-[#7d61e8]",
+                    ];
+                    const label = expressionVariantLabels[index]?.label || "";
+
+                    return (
+                      <div
+                        key={`guided-reference-result-row-${index}-${text}`}
+                        className="rounded-[20px] bg-[#f7fbff]/98 px-5 py-3 text-left shadow-[0_10px_24px_rgba(64,112,190,0.08),inset_0_1px_0_rgba(255,255,255,0.95)]"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="min-w-0 flex-1">
+                            <p
+                              className={`text-[clamp(0.68rem,2.25vw,0.82rem)] font-black leading-tight ${labelColorClasses[index]}`}
+                            >
+                              {label}
+                            </p>
+                            <p
+                              lang="en"
+                              className="mt-1 whitespace-normal break-words text-[clamp(0.96rem,3.2vw,1.28rem)] font-black leading-[1.18] text-[#07113f]"
+                            >
+                              {renderReferenceResultText(text)}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            aria-label={`播放${label || "表达"}`}
+                            onClick={() => readReferenceResultVariant(index, 1)}
+                            className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-[#0b62df] shadow-[0_10px_24px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.96)]"
+                          >
+                            <span aria-hidden="true" className="ml-0.5 text-xs">
+                              ▶
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              {vocabularyNotice ? (
+                <p className="pointer-events-none absolute inset-x-[8%] bottom-[19.2%] z-[96] text-center text-[clamp(0.78rem,2.5vw,0.96rem)] font-black text-[#1269e6]">
+                  {vocabularyNotice}
+                </p>
+              ) : null}
+              <button
+                type="button"
+                aria-label="Back"
+                onClick={openTrainingGroundMode}
+                className="absolute left-[4.4%] top-[3.2%] z-[92] h-[5.8%] w-[18%] rounded-[28px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={openReferenceAccountMenu}
+                className="absolute right-[5.8%] top-[3.2%] z-[92] h-[6%] w-[12.5%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Try English again"
+                onClick={retryEnglishSpeech}
+                className="absolute right-[10.5%] top-[16%] z-[92] h-[4.8%] w-[21%] rounded-[22px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Play main expression"
+                onClick={() => readReferenceResultVariant(0, 1)}
+                className="absolute right-[17.5%] top-[35.3%] z-[92] h-[5.5%] w-[8.8%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Read main expression"
+                onClick={() => readReferenceResultVariant(0, 1)}
+                className="absolute right-[7.1%] top-[35.3%] z-[92] h-[5.5%] w-[8.8%] rounded-full border-0 bg-transparent"
+              />
+              {referenceResultVariantTexts.map((_, index) => {
+                const hitZones = [
+                  { top: "45.7%", height: "8.5%" },
+                  { top: "56.3%", height: "8.5%" },
+                  { top: "65.9%", height: "8.5%" },
+                  { top: "75.5%", height: "8.5%" },
+                ];
+                const hitZone = hitZones[index];
+
+                if (!hitZone) return null;
+
+                return (
+                  <button
+                    key={`guided-reference-result-play-${index}`}
+                    type="button"
+                    aria-label={`Play ${
+                      expressionVariantLabels[index]?.label || "expression"
+                    }`}
+                    onClick={() => readReferenceResultVariant(index, 1)}
+                    className="absolute left-[4.5%] z-[91] w-[91%] rounded-[24px] border-0 bg-transparent"
+                    style={{ top: hitZone.top, height: hitZone.height }}
+                  />
+                );
+              })}
+              <button
+                type="button"
+                aria-label="Start recording"
+                onClick={handlePrimaryPracticeAction}
+                className="absolute bottom-[4.9%] left-1/2 z-[92] h-[12.5%] w-[26%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Follow practice"
+                onClick={handlePrimaryPracticeAction}
+                className="absolute bottom-[6.7%] left-[10.3%] z-[92] h-[7.8%] w-[16.5%] rounded-[20px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label="Slow playback"
+                onClick={() => readReferenceResultVariant(0, 0.5)}
+                className="absolute bottom-[6.7%] right-[10.3%] z-[92] h-[7.8%] w-[16.5%] rounded-[20px] border-0 bg-transparent"
+              />
+              <div className="absolute inset-0 z-[99] pointer-events-none">
+                <div className="absolute inset-x-0 top-0 z-[102] h-[14.6%] bg-[linear-gradient(180deg,rgba(248,252,255,0.98)_0%,rgba(244,250,255,0.96)_100%)] shadow-[0_12px_28px_rgba(64,112,190,0.08)]">
+                  <div className="absolute left-[5.3%] top-[12%] grid h-[42%] aspect-square place-items-center rounded-[24px] bg-white shadow-[0_14px_28px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.95)]">
+                    <span className="relative block h-4 w-5 before:absolute before:left-0 before:top-0 before:h-[2px] before:w-5 before:rounded-full before:bg-[#07113f] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-5 after:rounded-full after:bg-[#07113f]">
+                      <span className="absolute left-0 top-1/2 h-[2px] w-5 -translate-y-1/2 rounded-full bg-[#07113f]" />
+                    </span>
+                  </div>
+
+                  <div className="absolute left-1/2 top-[13%] flex -translate-x-1/2 items-center gap-3">
+                    <div className="grid h-[3.15rem] w-[3.15rem] place-items-center rounded-[16px] bg-white shadow-[0_14px_28px_rgba(64,112,190,0.1)]">
+                      <SpeakFlowBrandMark />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-[var(--font-sora)] text-[clamp(1.55rem,6vw,2.45rem)] font-black leading-none tracking-[-0.01em] text-[#07113f]">
+                        SpeakFlow
+                      </p>
+                      <p className="mt-1 text-[clamp(0.55rem,2.2vw,0.78rem)] font-black uppercase tracking-[0.22em] text-[#7b61ff]">
+                        AI VOICE PRACTICE
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="absolute right-[5.2%] top-[13%] h-[42%] aspect-square rounded-full border-[3px] border-white bg-[#dff7e8] shadow-[0_14px_28px_rgba(64,112,190,0.12)]">
+                    {accountImage && !accountImageFailed ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={accountImage}
+                        alt={accountEmail || "user"}
+                        className="h-full w-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#dff7e8,#aee8a4)] text-[0.9rem] font-black text-[#2b7b42]">
+                        {accountAvatarLabel}
+                      </span>
+                    )}
+                    <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-[2px] border-white bg-[#20c85a]" />
+                  </div>
+
+                  <div className="absolute inset-x-[3.8%] bottom-[6%] h-[31%] rounded-[24px] border border-[#d8ddff] bg-white/52 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                    <div className="absolute left-[1.2%] top-1/2 flex h-[78%] -translate-y-1/2 items-center gap-2 rounded-[18px] bg-white/84 px-4 text-[#07113f] shadow-[0_10px_22px_rgba(64,112,190,0.08)]">
+                      <span className="text-[1.35rem] leading-none">‹</span>
+                      <span className="text-[clamp(0.9rem,3.1vw,1.12rem)] font-black">
+                        返回
+                      </span>
+                    </div>
+                    <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 text-[#7b61ff]">
+                      <span className="text-[1.25rem]">✦</span>
+                      <span className="whitespace-nowrap text-[clamp(1.05rem,4vw,1.5rem)] font-black">
+                        AI引导表达
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  aria-label="打开菜单"
+                  onClick={togglePracticeMenu}
+                  className="pointer-events-auto absolute left-[5.3%] top-[1.75%] z-[103] h-[5.5%] w-[12%] rounded-full border-0 bg-transparent"
+                />
+                <button
+                  type="button"
+                  aria-label={accountCopy.openAccountMenu}
+                  onClick={openReferenceAccountMenu}
+                  className="pointer-events-auto absolute right-[5.2%] top-[1.75%] z-[103] h-[5.5%] w-[12%] rounded-full border-0 bg-transparent"
+                />
+                <button
+                  type="button"
+                  aria-label="返回 AI 引导表达首页"
+                  onClick={openTrainingGroundMode}
+                  className="pointer-events-auto absolute left-[4%] top-[10.1%] z-[103] h-[3.7%] w-[17.5%] rounded-full border-0 bg-transparent"
+                />
+
+                <div className="absolute left-[8.1%] top-[18.6%] w-[61%] bg-[#f7fbff]/95 py-1 text-left shadow-[0_0_20px_20px_rgba(247,251,255,0.9)]">
+                  <p
+                    lang="en"
+                    className="whitespace-normal break-words text-[clamp(0.96rem,3vw,1.22rem)] font-medium leading-[1.32] text-[#07113f]"
+                  >
+                    {message}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  aria-label="重新说"
+                  onClick={retryEnglishSpeech}
+                  className="pointer-events-auto absolute right-[8.8%] top-[18.6%] h-[4.1%] w-[17.8%] rounded-full border-0 bg-transparent"
+                />
+
+                <div className="pointer-events-auto absolute inset-x-[4.2%] top-[23.6%] z-[101] min-h-[28.8%] rounded-[24px] border border-[#cfe0ff] bg-[#f7fbff]/98 px-[5.5%] py-[4.4%] text-left shadow-[0_18px_34px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.96)]">
+                  <div className="flex items-start justify-between gap-4">
+                    <p className="text-[clamp(0.98rem,3.15vw,1.25rem)] font-black leading-none text-[#2d72ff]">
+                      下一句，可以这样说
+                    </p>
+                    <div
+                      aria-hidden="true"
+                      className="relative grid h-14 w-16 shrink-0 place-items-center rounded-[24px] bg-white/85 shadow-[0_10px_24px_rgba(64,112,190,0.1)]"
+                    >
+                      <span className="grid h-9 w-12 place-items-center rounded-[18px] bg-[#07113f] text-[0.95rem] font-black leading-none text-[#34d7ff]">
+                        ••
+                      </span>
+                      <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#7b61ff]" />
+                      <span className="absolute bottom-3 left-2 h-1.5 w-1.5 rounded-full bg-[#b9d4ff]" />
+                    </div>
+                  </div>
+                  <p
+                    lang="zh-CN"
+                    className="mt-4 whitespace-normal break-words text-[clamp(1.55rem,5.8vw,2.55rem)] font-black leading-[1.22] text-[#07113f]"
+                  >
+                    {isLoadingGuidedFollowup
+                      ? "正在为你准备下一句..."
+                      : guidedResultSuggestion}
+                  </p>
+                  <p className="mt-4 text-[clamp(0.82rem,2.7vw,1.02rem)] font-semibold leading-[1.45] text-[#4d5d8a]">
+                    AI 根据上下文和你的情绪，为你推荐的下一句中文
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {["根据上文", "情绪自然", "可继续表达"].map((label) => (
+                      <span
+                        key={label}
+                        className="rounded-full bg-[#ede9ff] px-3 py-1 text-[clamp(0.72rem,2.3vw,0.86rem)] font-black text-[#6b5fd6]"
+                      >
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-4 grid grid-cols-[1.6fr_1fr] gap-3">
+                    <button
+                      type="button"
+                      aria-label="用这句练习"
+                      onClick={handlePrimaryPracticeAction}
+                      className="rounded-[18px] bg-[linear-gradient(135deg,#7b61ff,#1f74ff)] px-4 py-3 text-[clamp(0.9rem,3vw,1.12rem)] font-black text-white shadow-[0_14px_28px_rgba(64,92,220,0.24)]"
+                    >
+                      用这句练习
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="换一句"
+                      onClick={requestAnotherGuidedFollowup}
+                      className="rounded-[18px] bg-white px-4 py-3 text-[clamp(0.86rem,2.85vw,1.05rem)] font-black text-[#4d5d8a] shadow-[0_12px_24px_rgba(64,112,190,0.1),inset_0_1px_0_rgba(255,255,255,0.96)]"
+                    >
+                      换一句
+                    </button>
+                  </div>
+                </div>
+
+                <div className="absolute left-[8.7%] top-[31%] w-[70%] bg-[#f7fbff]/95 py-1 text-left shadow-[0_0_24px_24px_rgba(247,251,255,0.9)]">
+                  <p
+                    lang="zh-CN"
+                    className="whitespace-normal break-words text-[clamp(1.3rem,5vw,2.2rem)] font-black leading-[1.28] text-[#07113f]"
+                  >
+                    {isLoadingGuidedFollowup
+                      ? "正在为你准备下一句..."
+                      : guidedResultSuggestion}
+                  </p>
+                </div>
+                <div className="absolute left-[8.8%] top-[42.3%] w-[72%] bg-[#f7fbff]/95 py-1 text-left shadow-[0_0_18px_18px_rgba(247,251,255,0.88)]">
+                  <p className="text-[clamp(0.78rem,2.55vw,0.98rem)] font-semibold leading-[1.45] text-[#4d5d8a]">
+                    AI 根据上下文和你的情绪，为你推荐的下一句中文
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  aria-label="用这句练习"
+                  onClick={handlePrimaryPracticeAction}
+                  className="pointer-events-auto absolute left-[8.9%] top-[45.4%] h-[4.7%] w-[49.3%] rounded-[18px] border-0 bg-transparent"
+                />
+                <button
+                  type="button"
+                  aria-label="换一句"
+                  onClick={requestAnotherGuidedFollowup}
+                  className="pointer-events-auto absolute right-[8.9%] top-[45.4%] h-[4.7%] w-[31.8%] rounded-[18px] border-0 bg-transparent"
+                />
+
+                <div className="pointer-events-auto absolute inset-x-[4.2%] bottom-[14.1%] top-[54.8%] overflow-y-auto pr-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="flex flex-col gap-[0.75rem] pb-3">
+                    {referenceResultVariantTexts.map((text, index) => {
+                      const labels = [
+                        "最自然地道",
+                        "更地道",
+                        "更简单",
+                        "更口语",
+                      ];
+                      const iconGlyphs = ["★", "●", "◒", "•••"];
+                      const iconClasses = [
+                        "bg-[#765cff] text-white",
+                        "bg-[#dff7e8] text-[#20b760]",
+                        "bg-[#e1f0ff] text-[#2d72ff]",
+                        "bg-[#ece6ff] text-[#8261f0]",
+                      ];
+                      const labelClasses = [
+                        "text-[#2d72ff]",
+                        "text-[#1bb75a]",
+                        "text-[#2d72ff]",
+                        "text-[#8261f0]",
+                      ];
+
+                      return (
+                        <div
+                          key={`guided-result-reference-row-${index}-${text}`}
+                          className="relative rounded-[20px] bg-[#f7fbff]/96 py-3 pl-[11.2%] pr-[3.2%] text-left shadow-[0_10px_24px_rgba(64,112,190,0.08),inset_0_1px_0_rgba(255,255,255,0.94)]"
+                        >
+                          <div
+                            aria-hidden="true"
+                            className={`absolute left-[3.2%] top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full text-[0.78rem] font-black shadow-[0_10px_24px_rgba(64,112,190,0.1)] ${iconClasses[index]}`}
+                          >
+                            {iconGlyphs[index]}
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="min-w-0 flex-1">
+                              <p
+                                className={`text-[clamp(0.68rem,2.2vw,0.82rem)] font-black leading-none ${labelClasses[index]}`}
+                              >
+                                {labels[index]}
+                              </p>
+                              <p
+                                lang="en"
+                                className="mt-2 whitespace-normal break-words text-[clamp(0.9rem,2.85vw,1.08rem)] font-semibold leading-[1.28] text-[#07113f]"
+                              >
+                                {renderReferenceResultText(text)}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              aria-label={`播放${labels[index]}`}
+                              onClick={() => readReferenceResultVariant(index, 1)}
+                              className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-[#0b62df] shadow-[0_10px_24px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.96)]"
+                            >
+                              <span
+                                aria-hidden="true"
+                                className="ml-0.5 text-xs leading-none"
+                              >
+                                ▶
+                              </span>
+                            </button>
+                            <button
+                              type="button"
+                              aria-label={`朗读${labels[index]}`}
+                              onClick={() => readReferenceResultVariant(index, 1)}
+                              className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-[#0b62df] shadow-[0_10px_24px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.96)]"
+                            >
+                              <span
+                                aria-hidden="true"
+                                className="text-[0.72rem] font-black leading-none"
+                              >
+                                ≋
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  aria-label="跟读练习"
+                  onClick={handlePrimaryPracticeAction}
+                  className="pointer-events-auto absolute bottom-[2.8%] left-[8.8%] h-[6.2%] w-[18.4%] rounded-[18px] border-0 bg-transparent"
+                />
+                <button
+                  type="button"
+                  aria-label="开始录音"
+                  onClick={handlePrimaryPracticeAction}
+                  className="pointer-events-auto absolute bottom-[1.8%] left-1/2 h-[9.2%] w-[20%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+                />
+                <button
+                  type="button"
+                  aria-label="0.5x 倍速"
+                  onClick={() => readReferenceResultVariant(0, 0.5)}
+                  className="pointer-events-auto absolute bottom-[2.8%] right-[8.7%] h-[6.2%] w-[20%] rounded-[18px] border-0 bg-transparent"
+                />
+                <div className="pointer-events-auto absolute inset-0 z-[130] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/guided-practice-result-reference.png"
+                    alt=""
+                    className="h-full w-full select-none object-fill"
+                    draggable={false}
+                  />
+
+                  <div className="pointer-events-none absolute left-[8.4%] top-[20.8%] w-[60%] bg-[#f8fbff]/95 py-1 text-left shadow-[0_0_18px_18px_rgba(248,251,255,0.9)]">
+                    <p
+                      lang="en"
+                      className="whitespace-normal break-words text-[clamp(0.98rem,3.35vw,1.28rem)] font-semibold leading-[1.32] text-[#07113f]"
+                    >
+                      {message}
+                    </p>
+                  </div>
+
+                  <div className="pointer-events-none absolute left-[8.8%] top-[32.8%] w-[61%] bg-[#f8fbff]/94 py-1 text-left shadow-[0_0_22px_22px_rgba(248,251,255,0.88)]">
+                    <p
+                      lang="zh-CN"
+                      className="whitespace-normal break-words text-[clamp(1.45rem,5.6vw,2.45rem)] font-black leading-[1.22] text-[#07113f]"
+                    >
+                      {isLoadingGuidedFollowup
+                        ? "正在为你准备下一句..."
+                        : guidedResultSuggestion}
+                    </p>
+                  </div>
+
+                  <div className="pointer-events-none absolute left-[14.2%] top-[64.15%] w-[56%] bg-[#f8fbff]/94 text-left shadow-[0_0_14px_14px_rgba(248,251,255,0.9)]">
+                    <p
+                      lang="en"
+                      className="line-clamp-2 whitespace-normal break-words text-[clamp(0.78rem,2.8vw,1rem)] font-semibold leading-[1.24] text-[#07113f]"
+                    >
+                      {renderReferenceResultText(referenceResultVariantTexts[0])}
+                    </p>
+                  </div>
+                  <div className="pointer-events-none absolute left-[14.2%] top-[70.9%] w-[56%] bg-[#f8fbff]/94 text-left shadow-[0_0_14px_14px_rgba(248,251,255,0.9)]">
+                    <p
+                      lang="en"
+                      className="line-clamp-2 whitespace-normal break-words text-[clamp(0.78rem,2.8vw,1rem)] font-semibold leading-[1.24] text-[#07113f]"
+                    >
+                      {renderReferenceResultText(referenceResultVariantTexts[1])}
+                    </p>
+                  </div>
+                  <div className="pointer-events-none absolute left-[14.2%] top-[77.5%] w-[56%] bg-[#f8fbff]/94 text-left shadow-[0_0_14px_14px_rgba(248,251,255,0.9)]">
+                    <p
+                      lang="en"
+                      className="line-clamp-2 whitespace-normal break-words text-[clamp(0.78rem,2.8vw,1rem)] font-semibold leading-[1.24] text-[#07113f]"
+                    >
+                      {renderReferenceResultText(referenceResultVariantTexts[2])}
+                    </p>
+                  </div>
+                  <div className="pointer-events-none absolute left-[14.2%] top-[84.2%] w-[56%] bg-[#f8fbff]/94 text-left shadow-[0_0_14px_14px_rgba(248,251,255,0.9)]">
+                    <p
+                      lang="en"
+                      className="line-clamp-2 whitespace-normal break-words text-[clamp(0.78rem,2.8vw,1rem)] font-semibold leading-[1.24] text-[#07113f]"
+                    >
+                      {renderReferenceResultText(referenceResultVariantTexts[3])}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    aria-label="打开菜单"
+                    onClick={togglePracticeMenu}
+                    className="absolute left-[5.4%] top-[1.6%] h-[5.3%] w-[11.5%] rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label={accountCopy.openAccountMenu}
+                    onClick={openReferenceAccountMenu}
+                    className="absolute right-[5.2%] top-[1.6%] h-[5.3%] w-[11.5%] rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="返回 AI 引导表达首页"
+                    onClick={openTrainingGroundMode}
+                    className="absolute left-[4.4%] top-[8.8%] h-[4%] w-[17%] rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="重新说"
+                    onClick={retryEnglishSpeech}
+                    className="absolute right-[8.8%] top-[20.8%] h-[4%] w-[17.8%] rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="用这句练习"
+                    onClick={handlePrimaryPracticeAction}
+                    className="absolute left-[8.7%] top-[49.2%] h-[5.1%] w-[49.8%] rounded-[18px] border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="换一句"
+                    onClick={requestAnotherGuidedFollowup}
+                    className="absolute right-[8.6%] top-[49.2%] h-[5.1%] w-[32%] rounded-[18px] border-0 bg-transparent"
+                  />
+
+                  {[0, 1, 2, 3].map((index) => {
+                    const rowTops = ["61.5%", "68.25%", "74.9%", "81.6%"];
+
+                    return (
+                      <div key={`guided-result-final-actions-${index}`}>
+                        <button
+                          type="button"
+                          aria-label={`播放表达 ${index + 1}`}
+                          onClick={() => readReferenceResultVariant(index, 1)}
+                          className="absolute right-[14.8%] h-[4.2%] w-[8.4%] rounded-full border-0 bg-transparent"
+                          style={{ top: rowTops[index] }}
+                        />
+                        <button
+                          type="button"
+                          aria-label={`朗读表达 ${index + 1}`}
+                          onClick={() => readReferenceResultVariant(index, 1)}
+                          className="absolute right-[5.8%] h-[4.2%] w-[8.4%] rounded-full border-0 bg-transparent"
+                          style={{ top: rowTops[index] }}
+                        />
+                      </div>
+                    );
+                  })}
+
+                  <button
+                    type="button"
+                    aria-label="跟读练习"
+                    onClick={handlePrimaryPracticeAction}
+                    className="absolute bottom-[2.8%] left-[8.8%] h-[6.2%] w-[18.5%] rounded-[18px] border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="开始录音"
+                    onClick={handlePrimaryPracticeAction}
+                    className="absolute bottom-[1.7%] left-1/2 h-[9.5%] w-[20.5%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="0.5x 倍速"
+                    onClick={() => readReferenceResultVariant(0, 0.5)}
+                    className="absolute bottom-[2.8%] right-[8.7%] h-[6.2%] w-[20%] rounded-[18px] border-0 bg-transparent"
+                  />
+                </div>
+              </div>
+
+              <div className="absolute inset-0 z-[300] overflow-hidden bg-[linear-gradient(180deg,#f8fbff_0%,#eef7ff_48%,#f8fbff_100%)] text-[#07113f]">
+                <div className="pointer-events-none absolute inset-0">
+                  <span className="absolute left-[-18%] top-[24%] h-[32rem] w-[32rem] rounded-full border border-[#cfe0ff]/42" />
+                  <span className="absolute left-[14%] top-[28%] h-[22rem] w-[22rem] rounded-full border border-[#dbe8ff]/48" />
+                  <span className="absolute right-[-26%] top-[28%] h-[22rem] w-[22rem] rounded-full bg-[#eaf4ff]/42 blur-3xl" />
+                  <span className="absolute bottom-[-12%] left-[-12%] h-[22rem] w-[22rem] rounded-full bg-[#f2f7ff]/74 blur-3xl" />
+                </div>
+
+                <header className="absolute inset-x-0 top-0 z-30 h-[9.8rem]">
+                  <div className="absolute inset-x-[3.8%] top-[0.9rem] h-[4.2rem]">
+                    <button
+                      type="button"
+                      aria-label="打开菜单"
+                      onClick={togglePracticeMenu}
+                      className="absolute left-0 top-1/2 grid h-[3.35rem] w-[3.35rem] -translate-y-1/2 place-items-center rounded-[21px] bg-white/86 text-[#07113f] shadow-[0_16px_30px_rgba(64,112,190,0.1),inset_0_1px_0_rgba(255,255,255,0.95)]"
+                    >
+                      <span className="relative block h-[1.05rem] w-[1.45rem] before:absolute before:left-0 before:top-0 before:h-[2px] before:w-full before:rounded-full before:bg-current after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:rounded-full after:bg-current">
+                        <span className="absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 rounded-full bg-current" />
+                      </span>
+                    </button>
+
+                    <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-3">
+                      <div className="grid h-[3rem] w-[3rem] place-items-center rounded-[15px] bg-white shadow-[0_14px_28px_rgba(64,112,190,0.12)]">
+                        <SpeakFlowBrandMark />
+                      </div>
+                      <div className="text-left">
+                        <p className="font-[var(--font-sora)] text-[clamp(1.45rem,5.2vw,2.05rem)] font-black leading-[1.04] tracking-[-0.01em] text-[#07113f]">
+                          SpeakFlow
+                        </p>
+                        <p className="mt-0.5 text-[clamp(0.5rem,1.8vw,0.7rem)] font-black uppercase tracking-[0.22em] text-[#7b61ff]">
+                          AI VOICE PRACTICE
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      aria-label={accountCopy.openAccountMenu}
+                      onClick={openReferenceAccountMenu}
+                      className="absolute right-0 top-1/2 h-[3.35rem] w-[3.35rem] -translate-y-1/2 rounded-full border-[3px] border-white bg-[#dff7e8] shadow-[0_16px_30px_rgba(64,112,190,0.12)]"
+                    >
+                      {accountImage && !accountImageFailed ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={accountImage}
+                          alt={accountEmail || "user"}
+                          className="h-full w-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#e9ffe9,#b8ecaa)] text-[0.9rem] font-black text-[#2b7b42]">
+                          {accountAvatarLabel}
+                        </span>
+                      )}
+                      <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-[2px] border-white bg-[#20c85a]" />
+                    </button>
+                  </div>
+
+                  <div className="absolute inset-x-[3.8%] bottom-[0.5rem] h-[2.95rem] rounded-[24px] border border-[#d8ddff] bg-white/58 shadow-[inset_0_1px_0_rgba(255,255,255,0.82),0_10px_24px_rgba(64,112,190,0.06)] backdrop-blur-xl">
+                    <button
+                      type="button"
+                      onClick={openTrainingGroundMode}
+                      className="absolute left-[1.2%] top-1/2 flex h-[76%] -translate-y-1/2 items-center gap-2 rounded-[18px] bg-white/86 px-4 text-[#07113f] shadow-[0_10px_22px_rgba(64,112,190,0.08)]"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="3"
+                      >
+                        <path d="m15 18-6-6 6-6" />
+                      </svg>
+                      <span className="text-[clamp(0.82rem,2.8vw,1rem)] font-black">
+                        返回
+                      </span>
+                    </button>
+                    <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 text-[#7b61ff]">
+                      <span aria-hidden="true" className="text-[1.35rem] leading-none">
+                        ✦
+                      </span>
+                      <span className="whitespace-nowrap text-[clamp(1rem,3.6vw,1.32rem)] font-black">
+                        AI引导表达
+                      </span>
+                    </div>
+                  </div>
+                </header>
+
+                <main className="absolute inset-x-[3.8%] bottom-[7.55rem] top-[10rem] z-20 overflow-y-auto pr-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <section className="rounded-[24px] bg-white/78 px-[5%] py-[3.8%] text-left shadow-[0_16px_36px_rgba(64,112,190,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="flex items-center gap-2 text-[clamp(0.82rem,2.7vw,1rem)] font-black text-[#273b78]">
+                        <span>你的表达</span>
+                        <span className="flex h-5 items-center gap-0.5 text-[#2f7cff]">
+                          {[0.45, 0.72, 1, 0.72, 0.45].map((scale, index) => (
+                            <span
+                              key={`guided-user-wave-${index}`}
+                              className="block w-1 rounded-full bg-current"
+                              style={{ height: `${0.9 + scale * 0.7}rem` }}
+                            />
+                          ))}
+                        </span>
+                      </p>
+                      <button
+                        type="button"
+                        onClick={retryEnglishSpeech}
+                        className="flex shrink-0 items-center gap-1.5 rounded-[14px] border border-[#dfe8ff] bg-white/72 px-3 py-2 text-[clamp(0.72rem,2.35vw,0.86rem)] font-black text-[#66719d] shadow-[0_8px_18px_rgba(64,112,190,0.07)]"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2.4"
+                        >
+                          <path d="M20 12a8 8 0 1 1-2.34-5.66" />
+                          <path d="M20 4v6h-6" />
+                        </svg>
+                        重新说
+                      </button>
+                    </div>
+                    <p
+                      lang="en"
+                      className="mt-3 whitespace-normal break-words text-[clamp(0.98rem,3.35vw,1.22rem)] font-medium leading-[1.42] text-[#07113f]"
+                    >
+                      {message}
+                    </p>
+                  </section>
+
+                  <section className="relative mt-4 rounded-[24px] border border-[#bdd5ff] bg-white/62 px-[5%] py-[4.6%] text-left shadow-[0_16px_36px_rgba(64,112,190,0.1),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl">
+                    <div
+                      aria-hidden="true"
+                      className="absolute right-[7%] top-[8%] grid h-[clamp(3.2rem,13vw,4.3rem)] w-[clamp(3.7rem,15vw,5rem)] place-items-center rounded-[24px] bg-white shadow-[0_12px_24px_rgba(64,112,190,0.1)]"
+                    >
+                      <span className="relative grid h-[2.15rem] w-[3.2rem] place-items-center rounded-[17px] bg-[#07113f] text-[#35d7ff]">
+                        <span className="flex items-center gap-2">
+                          <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                          <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                        </span>
+                        <span className="absolute bottom-1.5 h-1 w-3 rounded-full bg-current opacity-80" />
+                      </span>
+                      <span className="absolute -right-2 top-0 text-[#8b6dff]">✦</span>
+                      <span className="absolute -left-2 bottom-1 text-[#c9d7ff]">✦</span>
+                    </div>
+                    <p className="flex items-center gap-2 pr-[24%] text-[clamp(0.88rem,2.85vw,1.08rem)] font-black text-[#2f7cff]">
+                      <span aria-hidden="true" className="text-[1.3rem] leading-none">
+                        ✦
+                      </span>
+                      下一句，可以这样说
+                    </p>
+                    <p
+                      lang="zh-CN"
+                      className="mt-4 max-w-[75%] whitespace-normal break-words text-[clamp(1.42rem,4.65vw,2.05rem)] font-black leading-[1.24] text-[#07113f]"
+                    >
+                      {isLoadingGuidedFollowup
+                        ? "正在为你准备下一句..."
+                        : guidedResultSuggestion}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {["根据上文", "情绪自然", "可继续表达"].map((label) => (
+                        <span
+                          key={label}
+                          className="rounded-full bg-[#ede9ff] px-3 py-1.5 text-[clamp(0.74rem,2.35vw,0.9rem)] font-black text-[#6b5fd6]"
+                        >
+                          {label}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="mt-5 grid grid-cols-[1.45fr_0.95fr] gap-3">
+                      <button
+                        type="button"
+                        onClick={handlePrimaryPracticeAction}
+                        className="flex min-h-[3.1rem] items-center justify-center gap-2 rounded-[18px] bg-[linear-gradient(135deg,#7b61ff,#1f74ff)] px-4 text-[clamp(0.9rem,2.9vw,1.06rem)] font-black text-white shadow-[0_16px_30px_rgba(64,92,220,0.24)] transition active:scale-[0.98] [color:white]"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 24 24"
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2.5"
+                        >
+                          <path d="M12 4.5a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0v-5a3 3 0 0 0-3-3Z" />
+                          <path d="M6.5 11.5a5.5 5.5 0 0 0 11 0M12 17v3M9 20h6" />
+                        </svg>
+                        用这句练习
+                      </button>
+                      <button
+                        type="button"
+                        onClick={requestAnotherGuidedFollowup}
+                        className="flex min-h-[3.1rem] items-center justify-center gap-2 rounded-[18px] bg-white/84 px-4 text-[clamp(0.86rem,2.8vw,1rem)] font-black text-[#4d5d8a] shadow-[0_12px_24px_rgba(64,112,190,0.1),inset_0_1px_0_rgba(255,255,255,0.96)] transition active:scale-[0.98]"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 24 24"
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2.4"
+                        >
+                          <path d="M20 12a8 8 0 1 1-2.34-5.66" />
+                          <path d="M20 4v6h-6" />
+                        </svg>
+                        换一句
+                      </button>
+                    </div>
+                  </section>
+
+                  <h3 className="mt-4 flex items-center gap-2 px-2 text-[clamp(0.84rem,2.75vw,1rem)] font-black text-[#273b78]">
+                    <span className="flex h-5 items-end gap-1 text-[#6f72b4]">
+                      <span className="h-2 w-[3px] rounded-full bg-current" />
+                      <span className="h-4 w-[3px] rounded-full bg-current" />
+                      <span className="h-3 w-[3px] rounded-full bg-current" />
+                    </span>
+                    表达训练记录
+                  </h3>
+
+                  <div className="mt-3 flex flex-col gap-2.5 pb-4">
+                    {referenceResultVariantTexts.map((text, index) => {
+                      const labels = [
+                        "最自然地道",
+                        "更地道",
+                        "更简单",
+                        "更口语",
+                      ];
+                      const labelClasses = [
+                        "text-[#735cff]",
+                        "text-[#31a86b]",
+                        "text-[#3478d8]",
+                        "text-[#8065e8]",
+                      ];
+                      const iconClasses = [
+                        "bg-[#f0edff] text-[#765cff]",
+                        "bg-[#dff7e8] text-[#20b760]",
+                        "bg-[#e2efff] text-[#3478d8]",
+                        "bg-[#ece6ff] text-[#8065e8]",
+                      ];
+                      const accentClasses = [
+                        "border-[#8b7cff]",
+                        "border-transparent",
+                        "border-transparent",
+                        "border-transparent",
+                      ];
+
+                      return (
+                        <article
+                          key={`guided-real-result-row-${index}-${text}`}
+                          className={`relative rounded-[18px] border bg-[#fbfaff] px-4 py-3 text-left shadow-[0_10px_24px_rgba(84,72,146,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] ${accentClasses[index]}`}
+                        >
+                          <div className="grid grid-cols-[2.85rem_1fr_auto] items-center gap-3">
+                          <div
+                            aria-hidden="true"
+                            className={`grid h-10 w-10 shrink-0 place-items-center shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_8px_18px_rgba(84,72,146,0.08)] ${index === 0 ? "rounded-none bg-transparent text-white shadow-none" : `rounded-full ${iconClasses[index]}`}`}
+                          >
+                            {index === 0 ? (
+                              <span className="relative block h-10 w-8 rounded-t-[5px] bg-[linear-gradient(180deg,#8e72ff_0%,#654cff_100%)] shadow-[0_8px_16px_rgba(118,92,255,0.26)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_78%,0_100%)]">
+                                <span className="absolute left-1/2 top-2 h-3.5 w-3.5 -translate-x-1/2 bg-white text-[0px] [clip-path:polygon(50%_0,61%_35%,98%_35%,68%_57%,79%_91%,50%_70%,21%_91%,32%_57%,2%_35%,39%_35%)]">
+                                  ★
+                                </span>
+                              </span>
+                            ) : index === 1 ? (
+                              <svg
+                                viewBox="0 0 24 24"
+                                className="h-6 w-6"
+                                fill="currentColor"
+                              >
+                                <path d="M5.5 13.6c5.8.2 9.8-3.1 12.1-8.6 2.1 6.2-.3 12.7-6.8 14.1-2.1.5-4 .1-5.8-.9 2.1-.5 4.3-1.6 6.2-3.6-2.1 1.1-4.1 1.4-5.7 1Z" />
+                              </svg>
+                            ) : index === 2 ? (
+                              <svg
+                                viewBox="0 0 24 24"
+                                className="h-6 w-6"
+                                fill="currentColor"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="0.8"
+                              >
+                                <path d="M12.2 3.8c4.2 3.1 5.7 6.9 4.5 11.4-2.7-.4-4.6-1.7-5.8-3.9-1 2-2.5 3.3-4.8 4.1-.9-4.1 1.1-8 6.1-11.6Z" />
+                                <path d="M11.1 12.8v7.4" />
+                                <path d="M11.1 16.2c1.3-.9 2.4-2 3.2-3.4" />
+                                <path d="M11 17c-1.2-.8-2.1-1.7-2.8-2.8" />
+                              </svg>
+                            ) : (
+                              <svg
+                                viewBox="0 0 24 24"
+                                className="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2.2"
+                              >
+                                <path d="M5.2 6.5h11.7a2.6 2.6 0 0 1 2.6 2.6v5.7a2.6 2.6 0 0 1-2.6 2.6H11l-4.1 3v-3H5.2a2.6 2.6 0 0 1-2.6-2.6V9.1a2.6 2.6 0 0 1 2.6-2.6Z" />
+                                <path d="M8 12h.1M11 12h.1M14 12h.1" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <p
+                              className={`text-[clamp(0.68rem,2.25vw,0.8rem)] font-black leading-tight ${labelClasses[index]}`}
+                            >
+                              {labels[index]}
+                            </p>
+                            <p
+                              lang="en"
+                              className="mt-1 whitespace-normal break-words text-[clamp(0.86rem,2.8vw,1.06rem)] font-medium leading-[1.34] text-[#141438]"
+                            >
+                              {renderReferenceResultText(text)}
+                            </p>
+                          </div>
+                          <div className="flex shrink-0 items-center gap-2">
+                            <button
+                              type="button"
+                              aria-label={`播放${labels[index]}`}
+                              onClick={() => readReferenceResultVariant(index, 1)}
+                              className="grid h-9 w-9 place-items-center rounded-full bg-white/95 text-[#40358f] shadow-[0_8px_18px_rgba(84,72,146,0.1)] transition active:scale-[0.96]"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                viewBox="0 0 24 24"
+                                className="h-4 w-4"
+                                fill="currentColor"
+                              >
+                                <path d="M8.2 5.6v12.8L18 12 8.2 5.6Z" />
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              aria-label={`朗读${labels[index]}`}
+                              onClick={() => readReferenceResultVariant(index, 1)}
+                              className="grid h-9 w-9 place-items-center rounded-full bg-white/95 text-[#40358f] shadow-[0_8px_18px_rgba(84,72,146,0.1)] transition active:scale-[0.96]"
+                            >
+                              <span className="flex h-5 items-center gap-0.5">
+                                {[0.45, 0.85, 1, 0.85, 0.45].map((scale, barIndex) => (
+                                  <span
+                                    key={`guided-real-row-wave-${index}-${barIndex}`}
+                                    className="block w-1 rounded-full bg-current"
+                                    style={{ height: `${0.65 + scale * 0.55}rem` }}
+                                  />
+                                ))}
+                              </span>
+                            </button>
+                          </div>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+
+                  <p className="pb-5 text-center text-[clamp(0.76rem,2.45vw,0.92rem)] font-bold text-[#8795bd]">
+                    向下查看更多表达⌄
+                  </p>
+
+                  {vocabularyNotice ? (
+                    <p className="pb-5 text-center text-[clamp(0.82rem,2.65vw,1rem)] font-black text-[#1269e6]">
+                      {vocabularyNotice}
+                    </p>
+                  ) : null}
+                </main>
+
+                <div className="absolute inset-x-[3.8%] bottom-[0.75rem] z-30 h-[6.55rem] rounded-[28px] border border-[#d9e6ff] bg-[#eef7ff]/74 shadow-[0_16px_34px_rgba(64,112,190,0.1),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xl">
+                  <button
+                    type="button"
+                    onClick={handlePrimaryPracticeAction}
+                    className="absolute left-[7%] top-[42%] flex h-[52%] -translate-y-1/2 items-center justify-center gap-1.5 rounded-[16px] bg-white/86 px-4 text-[clamp(0.78rem,2.55vw,0.94rem)] font-black text-[#0b3c9f] shadow-[0_10px_22px_rgba(64,112,190,0.08)]"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.4"
+                    >
+                      <path d="M20 12a8 8 0 1 1-2.34-5.66" />
+                      <path d="M20 4v6h-6" />
+                    </svg>
+                    跟读练习
+                  </button>
+                  <div aria-hidden="true" className="absolute left-1/2 top-1/2 h-[82%] w-[38%] -translate-x-1/2 -translate-y-1/2">
+                    <span className="absolute left-0 top-1/2 h-12 w-12 -translate-y-1/2 rounded-full border-l-4 border-[#bcd4ff]/48" />
+                    <span className="absolute right-0 top-1/2 h-12 w-12 -translate-y-1/2 rounded-full border-r-4 border-[#bcd4ff]/48" />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handlePrimaryPracticeAction}
+                    aria-label={isListening ? "停止录音" : "开始录音"}
+                    className="absolute left-1/2 top-[42%] grid h-[4.45rem] w-[4.45rem] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[linear-gradient(135deg,#8f64ff,#0d74ff)] text-white shadow-[0_18px_36px_rgba(64,92,220,0.24),0_0_0_9px_rgba(255,255,255,0.65),0_0_0_20px_rgba(72,132,255,0.08)] transition active:scale-[0.97]"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      className="h-[48%] w-[48%]"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.4"
+                    >
+                      <path d="M12 4.5a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0v-5a3 3 0 0 0-3-3Z" />
+                      <path d="M6.5 11.5a5.5 5.5 0 0 0 11 0M12 17v3M9 20h6" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => readReferenceResultVariant(0, 0.5)}
+                    className="absolute right-[7%] top-[42%] flex h-[52%] -translate-y-1/2 items-center justify-center gap-1.5 rounded-[16px] bg-white/86 px-4 text-[clamp(0.78rem,2.55vw,0.94rem)] font-black text-[#0b3c9f] shadow-[0_10px_22px_rgba(64,112,190,0.08)]"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      className="h-4 w-4"
+                      fill="currentColor"
+                    >
+                      <path d="M8.2 5.6v12.8L18 12 8.2 5.6Z" />
+                    </svg>
+                    <span>0.5x</span>
+                    <span>倍速</span>
+                  </button>
+                  <p className="absolute inset-x-0 bottom-[7%] text-center text-[clamp(0.64rem,2vw,0.76rem)] font-bold text-[#7f8fb8]">
+                    点击麦克风开始录音
+                  </p>
+                </div>
+
+                <div className="pointer-events-none absolute inset-0 z-[400] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/guided-practice-result-standard.png"
+                    alt=""
+                    className="h-full w-full select-none object-fill"
+                    draggable={false}
+                  />
+
+                  <div className="pointer-events-auto absolute left-[8%] top-[20.5%] z-[410] w-[54%] bg-[#f8fbff]/96 py-1.5 text-left shadow-[0_0_20px_20px_rgba(248,251,255,0.94)]">
+                    <p
+                      lang="en"
+                      className="whitespace-normal break-words text-[clamp(0.95rem,3.25vw,1.18rem)] font-medium leading-[1.36] text-[#07113f]"
+                    >
+                      {message}
+                    </p>
+                  </div>
+
+                  <div className="pointer-events-none absolute left-[8.6%] top-[32.1%] z-[410] flex h-[13.5%] w-[61%] items-center bg-[#f8fbff] py-1 text-left shadow-[0_0_22px_22px_rgba(248,251,255,0.96)]">
+                    <p
+                      lang="zh-CN"
+                      className="whitespace-normal break-words text-[clamp(1.02rem,3.65vw,1.5rem)] font-black leading-[1.34] text-[#07113f]"
+                    >
+                      {isLoadingGuidedFollowup
+                        ? "正在为你准备下一句..."
+                        : guidedResultSuggestion}
+                    </p>
+                  </div>
+
+                  <div className="pointer-events-auto absolute left-[13.6%] top-[63.6%] z-[410] w-[56%] bg-[#f8fbff]/95 py-0.5 text-left shadow-[0_0_14px_14px_rgba(248,251,255,0.92)]">
+                    <p
+                      lang="en"
+                      className="whitespace-normal break-words text-[clamp(0.78rem,2.75vw,1rem)] font-semibold leading-[1.25] text-[#07113f]"
+                    >
+                      {renderReferenceResultText(referenceResultVariantTexts[0])}
+                    </p>
+                  </div>
+                  <div className="pointer-events-auto absolute left-[13.6%] top-[70.6%] z-[410] w-[56%] bg-[#f8fbff]/95 py-0.5 text-left shadow-[0_0_14px_14px_rgba(248,251,255,0.92)]">
+                    <p
+                      lang="en"
+                      className="whitespace-normal break-words text-[clamp(0.78rem,2.75vw,1rem)] font-semibold leading-[1.25] text-[#07113f]"
+                    >
+                      {renderReferenceResultText(referenceResultVariantTexts[1])}
+                    </p>
+                  </div>
+                  <div className="pointer-events-auto absolute left-[13.6%] top-[77.4%] z-[410] w-[56%] bg-[#f8fbff]/95 py-0.5 text-left shadow-[0_0_14px_14px_rgba(248,251,255,0.92)]">
+                    <p
+                      lang="en"
+                      className="whitespace-normal break-words text-[clamp(0.78rem,2.75vw,1rem)] font-semibold leading-[1.25] text-[#07113f]"
+                    >
+                      {renderReferenceResultText(referenceResultVariantTexts[2])}
+                    </p>
+                  </div>
+                  <div className="pointer-events-auto absolute left-[13.6%] top-[84.2%] z-[410] w-[56%] bg-[#f8fbff]/95 py-0.5 text-left shadow-[0_0_14px_14px_rgba(248,251,255,0.92)]">
+                    <p
+                      lang="en"
+                      className="whitespace-normal break-words text-[clamp(0.78rem,2.75vw,1rem)] font-semibold leading-[1.25] text-[#07113f]"
+                    >
+                      {renderReferenceResultText(referenceResultVariantTexts[3])}
+                    </p>
+                  </div>
+
+                  {vocabularyNotice ? (
+                    <p className="pointer-events-none absolute inset-x-[10%] bottom-[10.5%] z-[411] text-center text-[clamp(0.72rem,2.35vw,0.9rem)] font-black text-[#1269e6]">
+                      {vocabularyNotice}
+                    </p>
+                  ) : null}
+
+                  <button
+                    type="button"
+                    aria-label="打开菜单"
+                    onClick={togglePracticeMenu}
+                    className="pointer-events-auto absolute left-[4.8%] top-[2.4%] z-[420] h-[5.4%] w-[12%] rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label={accountCopy.openAccountMenu}
+                    onClick={openReferenceAccountMenu}
+                    className="pointer-events-auto absolute right-[5%] top-[2.3%] z-[420] h-[5.4%] w-[12%] rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="返回 AI 引导表达首页"
+                    onClick={openTrainingGroundMode}
+                    className="pointer-events-auto absolute left-[4%] top-[8.9%] z-[420] h-[3.9%] w-[17.5%] rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="重新说"
+                    onClick={retryEnglishSpeech}
+                    className="pointer-events-auto absolute right-[8.4%] top-[20.3%] z-[420] h-[4.1%] w-[18.5%] rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="用这句练习"
+                    onClick={handlePrimaryPracticeAction}
+                    className="pointer-events-auto absolute left-[8.5%] top-[48.5%] z-[420] h-[5.3%] w-[50%] rounded-[18px] border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="换一句"
+                    onClick={requestAnotherGuidedFollowup}
+                    className="pointer-events-auto absolute right-[8.4%] top-[48.5%] z-[420] h-[5.3%] w-[32%] rounded-[18px] border-0 bg-transparent"
+                  />
+
+                  {[0, 1, 2, 3].map((index) => {
+                    const rowZones = [
+                      { height: "5.1%", top: "62.75%" },
+                      { height: "5.1%", top: "69.75%" },
+                      { height: "5.1%", top: "76.55%" },
+                      { height: "6.2%", top: "82.2%" },
+                    ];
+                    const rowZone = rowZones[index];
+
+                    return (
+                      <div key={`guided-standard-actions-${index}`}>
+                        <button
+                          type="button"
+                          aria-label={`播放表达 ${index + 1}`}
+                          onClick={() => readReferenceResultVariant(index, 1)}
+                          className="pointer-events-auto absolute right-[12.8%] z-[420] w-[11.5%] rounded-full border-0 bg-transparent"
+                          style={{ height: rowZone.height, top: rowZone.top }}
+                        />
+                        <button
+                          type="button"
+                          aria-label={`朗读表达 ${index + 1}`}
+                          onClick={() => readReferenceResultVariant(index, 1)}
+                          className="pointer-events-auto absolute right-[3.2%] z-[420] w-[11.5%] rounded-full border-0 bg-transparent"
+                          style={{ height: rowZone.height, top: rowZone.top }}
+                        />
+                      </div>
+                    );
+                  })}
+
+                  <button
+                    type="button"
+                    aria-label="跟读练习"
+                    onClick={handlePrimaryPracticeAction}
+                    className="pointer-events-auto absolute bottom-[2.5%] left-[8.2%] z-[420] h-[6.5%] w-[18.8%] rounded-[18px] border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label={isListening ? "停止录音" : "开始录音"}
+                    onClick={handlePrimaryPracticeAction}
+                    className="pointer-events-auto absolute bottom-[1.5%] left-1/2 z-[420] h-[10%] w-[20.5%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+                  />
+                  <button
+                    type="button"
+                    aria-label="0.5x 倍速"
+                    onClick={() => readReferenceResultVariant(0, 0.5)}
+                    className="pointer-events-auto absolute bottom-[2.5%] right-[8.2%] z-[420] h-[6.5%] w-[20.8%] rounded-[18px] border-0 bg-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {showReferenceLanding ? (
+            <div className="sf-free-practice-reference-landing absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/free-practice-landing-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <button
+                type="button"
+                aria-label="打开菜单"
+                onClick={togglePracticeMenu}
+                className="absolute left-[6.8%] top-[4.5%] h-[8.2%] w-[16%] rounded-[26px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={() => {
+                  if (isListening) {
+                    cancelRecognition();
+                  }
+                  setShowQuickPanel(false);
+                  setShowClassicCoursePicker(false);
+                  resetClassicCoursePicker();
+                  setShowAccountMenu((current) => {
+                    const next = !current;
+                    if (next) {
+                      setAccountPanelView("menu");
+                    } else {
+                      setShowAvatarEditor(false);
+                    }
+                    return next;
+                  });
+                }}
+                className="absolute right-[6.8%] top-[4.7%] h-[8%] w-[16%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={handlePrimaryPracticeAction}
+                aria-label="点击麦克风开始练习"
+                className="absolute bottom-[5.4%] left-1/2 h-[14%] w-[34%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          {showReferenceListening ? (
+            <div className="sf-free-practice-reference-listening absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/free-practice-listening-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <button
+                type="button"
+                aria-label="打开菜单"
+                onClick={togglePracticeMenu}
+                className="absolute left-[6.8%] top-[4.5%] h-[8.2%] w-[16%] rounded-[26px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={() => {
+                  if (isListening) {
+                    cancelRecognition();
+                  }
+                  setShowQuickPanel(false);
+                  setShowClassicCoursePicker(false);
+                  resetClassicCoursePicker();
+                  setShowAccountMenu((current) => {
+                    const next = !current;
+                    if (next) {
+                      setAccountPanelView("menu");
+                    } else {
+                      setShowAvatarEditor(false);
+                    }
+                    return next;
+                  });
+                }}
+                className="absolute right-[6.8%] top-[4.7%] h-[8%] w-[16%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={handlePrimaryPracticeAction}
+                aria-label="点击麦克风结束录音"
+                className="absolute bottom-[5.8%] left-1/2 h-[14%] w-[34%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          {showReferenceConfirmation ? (
+            <div className="sf-free-practice-reference-confirmation absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/free-practice-confirmation-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <label className="absolute left-[18.4%] top-[22.7%] flex min-h-[8.8%] w-[51%] items-center bg-[#fbfaff] text-left shadow-[0_0_18px_18px_rgba(251,250,255,0.92)]">
+                <textarea
+                  aria-label="修改识别到的中文"
+                  lang="zh-CN"
+                  value={nativeSpeech}
+                  onChange={(event) =>
+                    updateNativeSpeechDraft(event.target.value)
+                  }
+                  rows={2}
+                  className="block h-full min-h-[4.7em] w-full resize-none overflow-hidden bg-transparent text-[clamp(0.88rem,3vw,1.16rem)] font-black leading-[1.38] text-[#141438] outline-none"
+                />
+              </label>
+              <button
+                type="button"
+                aria-label="返回自由学习首页"
+                onClick={prepareNextNativeRound}
+                className="absolute left-[8.5%] top-[5%] h-[4.9%] w-[10%] rounded-[22px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={() => {
+                  if (isListening) {
+                    cancelRecognition();
+                  }
+                  setShowQuickPanel(false);
+                  setShowClassicCoursePicker(false);
+                  resetClassicCoursePicker();
+                  setShowAccountMenu((current) => {
+                    const next = !current;
+                    if (next) {
+                      setAccountPanelView("menu");
+                    } else {
+                      setShowAvatarEditor(false);
+                    }
+                    return next;
+                  });
+                }}
+                className="absolute right-[8%] top-[5%] h-[5.2%] w-[12%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={retryNativeSpeech}
+                aria-label="重新说"
+                className="absolute left-[13.5%] top-[36.2%] h-[5.2%] w-[34.5%] rounded-[24px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={confirmNativeSpeech}
+                aria-label="确认，开始练习"
+                className="absolute right-[14.1%] top-[36.2%] h-[5.2%] w-[36%] rounded-[24px] border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          {showReferenceEnglishPrompt ? (
+            <div className="sf-free-practice-reference-english-prompt absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/free-practice-english-prompt-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <button
+                type="button"
+                aria-label="打开菜单"
+                onClick={togglePracticeMenu}
+                className="absolute left-[6.5%] top-[4.1%] h-[7.5%] w-[15.2%] rounded-[26px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={() => {
+                  if (isListening) {
+                    cancelRecognition();
+                  }
+                  setShowQuickPanel(false);
+                  setShowClassicCoursePicker(false);
+                  resetClassicCoursePicker();
+                  setShowAccountMenu((current) => {
+                    const next = !current;
+                    if (next) {
+                      setAccountPanelView("menu");
+                    } else {
+                      setShowAvatarEditor(false);
+                    }
+                    return next;
+                  });
+                }}
+                className="absolute right-[6.8%] top-[4.2%] h-[7.8%] w-[15.8%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={handlePrimaryPracticeAction}
+                aria-label="点击麦克风开始录音"
+                className="absolute bottom-[5.6%] left-1/2 h-[14.2%] w-[34%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          {showReferenceEnglishListening ? (
+            <div className="sf-free-practice-reference-english-listening absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/free-practice-english-listening-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <div className="absolute left-[25%] top-[24.7%] flex h-[12%] w-[50%] items-center justify-center bg-[#fbfaff] text-center shadow-[0_0_22px_22px_rgba(251,250,255,0.92)]">
+                <p
+                  lang="zh-CN"
+                  className="whitespace-normal break-words text-[clamp(0.95rem,3.2vw,1.28rem)] font-black leading-[1.36] text-[#141438]"
+                >
+                  {nativeSpeech}
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-label="打开菜单"
+                onClick={togglePracticeMenu}
+                className="absolute left-[6.5%] top-[4.1%] h-[7.5%] w-[15.2%] rounded-[26px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={() => {
+                  if (isListening) {
+                    cancelRecognition();
+                  }
+                  setShowQuickPanel(false);
+                  setShowClassicCoursePicker(false);
+                  resetClassicCoursePicker();
+                  setShowAccountMenu((current) => {
+                    const next = !current;
+                    if (next) {
+                      setAccountPanelView("menu");
+                    } else {
+                      setShowAvatarEditor(false);
+                    }
+                    return next;
+                  });
+                }}
+                className="absolute right-[6.8%] top-[4.2%] h-[7.8%] w-[15.8%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={handlePrimaryPracticeAction}
+                aria-label="点击麦克风停止录音"
+                className="absolute bottom-[5.5%] left-1/2 h-[14.4%] w-[34%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          {showReferenceResult ? (
+            <div className="sf-free-practice-reference-result absolute inset-0 z-[90] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/free-practice-result-reference.png"
+                alt=""
+                className="h-full w-full select-none object-fill"
+                draggable={false}
+              />
+              <div className="pointer-events-none absolute left-[9.2%] top-[25.8%] flex max-h-[7.2%] min-h-[4.8%] w-[68%] items-start overflow-hidden bg-[#fbfaff] py-1 text-left shadow-[0_0_24px_24px_rgba(251,250,255,0.94)]">
+                <p
+                  lang="en"
+                  className="break-words text-[clamp(0.82rem,2.8vw,1.12rem)] font-extrabold leading-[1.2] text-[#757186]"
+                >
+                  {message}
+                </p>
+              </div>
+              <div
+                className="absolute z-[120] isolate overflow-y-auto rounded-[24px] bg-[#fbfaff] px-[1.2%] pb-4 pt-1 shadow-[0_0_42px_42px_rgba(251,250,255,1)] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                style={{
+                  bottom: "17.6%",
+                  left: "5.6%",
+                  right: "5.6%",
+                  top: "39.2%",
+                }}
+              >
+                <div
+                  aria-hidden="true"
+                  className="hidden"
+                />
+                <div className="relative z-10 flex flex-col gap-3 pb-3">
+                  {referenceResultVariantTexts.map((text, index) => {
+                    const labelColorClasses = [
+                      "text-[#735cff]",
+                      "text-[#31a86b]",
+                      "text-[#3478d8]",
+                      "text-[#8065e8]",
+                    ];
+                    const iconWrapClasses = [
+                      "bg-[#f0edff] text-[#765cff]",
+                      "bg-[#dff7e8] text-[#20a85a]",
+                      "bg-[#e2efff] text-[#3478d8]",
+                      "bg-[#ece6ff] text-[#8065e8]",
+                    ];
+                    const accentClasses = [
+                      "border-[#8b7cff]",
+                      "border-transparent",
+                      "border-transparent",
+                      "border-transparent",
+                    ];
+                    const label = expressionVariantLabels[index]?.label || "";
+
+                    return (
+                      <div
+                        key={`${index}-${text}`}
+                        className={`relative rounded-[18px] border bg-[#fbfaff] px-4 py-3 text-left shadow-[0_10px_24px_rgba(84,72,146,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] ${accentClasses[index]}`}
+                      >
+                        <div className="grid grid-cols-[2.85rem_1fr_auto] items-center gap-3">
+                          <div
+                            className={`grid h-10 w-10 shrink-0 place-items-center shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_8px_18px_rgba(84,72,146,0.08)] ${index === 0 ? "rounded-none bg-transparent text-white shadow-none" : `rounded-full ${iconWrapClasses[index]}`}`}
+                            aria-hidden="true"
+                          >
+                            {index === 0 ? (
+                                <span className="relative block h-10 w-8 rounded-t-[5px] bg-[linear-gradient(180deg,#8e72ff_0%,#654cff_100%)] shadow-[0_8px_16px_rgba(118,92,255,0.26)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_78%,0_100%)]">
+                                <span className="absolute left-1/2 top-2 h-3.5 w-3.5 -translate-x-1/2 bg-white text-[0px] [clip-path:polygon(50%_0,61%_35%,98%_35%,68%_57%,79%_91%,50%_70%,21%_91%,32%_57%,2%_35%,39%_35%)]">
+                                  ★
+                                </span>
+                              </span>
+                            ) : index === 1 ? (
+                              <svg
+                                viewBox="0 0 24 24"
+                                className="h-6 w-6"
+                                fill="currentColor"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="0.8"
+                              >
+                                <path d="M12.4 4.2c3.8 3.1 5.2 6.7 4.2 10.7-2.8-.4-4.7-1.6-5.8-3.5-1.2 2.2-3.1 3.6-5.7 4.2-.8-4 1.1-7.8 5.7-11.4.1 3.3.1 6.6 0 9.9 1.3-2.8 1.8-6.1 1.6-9.9Z" />
+                                <path d="M11.2 14.5c-.7 1.8-1.9 3.2-3.8 4.2 2.7.6 5.5-.4 7-2.5" />
+                              </svg>
+                            ) : index === 2 ? (
+                              <svg
+                                viewBox="0 0 24 24"
+                                className="h-6 w-6"
+                                fill="currentColor"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="0.8"
+                              >
+                                <path d="M12.2 3.8c4.2 3.1 5.7 6.9 4.5 11.4-2.7-.4-4.6-1.7-5.8-3.9-1 2-2.5 3.3-4.8 4.1-.9-4.1 1.1-8 6.1-11.6Z" />
+                                <path d="M11.1 12.8v7.4" />
+                                <path d="M11.1 16.2c1.3-.9 2.4-2 3.2-3.4" />
+                                <path d="M11 17c-1.2-.8-2.1-1.7-2.8-2.8" />
+                              </svg>
+                            ) : (
+                              <svg
+                                viewBox="0 0 24 24"
+                                className="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2.2"
+                              >
+                                <path d="M5.2 6.5h11.7a2.6 2.6 0 0 1 2.6 2.6v5.7a2.6 2.6 0 0 1-2.6 2.6H11l-4.1 3v-3H5.2a2.6 2.6 0 0 1-2.6-2.6V9.1a2.6 2.6 0 0 1 2.6-2.6Z" />
+                                <path d="M8 12h.1M11 12h.1M14 12h.1" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p
+                              className={`text-[clamp(0.68rem,2.25vw,0.8rem)] font-black leading-tight ${labelColorClasses[index]}`}
+                            >
+                              {label}
+                            </p>
+                            <p
+                              lang="en"
+                              className="mt-1 whitespace-normal break-words text-[clamp(0.86rem,2.8vw,1.06rem)] font-medium leading-[1.34] text-[#141438]"
+                            >
+                              {renderReferenceResultText(text)}
+                            </p>
+                          </div>
+                          <div className="flex shrink-0 items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                readReferenceResultVariant(index, 1)
+                              }
+                              aria-label={`Play ${label || "expression"}`}
+                              className="grid h-9 w-9 place-items-center rounded-full bg-white/95 text-[#40358f] shadow-[0_8px_18px_rgba(84,72,146,0.1)]"
+                            >
+                              <span
+                                aria-hidden="true"
+                                className="ml-0.5 text-[0.72rem]"
+                              >
+                                ▶
+                              </span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                readReferenceResultVariant(index, 1)
+                              }
+                              aria-label={`Read ${label || "expression"}`}
+                              className="grid h-9 w-9 place-items-center rounded-full bg-white/95 text-[#40358f] shadow-[0_8px_18px_rgba(84,72,146,0.1)]"
+                            >
+                              <span
+                                aria-hidden="true"
+                                className="text-[0.72rem] font-black"
+                              >
+                                ≋
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              {vocabularyNotice ? (
+                <p className="pointer-events-none absolute inset-x-[8%] bottom-[19.5%] z-[96] text-center text-[clamp(0.72rem,2.4vw,0.92rem)] font-extrabold text-[#7c55ff]">
+                  {vocabularyNotice}
+                </p>
+              ) : null}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute bottom-[6.8%] left-[6.8%] z-[92] h-[8.4%] w-[15.8%] rounded-[22px] bg-[#fbfaff] shadow-[0_0_22px_22px_rgba(251,250,255,0.9)]"
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute bottom-[6.8%] right-[6.8%] z-[92] h-[8.4%] w-[15.8%] rounded-[22px] bg-[#fbfaff] shadow-[0_0_22px_22px_rgba(251,250,255,0.9)]"
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute bottom-[6.7%] left-[21%] z-[93] flex h-[8%] w-[14.5%] flex-col items-center justify-center rounded-[18px] bg-white/92 text-[#40358f] shadow-[0_10px_24px_rgba(84,72,146,0.1),inset_0_1px_0_rgba(255,255,255,0.94)]"
+              >
+                <span className="text-[clamp(0.9rem,3vw,1.08rem)] font-black leading-none">
+                  ↻
+                </span>
+                <span className="mt-1 text-[clamp(0.58rem,2vw,0.72rem)] font-black leading-none">
+                  跟读练习
+                </span>
+              </span>
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute bottom-[6.7%] right-[21%] z-[93] flex h-[8%] w-[14.5%] flex-col items-center justify-center rounded-[18px] bg-white/92 text-[#40358f] shadow-[0_10px_24px_rgba(84,72,146,0.1),inset_0_1px_0_rgba(255,255,255,0.94)]"
+              >
+                <span className="text-[clamp(0.56rem,1.9vw,0.7rem)] font-black leading-none">
+                  ▶ 0.5x
+                </span>
+                <span className="mt-1 text-[clamp(0.58rem,2vw,0.72rem)] font-black leading-none">
+                  倍速
+                </span>
+              </span>
+              <button
+                type="button"
+                aria-label="返回自由学习首页"
+                onClick={prepareNextNativeRound}
+                className="absolute left-[4.8%] top-[3.1%] h-[5.2%] w-[10.5%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                aria-label={accountCopy.openAccountMenu}
+                onClick={() => {
+                  if (isListening) {
+                    cancelRecognition();
+                  }
+                  setShowQuickPanel(false);
+                  setShowClassicCoursePicker(false);
+                  resetClassicCoursePicker();
+                  setShowAccountMenu((current) => {
+                    const next = !current;
+                    if (next) {
+                      setAccountPanelView("menu");
+                    } else {
+                      setShowAvatarEditor(false);
+                    }
+                    return next;
+                  });
+                }}
+                className="absolute right-[5.2%] top-[3.1%] h-[5.4%] w-[11.4%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={openTrainingGroundMode}
+                aria-label="AI guided expression"
+                className="absolute left-[6.8%] top-[10.5%] h-[8.4%] w-[86.4%] rounded-[24px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={() => readStandardEnglish(1)}
+                aria-label="播放推荐表达"
+                className="pointer-events-none hidden absolute right-[18.8%] top-[46%] h-[6%] w-[8.5%] rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={() => readStandardEnglish(1)}
+                aria-label="朗读推荐表达"
+                className="pointer-events-none hidden absolute right-[8.2%] top-[46%] h-[6%] w-[8.5%] rounded-full border-0 bg-transparent"
+              />
+              {referenceResultVariantTexts.map((_, index) => {
+                const hitZones = [
+                  { height: "12.3%", top: "40.7%" },
+                  { height: "7.7%", top: "54.2%" },
+                  { height: "7.7%", top: "62.8%" },
+                  { height: "7.7%", top: "71.4%" },
+                ];
+                const hitZone = hitZones[index];
+
+                if (!hitZone) return null;
+
+                return (
+                  <button
+                    key={`reference-result-play-${index}`}
+                    type="button"
+                    onClick={() => readReferenceResultVariant(index, 1)}
+                    aria-label={`Play ${expressionVariantLabels[index]?.label || "expression"}`}
+                    className="pointer-events-none hidden absolute left-[6.8%] z-[91] w-[86.4%] rounded-[24px] border-0 bg-transparent"
+                    style={{ height: hitZone.height, top: hitZone.top }}
+                  />
+                );
+              })}
+              <button
+                type="button"
+                onClick={handlePrimaryPracticeAction}
+                aria-label="跟读练习"
+                className="absolute bottom-[5.5%] left-1/2 h-[12.8%] w-[19%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={() => readStandardEnglish(0.5)}
+                aria-label="0.5x 倍速"
+                className="absolute bottom-[6.7%] right-[21%] h-[8%] w-[14.5%] rounded-[20px] border-0 bg-transparent"
+              />
+              <button
+                type="button"
+                onClick={prepareNextNativeRound}
+                aria-label="重新练习"
+                className="absolute bottom-[6.7%] left-[21%] h-[8%] w-[14.5%] rounded-[20px] border-0 bg-transparent"
+              />
+            </div>
+          ) : null}
+
+          <header className="sf-app-topbar sf-speak-header relative z-10 shrink-0 px-5">
+            <div className="sf-app-topbar-inner flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <button
                   type="button"
@@ -5446,14 +7847,14 @@ function SpeakEnglishClient() {
                 </button>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="sf-app-brand flex items-center gap-2">
                 <SpeakFlowBrandMark />
                 <div>
                   <h1 className="text-[1.05rem] font-semibold leading-none text-white">
                     SpeakFlow
                   </h1>
                   <p className="mt-0.5 text-[0.42rem] font-semibold uppercase tracking-[0.16em] text-[#91dcff]/80">
-                    voice practice
+                    AI voice practice
                   </p>
                 </div>
               </div>
@@ -5478,7 +7879,7 @@ function SpeakEnglishClient() {
                     return next;
                   });
                 }}
-                className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-[#f7f4ff] text-[0.82rem] font-extrabold text-white shadow-[0_12px_26px_rgba(84,72,146,0.18)]"
+                className="sf-app-avatar-button grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-[#f7f4ff] text-[0.82rem] font-extrabold text-white shadow-[0_12px_26px_rgba(84,72,146,0.18)]"
               >
                 {accountImage && !accountImageFailed ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -7134,23 +9535,33 @@ function SpeakEnglishClient() {
           ) : null}
 
           <section
-            className={`sf-free-practice-main relative z-10 flex min-h-0 flex-1 flex-col px-6 pt-6 ${
-              hasEnglishAttempt ? "sf-free-practice-result-main" : ""
-            } ${
-              showPracticeKeyboardPanel
-                ? "sf-free-practice-keyboard-main"
-                : ""
-            } ${
-              showVoiceOnlyPrompt
-                ? "pb-[calc(5.8rem+env(safe-area-inset-bottom))]"
-                : hasEnglishAttempt
-                  ? "pb-[calc(6.8rem+env(safe-area-inset-bottom))]"
-                  : showPracticeKeyboardPanel
-                    ? "pb-[352px]"
-                    : "pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+            className={`sf-free-practice-main relative z-10 flex min-h-0 flex-1 flex-col ${
+              showLandingPrompt
+                ? "sf-free-practice-main-landing px-0 pb-[calc(8rem+env(safe-area-inset-bottom))] pt-0"
+                : `px-6 pt-6 ${
+                    hasEnglishAttempt ? "sf-free-practice-result-main" : ""
+                  } ${
+                    showFreePracticeNativeListeningPrompt
+                      ? "sf-free-practice-listening-main"
+                      : ""
+                  } ${
+                    showPracticeKeyboardPanel
+                      ? "sf-free-practice-keyboard-main"
+                      : ""
+                  } ${
+                    showVoiceOnlyPrompt
+                      ? "pb-[calc(5.8rem+env(safe-area-inset-bottom))]"
+                      : hasEnglishAttempt
+                        ? "pb-[calc(6.8rem+env(safe-area-inset-bottom))]"
+                        : showPracticeKeyboardPanel
+                          ? "pb-[352px]"
+                          : "pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+                  }`
             }`}
           >
-            <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
+            {!showLandingPrompt ? (
+              <div className="mx-auto h-px w-32 bg-[linear-gradient(90deg,transparent,rgba(145,220,255,0.46),transparent)]" />
+            ) : null}
 
             {showAiGuidedNudge ? (
               <div className="absolute inset-x-0 top-6 z-20 flex justify-center px-6">
@@ -7210,7 +9621,11 @@ function SpeakEnglishClient() {
               className={`sf-free-practice-content flex min-h-0 flex-1 flex-col items-center overflow-y-auto text-left ${
                 showNativeConfirmationPrompt ? "sf-native-confirmation-content" : ""
               } ${
-                showVoiceOnlyPrompt
+                showLandingPrompt
+                  ? "sf-free-practice-landing-content justify-start pt-0"
+                  : showFreePracticeNativeListeningPrompt
+                  ? "sf-free-practice-listening-content justify-start pt-0"
+                  : showVoiceOnlyPrompt
                   ? "justify-start pt-28"
                   : hasEnglishAttempt
                     ? `sf-free-practice-result-content ${
@@ -7227,7 +9642,7 @@ function SpeakEnglishClient() {
                     : "justify-start pt-14"
               }`}
             >
-              {shouldShowFreePracticeUsageMeter ? (
+              {shouldShowFreePracticeUsageMeter && !showLandingPrompt ? (
                 <FreeUsageMeter
                   className="mb-6"
                   limit={FREE_PRACTICE_DAILY_LIMIT}
@@ -7267,21 +9682,51 @@ function SpeakEnglishClient() {
                     </p>
                   </div>
                 ) : (
-                  <>
-                    <h2 className="w-full max-w-[360px] text-[1.9rem] font-extrabold leading-[2.55rem] text-[#201833]">
+                  <div className="sf-free-practice-listening-screen relative w-full text-center">
+                    <span className="sf-free-practice-listening-orbit sf-free-practice-listening-orbit-lg" />
+                    <span className="sf-free-practice-listening-orbit sf-free-practice-listening-orbit-sm" />
+                    <span className="sf-free-practice-listening-dot sf-free-practice-listening-dot-left" />
+                    <span className="sf-free-practice-listening-dot sf-free-practice-listening-dot-right" />
+
+                    <div className="sf-free-practice-listening-mark mx-auto grid place-items-center text-[#9b7cff]">
+                      <FreePracticeLandingIcon icon="mic" />
+                    </div>
+                    <h2 className="sf-free-practice-listening-title mx-auto mt-8 max-w-[22rem] text-center font-black text-[#141438]">
                       正在听你说话...
                     </h2>
-                    <p className="mt-6 w-full max-w-[340px] text-[1.08rem] font-semibold leading-7 text-[#201833]">
+                    <p className="sf-free-practice-listening-copy mx-auto mt-5 max-w-[18rem] text-center font-bold text-[#7f7896]">
                       自然地说中文，SpeakFlow 会帮你转换成英语练习。
                     </p>
-                  </>
+
+                    <div className="sf-free-practice-listening-wave-band" aria-hidden="true">
+                      <span className="sf-free-practice-listening-wave-layer sf-free-practice-listening-wave-layer-back" />
+                      <span className="sf-free-practice-listening-wave-layer sf-free-practice-listening-wave-layer-front" />
+                      <span className="sf-free-practice-listening-spark sf-free-practice-listening-spark-one" />
+                      <span className="sf-free-practice-listening-spark sf-free-practice-listening-spark-two" />
+                      <span className="sf-free-practice-listening-spark sf-free-practice-listening-spark-three" />
+                    </div>
+
+                    <div className="sf-free-practice-listening-tip mx-auto flex items-center gap-4 text-left">
+                      <span className="grid shrink-0 place-items-center rounded-full bg-[#f0edff] text-[#8b6dff]">
+                        <FreePracticeLandingIcon icon="sparkle" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-black text-[#17163c]">
+                          小提示
+                        </span>
+                        <span className="mt-1 block font-bold leading-6 text-[#7f7896]">
+                          说得越自然，AI 给出的表达就越贴近真实语境哦！
+                        </span>
+                      </span>
+                    </div>
+                  </div>
                 )
               ) : showNativeConfirmationPrompt ? (
-                <div className="sf-native-confirmation-card w-full max-w-[360px]">
-                  <p className="sf-native-confirmation-label text-[1.05rem] font-extrabold leading-6 text-[#6b4dff]">
+                <div className="sf-native-confirmation-card w-full max-w-[300px]">
+                  <p className="sf-native-confirmation-label text-[0.92rem] font-extrabold leading-5 text-[#6b4dff]">
                     你想表达的是：
                   </p>
-                  <label className="sf-native-confirmation-input mt-4 block rounded-[22px] border border-[#d9d0ff] bg-white/58 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.72),0_14px_34px_rgba(84,72,146,0.08)]">
+                  <label className="sf-native-confirmation-input mt-4 block rounded-[16px] border-[10px] border-white/62 bg-white/74 px-3 py-2 shadow-[0_16px_34px_rgba(84,72,146,0.12),inset_0_1px_0_rgba(255,255,255,0.84)]">
                     <textarea
                       value={nativeSpeech}
                       onChange={(event) =>
@@ -7289,17 +9734,17 @@ function SpeakEnglishClient() {
                       }
                       rows={3}
                       lang="zh-CN"
-                      className="sf-native-confirmation-textarea block min-h-[7.5rem] w-full resize-none bg-transparent text-[1.55rem] font-extrabold leading-[2.15rem] text-[#201833] outline-none"
+                      className="sf-native-confirmation-textarea block min-h-[6.2rem] w-full resize-none bg-transparent text-[1.08rem] font-extrabold leading-7 text-[#201833] outline-none"
                     />
                   </label>
-                  <p className="sf-native-confirmation-help mt-4 text-[0.96rem] font-bold leading-6 text-[#7f7896]">
+                  <p className="sf-native-confirmation-help mt-4 text-[0.78rem] font-bold leading-5 text-[#7f7896]">
                     如果识别错了，可以直接修改，或者重新说一遍。
                   </p>
                   <div className="sf-native-confirmation-actions mt-5 grid grid-cols-2 gap-3">
                     <button
                       type="button"
                       onClick={retryNativeSpeech}
-                      className="min-h-12 rounded-[18px] bg-white/54 px-4 text-[1rem] font-black text-[#4b4267] shadow-[inset_0_1px_0_rgba(255,255,255,0.76)] transition active:scale-[0.98]"
+                      className="min-h-10 rounded-[14px] bg-white/72 px-4 text-[0.9rem] font-black text-[#4b4267] shadow-[inset_0_1px_0_rgba(255,255,255,0.82),0_10px_20px_rgba(84,72,146,0.08)] transition active:scale-[0.98]"
                     >
                       重说
                     </button>
@@ -7307,7 +9752,7 @@ function SpeakEnglishClient() {
                       type="button"
                       onClick={confirmNativeSpeech}
                       disabled={!nativeSpeech.trim()}
-                      className="min-h-12 rounded-[18px] bg-[#7c55ff] px-4 text-[1rem] font-black text-white shadow-[0_14px_28px_rgba(124,85,255,0.22)] transition active:scale-[0.98] disabled:opacity-45"
+                      className="min-h-10 rounded-[14px] bg-[#7c55ff] px-4 text-[0.9rem] font-black text-white shadow-[0_14px_28px_rgba(124,85,255,0.24)] transition active:scale-[0.98] disabled:opacity-45"
                     >
                       确认
                     </button>
@@ -7333,11 +9778,74 @@ function SpeakEnglishClient() {
                   </p>
                 </div>
               ) : showLandingPrompt ? (
-                <>
-                  <h2 className="w-full max-w-[360px] text-[1.9rem] font-extrabold leading-[2.55rem] text-[#201833]">
-                    用中文说出你想表达的内容
-                  </h2>
-                </>
+                <div className="sf-free-practice-landing relative w-full px-6 pb-0 pt-6 text-center">
+                  <span className="pointer-events-none absolute left-1/2 top-6 h-[22rem] w-[22rem] -translate-x-1/2 rounded-full border border-[#d8d2ff]/48" />
+                  <span className="pointer-events-none absolute left-1/2 top-[5.25rem] h-[16rem] w-[16rem] -translate-x-1/2 rounded-full border border-[#e2dcff]/46" />
+                  <span className="pointer-events-none absolute left-[17%] top-[7.5rem] h-2 w-2 rounded-full bg-[#b8a7ff]/62" />
+                  <span className="pointer-events-none absolute right-[16%] top-[10.8rem] h-3 w-3 rounded-full bg-[#a996ff]/58" />
+
+                  <div className="relative mx-auto max-w-[22rem]">
+                    <div className="mx-auto grid h-7 w-7 place-items-center text-[#9b7cff]">
+                      <FreePracticeLandingIcon icon="mic" />
+                    </div>
+                    <h2 className="mt-3 text-[2.15rem] font-black leading-[1.08] tracking-[-0.01em] text-[#141438] min-[390px]:text-[2.35rem]">
+                      <span className="block">先说中文，</span>
+                      <span className="block bg-[linear-gradient(135deg,#141438_0%,#7c55ff_44%,#9d6bff_100%)] bg-clip-text text-transparent">
+                        再大胆说英语
+                      </span>
+                    </h2>
+                    <p className="mt-4 text-[0.92rem] font-extrabold leading-6 text-[#7f7896] min-[390px]:text-[0.98rem]">
+                      AI 会一步步帮你说得更自然、更地道。
+                    </p>
+                  </div>
+
+                  <div className="relative mx-auto mt-6 max-w-[21rem] rounded-[28px] border border-[#ded7ff] bg-white/62 px-4 py-4 text-left shadow-[0_24px_58px_rgba(84,72,146,0.13),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xl">
+                    <h3 className="text-[0.98rem] font-black text-[#17163c]">
+                      练习只需
+                      <span className="mx-1 text-[#7c55ff]">4</span>
+                      步
+                    </h3>
+                    <div className="mt-2.5 grid gap-0">
+                      {freePracticeLandingSteps.map((step, index) => (
+                        <div
+                          key={step.step}
+                          className={`grid grid-cols-[1.8rem_3rem_1fr] items-center gap-2.5 py-1 ${
+                            index === 0 ? "" : "border-t border-[#e7e2ff]"
+                          }`}
+                        >
+                          <span className="grid h-7 w-7 place-items-center rounded-full bg-[linear-gradient(135deg,#8b7cff_0%,#6f55ff_100%)] text-[0.82rem] font-black text-white shadow-[0_10px_20px_rgba(124,85,255,0.22)]">
+                            {step.step}
+                          </span>
+                          <span className="grid h-[3rem] w-[3rem] place-items-center rounded-[15px] bg-[#f0edff] text-[#8b6dff] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
+                            <FreePracticeLandingIcon icon={step.icon} />
+                          </span>
+                          <span className="min-w-0 border-l border-dashed border-[#ddd6ff] pl-3">
+                            <span className="block text-[0.88rem] font-black leading-5 text-[#17163c] min-[390px]:text-[0.94rem]">
+                              {step.title}
+                            </span>
+                            <span className="mt-0.5 block text-[0.72rem] font-bold leading-4 text-[#7f7896] min-[390px]:text-[0.78rem]">
+                              {step.description}
+                            </span>
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="relative mx-auto mt-5 grid max-w-[20.75rem] grid-cols-3 gap-2.5">
+                    {freePracticeLandingChips.map((chip) => (
+                      <span
+                        key={chip.label}
+                        className="flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/80 bg-white/62 px-2 text-[0.74rem] font-black text-[#7c55ff] shadow-[0_14px_30px_rgba(84,72,146,0.1)] min-[390px]:text-[0.82rem]"
+                      >
+                        <span className="grid h-4 w-4 place-items-center">
+                          <FreePracticeLandingIcon icon={chip.icon} />
+                        </span>
+                        <span>{chip.label}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
               ) : showNativeCompletePrompt ? (
                 <>
                   <div className="w-full max-w-[360px]">
@@ -7674,24 +10182,74 @@ function SpeakEnglishClient() {
           </section>
 
           {showVoiceOnlyPrompt ? (
-            <div className="sf-free-practice-voice-actions absolute inset-x-0 bottom-0 z-20 flex min-h-[5.25rem] items-center justify-center border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.78),rgba(215,207,252,0.94))] px-6 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1 shadow-[0_-10px_24px_rgba(100,82,180,0.08),inset_0_1px_0_rgba(255,255,255,0.52)] backdrop-blur-xl">
-              <button
-                type="button"
-                onClick={handlePrimaryPracticeAction}
-                className={`grid place-items-center text-[#7f7896] transition ${
-                  isListening ? "scale-105" : ""
-                }`}
-                aria-label={isListening ? "停止语音输入" : "点击开始说话"}
-              >
-                <Image
-                  src="/icons/glow-mic.svg"
-                  alt=""
-                  width={96}
-                  height={96}
-                  className="h-[4.3rem] w-[4.3rem]"
-                />
-              </button>
-            </div>
+            showLandingPrompt ? (
+              <div className="sf-free-practice-landing-actions absolute inset-x-0 bottom-0 z-20 flex min-h-[9.6rem] flex-col items-center justify-end overflow-hidden px-6 pb-[max(0.95rem,env(safe-area-inset-bottom))]">
+                <span className="sf-free-practice-landing-wave sf-free-practice-landing-wave-back" />
+                <span className="sf-free-practice-landing-wave sf-free-practice-landing-wave-front" />
+                <button
+                  type="button"
+                  onClick={handlePrimaryPracticeAction}
+                  className="relative z-10 grid h-[6.9rem] w-[6.9rem] place-items-center rounded-full bg-white text-[#7c55ff] shadow-[0_24px_62px_rgba(124,85,255,0.24),0_0_0_14px_rgba(255,255,255,0.28),inset_0_1px_0_rgba(255,255,255,0.92)] transition active:scale-[0.98]"
+                  aria-label="点击麦克风开始练习"
+                >
+                  <Image
+                    src="/icons/glow-mic.svg"
+                    alt=""
+                    width={112}
+                    height={112}
+                    className="h-[4.35rem] w-[4.35rem]"
+                  />
+                </button>
+                <p className="relative z-10 mt-3 flex items-center justify-center gap-2 text-[0.9rem] font-extrabold text-[#7f7896]">
+                  <span className="grid h-5 w-5 place-items-center rounded-[6px] border-2 border-current text-[0.7rem] leading-none">
+                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                  </span>
+                  点击麦克风开始练习
+                </p>
+              </div>
+            ) : showFreePracticeNativeListeningPrompt ? (
+              <div className="sf-free-practice-listening-actions absolute inset-x-0 bottom-0 z-20 flex min-h-[12rem] flex-col items-center justify-end overflow-hidden px-6 pb-[max(1.45rem,env(safe-area-inset-bottom))]">
+                <button
+                  type="button"
+                  onClick={handlePrimaryPracticeAction}
+                  className="relative z-10 grid h-[7.35rem] w-[7.35rem] place-items-center rounded-full bg-white text-[#7c55ff] shadow-[0_26px_64px_rgba(124,85,255,0.22),0_0_0_18px_rgba(255,255,255,0.32),0_0_0_34px_rgba(161,139,255,0.08),inset_0_1px_0_rgba(255,255,255,0.94)] transition active:scale-[0.98]"
+                  aria-label="点击麦克风结束录音"
+                >
+                  <Image
+                    src="/icons/glow-mic.svg"
+                    alt=""
+                    width={112}
+                    height={112}
+                    className="h-[4.7rem] w-[4.7rem]"
+                  />
+                </button>
+                <p className="relative z-10 mt-5 flex items-center justify-center gap-2 text-[0.98rem] font-extrabold text-[#8a91a8]">
+                  <span className="grid h-5 w-5 place-items-center rounded-[6px] border-2 border-current text-[0.7rem] leading-none">
+                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                  </span>
+                  点击麦克风结束录音
+                </p>
+              </div>
+            ) : (
+              <div className="sf-free-practice-voice-actions absolute inset-x-0 bottom-0 z-20 flex min-h-[5.25rem] items-center justify-center border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.78),rgba(215,207,252,0.94))] px-6 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1 shadow-[0_-10px_24px_rgba(100,82,180,0.08),inset_0_1px_0_rgba(255,255,255,0.52)] backdrop-blur-xl">
+                <button
+                  type="button"
+                  onClick={handlePrimaryPracticeAction}
+                  className={`grid place-items-center text-[#7f7896] transition ${
+                    isListening ? "scale-105" : ""
+                  }`}
+                  aria-label={isListening ? "停止语音输入" : "点击开始说话"}
+                >
+                  <Image
+                    src="/icons/glow-mic.svg"
+                    alt=""
+                    width={96}
+                    height={96}
+                    className="h-[4.3rem] w-[4.3rem]"
+                  />
+                </button>
+              </div>
+            )
           ) : null}
 
           {hasEnglishAttempt ? (
