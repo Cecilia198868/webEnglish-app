@@ -58,34 +58,33 @@ export default function FreeStudyHeader({
 
   return (
     <header ref={headerRef} className="sf-free-study-header">
-      <div className="sf-free-study-header-image-wrap">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/free-study-header.jpg"
-          alt=""
-          aria-hidden="true"
-          className="sf-free-study-header-image"
-          draggable={false}
-        />
-
-        {avatarSrc ? (
-          <span aria-hidden="true" className="sf-free-study-header-avatar">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={avatarSrc}
-              alt=""
-              className="sf-free-study-header-avatar-image"
-              onError={onAvatarError}
-            />
-          </span>
-        ) : null}
-
+      <div className="sf-free-study-header-card">
         <button
           type="button"
           aria-label={menuLabel}
           onClick={onMenuClick}
-          className="sf-free-study-header-menu-hit"
-        />
+          className="sf-free-study-header-menu-button"
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
+
+        <div className="sf-free-study-header-brand" aria-hidden="true">
+          <span className="sf-free-study-header-logo">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/icons/logo.png"
+              alt=""
+              className="sf-free-study-header-logo-image"
+              draggable={false}
+            />
+          </span>
+          <span className="sf-free-study-header-brand-copy">
+            <span className="sf-free-study-header-title">SpeakFlow</span>
+            <span className="sf-free-study-header-subtitle">VOICE PRACTICE</span>
+          </span>
+        </div>
 
         <button
           type="button"
@@ -93,7 +92,17 @@ export default function FreeStudyHeader({
           onClick={onAccountClick}
           className="sf-free-study-header-avatar-button"
           title={avatarAlt}
-        />
+        >
+          <span aria-hidden="true" className="sf-free-study-header-avatar">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={avatarSrc || "/default-avatar.png"}
+              alt=""
+              className="sf-free-study-header-avatar-image"
+              onError={onAvatarError}
+            />
+          </span>
+        </button>
       </div>
     </header>
   );

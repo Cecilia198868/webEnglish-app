@@ -4477,9 +4477,7 @@ function SpeakEnglishClient() {
   }
 
   function openAiGuidedExpressionStepOne() {
-    handledStepRouteRef.current = "/ai-guided-expression/step-1";
     router.push("/ai-guided-expression/step-1");
-    openTrainingGroundMode();
   }
 
   function openFreeStudyStepFourForRetry() {
@@ -4610,6 +4608,16 @@ function SpeakEnglishClient() {
     resetGuidedFollowupState();
     resetAuthoritativeEnglish();
     void startRecognition("english");
+  }
+
+  function confirmFreeStudyNativeSpeech() {
+    const confirmedSpeech = nativeSpeech.trim();
+    if (!confirmedSpeech) return;
+
+    saveFreeStudyRouteState("");
+    handledStepRouteRef.current = `/free-study/step-4:${confirmedSpeech}`;
+    router.push("/free-study/step-4");
+    startFreeStudyStepFourEnglishRound(confirmedSpeech);
   }
 
   function retryEnglishSpeech() {
@@ -7565,7 +7573,16 @@ function SpeakEnglishClient() {
           ) : null}
 
           {showReferenceLanding ? (
-            <FreeStudyPageOne onMicrophoneClick={handlePrimaryPracticeAction} />
+            <FreeStudyPageOne
+              menuLabel="打开菜单"
+              onMenuClick={openMenuPage}
+              accountLabel={accountCopy.openAccountMenu}
+              onAccountClick={openReferenceAccountMenu}
+              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
+              avatarAlt={accountEmail || accountName || "user"}
+              onAvatarError={() => setAccountImageFailed(true)}
+              onMicrophoneClick={handlePrimaryPracticeAction}
+            />
           ) : null}
 
           {showReferenceListening ? (
@@ -7579,9 +7596,16 @@ function SpeakEnglishClient() {
           {showReferenceConfirmation ? (
             <FreeStudyPageThree
               chineseText={nativeSpeech}
+              menuLabel="重新说中文"
+              onMenuClick={openFreeStudyStepTwoForNextChinese}
+              accountLabel={accountCopy.openAccountMenu}
+              onAccountClick={openReferenceAccountMenu}
+              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
+              avatarAlt={accountEmail || accountName || "user"}
+              onAvatarError={() => setAccountImageFailed(true)}
               onEditChinese={updateNativeSpeechDraft}
-              onRetryChinese={retryNativeSpeech}
-              onStartEnglishPractice={confirmNativeSpeech}
+              onRetryChinese={openFreeStudyStepTwoForNextChinese}
+              onStartEnglishPractice={confirmFreeStudyNativeSpeech}
             />
           ) : null}
 
@@ -7599,6 +7623,25 @@ function SpeakEnglishClient() {
                 onAiGuidedPractice={openAiGuidedExpressionStepOne}
                 onRetryEnglish={openFreeStudyStepFourForRetry}
               />
+              <div
+                className="pointer-events-none absolute z-[121] flex items-center gap-1.5 font-black leading-none text-[#755cff] drop-shadow-[0_4px_10px_rgba(117,92,255,0.16)]"
+                style={{
+                  left: "6.8%",
+                  top: "36.4%",
+                  fontSize: "clamp(1.02rem, 3.8vw, 1.26rem)",
+                }}
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="h-[1.15em] w-[1.15em] shrink-0"
+                  fill="currentColor"
+                >
+                  <path d="M11.9 2.4c.5 4.8 2.9 7.5 7.7 8.1-4.8.7-7.2 3.3-7.7 8.1-.6-4.8-3-7.4-7.8-8.1 4.8-.6 7.2-3.3 7.8-8.1Z" />
+                  <path d="M19.4 15.2c.2 1.7 1.1 2.7 2.8 2.9-1.7.2-2.6 1.2-2.8 2.9-.2-1.7-1.1-2.7-2.8-2.9 1.7-.2 2.6-1.2 2.8-2.9Z" />
+                </svg>
+                <span>推荐表达</span>
+              </div>
               <div
                 className="absolute z-[120] isolate overflow-y-auto rounded-[24px] bg-[#fbfaff] px-[1.2%] pb-4 pt-1 shadow-[0_0_42px_42px_rgba(251,250,255,1)] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 style={{
@@ -7694,14 +7737,16 @@ function SpeakEnglishClient() {
                             )}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p
-                              className={`text-[clamp(0.68rem,2.25vw,0.8rem)] font-black leading-tight ${labelColorClasses[index]}`}
-                            >
-                              {label}
-                            </p>
+                            {index === 0 ? null : (
+                              <p
+                                className={`text-[clamp(0.68rem,2.25vw,0.8rem)] font-black leading-tight ${labelColorClasses[index]}`}
+                              >
+                                {label}
+                              </p>
+                            )}
                             <p
                               lang="en"
-                              className="mt-1 whitespace-normal break-words text-[clamp(0.86rem,2.8vw,1.06rem)] font-medium leading-[1.34] text-[#141438]"
+                              className={`${index === 0 ? "" : "mt-1"} whitespace-normal break-words text-[clamp(0.86rem,2.8vw,1.06rem)] font-medium leading-[1.34] text-[#141438]`}
                             >
                               {renderReferenceResultText(text)}
                             </p>
@@ -7795,15 +7840,17 @@ function SpeakEnglishClient() {
             />
           ) : null}
 
-          <FreeStudyHeader
-            menuLabel="打开菜单"
-            onMenuClick={openMenuPage}
-            accountLabel={accountCopy.openAccountMenu}
-            onAccountClick={openReferenceAccountMenu}
-            avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
-            avatarAlt={accountEmail || accountName || "user"}
-            onAvatarError={() => setAccountImageFailed(true)}
-          />
+          {!showReferenceLanding && !showReferenceConfirmation && !showAccountMenu ? (
+            <FreeStudyHeader
+              menuLabel="打开菜单"
+              onMenuClick={openMenuPage}
+              accountLabel={accountCopy.openAccountMenu}
+              onAccountClick={openReferenceAccountMenu}
+              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
+              avatarAlt={accountEmail || accountName || "user"}
+              onAvatarError={() => setAccountImageFailed(true)}
+            />
+          ) : null}
           {trainingGroundTitle && !showQuickPanel ? (
             <div className="relative z-10 mt-1 text-center font-[var(--font-sora)] text-[0.92rem] font-extrabold text-[#5b63ff]">
               {trainingGroundTitle}
@@ -10713,4 +10760,3 @@ function SpeakEnglishClient() {
     </main>
   );
 }
-
