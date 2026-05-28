@@ -1194,7 +1194,7 @@ export default function StudyPage() {
 
   function handleBackToPreviousPage() {
     stopAutoPlay();
-    router.replace("/speak-english?menu=1");
+    router.replace("/menu");
   }
 
   function openRenameCourseDialog() {
@@ -1273,7 +1273,7 @@ export default function StudyPage() {
     }
 
     setShowCourseFileMenu(false);
-    router.replace("/speak-english?menu=1");
+    router.replace("/menu");
   }
 
   function handleSaveCurrentPosition() {

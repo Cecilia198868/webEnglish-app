@@ -3,8 +3,16 @@
 import type { ChangeEvent, MutableRefObject, PointerEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import FreePracticeLimitModal from "@/components/FreePracticeLimitModal";
+import FreeStudyHeader from "@/components/FreeStudyHeader";
+import FreeStudyPageOne from "@/components/FreeStudyPageOne";
+import FreeStudyPageTwo from "@/components/FreeStudyPageTwo";
+import FreeStudyPageThree from "@/components/FreeStudyPageThree";
+import FreeStudyPageFour from "@/components/FreeStudyPageFour";
+import FreeStudyPageFiveTop from "@/components/FreeStudyPageFiveTop";
+import FreeStudyPageFiveBottomBar from "@/components/FreeStudyPageFiveBottomBar";
 import FreeUsageMeter from "@/components/FreeUsageMeter";
 import { useLanguage } from "@/components/LanguageProvider";
 import PlayIcon from "@/components/PlayIcon";
@@ -104,9 +112,13 @@ type SubscriptionStatus = "free" | "pro" | "cancels_at_period_end";
 
 type SessionResponse = {
   user?: {
+    avatarUrl?: string | null;
     email?: string | null;
     image?: string | null;
     name?: string | null;
+    photoURL?: string | null;
+    photoUrl?: string | null;
+    picture?: string | null;
   } | null;
 };
 
@@ -262,6 +274,7 @@ type HelpCenterSection = {
 const accountAvatarStoragePrefix = "speakflow-account-avatar";
 const appearancePreferenceStorageKey = "speakflow-appearance-preference";
 const fontSizePreferenceStorageKey = "speakflow-font-size-preference";
+const freeStudyRouteStateStorageKey = "speakflow-free-study-route-state";
 const selectedVoiceStorageKey = "speakflow-selected-voice-uri";
 const speechSilenceDelayMs = 1000;
 const englishSpeechSilenceDelayMs = 2000;
@@ -269,8 +282,47 @@ const speechNoInputTimeoutMs = 12000;
 const speechStopFallbackMs = 900;
 const speechMaxDurationMs = 45000;
 
+type FreeStudyRouteState = {
+  nativeSpeech?: string;
+  userEnglishText?: string;
+};
+
 function getAccountAvatarStorageKey(identifier: string) {
   return `${accountAvatarStoragePrefix}:${identifier || "local-user"}`;
+}
+
+function getSessionAvatar(user?: SessionResponse["user"]) {
+  return (
+    user?.avatarUrl ||
+    user?.image ||
+    user?.photoURL ||
+    user?.photoUrl ||
+    user?.picture ||
+    ""
+  );
+}
+
+function readFreeStudyRouteState(): FreeStudyRouteState | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const rawState = window.sessionStorage.getItem(freeStudyRouteStateStorageKey);
+    if (!rawState) return null;
+    const parsedState = JSON.parse(rawState) as FreeStudyRouteState;
+
+    return {
+      nativeSpeech:
+        typeof parsedState.nativeSpeech === "string"
+          ? parsedState.nativeSpeech
+          : "",
+      userEnglishText:
+        typeof parsedState.userEnglishText === "string"
+          ? parsedState.userEnglishText
+          : "",
+    };
+  } catch {
+    return null;
+  }
 }
 
 function createFreePracticeRoundId() {
@@ -2900,6 +2952,8 @@ export default function SpeakEnglishPage() {
 }
 
 function SpeakEnglishClient() {
+  const router = useRouter();
+  const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
@@ -2923,6 +2977,7 @@ function SpeakEnglishClient() {
     useRef<FreeConversationPrefetch | null>(null);
   const hasEnglishAttemptRef = useRef(false);
   const messageRef = useRef("");
+  const handledStepRouteRef = useRef("");
 
   const [message, setMessage] = useState(defaultFreeLearningPrompt);
   const [inputText, setInputText] = useState("");
@@ -2932,6 +2987,8 @@ function SpeakEnglishClient() {
   const [composingPinyin, setComposingPinyin] = useState("");
   const [isShifted, setIsShifted] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [isRecognizingNativeSpeech, setIsRecognizingNativeSpeech] =
+    useState(false);
   const [liveTranscript, setLiveTranscript] = useState("");
   const [practiceStage, setPracticeStage] = useState<PracticeStage>("native");
   const [nativeSpeech, setNativeSpeech] = useState("");
@@ -3086,13 +3143,17 @@ function SpeakEnglishClient() {
     !hasEnglishAttempt &&
     !standardEnglish;
   const showListeningPrompt = isListening;
+  const showNativeRecognitionPrompt =
+    isRecognizingNativeSpeech &&
+    practiceStage === "native" &&
+    !hasNativeSpeech;
   const showFreeConversationAnswerPrompt =
     isFreeConversationMode &&
     Boolean(freeConversationQuestionPrompt) &&
     !hasEnglishAttempt &&
     !nativeSpeech;
   const showFreePracticeNativeListeningPrompt =
-    showListeningPrompt &&
+    (showListeningPrompt || showNativeRecognitionPrompt) &&
     !(practiceStage === "english" && nativeSpeech) &&
     !(isFreeConversationMode && freeConversationQuestionPrompt);
   const showVoiceOnlyPrompt =
@@ -3522,7 +3583,7 @@ function SpeakEnglishClient() {
 
         setAccountName(nextName);
         setAccountEmail(nextEmail);
-        setAccountImage(savedAvatar || session.user?.image || "");
+        setAccountImage(savedAvatar || getSessionAvatar(session.user));
         setAccountImageFailed(false);
       } catch {
         if (!cancelled) {
@@ -4193,6 +4254,7 @@ function SpeakEnglishClient() {
     setPracticeStage("native");
     setNativeSpeech("");
     setIsNativeSpeechConfirmed(false);
+    setIsRecognizingNativeSpeech(false);
     resetAuthoritativeEnglish();
     setHasNativeSpeech(false);
     setHasEnglishAttempt(false);
@@ -4307,6 +4369,20 @@ function SpeakEnglishClient() {
     setShowQuickPanel(true);
   }
 
+  function openMenuPage() {
+    if (isListening) {
+      cancelRecognition();
+    }
+
+    setShowAccountMenu(false);
+    setAccountPanelView("menu");
+    setShowAvatarEditor(false);
+    setShowQuickPanel(false);
+    setShowClassicCoursePicker(false);
+    resetClassicCoursePicker();
+    router.push("/menu");
+  }
+
   function openReferenceAccountMenu() {
     if (isListening) {
       cancelRecognition();
@@ -4342,6 +4418,116 @@ function SpeakEnglishClient() {
     resetClassicCoursePicker();
   }
 
+  function saveFreeStudyRouteState(nextUserEnglishText = message) {
+    if (typeof window === "undefined") return;
+
+    const savedNativeSpeech =
+      readFreeStudyRouteState()?.nativeSpeech?.trim() || "";
+
+    window.sessionStorage.setItem(
+      freeStudyRouteStateStorageKey,
+      JSON.stringify({
+        nativeSpeech: nativeSpeech.trim() || savedNativeSpeech,
+        userEnglishText: nextUserEnglishText.trim(),
+      } satisfies FreeStudyRouteState)
+    );
+  }
+
+  function startFreeStudyStepFourEnglishRound(confirmedSpeech: string) {
+    const normalizedSpeech = confirmedSpeech.trim();
+    if (!normalizedSpeech) return;
+
+    if (isListening) {
+      cancelRecognition();
+    }
+
+    freePracticeRoundIdRef.current = createFreePracticeRoundId();
+    setTrainingGroundMode("default");
+    guidedConversationTurnsRef.current = [];
+    setPracticeStage("english");
+    setNativeSpeech(normalizedSpeech);
+    setMessage(normalizedSpeech);
+    setIsNativeSpeechConfirmed(true);
+    setIsRecognizingNativeSpeech(false);
+    resetAuthoritativeEnglish();
+    setHasNativeSpeech(true);
+    setHasEnglishAttempt(false);
+    setStandardEnglish("");
+    setExpressionVariants([]);
+    setSelectedExpressionIndex(0);
+    setIsLoadingExpressionVariants(false);
+    setHighlightedExpressions([]);
+    setVocabularyNotice("");
+    resetGuidedFollowupState();
+    resetFreeConversationState();
+    setInputText("");
+    setComposingPinyin("");
+    setLiveTranscript("");
+    setKeyboardMode("en");
+    setShowQuickPanel(false);
+    setShowExpressionMenu(false);
+    setShowClassicCoursePicker(false);
+    resetClassicCoursePicker();
+
+    if (typeof window === "undefined") return;
+
+    window.setTimeout(() => {
+      void startRecognition("english");
+    }, 0);
+  }
+
+  function openAiGuidedExpressionStepOne() {
+    handledStepRouteRef.current = "/ai-guided-expression/step-1";
+    router.push("/ai-guided-expression/step-1");
+    openTrainingGroundMode();
+  }
+
+  function openFreeStudyStepFourForRetry() {
+    const confirmedSpeech = nativeSpeech.trim();
+    if (!confirmedSpeech) return;
+
+    saveFreeStudyRouteState(message);
+    handledStepRouteRef.current = `/free-study/step-4:${confirmedSpeech}`;
+    router.push("/free-study/step-4");
+    startFreeStudyStepFourEnglishRound(confirmedSpeech);
+  }
+
+  function startFreeStudyStepTwoChineseRound(
+    options: { navigate?: boolean } = {}
+  ) {
+    if (isListening) {
+      cancelRecognition();
+    }
+
+    setTrainingGroundMode("default");
+    guidedConversationTurnsRef.current = [];
+    prepareNextNativeRound();
+    setInputText("");
+    setComposingPinyin("");
+    setLiveTranscript("");
+    setKeyboardMode("zh");
+    setMessage("正在听你说话…");
+    setShowQuickPanel(false);
+    setShowExpressionMenu(false);
+    setShowClassicCoursePicker(false);
+    resetClassicCoursePicker();
+
+    if (typeof window === "undefined") return;
+
+    if (options.navigate !== false) {
+      handledStepRouteRef.current = "/free-study/step-2";
+      router.push("/free-study/step-2");
+    }
+
+    window.setTimeout(() => {
+      void startRecognition("native");
+    }, 0);
+  }
+
+  function openFreeStudyStepTwoForNextChinese() {
+    startFreeStudyStepTwoChineseRound();
+  }
+
   function finishRecognition(finalTranscript = speechBufferRef.current.trim()) {
     const completedStage = activeRecognitionStageRef.current;
 
@@ -4362,6 +4548,7 @@ function SpeakEnglishClient() {
         setHasNativeSpeech(true);
         setPracticeStage("native");
       } else {
+        saveFreeStudyRouteState(finalTranscript);
         setHasEnglishAttempt(true);
         markFreePracticeRoundCompleted();
       }
@@ -4373,6 +4560,7 @@ function SpeakEnglishClient() {
     recognitionRef.current = null;
     setLiveTranscript("");
     setIsListening(false);
+    setIsRecognizingNativeSpeech(false);
   }
 
   function cancelRecognition(options: { message?: string } = {}) {
@@ -4383,6 +4571,7 @@ function SpeakEnglishClient() {
     speechBufferRef.current = "";
     setLiveTranscript("");
     setIsListening(false);
+    setIsRecognizingNativeSpeech(false);
     if (options.message) {
       setMessage(options.message);
     }
@@ -4471,6 +4660,49 @@ function SpeakEnglishClient() {
     }, 0);
   }
 
+  useEffect(() => {
+    if (pathname === "/ai-guided-expression/step-1") {
+      if (handledStepRouteRef.current === pathname) return;
+
+      handledStepRouteRef.current = pathname;
+      openTrainingGroundMode();
+      return;
+    }
+
+    if (pathname === "/free-study/step-1") {
+      if (handledStepRouteRef.current === pathname) return;
+
+      handledStepRouteRef.current = pathname;
+      returnToFreeLearningHome();
+      return;
+    }
+
+    if (pathname === "/free-study/step-2") {
+      if (handledStepRouteRef.current === pathname) return;
+
+      handledStepRouteRef.current = pathname;
+      startFreeStudyStepTwoChineseRound({ navigate: false });
+      return;
+    }
+
+    if (pathname !== "/free-study/step-4") return;
+
+    const savedRouteState = readFreeStudyRouteState();
+    const confirmedSpeech = (
+      savedRouteState?.nativeSpeech ||
+      nativeSpeech
+    ).trim();
+
+    if (!confirmedSpeech) return;
+
+    const routeKey = `${pathname}:${confirmedSpeech}`;
+    if (handledStepRouteRef.current === routeKey) return;
+
+    handledStepRouteRef.current = routeKey;
+    startFreeStudyStepFourEnglishRound(confirmedSpeech);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   function handleComposerPracticeAction() {
     if (isListening) {
       stopRecognition({ forceUiReset: true });
@@ -4481,7 +4713,7 @@ function SpeakEnglishClient() {
   }
 
   async function startRecognition(forcedPracticeStage?: PracticeStage) {
-    if (isListening) return;
+    if (isListening || recognitionRef.current) return;
 
     const RecognitionConstructor = getRecognitionConstructor();
 
@@ -4490,7 +4722,6 @@ function SpeakEnglishClient() {
       return;
     }
 
-    recognitionRef.current?.abort?.();
     clearAllSpeechTimers();
     speechBufferRef.current = "";
     shouldCommitSpeechRef.current = true;
@@ -4543,6 +4774,7 @@ function SpeakEnglishClient() {
     setInputText("");
     setComposingPinyin("");
     setLiveTranscript("");
+    setIsRecognizingNativeSpeech(false);
     setIsListening(true);
     if (nextPracticeStage === "native") {
       setMessage("正在听你说话…");
@@ -4606,6 +4838,10 @@ function SpeakEnglishClient() {
     clearSpeechSilenceTimer();
     clearTimer(speechNoInputTimerRef);
     clearTimer(speechStopFallbackTimerRef);
+
+    if (activeRecognitionStageRef.current === "native") {
+      setIsRecognizingNativeSpeech(true);
+    }
 
     if (options.forceUiReset) {
       setIsListening(false);
@@ -4935,6 +5171,44 @@ function SpeakEnglishClient() {
 
     setSelectedExpressionIndex(variantIndex);
     speakEnglishText(text, rate);
+  }
+
+  function getSelectedReferenceResultText() {
+    const safeIndex = Math.min(
+      selectedExpressionIndex,
+      Math.max(referenceResultVariantTexts.length - 1, 0)
+    );
+    const variantText = expressionVariantsForDisplay[safeIndex]?.text?.trim();
+    const referenceText = referenceResultVariantTexts[safeIndex]?.trim();
+
+    return variantText || referenceText || standardEnglish.trim();
+  }
+
+  function readSelectedReferenceResult(rate = 1) {
+    speakEnglishText(getSelectedReferenceResultText(), rate);
+  }
+
+  function saveSelectedReferenceResultExpression() {
+    const phrase = getSelectedReferenceResultText().trim();
+    if (!phrase) return;
+
+    window.speechSynthesis?.cancel();
+    const result = addVocabularyWord(phrase, nativeSpeech);
+
+    if (!result.ok) {
+      setVocabularyNotice(
+        result.reason === "DUPLICATE" ? "这个表达已经收藏过了" : result.message
+      );
+      return;
+    }
+
+    updateVocabularyWord(result.word.word, {
+      meaning: "收藏表达",
+      partOfSpeech: "phrase",
+      example: nativeSpeech,
+      sourceSentence: nativeSpeech,
+    });
+    setVocabularyNotice("已收藏当前表达");
   }
 
   function renderReferenceResultText(text: string) {
@@ -7291,278 +7565,40 @@ function SpeakEnglishClient() {
           ) : null}
 
           {showReferenceLanding ? (
-            <div className="sf-free-practice-reference-landing absolute inset-0 z-[90] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/free-practice-landing-reference.png"
-                alt=""
-                className="h-full w-full select-none object-fill"
-                draggable={false}
-              />
-              <button
-                type="button"
-                aria-label="打开菜单"
-                onClick={togglePracticeMenu}
-                className="absolute left-[6.8%] top-[4.5%] h-[8.2%] w-[16%] rounded-[26px] border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={() => {
-                  if (isListening) {
-                    cancelRecognition();
-                  }
-                  setShowQuickPanel(false);
-                  setShowClassicCoursePicker(false);
-                  resetClassicCoursePicker();
-                  setShowAccountMenu((current) => {
-                    const next = !current;
-                    if (next) {
-                      setAccountPanelView("menu");
-                    } else {
-                      setShowAvatarEditor(false);
-                    }
-                    return next;
-                  });
-                }}
-                className="absolute right-[6.8%] top-[4.7%] h-[8%] w-[16%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                onClick={handlePrimaryPracticeAction}
-                aria-label="点击麦克风开始练习"
-                className="absolute bottom-[5.4%] left-1/2 h-[14%] w-[34%] -translate-x-1/2 rounded-full border-0 bg-transparent"
-              />
-            </div>
+            <FreeStudyPageOne onMicrophoneClick={handlePrimaryPracticeAction} />
           ) : null}
 
           {showReferenceListening ? (
-            <div className="sf-free-practice-reference-listening absolute inset-0 z-[90] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/free-practice-listening-reference.png"
-                alt=""
-                className="h-full w-full select-none object-fill"
-                draggable={false}
-              />
-              <button
-                type="button"
-                aria-label="打开菜单"
-                onClick={togglePracticeMenu}
-                className="absolute left-[6.8%] top-[4.5%] h-[8.2%] w-[16%] rounded-[26px] border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={() => {
-                  if (isListening) {
-                    cancelRecognition();
-                  }
-                  setShowQuickPanel(false);
-                  setShowClassicCoursePicker(false);
-                  resetClassicCoursePicker();
-                  setShowAccountMenu((current) => {
-                    const next = !current;
-                    if (next) {
-                      setAccountPanelView("menu");
-                    } else {
-                      setShowAvatarEditor(false);
-                    }
-                    return next;
-                  });
-                }}
-                className="absolute right-[6.8%] top-[4.7%] h-[8%] w-[16%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                onClick={handlePrimaryPracticeAction}
-                aria-label="点击麦克风结束录音"
-                className="absolute bottom-[5.8%] left-1/2 h-[14%] w-[34%] -translate-x-1/2 rounded-full border-0 bg-transparent"
-              />
-            </div>
+            <FreeStudyPageTwo
+              isRecordingChinese={isListening}
+              isTranscribingChinese={isRecognizingNativeSpeech}
+              onMicrophoneClick={handlePrimaryPracticeAction}
+            />
           ) : null}
 
           {showReferenceConfirmation ? (
-            <div className="sf-free-practice-reference-confirmation absolute inset-0 z-[90] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/free-practice-confirmation-reference.png"
-                alt=""
-                className="h-full w-full select-none object-fill"
-                draggable={false}
-              />
-              <label className="absolute left-[18.4%] top-[22.7%] flex min-h-[8.8%] w-[51%] items-center bg-[#fbfaff] text-left shadow-[0_0_18px_18px_rgba(251,250,255,0.92)]">
-                <textarea
-                  aria-label="修改识别到的中文"
-                  lang="zh-CN"
-                  value={nativeSpeech}
-                  onChange={(event) =>
-                    updateNativeSpeechDraft(event.target.value)
-                  }
-                  rows={2}
-                  className="block h-full min-h-[4.7em] w-full resize-none overflow-hidden bg-transparent text-[clamp(0.88rem,3vw,1.16rem)] font-black leading-[1.38] text-[#141438] outline-none"
-                />
-              </label>
-              <button
-                type="button"
-                aria-label="返回自由学习首页"
-                onClick={prepareNextNativeRound}
-                className="absolute left-[8.5%] top-[5%] h-[4.9%] w-[10%] rounded-[22px] border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={() => {
-                  if (isListening) {
-                    cancelRecognition();
-                  }
-                  setShowQuickPanel(false);
-                  setShowClassicCoursePicker(false);
-                  resetClassicCoursePicker();
-                  setShowAccountMenu((current) => {
-                    const next = !current;
-                    if (next) {
-                      setAccountPanelView("menu");
-                    } else {
-                      setShowAvatarEditor(false);
-                    }
-                    return next;
-                  });
-                }}
-                className="absolute right-[8%] top-[5%] h-[5.2%] w-[12%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                onClick={retryNativeSpeech}
-                aria-label="重新说"
-                className="absolute left-[13.5%] top-[36.2%] h-[5.2%] w-[34.5%] rounded-[24px] border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                onClick={confirmNativeSpeech}
-                aria-label="确认，开始练习"
-                className="absolute right-[14.1%] top-[36.2%] h-[5.2%] w-[36%] rounded-[24px] border-0 bg-transparent"
-              />
-            </div>
+            <FreeStudyPageThree
+              chineseText={nativeSpeech}
+              onEditChinese={updateNativeSpeechDraft}
+              onRetryChinese={retryNativeSpeech}
+              onStartEnglishPractice={confirmNativeSpeech}
+            />
           ) : null}
 
-          {showReferenceEnglishPrompt ? (
-            <div className="sf-free-practice-reference-english-prompt absolute inset-0 z-[90] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/free-practice-english-prompt-reference.png"
-                alt=""
-                className="h-full w-full select-none object-fill"
-                draggable={false}
-              />
-              <button
-                type="button"
-                aria-label="打开菜单"
-                onClick={togglePracticeMenu}
-                className="absolute left-[6.5%] top-[4.1%] h-[7.5%] w-[15.2%] rounded-[26px] border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={() => {
-                  if (isListening) {
-                    cancelRecognition();
-                  }
-                  setShowQuickPanel(false);
-                  setShowClassicCoursePicker(false);
-                  resetClassicCoursePicker();
-                  setShowAccountMenu((current) => {
-                    const next = !current;
-                    if (next) {
-                      setAccountPanelView("menu");
-                    } else {
-                      setShowAvatarEditor(false);
-                    }
-                    return next;
-                  });
-                }}
-                className="absolute right-[6.8%] top-[4.2%] h-[7.8%] w-[15.8%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                onClick={handlePrimaryPracticeAction}
-                aria-label="点击麦克风开始录音"
-                className="absolute bottom-[5.6%] left-1/2 h-[14.2%] w-[34%] -translate-x-1/2 rounded-full border-0 bg-transparent"
-              />
-            </div>
-          ) : null}
-
-          {showReferenceEnglishListening ? (
-            <div className="sf-free-practice-reference-english-listening absolute inset-0 z-[90] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/free-practice-english-listening-reference.png"
-                alt=""
-                className="h-full w-full select-none object-fill"
-                draggable={false}
-              />
-              <div className="absolute left-[25%] top-[24.7%] flex h-[12%] w-[50%] items-center justify-center bg-[#fbfaff] text-center shadow-[0_0_22px_22px_rgba(251,250,255,0.92)]">
-                <p
-                  lang="zh-CN"
-                  className="whitespace-normal break-words text-[clamp(0.95rem,3.2vw,1.28rem)] font-black leading-[1.36] text-[#141438]"
-                >
-                  {nativeSpeech}
-                </p>
-              </div>
-              <button
-                type="button"
-                aria-label="打开菜单"
-                onClick={togglePracticeMenu}
-                className="absolute left-[6.5%] top-[4.1%] h-[7.5%] w-[15.2%] rounded-[26px] border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={() => {
-                  if (isListening) {
-                    cancelRecognition();
-                  }
-                  setShowQuickPanel(false);
-                  setShowClassicCoursePicker(false);
-                  resetClassicCoursePicker();
-                  setShowAccountMenu((current) => {
-                    const next = !current;
-                    if (next) {
-                      setAccountPanelView("menu");
-                    } else {
-                      setShowAvatarEditor(false);
-                    }
-                    return next;
-                  });
-                }}
-                className="absolute right-[6.8%] top-[4.2%] h-[7.8%] w-[15.8%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                onClick={handlePrimaryPracticeAction}
-                aria-label="点击麦克风停止录音"
-                className="absolute bottom-[5.5%] left-1/2 h-[14.4%] w-[34%] -translate-x-1/2 rounded-full border-0 bg-transparent"
-              />
-            </div>
+          {showReferenceEnglishPrompt || showReferenceEnglishListening ? (
+            <FreeStudyPageFour
+              isRecordingEnglish={isListening || showReferenceEnglishPrompt}
+              nativeSpeech={nativeSpeech}
+            />
           ) : null}
 
           {showReferenceResult ? (
             <div className="sf-free-practice-reference-result absolute inset-0 z-[90] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/free-practice-result-reference.png"
-                alt=""
-                className="h-full w-full select-none object-fill"
-                draggable={false}
+              <FreeStudyPageFiveTop
+                userEnglishText={message}
+                onAiGuidedPractice={openAiGuidedExpressionStepOne}
+                onRetryEnglish={openFreeStudyStepFourForRetry}
               />
-              <div className="pointer-events-none absolute left-[9.2%] top-[25.8%] flex max-h-[7.2%] min-h-[4.8%] w-[68%] items-start overflow-hidden bg-[#fbfaff] py-1 text-left shadow-[0_0_24px_24px_rgba(251,250,255,0.94)]">
-                <p
-                  lang="en"
-                  className="break-words text-[clamp(0.82rem,2.8vw,1.12rem)] font-extrabold leading-[1.2] text-[#757186]"
-                >
-                  {message}
-                </p>
-              </div>
               <div
                 className="absolute z-[120] isolate overflow-y-auto rounded-[24px] bg-[#fbfaff] px-[1.2%] pb-4 pt-1 shadow-[0_0_42px_42px_rgba(251,250,255,1)] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 style={{
@@ -7713,70 +7749,6 @@ function SpeakEnglishClient() {
                   {vocabularyNotice}
                 </p>
               ) : null}
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute bottom-[6.8%] left-[6.8%] z-[92] h-[8.4%] w-[15.8%] rounded-[22px] bg-[#fbfaff] shadow-[0_0_22px_22px_rgba(251,250,255,0.9)]"
-              />
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute bottom-[6.8%] right-[6.8%] z-[92] h-[8.4%] w-[15.8%] rounded-[22px] bg-[#fbfaff] shadow-[0_0_22px_22px_rgba(251,250,255,0.9)]"
-              />
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute bottom-[6.7%] left-[21%] z-[93] flex h-[8%] w-[14.5%] flex-col items-center justify-center rounded-[18px] bg-white/92 text-[#40358f] shadow-[0_10px_24px_rgba(84,72,146,0.1),inset_0_1px_0_rgba(255,255,255,0.94)]"
-              >
-                <span className="text-[clamp(0.9rem,3vw,1.08rem)] font-black leading-none">
-                  ↻
-                </span>
-                <span className="mt-1 text-[clamp(0.58rem,2vw,0.72rem)] font-black leading-none">
-                  跟读练习
-                </span>
-              </span>
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute bottom-[6.7%] right-[21%] z-[93] flex h-[8%] w-[14.5%] flex-col items-center justify-center rounded-[18px] bg-white/92 text-[#40358f] shadow-[0_10px_24px_rgba(84,72,146,0.1),inset_0_1px_0_rgba(255,255,255,0.94)]"
-              >
-                <span className="text-[clamp(0.56rem,1.9vw,0.7rem)] font-black leading-none">
-                  ▶ 0.5x
-                </span>
-                <span className="mt-1 text-[clamp(0.58rem,2vw,0.72rem)] font-black leading-none">
-                  倍速
-                </span>
-              </span>
-              <button
-                type="button"
-                aria-label="返回自由学习首页"
-                onClick={prepareNextNativeRound}
-                className="absolute left-[4.8%] top-[3.1%] h-[5.2%] w-[10.5%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={() => {
-                  if (isListening) {
-                    cancelRecognition();
-                  }
-                  setShowQuickPanel(false);
-                  setShowClassicCoursePicker(false);
-                  resetClassicCoursePicker();
-                  setShowAccountMenu((current) => {
-                    const next = !current;
-                    if (next) {
-                      setAccountPanelView("menu");
-                    } else {
-                      setShowAvatarEditor(false);
-                    }
-                    return next;
-                  });
-                }}
-                className="absolute right-[5.2%] top-[3.1%] h-[5.4%] w-[11.4%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                onClick={openTrainingGroundMode}
-                aria-label="AI guided expression"
-                className="absolute left-[6.8%] top-[10.5%] h-[8.4%] w-[86.4%] rounded-[24px] border-0 bg-transparent"
-              />
               <button
                 type="button"
                 onClick={() => readStandardEnglish(1)}
@@ -7811,97 +7783,32 @@ function SpeakEnglishClient() {
                   />
                 );
               })}
-              <button
-                type="button"
-                onClick={handlePrimaryPracticeAction}
-                aria-label="跟读练习"
-                className="absolute bottom-[5.5%] left-1/2 h-[12.8%] w-[19%] -translate-x-1/2 rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                onClick={() => readStandardEnglish(0.5)}
-                aria-label="0.5x 倍速"
-                className="absolute bottom-[6.7%] right-[21%] h-[8%] w-[14.5%] rounded-[20px] border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                onClick={prepareNextNativeRound}
-                aria-label="重新练习"
-                className="absolute bottom-[6.7%] left-[21%] h-[8%] w-[14.5%] rounded-[20px] border-0 bg-transparent"
-              />
             </div>
           ) : null}
 
-          <header className="sf-app-topbar sf-speak-header relative z-10 shrink-0 px-5">
-            <div className="sf-app-topbar-inner flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  aria-label="打开菜单"
-                  onClick={togglePracticeMenu}
-                  className="sf-header-button"
-                >
-                  <span className="relative block h-4 w-5 before:absolute before:left-0 before:top-0 before:h-px before:w-4 before:bg-[#efe9ff] after:absolute after:bottom-0 after:left-0 after:h-px after:w-5 after:bg-[#efe9ff]">
-                    <span className="absolute left-0 top-1/2 h-px w-5 -translate-y-1/2 bg-[#efe9ff]" />
-                  </span>
-                </button>
-              </div>
+          {showReferenceResult ? (
+            <FreeStudyPageFiveBottomBar
+              onFavorite={saveSelectedReferenceResultExpression}
+              onFollowPractice={() => readSelectedReferenceResult(1)}
+              onNextChinese={openFreeStudyStepTwoForNextChinese}
+              onSlowPlayback={() => readSelectedReferenceResult(0.5)}
+            />
+          ) : null}
 
-              <div className="sf-app-brand flex items-center gap-2">
-                <SpeakFlowBrandMark />
-                <div>
-                  <h1 className="text-[1.05rem] font-semibold leading-none text-white">
-                    SpeakFlow
-                  </h1>
-                  <p className="mt-0.5 text-[0.42rem] font-semibold uppercase tracking-[0.16em] text-[#91dcff]/80">
-                    AI voice practice
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={() => {
-                  if (isListening) {
-                    cancelRecognition();
-                  }
-                  setShowQuickPanel(false);
-                  setShowClassicCoursePicker(false);
-                  resetClassicCoursePicker();
-                  setShowAccountMenu((current) => {
-                    const next = !current;
-                    if (next) {
-                      setAccountPanelView("menu");
-                    } else {
-                      setShowAvatarEditor(false);
-                    }
-                    return next;
-                  });
-                }}
-                className="sf-app-avatar-button grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/70 bg-[#f7f4ff] text-[0.82rem] font-extrabold text-white shadow-[0_12px_26px_rgba(84,72,146,0.18)]"
-              >
-                {accountImage && !accountImageFailed ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={accountImage}
-                    alt={accountEmail || "user"}
-                    className="h-full w-full object-cover"
-                    onError={() => setAccountImageFailed(true)}
-                  />
-                ) : (
-                  <span className="grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#ffd84d_0%,#f0b912_52%,#e9a70f_100%)] text-[#fff8dd]">
-                    {accountAvatarLabel}
-                  </span>
-                )}
-              </button>
+          <FreeStudyHeader
+            menuLabel="打开菜单"
+            onMenuClick={openMenuPage}
+            accountLabel={accountCopy.openAccountMenu}
+            onAccountClick={openReferenceAccountMenu}
+            avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
+            avatarAlt={accountEmail || accountName || "user"}
+            onAvatarError={() => setAccountImageFailed(true)}
+          />
+          {trainingGroundTitle && !showQuickPanel ? (
+            <div className="relative z-10 mt-1 text-center font-[var(--font-sora)] text-[0.92rem] font-extrabold text-[#5b63ff]">
+              {trainingGroundTitle}
             </div>
-            {trainingGroundTitle && !showQuickPanel ? (
-              <div className="mt-3 text-center font-[var(--font-sora)] text-[0.92rem] font-extrabold text-[#5b63ff]">
-                {trainingGroundTitle}
-              </div>
-            ) : null}
-          </header>
+          ) : null}
 
           {showAccountMenu ? (
             <div className="sf-account-panel absolute inset-0 z-50 flex flex-col bg-[linear-gradient(180deg,#f0eaff_0%,#f7f3ff_100%)] px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6 text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] backdrop-blur-2xl">
@@ -10252,7 +10159,7 @@ function SpeakEnglishClient() {
             )
           ) : null}
 
-          {hasEnglishAttempt ? (
+          {hasEnglishAttempt && !showReferenceResult ? (
             <div className="sf-free-practice-result-actions absolute inset-x-0 bottom-0 z-20 grid min-h-[5.45rem] grid-cols-[1fr_auto_1fr] items-center gap-3 border-t border-[#cfc4ff]/72 bg-[linear-gradient(180deg,rgba(228,220,255,0.78),rgba(215,207,252,0.94))] px-5 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1 shadow-[0_-10px_24px_rgba(100,82,180,0.08),inset_0_1px_0_rgba(255,255,255,0.52)] backdrop-blur-xl min-[390px]:gap-4 min-[390px]:px-8">
               <button
                 type="button"
@@ -10806,3 +10713,4 @@ function SpeakEnglishClient() {
     </main>
   );
 }
+
