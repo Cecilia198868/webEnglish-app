@@ -7626,15 +7626,15 @@ function SpeakEnglishClient() {
 
           {showReferenceEnglishPrompt || showReferenceEnglishListening ? (
             <FreeStudyPageFour
-               isRecordingEnglish={isListening || showReferenceEnglishPrompt}
-  nativeSpeech={nativeSpeech}
-  menuLabel="打开菜单"
-  onMenuClick={openMenuPage}
-  accountLabel={accountCopy.openAccountMenu}
-  onAccountClick={openReferenceAccountMenu}
-  avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
-  avatarAlt={accountEmail || accountName || "user"}
-  onAvatarError={() => setAccountImageFailed(true)}
+              isRecordingEnglish={isListening || showReferenceEnglishPrompt}
+              nativeSpeech={nativeSpeech}
+              menuLabel="回到主菜单"
+              onMenuClick={openMenuPage}
+              accountLabel={accountCopy.openAccountMenu}
+              onAccountClick={openAccountPage}
+              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
+              avatarAlt={accountEmail || accountName || "user"}
+              onAvatarError={() => setAccountImageFailed(true)}
             />
           ) : null}
 
