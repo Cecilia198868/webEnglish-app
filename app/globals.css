@@ -5303,16 +5303,19 @@ html[data-speakflow-font-size="large"] {
     --sf-free-study-frame-pad-top: calc(env(safe-area-inset-top, 0px) + 1.08rem);
     --sf-free-study-frame-pad-x: clamp(1.04rem, 0.84rem + 0.7dvh, 1.32rem);
     --sf-free-study-frame-pad-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.46rem);
-    --sf-free-study-header-height: 3.66rem;
+    --sf-free-study-header-height: 3.58rem;
     --sf-free-study-header-control-size: 3.18rem;
-    --sf-free-study-menu-size: 2.86rem;
-    --sf-free-study-avatar-size: 3.34rem;
-    --sf-free-study-avatar-offset: 1.08rem;
-    --sf-free-study-brand-width: min(15.2rem, calc(100% - 7.3rem));
-    --sf-free-study-brand-gap: 0.58rem;
-    --sf-free-study-logo-size: 2.16rem;
-    --sf-free-study-brand-title-size: 1.34rem;
-    --sf-free-study-brand-subtitle-size: 0.5rem;
+    --sf-free-study-header-control-top: 47%;
+    --sf-free-study-brand-top: 47%;
+    --sf-free-study-brand-center-x: 48.5%;
+    --sf-free-study-menu-size: 2.58rem;
+    --sf-free-study-avatar-size: 3.12rem;
+    --sf-free-study-avatar-offset: 0.7rem;
+    --sf-free-study-brand-width: min(14rem, calc(100% - 7.55rem));
+    --sf-free-study-brand-gap: 0.5rem;
+    --sf-free-study-logo-size: 2rem;
+    --sf-free-study-brand-title-size: 1.22rem;
+    --sf-free-study-brand-subtitle-size: 0.46rem;
     --sf-free-study-content-pad-top: 1.24rem;
     --sf-free-study-orbit-top: 6.9rem;
     --sf-free-study-hero-wave-size: 1.62rem;
@@ -5365,7 +5368,7 @@ html[data-speakflow-font-size="large"] {
   .sf-free-study-page-one-menu,
   .sf-free-study-page-one-avatar-button {
     position: absolute !important;
-    top: 50% !important;
+    top: var(--sf-free-study-header-control-top, 50%) !important;
     transform: translateY(-50%);
   }
 
@@ -5388,8 +5391,8 @@ html[data-speakflow-font-size="large"] {
 
   .sf-free-study-page-one-brand {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: var(--sf-free-study-brand-top, 50%);
+    left: var(--sf-free-study-brand-center-x, 50%);
     width: var(--sf-free-study-brand-width);
     transform: translate(-50%, -50%);
     gap: var(--sf-free-study-brand-gap);
@@ -5575,16 +5578,19 @@ html[data-speakflow-font-size="large"] {
     --sf-free-study-frame-pad-top: calc(env(safe-area-inset-top, 0px) + 0.62rem);
     --sf-free-study-frame-pad-x: 1rem;
     --sf-free-study-frame-pad-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.34rem);
-    --sf-free-study-header-height: 3rem;
+    --sf-free-study-header-height: 2.94rem;
     --sf-free-study-header-control-size: 2.82rem;
-    --sf-free-study-menu-size: 2.48rem;
-    --sf-free-study-avatar-size: 2.9rem;
-    --sf-free-study-avatar-offset: 0.68rem;
-    --sf-free-study-brand-width: min(13.3rem, calc(100% - 6.2rem));
-    --sf-free-study-brand-gap: 0.42rem;
-    --sf-free-study-logo-size: 1.84rem;
-    --sf-free-study-brand-title-size: 1.08rem;
-    --sf-free-study-brand-subtitle-size: 0.4rem;
+    --sf-free-study-header-control-top: 47%;
+    --sf-free-study-brand-top: 47%;
+    --sf-free-study-brand-center-x: 48.5%;
+    --sf-free-study-menu-size: 2.28rem;
+    --sf-free-study-avatar-size: 2.68rem;
+    --sf-free-study-avatar-offset: 0.4rem;
+    --sf-free-study-brand-width: min(12.4rem, calc(100% - 6.65rem));
+    --sf-free-study-brand-gap: 0.34rem;
+    --sf-free-study-logo-size: 1.68rem;
+    --sf-free-study-brand-title-size: 0.98rem;
+    --sf-free-study-brand-subtitle-size: 0.36rem;
     --sf-free-study-content-pad-top: 0.58rem;
     --sf-free-study-orbit-top: 5.12rem;
     --sf-free-study-hero-wave-size: 1.2rem;
@@ -5631,16 +5637,19 @@ html[data-speakflow-font-size="large"] {
     --sf-free-study-frame-pad-x: 0.9rem;
     --sf-free-study-frame-pad-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.26rem);
     --sf-free-study-content-width: clamp(17.4rem, 86vw, 20rem);
-    --sf-free-study-header-height: 2.86rem;
+    --sf-free-study-header-height: 2.74rem;
     --sf-free-study-header-control-size: 2.7rem;
-    --sf-free-study-menu-size: 2.36rem;
-    --sf-free-study-avatar-size: 2.76rem;
-    --sf-free-study-avatar-offset: 0.48rem;
-    --sf-free-study-brand-width: min(12rem, calc(100% - 5.95rem));
-    --sf-free-study-brand-gap: 0.32rem;
-    --sf-free-study-logo-size: 1.68rem;
-    --sf-free-study-brand-title-size: 0.98rem;
-    --sf-free-study-brand-subtitle-size: 0.36rem;
+    --sf-free-study-header-control-top: 47%;
+    --sf-free-study-brand-top: 47%;
+    --sf-free-study-brand-center-x: 48.5%;
+    --sf-free-study-menu-size: 2.16rem;
+    --sf-free-study-avatar-size: 2.48rem;
+    --sf-free-study-avatar-offset: 0.28rem;
+    --sf-free-study-brand-width: min(11.2rem, calc(100% - 6.1rem));
+    --sf-free-study-brand-gap: 0.28rem;
+    --sf-free-study-logo-size: 1.52rem;
+    --sf-free-study-brand-title-size: 0.86rem;
+    --sf-free-study-brand-subtitle-size: 0.32rem;
     --sf-free-study-content-pad-top: 0.5rem;
     --sf-free-study-orbit-top: 4.82rem;
     --sf-free-study-hero-wave-size: 1.08rem;
@@ -6338,92 +6347,334 @@ html[data-speakflow-font-size="large"] {
 
 @media (max-width: 540px) {
   .sf-speak-page:has(.sf-free-study-page-two) {
-    background: linear-gradient(180deg, #c8bcff 0%, #d7ceff 46%, #c8bcff 100%) !important;
+    background: #f8f7ff !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-two) > div {
     box-sizing: border-box !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
     width: 100vw !important;
-    max-width: none !important;
+    max-width: 100vw !important;
     min-height: 100dvh !important;
-    justify-content: center !important;
-    align-items: center !important;
-    padding:
-      clamp(0.58rem, 1.6dvh, 0.96rem)
-      0 !important;
+    padding: 0 !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-two) .sf-speak-phone:has(.sf-free-study-page-two) {
     flex: 0 0 auto !important;
-    width: min(92vw, 26.875rem) !important;
-    max-width: min(92vw, 26.875rem) !important;
-    height: calc(100dvh - clamp(1.16rem, 3.2dvh, 1.92rem)) !important;
-    min-height: calc(100dvh - clamp(1.16rem, 3.2dvh, 1.92rem)) !important;
+    width: 100vw !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
     border: 0 !important;
-    border-radius: clamp(1.5rem, 1.18rem + 0.95dvh, 2rem) !important;
-    background: transparent !important;
+    border-radius: 0 !important;
+    background: #f8f7ff !important;
     box-shadow: none !important;
   }
 
+  .sf-free-study-page-two,
+  .sf-free-study-page-two-frame {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: inherit !important;
+  }
+
+  .sf-free-study-page-two-frame {
+    height: 100% !important;
+  }
+
+  .sf-free-study-page-two-orbit {
+    top: 10.6%;
+    width: min(122vw, 35.5rem);
+  }
+
+  .sf-free-study-page-two-orbit-ring {
+    border-color: rgba(226, 221, 248, 0.48);
+  }
+
+  .sf-free-study-page-two-orbit-ring-two {
+    border-color: rgba(222, 216, 246, 0.42);
+  }
+
+  .sf-free-study-page-two-orbit-ring-three {
+    border-color: rgba(255, 255, 255, 0.72);
+  }
+
   .sf-free-study-page-two-header {
-    top: clamp(1.06rem, 3dvh, 1.86rem);
-    left: clamp(1.42rem, 6.2vw, 2rem);
-    right: clamp(1.42rem, 6.2vw, 2rem);
+    top: calc(env(safe-area-inset-top, 0px) + clamp(0.95rem, 2.35dvh, 1.34rem));
+    left: clamp(1.1rem, 4.7vw, 1.55rem);
+    right: clamp(1.05rem, 4.5vw, 1.46rem);
     grid-template-columns:
-      clamp(2.85rem, 2.52rem + 1dvh, 3.38rem)
+      clamp(2.56rem, 10.6vw, 2.86rem)
       minmax(0, 1fr)
-      clamp(2.95rem, 2.62rem + 1.08dvh, 3.52rem);
+      clamp(3.1rem, 13vw, 3.52rem);
+    gap: clamp(0.62rem, 2vw, 0.86rem);
+  }
+
+  .sf-free-study-page-two-logo {
+    position: relative;
+    width: clamp(2rem, 8.3vw, 2.28rem);
+    border-radius: 0.72rem;
+  }
+
+  .sf-free-study-page-two-logo::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-image: url("/brand/speakflow-app-icon.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .sf-free-study-page-two-logo svg {
+    display: none;
+  }
+
+  .sf-free-study-page-two-brand {
+    gap: clamp(0.42rem, 1.35vw, 0.56rem);
   }
 
   .sf-free-study-page-two-brand-title {
-    font-size: clamp(1.18rem, 4.8vw, 1.44rem);
+    font-size: clamp(1.18rem, 5vw, 1.38rem);
+    font-weight: 850;
   }
 
   .sf-free-study-page-two-brand-subtitle {
-    font-size: clamp(0.42rem, 1.55vw, 0.5rem);
+    margin-top: 0.24rem;
+    font-size: clamp(0.4rem, 1.55vw, 0.48rem);
+    letter-spacing: 0.15em;
   }
 
   .sf-free-study-page-two-hero {
-    top: 19%;
+    top: 22.2%;
+  }
+
+  .sf-free-study-page-two-hero-wave {
+    width: clamp(1.48rem, 6.2vw, 1.82rem);
+    height: clamp(1.48rem, 6.2vw, 1.82rem);
   }
 
   .sf-free-study-page-two-hero h1 {
-    font-size: clamp(1.43rem, 5.8vw, 1.74rem);
-    font-weight: 780;
+    margin-top: clamp(0.92rem, 2.2dvh, 1.22rem);
+    font-size: clamp(1.58rem, 6.2vw, 1.9rem);
+    font-weight: 820;
   }
 
   .sf-free-study-page-two-hero p {
-    font-size: clamp(0.76rem, 3.1vw, 0.9rem);
-    line-height: 1.7;
+    margin-top: clamp(1rem, 2.55dvh, 1.38rem);
+    max-width: min(20rem, 78vw);
+    font-size: clamp(0.84rem, 3.25vw, 0.98rem);
+    font-weight: 600;
+    line-height: 1.62;
+  }
+
+  .sf-free-study-page-two-ribbon {
+    top: 48.2%;
+    left: -20%;
+    right: -20%;
+    height: clamp(5rem, 12.4dvh, 6.9rem);
+    opacity: 0.58;
+  }
+
+  .sf-free-study-page-two-ribbon-fill-back {
+    fill: rgba(207, 181, 255, 0.25);
+  }
+
+  .sf-free-study-page-two-ribbon-fill-front {
+    fill: rgba(172, 137, 255, 0.18);
   }
 
   .sf-free-study-page-two-tip {
-    left: clamp(1.25rem, 6vw, 1.85rem);
-    right: clamp(1.25rem, 6vw, 1.85rem);
-    bottom: clamp(10.15rem, 23.2dvh, 12.35rem);
-    grid-template-columns: clamp(2.72rem, 11vw, 3.22rem) minmax(0, 1fr);
-    min-height: clamp(3.95rem, 9.2dvh, 4.7rem);
-    padding: clamp(0.66rem, 1.8dvh, 0.9rem) clamp(0.82rem, 3vw, 1.18rem);
+    left: clamp(2.35rem, 9.6vw, 3rem);
+    right: clamp(2.35rem, 9.6vw, 3rem);
+    bottom: clamp(13rem, 27.4dvh, 15.9rem);
+    grid-template-columns: clamp(2.75rem, 11.2vw, 3.2rem) minmax(0, 1fr);
+    gap: clamp(0.72rem, 2.4vw, 1rem);
+    min-height: clamp(4.25rem, 9.2dvh, 4.95rem);
+    padding: clamp(0.72rem, 1.8dvh, 0.92rem) clamp(0.9rem, 3vw, 1.24rem);
   }
 
   .sf-free-study-page-two-tip-copy strong {
-    font-size: clamp(0.74rem, 3vw, 0.88rem);
+    font-size: clamp(0.82rem, 3.25vw, 0.98rem);
   }
 
   .sf-free-study-page-two-tip-copy span {
-    font-size: clamp(0.56rem, 2.25vw, 0.66rem);
+    font-size: clamp(0.62rem, 2.35vw, 0.72rem);
+    font-weight: 590;
   }
 
   .sf-free-study-page-two-record {
-    bottom: clamp(1.8rem, 5.4dvh, 3rem);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(2.36rem, 5.9dvh, 3.42rem));
   }
 
   .sf-free-study-page-two-mic {
-    width: clamp(5.45rem, 22vw, 6.4rem);
+    width: clamp(5.15rem, 20.8vw, 5.9rem);
+  }
+
+  .sf-free-study-page-two-mic-ring {
+    inset: -1.82rem;
   }
 
   .sf-free-study-page-two-status {
-    font-size: clamp(0.76rem, 3.1vw, 0.9rem);
+    margin-top: clamp(1rem, 2.5dvh, 1.32rem);
+    font-size: clamp(0.82rem, 3.15vw, 0.94rem);
+    font-weight: 680;
+  }
+}
+
+@media (max-width: 540px) and (max-height: 740px) {
+  .sf-free-study-page-two-header {
+    top: calc(env(safe-area-inset-top, 0px) + 0.72rem);
+    left: 0.95rem;
+    right: 0.95rem;
+    grid-template-columns: 2.34rem minmax(0, 1fr) 2.82rem;
+  }
+
+  .sf-free-study-page-two-logo {
+    width: 1.78rem;
+  }
+
+  .sf-free-study-page-two-brand-title {
+    font-size: 1rem;
+  }
+
+  .sf-free-study-page-two-brand-subtitle {
+    font-size: 0.36rem;
+  }
+
+  .sf-free-study-page-two-orbit {
+    top: 9.6%;
+  }
+
+  .sf-free-study-page-two-hero {
+    top: 20.5%;
+  }
+
+  .sf-free-study-page-two-hero-wave {
+    width: 1.28rem;
+    height: 1.28rem;
+  }
+
+  .sf-free-study-page-two-hero h1 {
+    margin-top: 0.68rem;
+    font-size: 1.36rem;
+    line-height: 1.16;
+  }
+
+  .sf-free-study-page-two-hero p {
+    margin-top: 0.72rem;
+    font-size: 0.74rem;
+    line-height: 1.48;
+  }
+
+  .sf-free-study-page-two-ribbon {
+    top: 47.3%;
+    height: 4.6rem;
+  }
+
+  .sf-free-study-page-two-tip {
+    left: 1.42rem;
+    right: 1.42rem;
+    bottom: 25.6dvh;
+    grid-template-columns: 2.46rem minmax(0, 1fr);
+    min-height: 3.62rem;
+    padding: 0.56rem 0.74rem;
+  }
+
+  .sf-free-study-page-two-tip-copy strong {
+    font-size: 0.72rem;
+  }
+
+  .sf-free-study-page-two-tip-copy span {
+    font-size: 0.52rem;
+  }
+
+  .sf-free-study-page-two-record {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 1.7rem);
+  }
+
+  .sf-free-study-page-two-mic {
+    width: 4.46rem;
+  }
+
+  .sf-free-study-page-two-mic-ring {
+    inset: -1.36rem;
+  }
+
+  .sf-free-study-page-two-status {
+    margin-top: 0.72rem;
+    font-size: 0.74rem;
+  }
+}
+
+@media (max-width: 540px) and (max-height: 610px) {
+  .sf-free-study-page-two-header {
+    top: calc(env(safe-area-inset-top, 0px) + 0.52rem);
+    grid-template-columns: 2.12rem minmax(0, 1fr) 2.48rem;
+  }
+
+  .sf-free-study-page-two-logo {
+    width: 1.5rem;
+  }
+
+  .sf-free-study-page-two-brand {
+    gap: 0.3rem;
+  }
+
+  .sf-free-study-page-two-brand-title {
+    font-size: 0.84rem;
+  }
+
+  .sf-free-study-page-two-brand-subtitle {
+    margin-top: 0.18rem;
+    font-size: 0.3rem;
+  }
+
+  .sf-free-study-page-two-hero {
+    top: 19.8%;
+  }
+
+  .sf-free-study-page-two-hero h1 {
+    margin-top: 0.52rem;
+    font-size: 1.16rem;
+  }
+
+  .sf-free-study-page-two-hero p {
+    margin-top: 0.5rem;
+    font-size: 0.62rem;
+  }
+
+  .sf-free-study-page-two-ribbon {
+    height: 3.9rem;
+  }
+
+  .sf-free-study-page-two-tip {
+    left: 1.08rem;
+    right: 1.08rem;
+    bottom: 24.8dvh;
+    grid-template-columns: 2.12rem minmax(0, 1fr);
+    min-height: 3.08rem;
+    border-radius: 1rem;
+    padding: 0.46rem 0.62rem;
+  }
+
+  .sf-free-study-page-two-tip-copy strong {
+    font-size: 0.62rem;
+  }
+
+  .sf-free-study-page-two-tip-copy span {
+    font-size: 0.46rem;
+  }
+
+  .sf-free-study-page-two-mic {
+    width: 3.78rem;
+  }
+
+  .sf-free-study-page-two-status {
+    margin-top: 0.56rem;
+    font-size: 0.66rem;
   }
 }
 
