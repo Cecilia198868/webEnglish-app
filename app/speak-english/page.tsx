@@ -7641,11 +7641,19 @@ function SpeakEnglishClient() {
           {showReferenceResult ? (
             <div className="sf-free-practice-reference-result absolute inset-0 z-[90] overflow-hidden">
               <FreeStudyPageFiveTop
-                  userEnglishText={message}
-  onAiGuidedPractice={openAiGuidedExpressionStepOne}
-  onRetryEnglish={openFreeStudyStepFourForRetry}
-  onMenuClick={openMenuPage}
-  onAccountClick={openReferenceAccountMenu}
+                userEnglishText={message}
+                expressions={referenceResultVariantTexts}
+                selectedExpressionIndex={selectedExpressionIndex}
+                avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
+                avatarAlt={accountEmail || accountName || "user"}
+                accountLabel={accountCopy.openAccountMenu}
+                onAvatarError={() => setAccountImageFailed(true)}
+                onAiGuidedPractice={openAiGuidedExpressionStepOne}
+                onRetryEnglish={openFreeStudyStepFourForRetry}
+                onMenuClick={openFreeStudyStepFourForRetry}
+                onAccountClick={openAccountPage}
+                onPlayExpression={readReferenceResultVariant}
+                onSelectExpression={setSelectedExpressionIndex}
               />
               <div
                 className="pointer-events-none absolute z-[121] flex items-center gap-1.5 font-black leading-none text-[#755cff] drop-shadow-[0_4px_10px_rgba(117,92,255,0.16)]"
@@ -7857,7 +7865,6 @@ function SpeakEnglishClient() {
 
           {showReferenceResult ? (
             <FreeStudyPageFiveBottomBar
-              onFavorite={saveSelectedReferenceResultExpression}
               onFollowPractice={() => readSelectedReferenceResult(1)}
               onNextChinese={openFreeStudyStepTwoForNextChinese}
               onSlowPlayback={() => readSelectedReferenceResult(0.5)}

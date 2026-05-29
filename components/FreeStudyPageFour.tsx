@@ -21,7 +21,7 @@ const COPY = {
   menuLabel: "\u56de\u5230\u4e3b\u83dc\u5355",
   pageLabel: "\u81ea\u7531\u5b66\u4e60\u82f1\u6587\u5f55\u97f3",
   readyStatus: "\u51c6\u5907\u542c\u4f60\u8bf4\u82f1\u6587",
-  recordingStatus: "\u6b63\u5728\u81ea\u52a8\u5f55\u97f3\uff0c\u8bf4\u5b8c\u540e\u4f1a\u8fdb\u5165\u4e0b\u4e00\u9875",
+  recordingStatus: "\u6b63\u5728\u5f55\u97f3\uff0c\u8bf4\u5b8c\u540e\u8fdb\u5165\u4e0b\u4e00\u9875",
   titlePrefix: "\u6b63\u5728\u542c\u4f60\u8bf4",
   titleSuffix: "\u82f1\u6587",
 } as const;
@@ -56,11 +56,11 @@ function getLineHeight(fontSizeRem: number) {
 }
 
 function getFontFitBounds(characterCount: number) {
-  if (characterCount <= 18) return { min: 1.22, max: 1.9 };
-  if (characterCount <= 30) return { min: 1.08, max: 1.66 };
-  if (characterCount <= 48) return { min: 0.96, max: 1.42 };
-  if (characterCount <= 70) return { min: 0.86, max: 1.2 };
-  return { min: 0.78, max: 1.05 };
+  if (characterCount <= 18) return { min: 1.08, max: 1.56 };
+  if (characterCount <= 30) return { min: 1, max: 1.38 };
+  if (characterCount <= 48) return { min: 0.92, max: 1.22 };
+  if (characterCount <= 70) return { min: 0.82, max: 1.08 };
+  return { min: 0.74, max: 0.96 };
 }
 
 function applyChineseTextFit(
