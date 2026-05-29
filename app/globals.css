@@ -5267,27 +5267,27 @@ html[data-speakflow-font-size="large"] {
 
 @media (max-width: 540px) {
   .sf-speak-page:has(.sf-free-study-page-one) {
-    background: linear-gradient(180deg, #c8bcff 0%, #d7ceff 46%, #c8bcff 100%) !important;
+    background: #f8f7ff !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-one) > div {
+    align-items: stretch !important;
+    justify-content: flex-start !important;
     width: 100vw !important;
     max-width: 100vw !important;
     min-height: 100dvh !important;
-    padding:
-      clamp(0.9rem, 0.68rem + 0.82dvh, 1.26rem)
-      clamp(1.48rem, 1.16rem + 0.96dvh, 1.96rem) !important;
+    padding: 0 !important;
   }
 
   .sf-speak-phone:has(.sf-free-study-page-one) {
-    width: 100% !important;
+    width: 100vw !important;
     min-width: 0 !important;
-    max-width: 430px !important;
-    height: calc(100dvh - clamp(1.8rem, 1.36rem + 1.64dvh, 2.52rem)) !important;
-    min-height: calc(100dvh - clamp(1.8rem, 1.36rem + 1.64dvh, 2.52rem)) !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
     border: 0 !important;
-    border-radius: clamp(1.5rem, 1.18rem + 0.95dvh, 2rem) !important;
-    background: transparent !important;
+    border-radius: 0 !important;
+    background: #f8f7ff !important;
     box-shadow: none !important;
   }
 
@@ -5299,18 +5299,63 @@ html[data-speakflow-font-size="large"] {
   }
 
   .sf-free-study-page-one-frame {
-    --sf-free-study-content-width: min(100%, 23.2rem);
+    --sf-free-study-content-width: min(100%, 23.8rem);
+    --sf-free-study-frame-pad-top: calc(env(safe-area-inset-top, 0px) + 1.2rem);
+    --sf-free-study-frame-pad-x: clamp(1.08rem, 0.84rem + 0.8dvh, 1.42rem);
+    --sf-free-study-frame-pad-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.95rem);
+    --sf-free-study-header-height: 3.8rem;
+    --sf-free-study-header-control-size: 3.42rem;
+    --sf-free-study-brand-width: min(15.8rem, calc(100% - 7.4rem));
+    --sf-free-study-brand-gap: 0.58rem;
+    --sf-free-study-logo-size: 2.24rem;
+    --sf-free-study-brand-title-size: 1.34rem;
+    --sf-free-study-brand-subtitle-size: 0.5rem;
+    --sf-free-study-content-pad-top: 2rem;
+    --sf-free-study-orbit-top: 8rem;
+    --sf-free-study-hero-wave-size: 1.9rem;
+    --sf-free-study-title-margin: 0.82rem;
+    --sf-free-study-title-size: 2.36rem;
+    --sf-free-study-title-line-height: 1.14;
+    --sf-free-study-copy-margin: 0.9rem;
+    --sf-free-study-copy-size: 1rem;
+    --sf-free-study-copy-line-height: 1.45;
+    --sf-free-study-card-margin: 1.45rem;
+    --sf-free-study-card-radius: 1.65rem;
+    --sf-free-study-card-padding: 1rem;
+    --sf-free-study-steps-title-size: 1.08rem;
+    --sf-free-study-list-margin: 0.78rem;
+    --sf-free-study-row-min: 3.62rem;
+    --sf-free-study-number-size: 1.82rem;
+    --sf-free-study-icon-size: 2.95rem;
+    --sf-free-study-row-gap: 0.64rem;
+    --sf-free-study-row-pad: 0.3rem;
+    --sf-free-study-step-title-size: 0.94rem;
+    --sf-free-study-step-title-weight: 880;
+    --sf-free-study-step-title-line-height: 1.28;
+    --sf-free-study-step-desc-size: 0.76rem;
+    --sf-free-study-step-desc-weight: 650;
+    --sf-free-study-step-desc-line-height: 1.36;
+    --sf-free-study-helper-margin: 1.06rem;
+    --sf-free-study-helper-height: 2.4rem;
+    --sf-free-study-helper-font-size: 0.72rem;
+    --sf-free-study-helper-gap: 0.54rem;
+    --sf-free-study-helper-icon-size: 1.2rem;
+    --sf-free-study-mic-size: 6.15rem;
+    --sf-free-study-mic-halo-bottom: 5rem;
+    --sf-free-study-record-pad-bottom: 0.24rem;
+    --sf-free-study-prompt-margin: 0.88rem;
+    --sf-free-study-prompt-size: 0.94rem;
 
     height: 100% !important;
     margin: 0 !important;
-    padding-top: calc(env(safe-area-inset-top, 0px) + clamp(1.72rem, 1.42rem + 1dvh, 2.24rem));
-    padding-inline: clamp(0.38rem, 0.28rem + 0.34dvh, 0.58rem);
+    padding: var(--sf-free-study-frame-pad-top) var(--sf-free-study-frame-pad-x)
+      var(--sf-free-study-frame-pad-bottom);
   }
 
   .sf-free-study-page-one-header {
     display: block;
     width: 100%;
-    height: clamp(3rem, 2.7rem + 0.95dvh, 3.5rem);
+    height: var(--sf-free-study-header-height);
     margin-inline: 0 auto;
   }
 
@@ -5318,164 +5363,284 @@ html[data-speakflow-font-size="large"] {
   .sf-free-study-page-one-avatar-button {
     position: absolute !important;
     top: 50% !important;
-    width: clamp(3rem, 2.7rem + 0.95dvh, 3.5rem) !important;
+    width: var(--sf-free-study-header-control-size) !important;
     transform: translateY(-50%);
   }
 
   .sf-free-study-page-one-menu {
-    left: clamp(0.35rem, 0.25rem + 0.35dvh, 0.62rem) !important;
+    left: 0 !important;
     z-index: 80 !important;
-    min-width: 3.05rem !important;
-    min-height: 3.05rem !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
   }
 
   .sf-free-study-page-one-avatar-button {
-    right: clamp(0.35rem, 0.25rem + 0.35dvh, 0.62rem) !important;
+    right: 0 !important;
   }
 
   .sf-free-study-page-one-brand {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: min(15.4rem, calc(100% - 8rem));
+    width: var(--sf-free-study-brand-width);
     transform: translate(-50%, -50%);
-    gap: 0.42rem;
+    gap: var(--sf-free-study-brand-gap);
   }
 
   .sf-free-study-page-one-logo {
-    width: clamp(1.92rem, 1.72rem + 0.7dvh, 2.25rem);
+    width: var(--sf-free-study-logo-size);
     border-radius: 0.72rem;
   }
 
   .sf-free-study-page-one-brand-title {
-    font-size: clamp(1.1rem, 1rem + 0.34dvh, 1.28rem);
+    font-size: var(--sf-free-study-brand-title-size);
   }
 
   .sf-free-study-page-one-brand-subtitle {
     margin-top: 0.22rem;
-    font-size: clamp(0.42rem, 0.39rem + 0.09dvh, 0.48rem);
+    font-size: var(--sf-free-study-brand-subtitle-size);
   }
 
   .sf-free-study-page-one-content {
-    margin-top: clamp(2.55rem, 1.98rem + 1.72dvh, 3.45rem);
+    margin-top: 0;
+    padding-top: var(--sf-free-study-content-pad-top);
   }
 
   .sf-free-study-orbit {
-    top: clamp(6.48rem, 5.72rem + 2.82dvh, 8rem);
+    top: var(--sf-free-study-orbit-top);
+  }
+
+  .sf-free-study-page-one-hero-wave {
+    width: var(--sf-free-study-hero-wave-size);
+    height: var(--sf-free-study-hero-wave-size);
   }
 
   .sf-free-study-page-one-hero h1 {
-    margin-top: clamp(0.94rem, 0.76rem + 0.52dvh, 1.16rem);
-    font-size: clamp(1.05rem, 0.99rem + 0.23dvh, 1.18rem);
-    font-weight: 720;
-    line-height: 1.34;
+    margin-top: var(--sf-free-study-title-margin);
+    font-size: var(--sf-free-study-title-size);
+    font-weight: 900;
+    line-height: var(--sf-free-study-title-line-height);
   }
 
   .sf-free-study-page-one-hero p {
-    margin-top: clamp(0.96rem, 0.78rem + 0.44dvh, 1.14rem);
-    font-size: clamp(0.57rem, 0.54rem + 0.08dvh, 0.62rem);
-    font-weight: 520;
-    line-height: 1.68;
+    margin-top: var(--sf-free-study-copy-margin);
+    font-size: var(--sf-free-study-copy-size);
+    font-weight: 760;
+    line-height: var(--sf-free-study-copy-line-height);
   }
 
   .sf-free-study-steps-card {
     width: var(--sf-free-study-content-width);
-    max-width: calc(100vw - 1rem);
+    max-width: 100%;
     justify-self: center;
-    margin-top: clamp(1.88rem, 1.5rem + 1dvh, 2.36rem);
+    margin-top: var(--sf-free-study-card-margin);
     margin-left: 0;
-    padding: clamp(1.04rem, 0.9rem + 0.42dvh, 1.28rem);
+    border-radius: var(--sf-free-study-card-radius);
+    padding: var(--sf-free-study-card-padding);
   }
 
   .sf-free-study-steps-title {
-    font-size: clamp(0.62rem, 0.59rem + 0.1dvh, 0.69rem);
-    font-weight: 710;
+    font-size: var(--sf-free-study-steps-title-size);
+    font-weight: 900;
     line-height: 1.32;
   }
 
   .sf-free-study-step-list {
-    margin-top: clamp(0.86rem, 0.68rem + 0.44dvh, 1.08rem);
+    margin-top: var(--sf-free-study-list-margin);
   }
 
   .sf-free-study-step-item {
-    min-height: clamp(4.66rem, 4.28rem + 1.06dvh, 5.22rem);
+    min-height: var(--sf-free-study-row-min);
     grid-template-columns:
-      clamp(1.42rem, 1.32rem + 0.28dvh, 1.62rem)
-      clamp(2.58rem, 2.38rem + 0.55dvh, 2.98rem)
+      var(--sf-free-study-number-size)
+      var(--sf-free-study-icon-size)
       1px
       minmax(0, 1fr);
-    gap: clamp(0.46rem, 0.4rem + 0.18dvh, 0.6rem);
-    padding-block: clamp(0.36rem, 0.28rem + 0.24dvh, 0.52rem);
+    gap: var(--sf-free-study-row-gap);
+    padding-block: var(--sf-free-study-row-pad);
   }
 
   .sf-free-study-step-divider {
     display: block;
-    height: 58%;
+    height: 62%;
   }
 
   .sf-free-study-step-number {
-    width: clamp(1.42rem, 1.32rem + 0.28dvh, 1.62rem);
-    font-size: clamp(0.72rem, 0.68rem + 0.12dvh, 0.8rem);
+    width: var(--sf-free-study-number-size);
+    font-size: calc(var(--sf-free-study-number-size) * 0.5);
   }
 
   .sf-free-study-step-copy {
-    gap: clamp(0.3rem, 0.24rem + 0.18dvh, 0.44rem);
+    gap: 0.24rem;
   }
 
   .sf-free-study-step-title {
     color: #15184a;
-    font-size: clamp(0.54rem, 0.51rem + 0.08dvh, 0.59rem);
-    font-weight: 630;
-    line-height: 1.54;
+    font-size: var(--sf-free-study-step-title-size);
+    font-weight: var(--sf-free-study-step-title-weight);
+    line-height: var(--sf-free-study-step-title-line-height);
     overflow-wrap: anywhere;
     white-space: normal;
   }
 
   .sf-free-study-step-description {
-    margin-top: 0.08rem;
+    margin-top: 0;
     color: #767696;
-    font-size: clamp(0.47rem, 0.45rem + 0.06dvh, 0.51rem);
-    font-weight: 520;
-    line-height: 1.62;
+    font-size: var(--sf-free-study-step-desc-size);
+    font-weight: var(--sf-free-study-step-desc-weight);
+    line-height: var(--sf-free-study-step-desc-line-height);
     overflow-wrap: anywhere;
     white-space: normal;
   }
 
   .sf-free-study-helper-pill {
-    min-height: 2.18rem;
-    font-size: clamp(0.49rem, 0.47rem + 0.07dvh, 0.54rem);
-    font-weight: 640;
+    min-height: var(--sf-free-study-helper-height);
+    font-size: var(--sf-free-study-helper-font-size);
+    font-weight: 820;
   }
 
   .sf-free-study-helper-actions {
     width: var(--sf-free-study-content-width);
-    max-width: calc(100vw - 1rem);
+    max-width: 100%;
     justify-self: center;
-    gap: 0.5rem;
-    margin-top: clamp(1.62rem, 1.28rem + 0.9dvh, 2.1rem);
+    gap: var(--sf-free-study-helper-gap);
+    margin-top: var(--sf-free-study-helper-margin);
     margin-left: 0;
   }
 
+  .sf-free-study-helper-icon {
+    width: var(--sf-free-study-helper-icon-size);
+    height: var(--sf-free-study-helper-icon-size);
+  }
+
   .sf-free-study-page-one-record {
-    padding-bottom: clamp(0.58rem, 0.42rem + 0.54dvh, 0.92rem);
+    padding-bottom: var(--sf-free-study-record-pad-bottom);
     transform: translateY(0);
   }
 
   .sf-free-study-page-one-mic-halo {
-    bottom: clamp(4.72rem, 3.72rem + 3.7dvh, 6.85rem);
+    bottom: var(--sf-free-study-mic-halo-bottom);
   }
 
   .sf-free-study-page-one-mic {
-    width: clamp(5.72rem, 5.22rem + 1.6dvh, 6.6rem);
+    width: var(--sf-free-study-mic-size);
   }
 
   .sf-free-study-page-one-record p {
-    font-size: clamp(0.8rem, 0.75rem + 0.22dvh, 0.92rem);
-    font-weight: 690;
+    margin-top: var(--sf-free-study-prompt-margin);
+    font-size: var(--sf-free-study-prompt-size);
+    font-weight: 780;
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 540px) and (max-height: 740px) {
+  .sf-free-study-page-one-frame {
+    --sf-free-study-frame-pad-top: calc(env(safe-area-inset-top, 0px) + 0.86rem);
+    --sf-free-study-frame-pad-x: 1.12rem;
+    --sf-free-study-frame-pad-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.56rem);
+    --sf-free-study-header-height: 3.45rem;
+    --sf-free-study-header-control-size: 3.12rem;
+    --sf-free-study-brand-width: min(14.4rem, calc(100% - 6.7rem));
+    --sf-free-study-brand-gap: 0.42rem;
+    --sf-free-study-logo-size: 2rem;
+    --sf-free-study-brand-title-size: 1.18rem;
+    --sf-free-study-brand-subtitle-size: 0.44rem;
+    --sf-free-study-content-pad-top: 1.22rem;
+    --sf-free-study-orbit-top: 6.7rem;
+    --sf-free-study-hero-wave-size: 1.45rem;
+    --sf-free-study-title-margin: 0.5rem;
+    --sf-free-study-title-size: 1.98rem;
+    --sf-free-study-title-line-height: 1.1;
+    --sf-free-study-copy-margin: 0.58rem;
+    --sf-free-study-copy-size: 0.9rem;
+    --sf-free-study-copy-line-height: 1.32;
+    --sf-free-study-card-margin: 0.82rem;
+    --sf-free-study-card-radius: 1.45rem;
+    --sf-free-study-card-padding: 0.78rem;
+    --sf-free-study-steps-title-size: 0.96rem;
+    --sf-free-study-list-margin: 0.54rem;
+    --sf-free-study-row-min: 3.02rem;
+    --sf-free-study-number-size: 1.6rem;
+    --sf-free-study-icon-size: 2.45rem;
+    --sf-free-study-row-gap: 0.48rem;
+    --sf-free-study-row-pad: 0.16rem;
+    --sf-free-study-step-title-size: 0.84rem;
+    --sf-free-study-step-desc-size: 0.68rem;
+    --sf-free-study-step-desc-line-height: 1.26;
+    --sf-free-study-helper-margin: 0.62rem;
+    --sf-free-study-helper-height: 2.05rem;
+    --sf-free-study-helper-font-size: 0.64rem;
+    --sf-free-study-helper-gap: 0.42rem;
+    --sf-free-study-helper-icon-size: 1rem;
+    --sf-free-study-mic-size: 4.65rem;
+    --sf-free-study-mic-halo-bottom: 4rem;
+    --sf-free-study-prompt-margin: 0.52rem;
+    --sf-free-study-prompt-size: 0.84rem;
+  }
+}
+
+@media (max-width: 540px) and (max-height: 610px) {
+  .sf-free-study-page-one-frame {
+    --sf-free-study-frame-pad-top: calc(env(safe-area-inset-top, 0px) + 0.58rem);
+    --sf-free-study-frame-pad-x: 0.9rem;
+    --sf-free-study-frame-pad-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.4rem);
+    --sf-free-study-header-height: 3.05rem;
+    --sf-free-study-header-control-size: 2.75rem;
+    --sf-free-study-brand-width: min(12.4rem, calc(100% - 5.9rem));
+    --sf-free-study-brand-gap: 0.32rem;
+    --sf-free-study-logo-size: 1.78rem;
+    --sf-free-study-brand-title-size: 1.02rem;
+    --sf-free-study-brand-subtitle-size: 0.38rem;
+    --sf-free-study-content-pad-top: 0.68rem;
+    --sf-free-study-orbit-top: 5.7rem;
+    --sf-free-study-hero-wave-size: 1.18rem;
+    --sf-free-study-title-margin: 0.34rem;
+    --sf-free-study-title-size: 1.64rem;
+    --sf-free-study-title-line-height: 1.06;
+    --sf-free-study-copy-margin: 0.36rem;
+    --sf-free-study-copy-size: 0.76rem;
+    --sf-free-study-copy-line-height: 1.24;
+    --sf-free-study-card-margin: 0.52rem;
+    --sf-free-study-card-radius: 1.22rem;
+    --sf-free-study-card-padding: 0.64rem;
+    --sf-free-study-steps-title-size: 0.86rem;
+    --sf-free-study-list-margin: 0.42rem;
+    --sf-free-study-row-min: 2.68rem;
+    --sf-free-study-number-size: 1.42rem;
+    --sf-free-study-icon-size: 2.05rem;
+    --sf-free-study-row-gap: 0.36rem;
+    --sf-free-study-row-pad: 0.08rem;
+    --sf-free-study-step-title-size: 0.74rem;
+    --sf-free-study-step-title-line-height: 1.18;
+    --sf-free-study-step-desc-size: 0.6rem;
+    --sf-free-study-step-desc-line-height: 1.2;
+    --sf-free-study-helper-margin: 0.42rem;
+    --sf-free-study-helper-height: 1.86rem;
+    --sf-free-study-helper-font-size: 0.56rem;
+    --sf-free-study-helper-gap: 0.28rem;
+    --sf-free-study-helper-icon-size: 0.86rem;
+    --sf-free-study-mic-size: 4.42rem;
+    --sf-free-study-mic-halo-bottom: 3.4rem;
+    --sf-free-study-record-pad-bottom: 0;
+    --sf-free-study-prompt-margin: 0.38rem;
+    --sf-free-study-prompt-size: 0.76rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .sf-free-study-page-one-frame {
+    --sf-free-study-frame-pad-x: 0.9rem;
+    --sf-free-study-brand-width: min(11.8rem, calc(100% - 5.8rem));
+    --sf-free-study-brand-gap: 0.3rem;
+    --sf-free-study-brand-title-size: 0.98rem;
+    --sf-free-study-card-padding: 0.62rem;
+    --sf-free-study-row-gap: 0.3rem;
+    --sf-free-study-helper-gap: 0.32rem;
+    --sf-free-study-helper-font-size: 0.54rem;
+  }
+}
+
+@media (min-width: 541px) and (max-width: 900px) {
   .sf-speak-page:has(.sf-free-study-page-one) > div {
     box-sizing: border-box !important;
     width: 100vw !important;
@@ -5500,32 +5665,32 @@ html[data-speakflow-font-size="large"] {
   }
 
   .sf-speak-page:has(.sf-free-study-page-one) .sf-free-study-page-one-brand-title {
-    font-size: clamp(0.92rem, 2.9vw, 1.08rem) !important;
+    font-size: clamp(0.92rem, 0.84rem + 0.26dvh, 1.08rem) !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-one) .sf-free-study-page-one-brand-subtitle {
-    font-size: clamp(0.47rem, 1.42vw, 0.5rem) !important;
+    font-size: clamp(0.47rem, 0.44rem + 0.08dvh, 0.5rem) !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-one) .sf-free-study-page-one-hero h1 {
-    font-size: clamp(1.02rem, 3.35vw, 1.22rem) !important;
+    font-size: clamp(1.02rem, 0.92rem + 0.32dvh, 1.22rem) !important;
     font-weight: 700 !important;
     line-height: 1.12 !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-one) .sf-free-study-page-one-hero p {
-    font-size: clamp(0.64rem, 1.86vw, 0.74rem) !important;
+    font-size: clamp(0.64rem, 0.58rem + 0.18dvh, 0.74rem) !important;
     font-weight: 560 !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-one) .sf-free-study-steps-title {
-    font-size: clamp(0.74rem, 2.05vw, 0.84rem) !important;
+    font-size: clamp(0.74rem, 0.68rem + 0.18dvh, 0.84rem) !important;
     font-weight: 760 !important;
     line-height: 1.28 !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-one) .sf-free-study-step-title {
-    font-size: clamp(0.66rem, 1.82vw, 0.74rem) !important;
+    font-size: clamp(0.66rem, 0.62rem + 0.14dvh, 0.74rem) !important;
     font-weight: 650 !important;
     line-height: 1.42 !important;
   }
@@ -5536,18 +5701,18 @@ html[data-speakflow-font-size="large"] {
 
   .sf-speak-page:has(.sf-free-study-page-one) .sf-free-study-step-description {
     margin-top: 0 !important;
-    font-size: clamp(0.56rem, 1.55vw, 0.63rem) !important;
+    font-size: clamp(0.56rem, 0.52rem + 0.12dvh, 0.63rem) !important;
     font-weight: 520 !important;
     line-height: 1.48 !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-one) .sf-free-study-helper-pill {
-    font-size: clamp(0.48rem, 1.34vw, 0.54rem) !important;
+    font-size: clamp(0.48rem, 0.45rem + 0.1dvh, 0.54rem) !important;
     font-weight: 600 !important;
   }
 
   .sf-speak-page:has(.sf-free-study-page-one) .sf-free-study-page-one-record p {
-    font-size: clamp(0.78rem, 2.15vw, 0.9rem) !important;
+    font-size: clamp(0.78rem, 0.7rem + 0.24dvh, 0.9rem) !important;
     font-weight: 700 !important;
   }
 }
