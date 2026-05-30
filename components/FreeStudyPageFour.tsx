@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import type { CSSProperties } from "react";
 
 type FreeStudyPageFourProps = {
   isRecordingEnglish: boolean;
@@ -61,23 +61,6 @@ function getFontFitBounds(characterCount: number) {
   if (characterCount <= 48) return { min: 0.92, max: 1.22 };
   if (characterCount <= 70) return { min: 0.82, max: 1.08 };
   return { min: 0.74, max: 0.96 };
-}
-
-function applyChineseTextFit(
-  textElement: HTMLParagraphElement,
-  fontSizeRem: number,
-  isScrollable: boolean,
-) {
-  textElement.style.setProperty(
-    "--sf-page-four-font-size",
-    `${fontSizeRem.toFixed(3)}rem`,
-  );
-  textElement.style.setProperty(
-    "--sf-page-four-line-height",
-    String(getLineHeight(fontSizeRem)),
-  );
-  textElement.style.overflowY = isScrollable ? "auto" : "hidden";
-  textElement.dataset.scrollable = isScrollable ? "true" : "false";
 }
 
 function MenuGlyph() {
@@ -191,61 +174,13 @@ export default function FreeStudyPageFour({
   onAccountClick,
   onAvatarError,
 }: FreeStudyPageFourProps) {
-  const chineseTextRef = useRef<HTMLParagraphElement>(null);
   const displayNativeSpeech = nativeSpeech.trim() || COPY.emptyNative;
   const chineseCharacterCount = getChineseCharacterCount(displayNativeSpeech);
-
-  const fitChineseText = useCallback(() => {
-    const textElement = chineseTextRef.current;
-    if (!textElement) return;
-
-    const { min, max } = getFontFitBounds(chineseCharacterCount);
-
-    const canFit = (fontSizeRem: number) => {
-      applyChineseTextFit(textElement, fontSizeRem, false);
-      return textElement.scrollHeight <= textElement.clientHeight + 1;
-    };
-
-    let low = min;
-    let high = max;
-    let best = min;
-
-    if (!canFit(min)) {
-      applyChineseTextFit(textElement, min, true);
-      return;
-    }
-
-    for (let index = 0; index < 12; index += 1) {
-      const midpoint = (low + high) / 2;
-      if (canFit(midpoint)) {
-        best = midpoint;
-        low = midpoint;
-      } else {
-        high = midpoint;
-      }
-    }
-
-    applyChineseTextFit(textElement, best, false);
-  }, [chineseCharacterCount]);
-
-  useLayoutEffect(() => {
-    fitChineseText();
-  }, [fitChineseText, displayNativeSpeech]);
-
-  useEffect(() => {
-    const textElement = chineseTextRef.current;
-    if (!textElement || typeof ResizeObserver === "undefined") return undefined;
-
-    const resizeObserver = new ResizeObserver(() => {
-      fitChineseText();
-    });
-
-    resizeObserver.observe(textElement);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [fitChineseText]);
+  const nativeTextFontSize = getFontFitBounds(chineseCharacterCount).max;
+  const nativeTextStyle = {
+    "--sf-page-four-font-size": `${nativeTextFontSize.toFixed(3)}rem`,
+    "--sf-page-four-line-height": String(getLineHeight(nativeTextFontSize)),
+  } as CSSProperties;
 
   return (
     <section className="sf-free-study-page-four" aria-label={COPY.pageLabel}>
@@ -300,10 +235,9 @@ export default function FreeStudyPageFour({
 
           <section className="sf-free-study-page-four-chinese" aria-label={COPY.body}>
             <p
-              ref={chineseTextRef}
               lang="zh-CN"
               className="sf-free-study-page-four-chinese-text"
-              data-scrollable="false"
+              style={nativeTextStyle}
             >
               {displayNativeSpeech}
             </p>
@@ -329,6 +263,12 @@ export default function FreeStudyPageFour({
             ))}
           </ul>
 
+        </main>
+
+        <footer
+          className="sf-free-study-page-four-record-bar"
+          aria-live="polite"
+        >
           <div
             aria-hidden="true"
             className={`sf-free-study-page-four-mic ${
@@ -347,7 +287,7 @@ export default function FreeStudyPageFour({
             </span>
             {isRecordingEnglish ? COPY.recordingStatus : COPY.readyStatus}
           </p>
-        </main>
+        </footer>
       </div>
     </section>
   );

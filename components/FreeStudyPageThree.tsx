@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 type FreeStudyPageThreeProps = {
   chineseText: string;
@@ -264,6 +264,21 @@ export default function FreeStudyPageThree({
 }: FreeStudyPageThreeProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const canConfirm = Boolean(chineseText.trim());
+
+  useLayoutEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    textarea.style.height = "auto";
+    const maxHeight = Number.parseFloat(getComputedStyle(textarea).maxHeight);
+    const nextHeight = Number.isFinite(maxHeight)
+      ? Math.min(textarea.scrollHeight, maxHeight)
+      : textarea.scrollHeight;
+
+    textarea.style.height = `${nextHeight}px`;
+    textarea.style.overflowY =
+      textarea.scrollHeight > nextHeight + 1 ? "auto" : "hidden";
+  }, [chineseText]);
 
   function focusChineseEditor() {
     const textarea = textareaRef.current;

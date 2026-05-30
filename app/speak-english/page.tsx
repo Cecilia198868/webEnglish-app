@@ -13,6 +13,8 @@ import FreeStudyPageThree from "@/components/FreeStudyPageThree";
 import FreeStudyPageFour from "@/components/FreeStudyPageFour";
 import FreeStudyPageFiveTop from "@/components/FreeStudyPageFiveTop";
 import FreeStudyPageFiveBottomBar from "@/components/FreeStudyPageFiveBottomBar";
+import AiGuidedExpressionStepFour from "@/components/AiGuidedExpressionStepFour";
+import AiGuidedExpressionStepFive from "@/components/AiGuidedExpressionStepFive";
 import FreeUsageMeter from "@/components/FreeUsageMeter";
 import { useLanguage } from "@/components/LanguageProvider";
 import PlayIcon from "@/components/PlayIcon";
@@ -4519,6 +4521,48 @@ function SpeakEnglishClient() {
     }, 0);
   }
 
+  function startAiGuidedStepFourEnglishRound(confirmedSpeech: string) {
+    const normalizedSpeech = confirmedSpeech.trim();
+    if (!normalizedSpeech) return;
+
+    if (isListening) {
+      cancelRecognition();
+    }
+
+    freePracticeRoundIdRef.current = createFreePracticeRoundId();
+    setTrainingGroundMode("guided");
+    setPracticeStage("english");
+    setNativeSpeech(normalizedSpeech);
+    setMessage(normalizedSpeech);
+    setIsNativeSpeechConfirmed(true);
+    setIsRecognizingNativeSpeech(false);
+    resetAuthoritativeEnglish();
+    setHasNativeSpeech(true);
+    setHasEnglishAttempt(false);
+    setStandardEnglish("");
+    setExpressionVariants([]);
+    setSelectedExpressionIndex(0);
+    setIsLoadingExpressionVariants(false);
+    setHighlightedExpressions([]);
+    setVocabularyNotice("");
+    resetGuidedFollowupState();
+    resetFreeConversationState();
+    setInputText("");
+    setComposingPinyin("");
+    setLiveTranscript("");
+    setKeyboardMode("en");
+    setShowQuickPanel(false);
+    setShowExpressionMenu(false);
+    setShowClassicCoursePicker(false);
+    resetClassicCoursePicker();
+
+    if (typeof window === "undefined") return;
+
+    window.setTimeout(() => {
+      void startRecognition("english");
+    }, 0);
+  }
+
   function openAiGuidedExpressionStepOne() {
     if (isListening) {
       cancelRecognition();
@@ -4538,6 +4582,26 @@ function SpeakEnglishClient() {
     handledStepRouteRef.current = `/free-study/step-4:${confirmedSpeech}`;
     router.push("/free-study/step-4");
     startFreeStudyStepFourEnglishRound(confirmedSpeech);
+  }
+
+  function openAiGuidedStepFourForRetry() {
+    const confirmedSpeech = nativeSpeech.trim();
+    if (!confirmedSpeech) return;
+
+    saveFreeStudyRouteState(message);
+    handledStepRouteRef.current = `/ai-guided-expression/step-4:${confirmedSpeech}`;
+    router.push("/ai-guided-expression/step-4");
+    startAiGuidedStepFourEnglishRound(confirmedSpeech);
+  }
+
+  function startAiGuidedSuggestedRound() {
+    const suggestedSpeech = guidedResultSuggestion.trim();
+    if (!suggestedSpeech || isLoadingGuidedFollowup) return;
+
+    saveFreeStudyRouteState("");
+    handledStepRouteRef.current = `/ai-guided-expression/step-4:${suggestedSpeech}`;
+    router.push("/ai-guided-expression/step-4");
+    startAiGuidedStepFourEnglishRound(suggestedSpeech);
   }
 
   function startFreeStudyStepTwoChineseRound(
@@ -4670,6 +4734,16 @@ function SpeakEnglishClient() {
     startFreeStudyStepFourEnglishRound(confirmedSpeech);
   }
 
+  function confirmAiGuidedNativeSpeech() {
+    const confirmedSpeech = nativeSpeech.trim();
+    if (!confirmedSpeech) return;
+
+    saveFreeStudyRouteState("");
+    handledStepRouteRef.current = `/ai-guided-expression/step-4:${confirmedSpeech}`;
+    router.push("/ai-guided-expression/step-4");
+    startAiGuidedStepFourEnglishRound(confirmedSpeech);
+  }
+
   function retryEnglishSpeech() {
     if (!nativeSpeech.trim()) return;
 
@@ -4732,6 +4806,23 @@ function SpeakEnglishClient() {
 
       handledStepRouteRef.current = pathname;
       startAiGuidedStepTwoNativeRound();
+      return;
+    }
+
+    if (pathname === "/ai-guided-expression/step-4") {
+      const savedRouteState = readFreeStudyRouteState();
+      const confirmedSpeech = (
+        savedRouteState?.nativeSpeech ||
+        nativeSpeech
+      ).trim();
+
+      if (!confirmedSpeech) return;
+
+      const routeKey = `${pathname}:${confirmedSpeech}`;
+      if (handledStepRouteRef.current === routeKey) return;
+
+      handledStepRouteRef.current = routeKey;
+      startAiGuidedStepFourEnglishRound(confirmedSpeech);
       return;
     }
 
@@ -6476,49 +6567,53 @@ function SpeakEnglishClient() {
               onAvatarError={() => setAccountImageFailed(true)}
               onEditChinese={updateNativeSpeechDraft}
               onRetryChinese={retryNativeSpeech}
-              onStartEnglishPractice={confirmNativeSpeech}
+              onStartEnglishPractice={confirmAiGuidedNativeSpeech}
             />
           ) : null}
 
           {showGuidedReferenceEnglishListening ? (
-            <div className="sf-guided-practice-reference-english-listening absolute inset-0 z-[90] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/guided-practice-english-listening-reference.png"
-                alt=""
-                className="h-full w-full select-none object-fill"
-                draggable={false}
-              />
-              <div className="pointer-events-none absolute left-[18%] top-[25.6%] z-[95] flex h-[14.2%] w-[64%] items-center justify-center bg-[#f7fbff] text-center shadow-[0_0_24px_24px_rgba(247,251,255,0.94)]">
-                <p
-                  lang="zh-CN"
-                  className="whitespace-normal break-words text-[clamp(1.05rem,3.7vw,1.48rem)] font-black leading-[1.34] text-[#07113f]"
-                >
-                  {nativeSpeech}
-                </p>
-              </div>
-              <button
-                type="button"
-                aria-label="Open menu"
-                onClick={togglePracticeMenu}
-                className="absolute left-[5.8%] top-[3.2%] h-[6.5%] w-[11%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={openReferenceAccountMenu}
-                className="absolute right-[6.8%] top-[3.1%] h-[6.2%] w-[12%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label="Stop recording"
-                onClick={handlePrimaryPracticeAction}
-                className="absolute bottom-[6.5%] left-1/2 h-[13.1%] w-[30%] -translate-x-1/2 rounded-full border-0 bg-transparent"
-              />
-            </div>
+            <AiGuidedExpressionStepFour
+              isRecordingEnglish={isListening}
+              nativeSpeech={nativeSpeech}
+              menuLabel="回到主菜单"
+              onMenuClick={openMenuPage}
+              accountLabel={accountCopy.openAccountMenu}
+              onAccountClick={openAccountPage}
+              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
+              avatarAlt={accountEmail || accountName || "user"}
+              onAvatarError={() => setAccountImageFailed(true)}
+              onMicrophoneClick={handlePrimaryPracticeAction}
+            />
           ) : null}
 
           {showGuidedReferenceResult ? (
+            <AiGuidedExpressionStepFive
+              userEnglishText={message}
+              nextChineseText={guidedResultSuggestion}
+              isLoadingNextChinese={isLoadingGuidedFollowup}
+              expressions={referenceResultVariantTexts}
+              selectedExpressionIndex={selectedExpressionIndex}
+              menuLabel="回到主菜单"
+              onMenuClick={openMenuPage}
+              accountLabel={accountCopy.openAccountMenu}
+              onAccountClick={openAccountPage}
+              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
+              avatarAlt={accountEmail || accountName || "user"}
+              onAvatarError={() => setAccountImageFailed(true)}
+              onBackToEnglish={openAiGuidedStepFourForRetry}
+              onRetryEnglish={openAiGuidedStepFourForRetry}
+              onUseNextChinese={startAiGuidedSuggestedRound}
+              onChangeNextChinese={requestAnotherGuidedFollowup}
+              onPlayExpression={readReferenceResultVariant}
+              onSelectExpression={setSelectedExpressionIndex}
+              onFollowPractice={openAiGuidedStepFourForRetry}
+              onSlowPlayback={() =>
+                readReferenceResultVariant(selectedExpressionIndex, 0.5)
+              }
+            />
+          ) : null}
+
+          {false && showGuidedReferenceResult ? (
             <div className="sf-guided-practice-reference-result absolute inset-0 z-[90] overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
