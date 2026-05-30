@@ -23,7 +23,7 @@ const COPY = {
   menuLabel: "回到主菜单",
   pageLabel: "AI 引导表达英文录音",
   readyStatus: "点击麦克风开始录音",
-  recordingStatus: "正在自动录音，说完后会进入下一页",
+  recordingStatus: "点击麦克风开始录音",
   titlePrefix: "正在听你说",
   titleSuffix: "英文",
 } as const;
@@ -51,33 +51,16 @@ function getChineseCharacterCount(value: string) {
 }
 
 function getFontFitBounds(characterCount: number) {
-  if (characterCount <= 8) return { max: 2.92 };
-  if (characterCount <= 14) return { max: 2.42 };
-  if (characterCount <= 24) return { max: 1.92 };
-  if (characterCount <= 40) return { max: 1.48 };
-  return { max: 1.2 };
+  if (characterCount <= 12) return { max: 1.76 };
+  if (characterCount <= 24) return { max: 1.48 };
+  if (characterCount <= 42) return { max: 1.24 };
+  return { max: 1.08 };
 }
 
 function getLineHeight(fontSizeRem: number) {
-  if (fontSizeRem >= 2.3) return 1.12;
-  if (fontSizeRem >= 1.8) return 1.18;
-  if (fontSizeRem >= 1.4) return 1.28;
+  if (fontSizeRem >= 1.55) return 1.24;
+  if (fontSizeRem >= 1.3) return 1.32;
   return 1.38;
-}
-
-function splitNativeSpeech(value: string) {
-  const characters = Array.from(value);
-  if (characters.length <= 1) {
-    return { after: "", before: value, highlight: "" };
-  }
-
-  const highlightIndex = Math.min(1, characters.length - 1);
-
-  return {
-    after: characters.slice(highlightIndex + 1).join(""),
-    before: characters.slice(0, highlightIndex).join(""),
-    highlight: characters[highlightIndex],
-  };
 }
 
 function MenuGlyph() {
@@ -199,7 +182,6 @@ export default function AiGuidedExpressionStepFour({
     "--sf-ai-step-four-native-size": `${nativeTextFontSize.toFixed(3)}rem`,
     "--sf-ai-step-four-native-line": String(getLineHeight(nativeTextFontSize)),
   } as CSSProperties;
-  const nativeParts = splitNativeSpeech(displayNativeSpeech);
 
   return (
     <section className="sf-ai-guided-step-four" aria-label={COPY.pageLabel}>
@@ -260,15 +242,15 @@ export default function AiGuidedExpressionStepFour({
               <WaveGlyph />
             </span>
 
-            <p
-              lang="zh-CN"
-              className="sf-ai-guided-step-four-native"
-              style={nativeTextStyle}
-            >
-              {nativeParts.before}
-              {nativeParts.highlight ? <span>{nativeParts.highlight}</span> : null}
-              {nativeParts.after}
-            </p>
+            <div className="sf-ai-guided-step-four-native-card">
+              <p
+                lang="zh-CN"
+                className="sf-ai-guided-step-four-native"
+                style={nativeTextStyle}
+              >
+                {displayNativeSpeech}
+              </p>
+            </div>
 
             <h1>
               {COPY.titlePrefix}

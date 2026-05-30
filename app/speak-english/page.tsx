@@ -6488,6 +6488,7 @@ function SpeakEnglishClient() {
                   </h1>
                   <p>
                     大胆表达你的想法，
+                    <br />
                     <span>AI</span> 会一步步帮你优化
                   </p>
                 </section>

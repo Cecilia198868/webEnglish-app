@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 
 type SessionResponse = {
   user?: {
@@ -15,36 +16,36 @@ type SessionResponse = {
 
 const guidedSteps = [
   {
+    description: "点击麦克风，说出你的想法",
+    icon: "mic",
+    state: "已完成",
     step: "1",
     title: "说中文",
-    description: "点击麦克风，说出你的想法",
-    state: "已完成",
     tone: "done",
-    icon: "mic",
   },
   {
+    description: "试着用英语表达这句话",
+    icon: "mic",
+    state: "开始练习",
     step: "2",
     title: "尝试英文表达",
-    description: "试着用英语表达这句话",
-    state: "开始练习",
     tone: "active",
-    icon: "mic",
   },
   {
+    description: "多种更地道的表达对比",
+    icon: "ai",
+    state: "待解锁",
     step: "3",
     title: "AI 给出优化建议",
-    description: "多种更地道的表达对比",
-    state: "待解锁",
     tone: "locked",
-    icon: "ai",
   },
   {
+    description: "跟读练习，巩固地道表达",
+    icon: "star",
+    state: "待解锁",
     step: "4",
     title: "跟读并掌握表达",
-    description: "跟读练习，巩固地道表达",
-    state: "待解锁",
     tone: "locked",
-    icon: "star",
   },
 ] as const;
 
@@ -145,14 +146,6 @@ function TargetGlyph() {
   );
 }
 
-function WaveGlyph() {
-  return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-      <path d="M13 20v8M20 15v18M27 11v26M34 17v14" />
-    </svg>
-  );
-}
-
 function AiGlyph() {
   return (
     <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
@@ -225,7 +218,7 @@ export default function AiGuidedExpressionStepOne() {
 
             <div className="sf-ai-guided-step-one-brand" aria-label="SpeakFlow AI Voice Practice">
               <span aria-hidden="true" className="sf-ai-guided-step-one-logo">
-                <WaveGlyph />
+                <SpeakFlowBrandMark className="sf-ai-guided-step-one-logo-mark" />
               </span>
               <span className="sf-ai-guided-step-one-brand-copy">
                 <span className="sf-ai-guided-step-one-brand-title">SpeakFlow</span>
@@ -245,6 +238,7 @@ export default function AiGuidedExpressionStepOne() {
                 alt=""
                 className="sf-ai-guided-step-one-avatar-image"
                 onError={() => setAvatarSrc("/default-avatar.png")}
+                draggable={false}
               />
             </button>
           </header>
