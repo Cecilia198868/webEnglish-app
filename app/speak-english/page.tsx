@@ -3705,11 +3705,27 @@ function SpeakEnglishClient() {
     const shouldOpenPro = searchParams.get("pro") === "1";
     const shouldOpenAccount = searchParams.get("account") === "1";
     const checkoutStatus = searchParams.get("checkout");
+    const requestedSubmenu = searchParams.get("submenu");
     if (searchParams.get("menu") !== "1" && !shouldOpenPro && !shouldOpenAccount)
       return;
 
     const refreshTimers: number[] = [];
     setShowQuickPanel(!shouldOpenAccount);
+    if (!shouldOpenPro && !shouldOpenAccount) {
+      if (requestedSubmenu === "expression") {
+        setShowExpressionMenu(true);
+        setShowClassicCoursePicker(false);
+        setSelectedClassicCourseCategoryId("");
+        setSelectedClassicCourseSectionId("");
+        setClassicCourseSearchQuery("");
+      } else if (requestedSubmenu === "classic") {
+        setShowExpressionMenu(false);
+        setShowClassicCoursePicker(true);
+        setSelectedClassicCourseCategoryId("");
+        setSelectedClassicCourseSectionId("");
+        setClassicCourseSearchQuery("");
+      }
+    }
     if (shouldOpenPro) {
       setShowAccountMenu(true);
       setAccountPanelView("subscription");
@@ -4431,6 +4447,20 @@ function SpeakEnglishClient() {
     resetClassicCoursePicker();
   }
 
+  function startAiGuidedStepTwoNativeRound() {
+    if (isListening) {
+      cancelRecognition();
+    }
+
+    openTrainingGroundMode();
+
+    if (typeof window === "undefined") return;
+
+    window.setTimeout(() => {
+      void startRecognition("native");
+    }, 0);
+  }
+
   function saveFreeStudyRouteState(nextUserEnglishText = message) {
     if (typeof window === "undefined") return;
 
@@ -4490,6 +4520,13 @@ function SpeakEnglishClient() {
   }
 
   function openAiGuidedExpressionStepOne() {
+    if (isListening) {
+      cancelRecognition();
+    }
+
+    setShowQuickPanel(false);
+    setShowClassicCoursePicker(false);
+    resetClassicCoursePicker();
     router.push("/ai-guided-expression/step-1");
   }
 
@@ -4687,6 +4724,14 @@ function SpeakEnglishClient() {
 
       handledStepRouteRef.current = pathname;
       openTrainingGroundMode();
+      return;
+    }
+
+    if (pathname === "/ai-guided-expression/step-2") {
+      if (handledStepRouteRef.current === pathname) return;
+
+      handledStepRouteRef.current = pathname;
+      startAiGuidedStepTwoNativeRound();
       return;
     }
 
@@ -6263,87 +6308,176 @@ function SpeakEnglishClient() {
           ) : null}
 
           {showGuidedReferenceListening ? (
-            <div className="sf-guided-practice-reference-listening absolute inset-0 z-[90] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/guided-practice-listening-reference.png"
-                alt=""
-                className="h-full w-full select-none object-fill"
-                draggable={false}
-              />
-              <button
-                type="button"
-                aria-label="Open menu"
-                onClick={togglePracticeMenu}
-                className="absolute left-[5.7%] top-[3%] h-[6.5%] w-[11%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={openReferenceAccountMenu}
-                className="absolute right-[6.5%] top-[3%] h-[6.2%] w-[12%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label="Back"
-                onClick={openTrainingGroundMode}
-                className="absolute left-[5%] top-[9.6%] h-[4.5%] w-[15.5%] rounded-[24px] border-0 bg-transparent"
-              />
+            <div className="sf-ai-guided-step-two absolute inset-0 z-[90] overflow-hidden">
+              <div className="sf-ai-guided-step-two-frame">
+                <header className="sf-ai-guided-step-two-header">
+                  <button
+                    type="button"
+                    aria-label="返回主菜单"
+                    onClick={openMenuPage}
+                    className="sf-ai-guided-step-two-menu"
+                  >
+                    <span aria-hidden="true" />
+                  </button>
+
+                  <div
+                    className="sf-ai-guided-step-two-brand"
+                    aria-label="SpeakFlow AI Voice Practice"
+                  >
+                    <span aria-hidden="true" className="sf-ai-guided-step-two-logo">
+                      <SpeakFlowBrandMark />
+                    </span>
+                    <span className="sf-ai-guided-step-two-brand-copy">
+                      <span className="sf-ai-guided-step-two-brand-title">
+                        SpeakFlow
+                      </span>
+                      <span className="sf-ai-guided-step-two-brand-subtitle">
+                        AI VOICE PRACTICE
+                      </span>
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    aria-label={accountCopy.openAccountMenu}
+                    onClick={openAccountPage}
+                    className="sf-ai-guided-step-two-avatar-button"
+                  >
+                    {accountImage && !accountImageFailed ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={accountImage}
+                        alt={accountEmail || accountName || "user"}
+                        className="sf-ai-guided-step-two-avatar-image"
+                        onError={() => setAccountImageFailed(true)}
+                      />
+                    ) : (
+                      <span className="sf-ai-guided-step-two-avatar-fallback">
+                        {accountAvatarLabel}
+                      </span>
+                    )}
+                  </button>
+                </header>
+
+                <div className="sf-ai-guided-step-two-toolbar">
+                  <button
+                    type="button"
+                    aria-label="返回AI引导表达第一页"
+                    onClick={openAiGuidedExpressionStepOne}
+                    className="sf-ai-guided-step-two-back"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M15 5 8 12l7 7M9 12h11" />
+                    </svg>
+                    <span>返回</span>
+                  </button>
+
+                  <div className="sf-ai-guided-step-two-mode">
+                    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                      <path d="m25 5 4.6 11.4L41 21l-11.4 4.6L25 37l-4.6-11.4L9 21l11.4-4.6L25 5Z" />
+                      <path d="m10 31 2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5Z" />
+                    </svg>
+                    <span>AI引导表达</span>
+                  </div>
+                </div>
+
+                <section className="sf-ai-guided-step-two-hero">
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-ring" />
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-ring sf-ai-guided-step-two-ring-two" />
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-dot sf-ai-guided-step-two-dot-one" />
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-dot sf-ai-guided-step-two-dot-two" />
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-dot sf-ai-guided-step-two-dot-three" />
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-signal">
+                    {[12, 22, 34, 44, 30, 20].map((height, index) => (
+                      <span key={`guided-listening-signal-${index}`} style={{ height }} />
+                    ))}
+                  </span>
+                  <h1>
+                    正在听你<span>说话</span>...
+                  </h1>
+                  <p>
+                    大胆表达你的想法，
+                    <span>AI</span> 会一步步帮你优化
+                  </p>
+                </section>
+
+                <div aria-hidden="true" className="sf-ai-guided-step-two-wave-field">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+
+                <section className="sf-ai-guided-step-two-tip">
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-tip-icon">
+                    <svg viewBox="0 0 48 48" focusable="false">
+                      <path d="M24 5a14 14 0 0 0-8 25.5c1.7 1.2 2.8 3 2.8 5.1h10.4c0-2.1 1.1-3.9 2.8-5.1A14 14 0 0 0 24 5Z" />
+                      <path d="M19 40h10M20.5 44h7M14 12l-3-3M34 12l3-3M8 24H4M44 24h-4M24 4V0" />
+                    </svg>
+                  </span>
+                  <span className="sf-ai-guided-step-two-tip-copy">
+                    <strong>小提示</strong>
+                    <span>尽量完整表达，你说得越多，</span>
+                    <span>AI 给出的建议会越精准！</span>
+                  </span>
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-tip-wave">
+                    {[12, 20, 36, 54, 34, 18].map((height, index) => (
+                      <span key={`guided-tip-wave-${index}`} style={{ height }} />
+                    ))}
+                  </span>
+                </section>
+
+                <section className="sf-ai-guided-step-two-record" aria-label="正在录音">
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-record-wave sf-ai-guided-step-two-record-wave-left" />
+                  <button
+                    type="button"
+                    aria-label="结束录音"
+                    onClick={handlePrimaryPracticeAction}
+                    className="sf-ai-guided-step-two-mic"
+                  >
+                    <span className="sf-ai-guided-step-two-mic-ring" />
+                    <span className="sf-ai-guided-step-two-mic-core">
+                      <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                        <path d="M24 29a8 8 0 0 0 8-8v-8a8 8 0 0 0-16 0v8a8 8 0 0 0 8 8Z" />
+                        <path d="M11 22a13 13 0 0 0 26 0M24 35v8M18 43h12" />
+                      </svg>
+                    </span>
+                  </button>
+                  <span aria-hidden="true" className="sf-ai-guided-step-two-record-wave sf-ai-guided-step-two-record-wave-right" />
+                  <p>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M7 11V8a5 5 0 0 1 10 0v3" />
+                      <path d="M6 11h12v9H6z" />
+                    </svg>
+                    <span>点击麦克风结束录音</span>
+                  </p>
+                </section>
+              </div>
               <button
                 type="button"
                 aria-label="Stop recording"
                 onClick={handlePrimaryPracticeAction}
-                className="absolute bottom-[6.2%] left-1/2 h-[12.5%] w-[29%] -translate-x-1/2 rounded-full border-0 bg-transparent"
+                className="sr-only"
               />
             </div>
           ) : null}
 
           {showGuidedReferenceConfirmation ? (
-            <div className="sf-guided-practice-reference-confirmation absolute inset-0 z-[90] overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/guided-practice-confirmation-reference.png"
-                alt=""
-                className="h-full w-full select-none object-fill"
-                draggable={false}
-              />
-              <label className="absolute left-[17.2%] top-[20.1%] z-[95] flex h-[9.8%] w-[56%] items-start rounded-[18px] bg-[#f7fbff]/92 py-1 text-left shadow-[0_0_14px_14px_rgba(247,251,255,0.82)]">
-                <textarea
-                  aria-label="Edit recognized Chinese"
-                  lang="zh-CN"
-                  value={nativeSpeech}
-                  onChange={(event) =>
-                    updateNativeSpeechDraft(event.target.value)
-                  }
-                  rows={2}
-                  className="block h-full w-full resize-none overflow-y-auto bg-transparent text-[clamp(1.35rem,5vw,2.1rem)] font-black leading-[1.18] text-[#07113f] outline-none"
-                />
-              </label>
-              <button
-                type="button"
-                aria-label="Back"
-                onClick={openTrainingGroundMode}
-                className="absolute left-[5.2%] top-[3.1%] h-[6.1%] w-[11.5%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label={accountCopy.openAccountMenu}
-                onClick={openReferenceAccountMenu}
-                className="absolute right-[7.2%] top-[3.1%] h-[6%] w-[12%] rounded-full border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label="Try again"
-                onClick={retryNativeSpeech}
-                className="absolute left-[10.8%] top-[33.4%] h-[5.7%] w-[35.5%] rounded-[24px] border-0 bg-transparent"
-              />
-              <button
-                type="button"
-                aria-label="Confirm and start practice"
-                onClick={confirmNativeSpeech}
-                className="absolute right-[10.8%] top-[33.4%] h-[5.7%] w-[40.5%] rounded-[24px] border-0 bg-transparent"
-              />
-            </div>
+            <FreeStudyPageThree
+              chineseText={nativeSpeech}
+              headingText="太棒了！ 你想表达的是："
+              menuIcon="menu"
+              menuLabel="返回主菜单"
+              variant="guided"
+              onMenuClick={openMenuPage}
+              accountLabel={accountCopy.openAccountMenu}
+              onAccountClick={openAccountPage}
+              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
+              avatarAlt={accountEmail || accountName || "user"}
+              onAvatarError={() => setAccountImageFailed(true)}
+              onEditChinese={updateNativeSpeechDraft}
+              onRetryChinese={retryNativeSpeech}
+              onStartEnglishPractice={confirmNativeSpeech}
+            />
           ) : null}
 
           {showGuidedReferenceEnglishListening ? (

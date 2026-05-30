@@ -7,7 +7,10 @@ type FreeStudyPageThreeProps = {
   avatarSrc?: string;
   avatarAlt?: string;
   accountLabel?: string;
+  headingText?: string;
   menuLabel?: string;
+  menuIcon?: "back" | "menu";
+  variant?: "free" | "guided";
   onEditChinese: (value: string) => void;
   onRetryChinese: () => void;
   onStartEnglishPractice: () => void;
@@ -68,6 +71,19 @@ function BackGlyph() {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="2.7"
+      />
+    </svg>
+  );
+}
+
+function MenuGlyph() {
+  return (
+    <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
+      <path
+        d="M8 10h16M8 16h16M8 22h16"
+        stroke="currentColor"
+        strokeLinecap="round"
         strokeWidth="2.7"
       />
     </svg>
@@ -235,7 +251,10 @@ export default function FreeStudyPageThree({
   avatarSrc = "",
   avatarAlt = "user",
   accountLabel = COPY.accountLabel,
+  headingText = COPY.received,
   menuLabel = COPY.retryAria,
+  menuIcon = "back",
+  variant = "free",
   onEditChinese,
   onRetryChinese,
   onStartEnglishPractice,
@@ -264,8 +283,15 @@ export default function FreeStudyPageThree({
     onRetryChinese();
   }
 
+  const rootClassName = [
+    "sf-free-study-page-three",
+    variant === "guided" ? "sf-free-study-page-three-guided" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <section className="sf-free-study-page-three" aria-label={COPY.pageLabel}>
+    <section className={rootClassName} aria-label={COPY.pageLabel}>
       <div className="sf-free-study-page-three-frame">
         <header className="sf-free-study-page-three-header">
           <button
@@ -274,7 +300,7 @@ export default function FreeStudyPageThree({
             onClick={returnToRecording}
             className="sf-free-study-page-three-back"
           >
-            <BackGlyph />
+            {menuIcon === "menu" ? <MenuGlyph /> : <BackGlyph />}
           </button>
 
           <div
@@ -318,7 +344,7 @@ export default function FreeStudyPageThree({
             <div className="sf-free-study-page-three-confirm-head">
               <p>
                 <SparklesGlyph />
-                <span>{COPY.received}</span>
+                <span>{headingText}</span>
               </p>
               <button
                 type="button"
