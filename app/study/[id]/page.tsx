@@ -1438,6 +1438,13 @@ export default function StudyPage() {
 
   function handleBackToPreviousPage() {
     stopAutoPlay();
+
+    if (typeof window !== "undefined") {
+      window.speechSynthesis?.cancel();
+      window.location.assign("/menu");
+      return;
+    }
+
     router.replace("/menu");
   }
 
