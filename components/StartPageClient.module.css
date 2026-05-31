@@ -1,0 +1,364 @@
+.page {
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 15% 4%, rgba(255, 255, 255, 0.94), transparent 32%),
+    radial-gradient(circle at 92% 0%, rgba(210, 196, 255, 0.32), transparent 34%),
+    linear-gradient(180deg, #f7f2ff 0%, #f2ecff 100%);
+  color: #151334;
+}
+
+.phone {
+  position: relative;
+  min-height: 100dvh;
+  width: min(100%, 430px);
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 16px) 18px
+    calc(env(safe-area-inset-bottom, 0px) + 112px);
+}
+
+.statusBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #141220;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+
+.proPill {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #8d55ff, #5e42ee);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0 13px;
+  text-decoration: none;
+  box-shadow: 0 12px 24px rgba(101, 72, 232, 0.24);
+}
+
+.greeting {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.greeting p,
+.greeting h1,
+.greeting small {
+  margin: 0;
+}
+
+.greeting p {
+  color: #151334;
+  font-size: 1.13rem;
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+.greeting h1 {
+  color: #151334;
+  font-size: clamp(1.45rem, 6vw, 1.86rem);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+
+.greeting small {
+  display: block;
+  margin-top: 10px;
+  color: rgba(39, 33, 78, 0.54);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.avatar {
+  position: relative;
+  display: grid;
+  width: 66px;
+  height: 66px;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: visible;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f2f7ff, #efe8ff);
+  color: #755cf7;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-decoration: none;
+  box-shadow: 0 16px 30px rgba(71, 57, 139, 0.12);
+}
+
+.avatar::after {
+  position: absolute;
+  right: 1px;
+  bottom: 2px;
+  width: 14px;
+  height: 14px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #45c963;
+  content: "";
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.progressCard {
+  display: flex;
+  min-height: 122px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+  border: 1px solid rgba(233, 226, 252, 0.9);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 18px 18px 15px;
+  box-shadow:
+    0 18px 34px rgba(82, 67, 139, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.progressCard span {
+  color: rgba(45, 38, 88, 0.52);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.progressCard strong {
+  display: block;
+  margin-top: 6px;
+  color: #151334;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.progressCard strong small {
+  color: #151334;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.progressCard p {
+  margin: 7px 0 0;
+  color: rgba(45, 38, 88, 0.46);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.progressTrack {
+  width: min(176px, 45vw);
+  height: 6px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #ece7ff;
+}
+
+.progressTrack span {
+  display: block;
+  width: 60%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8f58ff, #d56cff);
+}
+
+.trophy {
+  display: grid;
+  width: 68px;
+  height: 68px;
+  place-items: center;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #fff8d8, #fff);
+  font-size: 2.45rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.sectionTitle {
+  margin: 24px 0 12px;
+  color: #292257;
+  font-size: 0.94rem;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.cardStack {
+  display: grid;
+  gap: 12px;
+}
+
+.continueCard {
+  display: grid;
+  min-height: 66px;
+  grid-template-columns: 48px 1fr 24px;
+  align-items: center;
+  gap: 13px;
+  border: 1px solid rgba(231, 225, 250, 0.92);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #151334;
+  padding: 10px 12px;
+  text-decoration: none;
+  box-shadow:
+    0 10px 26px rgba(73, 59, 128, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.continueCard:active {
+  transform: translateY(1px);
+}
+
+.cardIcon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 14px;
+  color: #fff;
+}
+
+.purple .cardIcon {
+  background: linear-gradient(135deg, #8c7cff, #6e55f4);
+}
+
+.cyan .cardIcon {
+  background: linear-gradient(135deg, #56d9e1, #4fb1f3);
+}
+
+.pink .cardIcon {
+  background: linear-gradient(135deg, #ff76ad, #eb5f9c);
+}
+
+.cardIcon svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+}
+
+.cardCopy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.cardCopy strong {
+  overflow: hidden;
+  color: #191739;
+  font-size: 0.93rem;
+  font-weight: 900;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardCopy small {
+  overflow: hidden;
+  color: rgba(43, 38, 83, 0.5);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  color: #765dff;
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.bottomNav {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 20;
+  display: grid;
+  width: min(100%, 430px);
+  grid-template-columns: repeat(4, 1fr);
+  align-items: end;
+  transform: translateX(-50%);
+  border-radius: 30px 30px 0 0;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 14px 12px calc(env(safe-area-inset-bottom, 0px) + 14px);
+  box-shadow: 0 -18px 42px rgba(75, 63, 140, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.tab,
+.activeTab {
+  display: grid;
+  min-width: 0;
+  justify-items: center;
+  gap: 6px;
+  color: #b8bdd5;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.tab svg,
+.activeTab svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.activeTab {
+  color: #6c4cff;
+}
+
+@media (max-width: 374px) {
+  .phone {
+    padding-inline: 14px;
+  }
+
+  .greeting {
+    margin-top: 22px;
+  }
+
+  .progressCard {
+    min-height: 112px;
+  }
+
+  .cardCopy strong {
+    font-size: 0.84rem;
+  }
+
+  .cardCopy small {
+    font-size: 0.66rem;
+  }
+}

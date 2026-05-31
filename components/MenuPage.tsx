@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
+import { syncVocabularyWordsWithCloud } from "@/lib/vocabulary";
 
 type SessionResponse = {
   user?: {
     avatarUrl?: string | null;
+    email?: string | null;
     image?: string | null;
+    name?: string | null;
     photoURL?: string | null;
     photoUrl?: string | null;
     picture?: string | null;
@@ -17,7 +20,6 @@ type SessionResponse = {
 type MenuEntry = {
   tone: "ai" | "new" | "classic";
   title: string;
-  badge?: string;
   primary: string;
   secondary: string;
   route: string;
@@ -28,7 +30,6 @@ const MENU_ENTRIES: MenuEntry[] = [
   {
     tone: "ai",
     title: "AI引导表达（推荐）",
-    badge: "推荐",
     primary: "AI一步一步引导你开口",
     secondary: "从想中文 → 说英文 → 更地道表达",
     route: "/ai-guided-expression/step-1",
@@ -219,6 +220,10 @@ export default function MenuPage() {
         if (!cancelled) {
           setAvatarSrc(getAvatarSrc(session.user));
         }
+
+        if (session.user?.email || session.user?.name) {
+          void syncVocabularyWordsWithCloud();
+        }
       } catch {
         if (!cancelled) {
           setAvatarSrc("/default-avatar.png");
@@ -291,9 +296,6 @@ export default function MenuPage() {
                 <span className="sf-menu-page-card-copy">
                   <span className="sf-menu-page-card-title-row">
                     <span className="sf-menu-page-card-title">{entry.title}</span>
-                    {entry.badge ? (
-                      <span className="sf-menu-page-card-badge">{entry.badge}</span>
-                    ) : null}
                   </span>
                   <span aria-hidden="true" className="sf-menu-page-card-rule" />
                   <span className="sf-menu-page-card-text">{entry.primary}</span>

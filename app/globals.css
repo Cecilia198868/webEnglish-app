@@ -2348,7 +2348,7 @@ body {
   stroke: #62aaff;
   stroke-linecap: round;
   stroke-dasharray: 302;
-  stroke-dashoffset: 212;
+  stroke-dashoffset: var(--ai-guided-ring-offset, 302);
 }
 
 .sf-ai-guided-progress strong {
@@ -2618,7 +2618,8 @@ body {
 .sf-ai-guided-challenge-progress span::before {
   content: "";
   position: absolute;
-  inset: 0 56% 0 0;
+  inset: 0 auto 0 0;
+  width: var(--ai-guided-challenge-percent, 0%);
   border-radius: inherit;
   background: linear-gradient(90deg, #6f8eff, #8aa6ff);
 }
@@ -13582,9 +13583,9 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
   min-height: 100dvh !important;
   overflow: visible !important;
   padding:
-    max(22px, calc(env(safe-area-inset-top, 0px) + 12px))
-    22px
-    max(14px, calc(env(safe-area-inset-bottom, 0px) + 12px)) !important;
+    max(18px, calc(env(safe-area-inset-top, 0px) + 10px))
+    20px
+    max(10px, calc(env(safe-area-inset-bottom, 0px) + 8px)) !important;
 }
 
 .sf-ai-guided-step-one-frame::before {
@@ -13674,12 +13675,12 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-one-toolbar {
   grid-template-columns: 74px 162px !important;
   gap: 40px !important;
-  margin-top: 20px !important;
+  margin-top: 14px !important;
 }
 
 .sf-ai-guided-step-one-back,
 .sf-ai-guided-step-one-mode {
-  min-height: 42px !important;
+  min-height: 38px !important;
   border-radius: 999px !important;
   border-color: rgba(255, 255, 255, 0.92) !important;
   background: rgba(255, 255, 255, 0.76) !important;
@@ -13709,8 +13710,8 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-one-hero {
-  margin-top: 18px !important;
-  min-height: 118px !important;
+  margin-top: 12px !important;
+  min-height: 104px !important;
   align-content: center !important;
 }
 
@@ -13723,7 +13724,7 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-one-hero h1 {
   color: #1f1b3d !important;
-  font-size: 40px !important;
+  font-size: 34px !important;
   font-weight: 700 !important;
   line-height: 1.02 !important;
   text-shadow: none !important;
@@ -13734,9 +13735,9 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-one-hero p {
-  margin-top: 8px !important;
+  margin-top: 6px !important;
   color: #6b668c !important;
-  font-size: 15px !important;
+  font-size: 13.5px !important;
   font-weight: 550 !important;
   line-height: 1.42 !important;
   text-shadow: none !important;
@@ -13755,9 +13756,9 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-stats {
-  grid-template-columns: 1fr 78px 1fr !important;
-  min-height: 72px !important;
-  margin: 24px 6px 0 !important;
+  grid-template-columns: 1fr 72px 1fr !important;
+  min-height: 64px !important;
+  margin: 16px 6px 0 !important;
   padding: 8px 12px !important;
   border-radius: 22px !important;
   background: rgba(255, 255, 255, 0.78) !important;
@@ -13771,25 +13772,25 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-stat-icon {
-  width: 31px !important;
+  width: 28px !important;
 }
 
 .sf-ai-guided-stat span span {
   color: #6b668c !important;
-  font-size: 11px !important;
+  font-size: 10.5px !important;
   font-weight: 550 !important;
   line-height: 1.25 !important;
 }
 
 .sf-ai-guided-stat strong {
-  margin-top: 4px !important;
+  margin-top: 3px !important;
   color: #1f1b3d !important;
-  font-size: 20px !important;
+  font-size: 18px !important;
   font-weight: 700 !important;
 }
 
 .sf-ai-guided-progress {
-  min-height: 64px !important;
+  min-height: 58px !important;
 }
 
 .sf-ai-guided-progress circle {
@@ -13797,27 +13798,27 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-progress strong {
-  margin-top: 3px !important;
+  margin-top: 2px !important;
   color: #1f1b3d !important;
-  font-size: 24px !important;
+  font-size: 22px !important;
   font-weight: 700 !important;
 }
 
 .sf-ai-guided-progress small {
-  margin-top: -8px !important;
+  margin-top: -7px !important;
   color: #5d8ff0 !important;
   font-size: 11px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-step-section {
-  margin-top: 22px !important;
+  margin-top: 16px !important;
 }
 
 .sf-ai-guided-step-section h2 {
-  margin-bottom: 8px !important;
+  margin-bottom: 6px !important;
   color: #174579 !important;
-  font-size: 17px !important;
+  font-size: 16px !important;
   font-weight: 650 !important;
 }
 
@@ -13829,7 +13830,7 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-list {
-  gap: 6px !important;
+  gap: 4px !important;
 }
 
 .sf-ai-guided-step-list::before {
@@ -13842,10 +13843,10 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-card {
   position: relative !important;
   isolation: isolate !important;
-  grid-template-columns: 52px 43px minmax(0, 1fr) auto !important;
-  gap: 8px !important;
-  min-height: 62px !important;
-  padding: 7px 10px 7px 0 !important;
+  grid-template-columns: 46px 40px minmax(0, 1fr) auto !important;
+  gap: 7px !important;
+  min-height: 54px !important;
+  padding: 6px 9px 6px 0 !important;
   border-radius: 18px !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -13854,7 +13855,7 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-card::before {
   content: "" !important;
   position: absolute !important;
-  inset: 0 0 0 42px !important;
+  inset: 0 0 0 38px !important;
   z-index: -1 !important;
   border-radius: 18px !important;
   background: rgba(255, 255, 255, 0.8) !important;
@@ -13864,14 +13865,14 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-number {
-  width: 26px !important;
-  font-size: 13px !important;
+  width: 24px !important;
+  font-size: 12px !important;
   font-weight: 650 !important;
   transform: translateX(-10px) !important;
 }
 
 .sf-ai-guided-step-icon {
-  width: 43px !important;
+  width: 40px !important;
   border-radius: 13px !important;
 }
 
@@ -13881,71 +13882,71 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-copy strong {
   color: #1f1b3d !important;
-  font-size: 14px !important;
+  font-size: 13.5px !important;
   font-weight: 650 !important;
   line-height: 1.2 !important;
 }
 
 .sf-ai-guided-step-copy span {
   color: #6b668c !important;
-  font-size: 10.5px !important;
+  font-size: 10px !important;
   font-weight: 500 !important;
   line-height: 1.35 !important;
 }
 
 .sf-ai-guided-step-state,
 .sf-ai-guided-step-action {
-  min-height: 27px !important;
-  font-size: 10.5px !important;
+  min-height: 25px !important;
+  font-size: 10px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-step-card-done .sf-ai-guided-step-state {
-  min-width: 64px !important;
+  min-width: 60px !important;
 }
 
 .sf-ai-guided-step-action {
-  min-width: 74px !important;
+  min-width: 68px !important;
   background: linear-gradient(135deg, #8ac7ff, #58a9f4) !important;
   color: #ffffff !important;
 }
 
 .sf-ai-guided-challenge {
-  grid-template-columns: 46px minmax(0, 1fr) 92px !important;
-  gap: 10px !important;
-  min-height: 56px !important;
-  margin-top: 20px !important;
-  padding: 8px 9px !important;
+  grid-template-columns: 42px minmax(0, 1fr) 84px !important;
+  gap: 8px !important;
+  min-height: 52px !important;
+  margin-top: 14px !important;
+  padding: 7px 8px !important;
   border-radius: 20px !important;
   background: rgba(255, 255, 255, 0.78) !important;
 }
 
 .sf-ai-guided-challenge-copy strong {
   color: #5d8ff0 !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-challenge-copy span {
   color: #6b668c !important;
-  font-size: 10.5px !important;
+  font-size: 10px !important;
   font-weight: 500 !important;
   line-height: 1.35 !important;
 }
 
 .sf-ai-guided-challenge-progress strong {
   color: #6b668c !important;
-  font-size: 12px !important;
+  font-size: 11.5px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-record {
-  margin-top: 15px !important;
+  margin-top: 10px !important;
   padding-bottom: 0 !important;
 }
 
 .sf-ai-guided-record-button {
-  width: 90px !important;
+  width: 82px !important;
 }
 
 .sf-ai-guided-record-core {
@@ -13954,165 +13955,166 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-record-wave {
   top: 37% !important;
-  height: 26px !important;
+  height: 22px !important;
   opacity: 0.28 !important;
 }
 
 .sf-ai-guided-record p {
-  margin-top: 6px !important;
+  margin-top: 4px !important;
   color: #6b668c !important;
-  font-size: 12.5px !important;
+  font-size: 11.5px !important;
   font-weight: 550 !important;
 }
 
 @media (max-width: 390px), (max-height: 820px) {
   .sf-ai-guided-step-one-frame {
     padding:
-      max(18px, calc(env(safe-area-inset-top, 0px) + 10px))
-      16px
-      max(12px, calc(env(safe-area-inset-bottom, 0px) + 10px)) !important;
+      max(14px, calc(env(safe-area-inset-top, 0px) + 8px))
+      14px
+      max(8px, calc(env(safe-area-inset-bottom, 0px) + 8px)) !important;
   }
 
   .sf-ai-guided-step-one-header {
-    grid-template-columns: 48px minmax(0, 1fr) 50px !important;
+    grid-template-columns: 44px minmax(0, 1fr) 46px !important;
   }
 
   .sf-ai-guided-step-one-menu,
   .sf-ai-guided-step-one-avatar-button {
-    width: 48px !important;
-    height: 48px !important;
-  }
-
-  .sf-ai-guided-step-one-avatar-button {
-    width: 50px !important;
-    height: 50px !important;
-  }
-
-  .sf-ai-guided-step-one-brand {
-    grid-template-columns: 44px minmax(0, max-content) !important;
-    gap: 9px !important;
-  }
-
-  .sf-ai-guided-step-one-logo {
     width: 44px !important;
     height: 44px !important;
   }
 
+  .sf-ai-guided-step-one-avatar-button {
+    width: 46px !important;
+    height: 46px !important;
+  }
+
+  .sf-ai-guided-step-one-brand {
+    grid-template-columns: 36px minmax(0, max-content) !important;
+    gap: 8px !important;
+  }
+
+  .sf-ai-guided-step-one-logo {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
   .sf-ai-guided-step-one-logo svg,
   .sf-ai-guided-step-one-logo-mark {
-    width: 34px !important;
-    height: 34px !important;
+    width: 28px !important;
+    height: 28px !important;
   }
 
   .sf-ai-guided-step-one-brand-title {
-    font-size: 27px !important;
+    font-size: 22px !important;
   }
 
   .sf-ai-guided-step-one-brand-subtitle {
-    font-size: 9px !important;
+    font-size: 7.5px !important;
   }
 
   .sf-ai-guided-step-one-toolbar {
-    grid-template-columns: 112px minmax(0, 1fr) !important;
-    margin-top: 20px !important;
+    grid-template-columns: 94px minmax(0, 1fr) !important;
+    gap: 18px !important;
+    margin-top: 12px !important;
   }
 
   .sf-ai-guided-step-one-back,
   .sf-ai-guided-step-one-mode {
-    min-height: 42px !important;
+    min-height: 38px !important;
   }
 
   .sf-ai-guided-step-one-hero {
-    margin-top: 20px !important;
-    min-height: 134px !important;
+    margin-top: 12px !important;
+    min-height: 100px !important;
   }
 
   .sf-ai-guided-step-one-hero h1 {
-    font-size: 37px !important;
+    font-size: 32px !important;
   }
 
   .sf-ai-guided-step-one-hero p {
-    margin-top: 11px !important;
-    font-size: 15px !important;
+    margin-top: 6px !important;
+    font-size: 13px !important;
   }
 
   .sf-ai-guided-stats {
-    grid-template-columns: 1fr 74px 1fr !important;
-    min-height: 72px !important;
-    margin-top: 18px !important;
-    padding: 8px 10px !important;
+    grid-template-columns: 1fr 68px 1fr !important;
+    min-height: 62px !important;
+    margin-top: 14px !important;
+    padding: 7px 9px !important;
   }
 
   .sf-ai-guided-stat-icon {
-    width: 30px !important;
+    width: 27px !important;
   }
 
   .sf-ai-guided-stat span span {
-    font-size: 12px !important;
+    font-size: 10.5px !important;
   }
 
   .sf-ai-guided-stat strong {
-    font-size: 21px !important;
+    font-size: 18px !important;
   }
 
   .sf-ai-guided-progress {
-    min-height: 68px !important;
+    min-height: 56px !important;
   }
 
   .sf-ai-guided-step-section {
-    margin-top: 20px !important;
+    margin-top: 14px !important;
   }
 
   .sf-ai-guided-step-section h2 {
-    font-size: 19px !important;
-    margin-bottom: 12px !important;
+    font-size: 16px !important;
+    margin-bottom: 6px !important;
   }
 
   .sf-ai-guided-step-card {
-    grid-template-columns: 44px 48px minmax(0, 1fr) auto !important;
-    min-height: 60px !important;
-    gap: 8px !important;
-    padding-block: 8px !important;
+    grid-template-columns: 42px 40px minmax(0, 1fr) auto !important;
+    min-height: 54px !important;
+    gap: 7px !important;
+    padding-block: 6px !important;
   }
 
   .sf-ai-guided-step-number {
-    width: 30px !important;
-    font-size: 16px !important;
-  }
-
-  .sf-ai-guided-step-icon {
-    width: 48px !important;
-  }
-
-  .sf-ai-guided-step-copy strong {
-    font-size: 16px !important;
-  }
-
-  .sf-ai-guided-step-copy span {
+    width: 24px !important;
     font-size: 12px !important;
   }
 
+  .sf-ai-guided-step-icon {
+    width: 40px !important;
+  }
+
+  .sf-ai-guided-step-copy strong {
+    font-size: 13.5px !important;
+  }
+
+  .sf-ai-guided-step-copy span {
+    font-size: 10px !important;
+  }
+
   .sf-ai-guided-step-action {
-    min-width: 86px !important;
+    min-width: 68px !important;
   }
 
   .sf-ai-guided-step-card-done .sf-ai-guided-step-state {
-    min-width: 72px !important;
+    min-width: 60px !important;
   }
 
   .sf-ai-guided-challenge {
-    grid-template-columns: 46px minmax(0, 1fr) 92px !important;
-    min-height: 64px !important;
-    margin-top: 20px !important;
-    padding: 10px !important;
+    grid-template-columns: 40px minmax(0, 1fr) 82px !important;
+    min-height: 50px !important;
+    margin-top: 12px !important;
+    padding: 7px !important;
   }
 
   .sf-ai-guided-record-button {
-    width: 96px !important;
+    width: 78px !important;
   }
 
   .sf-ai-guided-record p {
-    font-size: 14px !important;
+    font-size: 12px !important;
   }
 }
 
@@ -15352,7 +15354,7 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-five-scroll {
   inset-inline: 0.92rem !important;
-  top: calc(max(1rem, calc(env(safe-area-inset-top, 0px) + 0.6rem)) + 8.55rem) !important;
+  top: calc(max(1rem, calc(env(safe-area-inset-top, 0px) + 0.6rem)) + 7.88rem) !important;
   bottom: calc(7.35rem + env(safe-area-inset-bottom, 0px)) !important;
   padding: 0 0.04rem 1rem !important;
   overflow-y: auto !important;
@@ -15369,8 +15371,8 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-five-user-card {
-  min-height: 5.75rem !important;
-  padding: 1rem 7rem 0.98rem 1rem !important;
+  min-height: 5.32rem !important;
+  padding: 0.82rem 6.8rem 0.82rem 0.96rem !important;
   border-radius: 1.18rem !important;
 }
 
@@ -15391,9 +15393,9 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-five-user-text {
   max-width: none !important;
-  margin-top: 0.72rem !important;
+  margin-top: 0.5rem !important;
   color: #1f1b3d !important;
-  font-size: 1.17rem !important;
+  font-size: 1.08rem !important;
   font-weight: 650 !important;
   line-height: 1.34 !important;
   letter-spacing: 0 !important;
@@ -15421,8 +15423,8 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-five-next-card {
-  margin-top: 0.72rem !important;
-  padding: 1rem 1rem 1rem !important;
+  margin-top: 0.56rem !important;
+  padding: 0.86rem 0.92rem 0.88rem !important;
   border-radius: 1.18rem !important;
 }
 
@@ -15462,27 +15464,27 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-five-next-text {
   max-width: 72% !important;
-  margin-top: 0.78rem !important;
+  margin-top: 0.56rem !important;
   color: #1f1b3d !important;
-  font-size: 1.48rem !important;
+  font-size: 1.34rem !important;
   font-weight: 650 !important;
-  line-height: 1.28 !important;
+  line-height: 1.24 !important;
   text-shadow: none !important;
   word-break: break-word !important;
 }
 
 .sf-ai-guided-step-five-next-description {
-  margin-top: 0.58rem !important;
+  margin-top: 0.42rem !important;
   color: #4f5c8c !important;
-  font-size: 0.78rem !important;
+  font-size: 0.68rem !important;
   font-weight: 500 !important;
-  line-height: 1.42 !important;
+  line-height: 1.32 !important;
   text-shadow: none !important;
 }
 
 .sf-ai-guided-step-five-tags {
   gap: 0.38rem !important;
-  margin-top: 0.55rem !important;
+  margin-top: 0.42rem !important;
 }
 
 .sf-ai-guided-step-five-tags span {
@@ -15503,7 +15505,7 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-five-next-actions {
   grid-template-columns: minmax(0, 1.48fr) minmax(5.6rem, 0.82fr) !important;
   gap: 0.62rem !important;
-  margin-top: 0.8rem !important;
+  margin-top: 0.62rem !important;
 }
 
 .sf-ai-guided-step-five-use-next,
@@ -15523,12 +15525,12 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-five-records {
-  margin-top: 0.72rem !important;
+  margin-top: 0.54rem !important;
 }
 
 .sf-ai-guided-step-five-records > h2 {
   gap: 0.36rem !important;
-  margin: 0 0 0.5rem 0.22rem !important;
+  margin: 0 0 0.38rem 0.22rem !important;
   color: #1767da !important;
   font-size: 1rem !important;
   font-weight: 650 !important;
@@ -15542,19 +15544,19 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-five-record-list {
-  gap: 0.48rem !important;
+  gap: 0.38rem !important;
 }
 
 .sf-ai-guided-step-five-record-card {
   grid-template-columns: 2.75rem minmax(0, 1fr) 2.34rem !important;
   gap: 0.56rem !important;
-  min-height: 4.15rem !important;
-  padding: 0.56rem 0.62rem !important;
+  min-height: 3.82rem !important;
+  padding: 0.46rem 0.62rem !important;
   border-radius: 0.92rem !important;
 }
 
 .sf-ai-guided-step-five-record-card.is-selected {
-  min-height: 5.25rem !important;
+  min-height: 4.72rem !important;
   border-color: rgba(23, 103, 218, 0.64) !important;
 }
 
@@ -15589,11 +15591,11 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-five-record-text {
-  margin-top: 0.24rem !important;
+  margin-top: 0.18rem !important;
   color: #1f1b3d !important;
-  font-size: 0.96rem !important;
+  font-size: 0.84rem !important;
   font-weight: 550 !important;
-  line-height: 1.34 !important;
+  line-height: 1.28 !important;
   letter-spacing: 0 !important;
   text-shadow: none !important;
   word-break: normal !important;
@@ -15770,18 +15772,18 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
   .sf-ai-guided-step-five-scroll {
     inset-inline: 0.72rem !important;
-    top: calc(max(0.88rem, calc(env(safe-area-inset-top, 0px) + 0.52rem)) + 7.92rem) !important;
+    top: calc(max(0.88rem, calc(env(safe-area-inset-top, 0px) + 0.52rem)) + 7.28rem) !important;
     bottom: calc(6.72rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 
   .sf-ai-guided-step-five-user-card {
-    min-height: 5.15rem !important;
-    padding: 0.82rem 6.2rem 0.82rem 0.88rem !important;
+    min-height: 4.8rem !important;
+    padding: 0.7rem 5.9rem 0.7rem 0.82rem !important;
   }
 
   .sf-ai-guided-step-five-user-text {
-    margin-top: 0.55rem !important;
-    font-size: 1.02rem !important;
+    margin-top: 0.42rem !important;
+    font-size: 0.96rem !important;
   }
 
   .sf-ai-guided-step-five-retry {
@@ -15791,28 +15793,40 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
   }
 
   .sf-ai-guided-step-five-next-card {
-    margin-top: 0.58rem !important;
-    padding: 0.86rem !important;
+    margin-top: 0.46rem !important;
+    padding: 0.72rem 0.78rem 0.76rem !important;
   }
 
   .sf-ai-guided-step-five-next-text {
     max-width: 73% !important;
-    font-size: 1.3rem !important;
+    margin-top: 0.48rem !important;
+    font-size: 1.18rem !important;
+    line-height: 1.23 !important;
+  }
+
+  .sf-ai-guided-step-five-next-description {
+    margin-top: 0.36rem !important;
+    font-size: 0.64rem !important;
+    line-height: 1.28 !important;
+  }
+
+  .sf-ai-guided-step-five-tags {
+    margin-top: 0.36rem !important;
   }
 
   .sf-ai-guided-step-five-next-actions {
-    margin-top: 0.64rem !important;
+    margin-top: 0.5rem !important;
   }
 
   .sf-ai-guided-step-five-record-card {
     grid-template-columns: 2.5rem minmax(0, 1fr) 2.12rem !important;
-    min-height: 3.88rem !important;
+    min-height: 3.5rem !important;
     gap: 0.48rem !important;
-    padding: 0.48rem 0.54rem !important;
+    padding: 0.4rem 0.54rem !important;
   }
 
   .sf-ai-guided-step-five-record-card.is-selected {
-    min-height: 4.9rem !important;
+    min-height: 4.42rem !important;
   }
 
   .sf-ai-guided-step-five-record-icon {
@@ -15821,8 +15835,8 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
   }
 
   .sf-ai-guided-step-five-record-text {
-    font-size: 0.88rem !important;
-    line-height: 1.3 !important;
+    font-size: 0.78rem !important;
+    line-height: 1.25 !important;
   }
 
   .sf-ai-guided-step-five-play,

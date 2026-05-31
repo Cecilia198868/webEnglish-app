@@ -2,98 +2,203 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import LogoutButton from "@/components/LogoutButton";
+import styles from "./StartPageClient.module.css";
 
 type StartPageClientProps = {
   userEmail: string;
   userImage: string;
+  userName: string;
 };
 
-const startActions = [
+const continueCards = [
   {
-    href: "/speak-english",
-    icon: "💬",
-    label: "我要说英语",
-    tone:
-      "border-fuchsia-400/70 bg-[linear-gradient(100deg,rgba(95,8,102,0.86),rgba(40,9,76,0.88))] shadow-[0_26px_64px_rgba(168,45,206,0.22)]",
+    href: "/ai-guided-expression/step-1",
+    title: "AI 引导表达",
+    subtitle: "不知道说什么？让 AI 帮你想",
+    icon: "voice",
+    tone: "purple",
   },
   {
-    href: "/dashboard",
-    icon: "📘",
-    label: "课程学习",
-    tone:
-      "border-blue-400/70 bg-[linear-gradient(100deg,rgba(8,39,94,0.86),rgba(5,20,59,0.9))] shadow-[0_26px_64px_rgba(37,99,235,0.22)]",
+    href: "/classic-scenes",
+    title: "经典场景口语练习",
+    subtitle: "覆盖出国生活、工作、日常等场景",
+    icon: "scene",
+    tone: "cyan",
   },
   {
-    href: "/vocabulary",
-    icon: "🎯",
-    label: "单词闯关",
-    tone:
-      "border-violet-400/70 bg-[linear-gradient(100deg,rgba(47,13,91,0.9),rgba(24,9,61,0.92))] shadow-[0_26px_64px_rgba(124,58,237,0.22)]",
+    href: "/new-expressions",
+    title: "新表达",
+    subtitle: "复习和巩固你学到的地道表达",
+    icon: "bookmark",
+    tone: "pink",
   },
 ] as const;
+
+const tabs = [
+  { href: "/start", label: "首页", icon: "home", active: true },
+  { href: "/classic-scenes", label: "场景", icon: "scene", active: false },
+  { href: "/new-expressions", label: "新表达", icon: "spark", active: false },
+  { href: "/account", label: "我的", icon: "user", active: false },
+] as const;
+
+function ContinueIcon({ type }: { type: (typeof continueCards)[number]["icon"] }) {
+  if (type === "scene") {
+    return (
+      <svg viewBox="0 0 36 36" aria-hidden="true">
+        <path d="M10 9h16v18H10z" />
+        <path d="M13 13h10M13 18h10M13 23h6" />
+      </svg>
+    );
+  }
+
+  if (type === "bookmark") {
+    return (
+      <svg viewBox="0 0 36 36" aria-hidden="true">
+        <path d="M11 8h14v21l-7-4-7 4V8Z" />
+        <path d="M16 14h4M16 18h4" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 36 36" aria-hidden="true">
+      <path d="M18 7a4.5 4.5 0 0 0-4.5 4.5v7a4.5 4.5 0 1 0 9 0v-7A4.5 4.5 0 0 0 18 7Z" />
+      <path d="M10 18a8 8 0 0 0 16 0M18 26v4M14 30h8" />
+    </svg>
+  );
+}
+
+function TabIcon({ type }: { type: (typeof tabs)[number]["icon"] }) {
+  if (type === "scene") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M9 7h14v18H9z" />
+        <path d="M12 12h8M12 16h8M12 20h5" />
+      </svg>
+    );
+  }
+
+  if (type === "spark") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 5 18.8 13.2 27 16l-8.2 2.8L16 27l-2.8-8.2L5 16l8.2-2.8L16 5Z" />
+      </svg>
+    );
+  }
+
+  if (type === "user") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 16a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z" />
+        <path d="M7 27c1.3-5.1 4.3-7.6 9-7.6s7.7 2.5 9 7.6" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M5 15 16 6l11 9v11h-7v-7h-8v7H5V15Z" />
+    </svg>
+  );
+}
+
+function displayName(userName: string, userEmail: string) {
+  const cleaned = userName.trim();
+  if (cleaned) return cleaned.split(/\s+/)[0] || cleaned;
+
+  const localPart = userEmail.split("@")[0]?.trim();
+  return localPart || "Cecilia";
+}
 
 export default function StartPageClient({
   userEmail,
   userImage,
+  userName,
 }: StartPageClientProps) {
-  return (
-    <main className="responsive-page-shell relative min-h-[100dvh] overflow-x-hidden bg-[#030611] text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_2%,rgba(151,42,179,0.26),transparent_34%),radial-gradient(circle_at_90%_18%,rgba(28,98,214,0.22),transparent_30%),linear-gradient(180deg,#11051e_0%,#050716_44%,#02040b_100%)]" />
-      <div className="lux-grid pointer-events-none absolute inset-0 opacity-[0.10]" />
-      <div className="aurora-wave pointer-events-none absolute left-[-18%] top-[6%] h-[24rem] w-[40rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,0,153,0.24),transparent_62%)] blur-[104px]" />
-      <div className="aurora-wave pointer-events-none absolute right-[-18%] bottom-[-10%] h-[28rem] w-[42rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,116,255,0.22),transparent_62%)] blur-[116px]" />
+  const name = displayName(userName, userEmail);
 
-      <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col gap-7 px-3 py-5 sm:px-5 sm:py-6 lg:px-6">
-        <section className="flex flex-wrap items-center justify-between gap-4 rounded-[26px] border border-fuchsia-400/34 bg-[#070a1d]/88 px-4 py-4 shadow-[0_18px_56px_rgba(0,0,0,0.34),0_0_26px_rgba(168,85,247,0.12)] backdrop-blur-2xl sm:flex-nowrap sm:px-5">
-          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+  return (
+    <main className={styles.page}>
+      <section className={styles.phone} aria-label="登录后的 SpeakFlow 首页">
+        <div className={styles.statusBar} aria-hidden="true">
+          <span>10:15</span>
+          <span>⌁ ◒ ▰</span>
+        </div>
+
+        <header className={styles.header}>
+          <Link href="/account" className={styles.proPill}>
+            <span aria-hidden="true">◆</span>
+            Pro
+          </Link>
+        </header>
+
+        <section className={styles.greeting}>
+          <div>
+            <p>太好了！<span aria-hidden="true">🎉</span></p>
+            <h1>欢迎回来 {name}</h1>
+            <small>继续你的英语练习吧</small>
+          </div>
+          <Link href="/account" className={styles.avatar} aria-label="打开我的页面">
             {userImage ? (
               <Image
                 src={userImage}
                 alt={userEmail}
-                width={52}
-                height={52}
-                className="h-12 w-12 shrink-0 rounded-full border border-white/14 object-cover sm:h-14 sm:w-14"
+                width={72}
+                height={72}
+                sizes="72px"
               />
             ) : (
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/14 bg-white/10 font-[var(--font-sora)] text-lg font-bold sm:h-14 sm:w-14">
-                {(userEmail || "U").slice(0, 1).toUpperCase()}
-              </div>
+              <span>{name.slice(0, 1).toUpperCase()}</span>
             )}
+          </Link>
+        </section>
 
-            <div className="min-w-0">
-              <p className="text-black-outline truncate font-[var(--font-sora)] text-sm font-extrabold text-white sm:text-base">
-                {userEmail}
-              </p>
-              <p className="text-black-outline mt-1 text-xs font-extrabold text-emerald-300">
-                已登录
-              </p>
+        <section className={styles.progressCard} aria-label="今日学习进度">
+          <div>
+            <span>今日学习进度</span>
+            <strong>3 <small>/ 5 句</small></strong>
+            <p>再练习 2 句即可完成每日目标</p>
+            <div className={styles.progressTrack} aria-hidden="true">
+              <span />
             </div>
           </div>
-
-          <LogoutButton />
+          <span className={styles.trophy} aria-hidden="true">🏆</span>
         </section>
 
-        <section className="grid gap-5 sm:gap-6">
-          {startActions.map((action) => (
+        <h2 className={styles.sectionTitle}>继续练习</h2>
+
+        <div className={styles.cardStack}>
+          {continueCards.map((card) => (
             <Link
-              key={action.href}
-              href={action.href}
-              className={`group flex min-h-[114px] min-w-0 items-center gap-4 rounded-[26px] border px-5 py-6 transition duration-200 hover:-translate-y-0.5 hover:brightness-110 sm:min-h-[122px] sm:gap-5 sm:px-6 ${action.tone}`}
+              key={card.href}
+              href={card.href}
+              className={`${styles.continueCard} ${styles[card.tone]}`}
             >
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] border border-white/18 bg-white/8 text-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
-                {action.icon}
+              <span className={styles.cardIcon}>
+                <ContinueIcon type={card.icon} />
               </span>
-              <span className="text-black-outline min-w-0 flex-1 font-[var(--font-sora)] text-2xl font-extrabold tracking-normal text-white sm:text-3xl">
-                {action.label}
+              <span className={styles.cardCopy}>
+                <strong>{card.title}</strong>
+                <small>{card.subtitle}</small>
               </span>
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/6 text-3xl leading-none shadow-[0_0_22px_rgba(255,255,255,0.12)] transition group-hover:translate-x-1 group-hover:bg-white/10">
-                ›
-              </span>
+              <span className={styles.chevron} aria-hidden="true">›</span>
             </Link>
           ))}
-        </section>
-      </div>
+        </div>
+
+        <nav className={styles.bottomNav} aria-label="主导航">
+          {tabs.map((tab) => (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              className={tab.active ? styles.activeTab : styles.tab}
+            >
+              <TabIcon type={tab.icon} />
+              <span>{tab.label}</span>
+            </Link>
+          ))}
+        </nav>
+      </section>
     </main>
   );
 }

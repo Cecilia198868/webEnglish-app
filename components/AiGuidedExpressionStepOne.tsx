@@ -1,8 +1,14 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
+import type {
+  AiGuidedProgressSnapshot,
+  AiGuidedStepId,
+  AiGuidedStepStatus,
+} from "@/lib/aiGuidedExpressionProgress";
 
 type SessionResponse = {
   user?: {
@@ -14,40 +20,65 @@ type SessionResponse = {
   } | null;
 };
 
-const guidedSteps = [
+type GuidedStepCopy = {
+  description: string;
+  icon: "ai" | "mic" | "star";
+  id: AiGuidedStepId;
+  step: "1" | "2" | "3" | "4";
+  title: string;
+};
+
+const guidedStepCopy: GuidedStepCopy[] = [
   {
     description: "点击麦克风，说出你的想法",
     icon: "mic",
-    state: "已完成",
+    id: "native",
     step: "1",
     title: "说中文",
-    tone: "done",
   },
   {
     description: "试着用英语表达这句话",
     icon: "mic",
-    state: "开始练习",
+    id: "english",
     step: "2",
     title: "尝试英文表达",
-    tone: "active",
   },
   {
     description: "多种更地道的表达对比",
     icon: "ai",
-    state: "待解锁",
+    id: "suggestions",
     step: "3",
     title: "AI 给出优化建议",
-    tone: "locked",
   },
   {
     description: "跟读练习，巩固地道表达",
     icon: "star",
-    state: "待解锁",
+    id: "follow",
     step: "4",
     title: "跟读并掌握表达",
-    tone: "locked",
   },
-] as const;
+];
+
+const defaultProgress: AiGuidedProgressSnapshot = {
+  challenge: {
+    completed: 0,
+    goal: 10,
+    percent: 0,
+  },
+  dailyGoal: 10,
+  level: 1,
+  steps: {
+    english: { id: "english", label: "待解锁", status: "locked" },
+    follow: { id: "follow", label: "待解锁", status: "locked" },
+    native: { id: "native", label: "开始练习", status: "active" },
+    suggestions: { id: "suggestions", label: "待解锁", status: "locked" },
+  },
+  streakDays: 0,
+  todayCompleted: 0,
+  totalCompleted: 0,
+};
+
+const ringCircumference = 302;
 
 function getAvatarSrc(user?: SessionResponse["user"]) {
   return (
@@ -58,6 +89,10 @@ function getAvatarSrc(user?: SessionResponse["user"]) {
     user?.picture ||
     "/default-avatar.png"
   );
+}
+
+function progressTone(status: AiGuidedStepStatus) {
+  return status === "completed" ? "done" : status;
 }
 
 function MenuGlyph() {
@@ -163,35 +198,50 @@ function StarGlyph() {
   );
 }
 
-function StepIcon({ icon }: { icon: (typeof guidedSteps)[number]["icon"] }) {
+function StepIcon({ icon }: { icon: GuidedStepCopy["icon"] }) {
   if (icon === "ai") return <AiGlyph />;
   if (icon === "star") return <StarGlyph />;
   return <MicGlyph />;
 }
 
+function StateIcon({ status }: { status: AiGuidedStepStatus }) {
+  if (status === "locked") return <LockGlyph />;
+  if (status === "completed") return <CheckGlyph />;
+  return <SparkleGlyph />;
+}
+
 export default function AiGuidedExpressionStepOne() {
   const router = useRouter();
   const [avatarSrc, setAvatarSrc] = useState("/default-avatar.png");
+  const [progress, setProgress] =
+    useState<AiGuidedProgressSnapshot>(defaultProgress);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function loadSession() {
+    async function loadPageData() {
       try {
-        const response = await fetch("/api/auth/session", { cache: "no-store" });
-        const session = (await response.json()) as SessionResponse;
+        const [sessionResponse, progressResponse] = await Promise.all([
+          fetch("/api/auth/session", { cache: "no-store" }),
+          fetch("/api/ai-guided-expression/progress", { cache: "no-store" }),
+        ]);
+        const session = (await sessionResponse.json()) as SessionResponse;
+        const progressData =
+          (await progressResponse.json()) as AiGuidedProgressSnapshot;
 
         if (!cancelled) {
           setAvatarSrc(getAvatarSrc(session.user));
+          setProgress(progressData);
         }
       } catch {
         if (!cancelled) {
           setAvatarSrc("/default-avatar.png");
+          setProgress(defaultProgress);
         }
       }
     }
 
-    void loadSession();
+    void loadPageData();
 
     return () => {
       cancelled = true;
@@ -201,6 +251,16 @@ export default function AiGuidedExpressionStepOne() {
   function openStepTwo() {
     router.push("/ai-guided-expression/step-2");
   }
+
+  const challengeProgressStyle = {
+    "--ai-guided-challenge-percent": `${progress.challenge.percent}%`,
+  } as CSSProperties;
+  const ringOffset =
+    ringCircumference -
+    (ringCircumference * Math.min(progress.challenge.percent, 100)) / 100;
+  const ringStyle = {
+    "--ai-guided-ring-offset": `${ringOffset}`,
+  } as CSSProperties;
 
   return (
     <main className="sf-ai-guided-step-one-page">
@@ -287,17 +347,21 @@ export default function AiGuidedExpressionStepOne() {
               </span>
               <span>
                 <span>连续练习</span>
-                <strong>5 天</strong>
+                <strong>{progress.streakDays} 天</strong>
               </span>
             </div>
 
-            <div className="sf-ai-guided-progress" aria-label="今日练习 3/10">
+            <div
+              className="sf-ai-guided-progress"
+              aria-label={`今日练习 ${progress.todayCompleted}/${progress.dailyGoal}`}
+              style={ringStyle}
+            >
               <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
                 <circle cx="60" cy="60" r="48" />
                 <circle cx="60" cy="60" r="48" />
               </svg>
               <strong>
-                3<span>/10</span>
+                {progress.todayCompleted}<span>/{progress.dailyGoal}</span>
               </strong>
               <small>今日练习</small>
             </div>
@@ -308,7 +372,7 @@ export default function AiGuidedExpressionStepOne() {
               </span>
               <span>
                 <span>表达提升</span>
-                <strong>Lv.2</strong>
+                <strong>Lv.{progress.level}</strong>
               </span>
             </div>
           </section>
@@ -319,14 +383,18 @@ export default function AiGuidedExpressionStepOne() {
             </h2>
 
             <div className="sf-ai-guided-step-list">
-              {guidedSteps.map((item) => {
-                const isActive = item.tone === "active";
-                const isLocked = item.tone === "locked";
+              {guidedStepCopy.map((item) => {
+                const stepProgress = progress.steps[item.id];
+                const status = stepProgress?.status || "locked";
+                const tone = progressTone(status);
+                const canStartPractice =
+                  status === "active" &&
+                  (item.id === "native" || item.id === "english");
 
                 return (
                   <div
                     key={item.step}
-                    className={`sf-ai-guided-step-card sf-ai-guided-step-card-${item.tone}`}
+                    className={`sf-ai-guided-step-card sf-ai-guided-step-card-${tone}`}
                   >
                     <span className="sf-ai-guided-step-number">{item.step}</span>
                     <span aria-hidden="true" className="sf-ai-guided-step-icon">
@@ -336,20 +404,20 @@ export default function AiGuidedExpressionStepOne() {
                       <strong>{item.title}</strong>
                       <span>{item.description}</span>
                     </span>
-                    {isActive ? (
+                    {canStartPractice ? (
                       <button
                         type="button"
                         onClick={openStepTwo}
                         className="sf-ai-guided-step-action"
-                        aria-label="开始第二步练习"
+                        aria-label={`开始${item.title}`}
                       >
-                        <span>{item.state}</span>
+                        <span>{stepProgress.label}</span>
                         <ChevronGlyph />
                       </button>
                     ) : (
                       <span className="sf-ai-guided-step-state">
-                        {isLocked ? <LockGlyph /> : <CheckGlyph />}
-                        <span>{item.state}</span>
+                        <StateIcon status={status} />
+                        <span>{stepProgress?.label || "待解锁"}</span>
                       </span>
                     )}
                   </div>
@@ -364,11 +432,17 @@ export default function AiGuidedExpressionStepOne() {
             </span>
             <span className="sf-ai-guided-challenge-copy">
               <strong>今日挑战</strong>
-              <span>完成 10 句表达练习，解锁专属勋章！</span>
+              <span>完成 {progress.challenge.goal} 句表达练习，解锁专属勋章！</span>
             </span>
-            <span className="sf-ai-guided-challenge-progress" aria-label="3/10">
+            <span
+              className="sf-ai-guided-challenge-progress"
+              aria-label={`${progress.challenge.completed}/${progress.challenge.goal}`}
+              style={challengeProgressStyle}
+            >
               <span />
-              <strong>3/10</strong>
+              <strong>
+                {progress.challenge.completed}/{progress.challenge.goal}
+              </strong>
             </span>
           </section>
 
@@ -376,7 +450,7 @@ export default function AiGuidedExpressionStepOne() {
             <span aria-hidden="true" className="sf-ai-guided-record-wave sf-ai-guided-record-wave-left" />
             <button
               type="button"
-              aria-label="开始AI引导表达第二页录音"
+              aria-label="开始AI引导表达练习"
               onClick={openStepTwo}
               className="sf-ai-guided-record-button"
             >

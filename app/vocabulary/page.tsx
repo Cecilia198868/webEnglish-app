@@ -13,6 +13,7 @@ import {
   recordLearnedExpression,
 } from "@/lib/freeExpressionLearningLimit";
 import {
+  applyExpressionStudyAction,
   deleteVocabularyWordFromCloud,
   generateVocabularyDefinition,
   hasUsableMeaning,
@@ -101,6 +102,78 @@ function getExpressionNativeMeaning(word: VocabularyWord) {
   }
 
   return EXPRESSION_MEANING_FALLBACKS[word.word.toLowerCase()] || "释义待补充";
+}
+
+function getDateKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function getExpressionStatusLabel(status: VocabularyWord["status"]) {
+  if (status === "mastered") return "已掌握";
+  if (status === "familiar") return "熟悉中";
+  if (status === "learning") return "学习中";
+  return "新表达";
+}
+
+function getExpressionStatusTone(status: VocabularyWord["status"]) {
+  if (status === "mastered") return "mastered";
+  if (status === "familiar") return "familiar";
+  if (status === "learning") return "learning";
+  return "new";
+}
+
+function getReviewLabel(nextReviewAt: string | null, todayKey = getDateKey()) {
+  if (!nextReviewAt) return "暂无";
+  if (nextReviewAt <= todayKey) return "今天";
+
+  const [year, month, day] = nextReviewAt.split("-").map(Number);
+  const reviewDate = new Date(year, month - 1, day);
+  const today = new Date(`${todayKey}T00:00:00`);
+  const dayDiff = Math.round(
+    (reviewDate.getTime() - today.getTime()) / (24 * 60 * 60 * 1000)
+  );
+
+  if (dayDiff === 1) return "明天";
+  if (dayDiff > 1 && dayDiff <= 7) return `${dayDiff}天后`;
+
+  return `${month}/${day}`;
+}
+
+function formatStatPercent(count: number, total: number) {
+  if (!total) return "0%";
+
+  return `${Math.round((count / total) * 1000) / 10}%`;
+}
+
+function getVocabularyUpdatePayload(
+  word: VocabularyWord
+): Partial<Omit<VocabularyWord, "word" | "createdAt">> {
+  return {
+    correctCount: word.correctCount,
+    example: word.example,
+    exampleZh: word.exampleZh,
+    firstStudiedAt: word.firstStudiedAt,
+    id: word.id,
+    lastStudiedAt: word.lastStudiedAt,
+    manuallyMastered: word.manuallyMastered,
+    masteredCount: word.masteredCount,
+    meaning: word.meaning,
+    meaningZh: word.meaningZh,
+    nextReviewAt: word.nextReviewAt,
+    partOfSpeech: word.partOfSpeech,
+    playCount: word.playCount,
+    shadowCount: word.shadowCount,
+    sourceSentence: word.sourceSentence,
+    status: word.status,
+    streakDays: word.streakDays,
+    studiedDates: word.studiedDates,
+    text: word.text,
+    wrongCount: word.wrongCount,
+  };
 }
 
 function cancelSpeech() {
@@ -605,6 +678,7 @@ export default function VocabularyPage() {
   const [hasLoadedAccountSubscription, setHasLoadedAccountSubscription] =
     useState(false);
   const [hasLoadedVocabulary, setHasLoadedVocabulary] = useState(false);
+  const [hasSyncedVocabulary, setHasSyncedVocabulary] = useState(false);
   const [loadingExampleTranslationFor, setLoadingExampleTranslationFor] =
     useState("");
   const [expressionLearningUsageCount, setExpressionLearningUsageCount] =
@@ -655,9 +729,11 @@ export default function VocabularyPage() {
     let cancelled = false;
 
     async function syncVocabulary() {
+      setHasSyncedVocabulary(false);
       const syncedWords = await syncVocabularyWordsWithCloud();
       if (!cancelled) {
         setWords([...syncedWords].reverse());
+        setHasSyncedVocabulary(true);
       }
     }
 
@@ -764,6 +840,9 @@ export default function VocabularyPage() {
   }, []);
 
   const displayedExpression = words[currentIndex] || null;
+  const displayedExpressionKey = displayedExpression?.word || "";
+  const hasFinishedLoadingVocabulary =
+    hasLoadedVocabulary && hasSyncedVocabulary;
   const displayedExpressionText = displayedExpression?.word || "";
   const displayedExampleText = displayedExpression
     ? getExpressionExample(displayedExpression)
@@ -784,14 +863,34 @@ export default function VocabularyPage() {
     Boolean(displayedExpression) &&
     loadingExampleTranslationFor === displayedExpression.word &&
     !displayedExampleZhText;
+  const todayKey = useMemo(() => getDateKey(), []);
   const totalExpressionCount = words.length;
   const currentExpressionNumber = displayedExpression ? currentIndex + 1 : 0;
-  const masteredExpressionCount = words.filter(
-    (word) => word.masteredCount > 0 || word.correctCount > 0
-  ).length;
-  const progressPercent = totalExpressionCount
-    ? Math.round((masteredExpressionCount / totalExpressionCount) * 100)
-    : 0;
+  const learningStats = useMemo(() => {
+    const masteredCount = words.filter(
+      (word) => word.status === "mastered"
+    ).length;
+    const learningCount = words.filter(
+      (word) => word.status === "learning" || word.status === "familiar"
+    ).length;
+    const reviewCount = words.filter(
+      (word) => word.nextReviewAt !== null && word.nextReviewAt <= todayKey
+    ).length;
+    const progress = totalExpressionCount
+      ? Math.round((masteredCount / totalExpressionCount) * 100)
+      : 0;
+
+    return {
+      learningCount,
+      masteredCount,
+      progress,
+      reviewCount,
+    };
+  }, [todayKey, totalExpressionCount, words]);
+  const masteredExpressionCount = learningStats.masteredCount;
+  const learningExpressionCount = learningStats.learningCount;
+  const reviewExpressionCount = learningStats.reviewCount;
+  const progressPercent = learningStats.progress;
   const progressStyle = {
     "--sf-vocabulary-progress": `${Math.max(progressPercent, displayedExpression ? 3 : 0)}%`,
   } as CSSProperties;
@@ -805,10 +904,17 @@ export default function VocabularyPage() {
     0,
     FREE_EXPRESSION_LEARNING_LIMIT - expressionLearningUsageCount
   );
-  const learningExpressionCount = words.filter(
-    (word) => word.masteredCount <= 0 && word.correctCount <= 0
-  ).length;
   const recentlyAddedCount = words.filter(isRecentlyAdded).length;
+  const displayedStatusLabel = displayedExpression
+    ? getExpressionStatusLabel(displayedExpression.status)
+    : "";
+  const displayedStatusTone = displayedExpression
+    ? getExpressionStatusTone(displayedExpression.status)
+    : "new";
+  const displayedStudyDays = displayedExpression?.studiedDates.length || 0;
+  const displayedReviewLabel = displayedExpression
+    ? getReviewLabel(displayedExpression.nextReviewAt, todayKey)
+    : "暂无";
   const normalizedLibrarySearchQuery = librarySearchQuery.trim().toLowerCase();
   const sortedLibraryWords = useMemo(() => {
     const nextWords = [...words];
@@ -1002,6 +1108,56 @@ export default function VocabularyPage() {
     }
   }
 
+  const persistExpressionProgress = useCallback((expression: VocabularyWord) => {
+    const savedExpression =
+      updateVocabularyWord(
+        expression.word,
+        getVocabularyUpdatePayload(expression)
+      ) || expression;
+
+    setWords((currentWords) =>
+      currentWords.map((word) =>
+        word.word === savedExpression.word ? savedExpression : word
+      )
+    );
+  }, []);
+
+  const recordCurrentExpressionAction = useCallback(
+    (action: "view" | "play" | "shadow" | "mastered") => {
+      if (!displayedExpression) return;
+
+      persistExpressionProgress(
+        applyExpressionStudyAction(displayedExpression, action)
+      );
+    },
+    [displayedExpression, persistExpressionProgress]
+  );
+
+  useEffect(() => {
+    if (!displayedExpressionKey) return;
+
+    const storedExpression = loadVocabularyWords().find(
+      (word) => word.word === displayedExpressionKey
+    );
+    if (!storedExpression) return;
+
+    const updatedExpression = applyExpressionStudyAction(
+      storedExpression,
+      "view"
+    );
+    const savedExpression =
+      updateVocabularyWord(
+        updatedExpression.word,
+        getVocabularyUpdatePayload(updatedExpression)
+      ) || updatedExpression;
+
+    setWords((currentWords) =>
+      currentWords.map((word) =>
+        word.word === savedExpression.word ? savedExpression : word
+      )
+    );
+  }, [displayedExpressionKey]);
+
   function speakText(text: string, rate = 1) {
     const normalizedText = text.trim();
     if (!normalizedText || typeof window === "undefined") return;
@@ -1013,8 +1169,18 @@ export default function VocabularyPage() {
     window.speechSynthesis.speak(utterance);
   }
 
-  function speakExpression(rate: number) {
+  function playCurrentExpressionText(text: string, rate = 1) {
+    speakText(text, rate);
+    recordCurrentExpressionAction("play");
+  }
+
+  function shadowCurrentExpression(rate: number) {
     speakText(speechText || displayedExpressionText, rate);
+    recordCurrentExpressionAction("shadow");
+  }
+
+  function markCurrentExpressionMastered() {
+    recordCurrentExpressionAction("mastered");
   }
 
   function removeExpressionFromLibrary(
@@ -1318,9 +1484,13 @@ export default function VocabularyPage() {
               })
             ) : (
               <div className="sf-expression-library-empty">
-                <h2>{hasLoadedVocabulary ? "没有找到匹配表达" : "正在加载表达库"}</h2>
+                <h2>
+                  {hasFinishedLoadingVocabulary
+                    ? "没有找到匹配表达"
+                    : "正在加载表达库"}
+                </h2>
                 <p>
-                  {hasLoadedVocabulary
+                  {hasFinishedLoadingVocabulary
                     ? "换一个关键词试试，中文或英文都可以搜索。"
                     : "正在读取本地和云端收藏数据。"}
                 </p>
@@ -1457,23 +1627,67 @@ export default function VocabularyPage() {
         <section className="sf-vocabulary-learning-title">
           <SparkleIcon />
           <h1>学习新表达</h1>
-          <p>
-            已掌握 <strong>{masteredExpressionCount}</strong> 个表达
-          </p>
+          <p>科学学习 · 多练多说 · 自然掌握</p>
         </section>
 
         <section
-          className="sf-vocabulary-progress-row"
+          className="sf-vocabulary-progress-panel"
           style={progressStyle}
           aria-label="学习进度"
         >
-          <span>
-            第 {currentExpressionNumber} / {totalExpressionCount} 个
-          </span>
-          <div>
-            <i />
+          <div className="sf-vocabulary-progress-copy">
+            <h2>我的学习进度</h2>
+            <p>
+              总表达数 <strong>{totalExpressionCount}</strong> 个
+            </p>
+            <div className="sf-vocabulary-progress-bar" aria-hidden="true">
+              <i />
+            </div>
+            <div className="sf-vocabulary-progress-meta">
+              <span>
+                第 <strong>{currentExpressionNumber}</strong> / {totalExpressionCount} 个
+              </span>
+              <b>{progressPercent}%</b>
+            </div>
           </div>
-          <strong>{progressPercent}%</strong>
+
+          <div className="sf-vocabulary-stat-grid">
+            <article className="sf-vocabulary-stat-card is-mastered">
+              <span>
+                <BookmarkStatIcon />
+              </span>
+              <p>已掌握</p>
+              <strong>{masteredExpressionCount}</strong>
+              <em>{formatStatPercent(masteredExpressionCount, totalExpressionCount)}</em>
+            </article>
+            <article className="sf-vocabulary-stat-card is-learning">
+              <span>
+                <BookStatIcon />
+              </span>
+              <p>学习中</p>
+              <strong>{learningExpressionCount}</strong>
+              <em>{formatStatPercent(learningExpressionCount, totalExpressionCount)}</em>
+            </article>
+            <article className="sf-vocabulary-stat-card is-review">
+              <span>
+                <RecentStatIcon />
+              </span>
+              <p>待复习</p>
+              <strong>{reviewExpressionCount}</strong>
+              <em>{formatStatPercent(reviewExpressionCount, totalExpressionCount)}</em>
+            </article>
+          </div>
+
+          <p className="sf-vocabulary-progress-note">
+            达到掌握标准的表达会自动归入「已掌握」
+            <button
+              type="button"
+              disabled={!displayedExpression || displayedExpression.status === "mastered"}
+              onClick={markCurrentExpressionMastered}
+            >
+              {displayedExpression?.status === "mastered" ? "已达标" : "我已掌握"}
+            </button>
+          </p>
         </section>
 
         {displayedExpression ? (
@@ -1482,7 +1696,7 @@ export default function VocabularyPage() {
               <div className="sf-vocabulary-card-copy">
                 <span className="sf-vocabulary-saved-pill">
                   <StarIcon />
-                  已收藏
+                  {displayedStatusLabel}
                 </span>
                 <div className="sf-vocabulary-word-line">
                   <h2>{displayedExpressionText}</h2>
@@ -1490,7 +1704,7 @@ export default function VocabularyPage() {
                     type="button"
                     aria-label={`播放表达 ${displayedExpressionText}`}
                     className="sf-vocabulary-audio-button"
-                    onClick={() => speakText(displayedExpressionText)}
+                    onClick={() => playCurrentExpressionText(displayedExpressionText)}
                   >
                     <SpeakerIcon />
                   </button>
@@ -1504,6 +1718,28 @@ export default function VocabularyPage() {
               </div>
               <div className="sf-vocabulary-card-art">
                 <WordIllustration />
+              </div>
+              <div className="sf-vocabulary-card-stats">
+                <span>
+                  <SpeakerIcon />
+                  <b>跟读次数</b>
+                  <strong>{displayedExpression.shadowCount} 次</strong>
+                </span>
+                <span>
+                  <BookStatIcon />
+                  <b>学习天数</b>
+                  <strong>{displayedStudyDays} 天</strong>
+                </span>
+                <span>
+                  <RecentStatIcon />
+                  <b>连续天数</b>
+                  <strong>{displayedExpression.streakDays} 天</strong>
+                </span>
+                <span className={`is-${displayedStatusTone}`}>
+                  <BookmarkStatIcon />
+                  <b>掌握标准</b>
+                  <strong>{displayedExpression.status === "mastered" ? "已达标" : "未达标"}</strong>
+                </span>
               </div>
             </section>
 
@@ -1529,7 +1765,9 @@ export default function VocabularyPage() {
                     aria-label="播放例句"
                     className="sf-vocabulary-audio-button"
                     onClick={() =>
-                      speakText(displayedExampleText || displayedExpressionText)
+                      playCurrentExpressionText(
+                        displayedExampleText || displayedExpressionText
+                      )
                     }
                     disabled={!displayedExampleText && !displayedExpressionText}
                   >
@@ -1551,13 +1789,39 @@ export default function VocabularyPage() {
               <div className="sf-vocabulary-card-art">
                 <ExampleIllustration />
               </div>
+              <div className="sf-vocabulary-card-stats">
+                <span>
+                  <SpeakerIcon />
+                  <b>跟读次数</b>
+                  <strong>{displayedExpression.shadowCount} 次</strong>
+                </span>
+                <span>
+                  <BookStatIcon />
+                  <b>学习天数</b>
+                  <strong>{displayedStudyDays} 天</strong>
+                </span>
+                <span>
+                  <RecentStatIcon />
+                  <b>连续天数</b>
+                  <strong>{displayedExpression.streakDays} 天</strong>
+                </span>
+                <span className="is-review">
+                  <RecentStatIcon />
+                  <b>下次复习</b>
+                  <strong>{displayedReviewLabel}</strong>
+                </span>
+              </div>
             </section>
           </>
         ) : (
           <section className="sf-vocabulary-empty-card">
-            <h2>{hasLoadedVocabulary ? "还没有收藏的新表达" : "正在加载新表达"}</h2>
+            <h2>
+              {hasFinishedLoadingVocabulary
+                ? "还没有收藏的新表达"
+                : "正在加载新表达"}
+            </h2>
             <p>
-              {hasLoadedVocabulary
+              {hasFinishedLoadingVocabulary
                 ? "在练习页点击英文词汇后，会自动保存到这里。"
                 : "正在读取你的表达库和云端同步数据。"}
             </p>
@@ -1581,7 +1845,7 @@ export default function VocabularyPage() {
             aria-label="播放跟读"
             className="sf-vocabulary-follow-action"
             disabled={!speechText}
-            onClick={() => speakExpression(1)}
+            onClick={() => shadowCurrentExpression(1)}
           >
             <PlayIcon />
             <span>跟读</span>
@@ -1592,7 +1856,9 @@ export default function VocabularyPage() {
             aria-label="慢速播放"
             className="sf-vocabulary-slow-action"
             disabled={!speechText}
-            onClick={() => speakExpression(0.5)}
+            onClick={() =>
+              playCurrentExpressionText(speechText || displayedExpressionText, 0.5)
+            }
           >
             <strong>0.5x</strong>
             <span>慢速</span>
@@ -1666,7 +1932,9 @@ export default function VocabularyPage() {
                 ))
               ) : (
                 <p className="sf-vocabulary-library-empty">
-                  还没有收藏的新表达。
+                  {hasFinishedLoadingVocabulary
+                    ? "还没有收藏的新表达。"
+                    : "正在读取你的表达库和云端同步数据。"}
                 </p>
               )}
             </div>

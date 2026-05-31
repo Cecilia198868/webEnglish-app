@@ -1,11 +1,29 @@
+export type ExpressionLearningStatus =
+  | "new"
+  | "learning"
+  | "familiar"
+  | "mastered";
+
 export type VocabularyWord = {
+  id: string;
+  text: string;
   word: string;
+  meaningZh: string;
   meaning: string;
   partOfSpeech: string;
   example: string;
   exampleZh: string;
   createdAt: string;
   sourceSentence?: string;
+  status: ExpressionLearningStatus;
+  playCount: number;
+  shadowCount: number;
+  firstStudiedAt: string | null;
+  lastStudiedAt: string | null;
+  studiedDates: string[];
+  streakDays: number;
+  nextReviewAt: string | null;
+  manuallyMastered: boolean;
   masteredCount: number;
   wrongCount: number;
   correctCount: number;
@@ -17,6 +35,8 @@ export const VOCABULARY_WORDS_KEY = "vocabulary_words";
 export const VOCABULARY_GROUP_MASTERY_KEY = "vocabulary_group_mastery";
 export const VOCABULARY_GROUP_SIZE = 30;
 let vocabularyCloudSyncTimer: number | null = null;
+let vocabularyCloudSyncInFlight: Promise<VocabularyWord[]> | null = null;
+let vocabularyCloudSyncRequested = false;
 export const PLACEHOLDER_MEANING = "释义待补充";
 
 const GENERIC_MEANINGS = new Set([
@@ -190,21 +210,310 @@ export function normalizeVocabularyDefinition(
   } satisfies VocabularyDefinition;
 }
 
+function isExpressionLearningStatus(
+  status: unknown
+): status is ExpressionLearningStatus {
+  return (
+    status === "new" ||
+    status === "learning" ||
+    status === "familiar" ||
+    status === "mastered"
+  );
+}
+
+function getDateKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function addDaysToDateKey(dateKey: string, days: number) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() + days);
+  return getDateKey(date);
+}
+
+function isDateKey(value: unknown): value is string {
+  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function isIsoDateLike(value: unknown): value is string {
+  return typeof value === "string" && Number.isFinite(new Date(value).getTime());
+}
+
+function normalizeStudiedDates(dates: unknown) {
+  if (!Array.isArray(dates)) return [] as string[];
+
+  return Array.from(
+    new Set(
+      dates.filter(
+        (date): date is string => isDateKey(date)
+      )
+    )
+  ).sort();
+}
+
+export function calculateExpressionStreakDays(
+  studiedDates: string[],
+  todayKey = getDateKey()
+) {
+  const studiedDateSet = new Set(normalizeStudiedDates(studiedDates));
+  let cursor = todayKey;
+
+  if (!studiedDateSet.has(cursor)) {
+    const yesterdayKey = addDaysToDateKey(todayKey, -1);
+    if (!studiedDateSet.has(yesterdayKey)) return 0;
+    cursor = yesterdayKey;
+  }
+
+  let streakDays = 0;
+  while (studiedDateSet.has(cursor)) {
+    streakDays += 1;
+    cursor = addDaysToDateKey(cursor, -1);
+  }
+
+  return streakDays;
+}
+
+function getNextReviewDate(status: ExpressionLearningStatus, todayKey = getDateKey()) {
+  if (status === "new") return null;
+  if (status === "learning") return addDaysToDateKey(todayKey, 1);
+  if (status === "familiar") return addDaysToDateKey(todayKey, 3);
+  return addDaysToDateKey(todayKey, 7);
+}
+
+type ExpressionStudyProgressInput = Partial<
+  Pick<
+    VocabularyWord,
+    | "correctCount"
+    | "firstStudiedAt"
+    | "lastStudiedAt"
+    | "manuallyMastered"
+    | "masteredCount"
+    | "nextReviewAt"
+    | "playCount"
+    | "shadowCount"
+    | "status"
+    | "streakDays"
+    | "studiedDates"
+  >
+>;
+
+function hasExpressionStudyRecord(expression: ExpressionStudyProgressInput) {
+  return Boolean(
+    expression.firstStudiedAt ||
+      expression.lastStudiedAt ||
+      expression.manuallyMastered ||
+      (expression.playCount || 0) > 0 ||
+      (expression.shadowCount || 0) > 0 ||
+      (expression.masteredCount || 0) > 0 ||
+      (expression.correctCount || 0) > 0 ||
+      normalizeStudiedDates(expression.studiedDates).length > 0
+  );
+}
+
+export function updateExpressionStatus(
+  expression: ExpressionStudyProgressInput
+): ExpressionLearningStatus {
+  const studiedDates = normalizeStudiedDates(expression.studiedDates);
+  const playCount = Math.max(0, Math.floor(expression.playCount || 0));
+  const shadowCount = Math.max(0, Math.floor(expression.shadowCount || 0));
+
+  if (
+    expression.manuallyMastered ||
+    (expression.masteredCount || 0) > 0 ||
+    (expression.correctCount || 0) > 0 ||
+    (shadowCount >= 5 && studiedDates.length >= 3)
+  ) {
+    return "mastered";
+  }
+
+  if (
+    shadowCount >= 3 ||
+    playCount >= 3 ||
+    studiedDates.length >= 2
+  ) {
+    return "familiar";
+  }
+
+  return hasExpressionStudyRecord(expression) ? "learning" : "new";
+}
+
+export function normalizeExpressionStudyProgress(
+  expression: ExpressionStudyProgressInput
+) {
+  const studiedDates = normalizeStudiedDates(expression.studiedDates);
+  const playCount = Math.max(0, Math.floor(expression.playCount || 0));
+  const shadowCount = Math.max(0, Math.floor(expression.shadowCount || 0));
+  const manuallyMastered = Boolean(expression.manuallyMastered);
+  const savedNextReviewAt = isDateKey(expression.nextReviewAt)
+    ? expression.nextReviewAt
+    : null;
+  const status = updateExpressionStatus({
+    ...expression,
+    manuallyMastered,
+    playCount,
+    shadowCount,
+    studiedDates,
+  });
+
+  return {
+    firstStudiedAt: expression.firstStudiedAt || null,
+    lastStudiedAt: expression.lastStudiedAt || null,
+    manuallyMastered,
+    nextReviewAt:
+      status === "new"
+        ? null
+        : savedNextReviewAt || getNextReviewDate(status),
+    playCount,
+    shadowCount,
+    status,
+    streakDays: calculateExpressionStreakDays(studiedDates),
+    studiedDates,
+  } satisfies Pick<
+    VocabularyWord,
+    | "firstStudiedAt"
+    | "lastStudiedAt"
+    | "manuallyMastered"
+    | "nextReviewAt"
+    | "playCount"
+    | "shadowCount"
+    | "status"
+    | "streakDays"
+    | "studiedDates"
+  >;
+}
+
+export function applyExpressionStudyAction(
+  expression: VocabularyWord,
+  action: "view" | "play" | "shadow" | "mastered"
+) {
+  const now = new Date().toISOString();
+  const todayKey = getDateKey();
+  const studiedDates = normalizeStudiedDates([
+    ...expression.studiedDates,
+    todayKey,
+  ]);
+  const nextExpression: VocabularyWord = {
+    ...expression,
+    firstStudiedAt: expression.firstStudiedAt || now,
+    lastStudiedAt: now,
+    manuallyMastered:
+      action === "mastered" ? true : expression.manuallyMastered,
+    masteredCount:
+      action === "mastered"
+        ? Math.max(1, expression.masteredCount)
+        : expression.masteredCount,
+    playCount:
+      action === "play" ? expression.playCount + 1 : expression.playCount,
+    shadowCount:
+      action === "shadow"
+        ? expression.shadowCount + 1
+        : expression.shadowCount,
+    studiedDates,
+  };
+
+  const normalizedProgress = normalizeExpressionStudyProgress(nextExpression);
+
+  return {
+    ...nextExpression,
+    ...normalizedProgress,
+    nextReviewAt: getNextReviewDate(normalizedProgress.status),
+  };
+}
+
+function getEarliestDateValue(...values: Array<string | null | undefined>) {
+  const validValues = values.filter(isIsoDateLike);
+  if (!validValues.length) return null;
+
+  return validValues.reduce((earliest, value) =>
+    new Date(value).getTime() < new Date(earliest).getTime()
+      ? value
+      : earliest
+  );
+}
+
+function getLatestDateValue(...values: Array<string | null | undefined>) {
+  const validValues = values.filter(isIsoDateLike);
+  if (!validValues.length) return null;
+
+  return validValues.reduce((latest, value) =>
+    new Date(value).getTime() > new Date(latest).getTime() ? value : latest
+  );
+}
+
+function getEarliestReviewDate(...values: Array<string | null | undefined>) {
+  const validValues = values.filter(isDateKey);
+  if (!validValues.length) return null;
+
+  return validValues.reduce((earliest, value) =>
+    value < earliest ? value : earliest
+  );
+}
+
 function normalizeStoredVocabularyWord(
   item: StoredVocabularyWord | null
 ): VocabularyWord | null {
   const normalizedWord =
-    typeof item?.word === "string" ? normalizeVocabularyWord(item.word) : "";
+    typeof item?.word === "string"
+      ? normalizeVocabularyWord(item.word)
+      : typeof item?.text === "string"
+        ? normalizeVocabularyWord(item.text)
+        : "";
 
   if (!normalizedWord) return null;
 
   const normalizedDefinition = normalizeVocabularyDefinition(item);
+  const firstStudiedAt = item?.firstStudiedAt;
+  const lastStudiedAt = item?.lastStudiedAt;
+  const nextReviewAt = item?.nextReviewAt;
+  const learningBase = {
+    correctCount: typeof item?.correctCount === "number" ? item.correctCount : 0,
+    firstStudiedAt: isIsoDateLike(firstStudiedAt) ? firstStudiedAt : null,
+    lastStudiedAt: isIsoDateLike(lastStudiedAt) ? lastStudiedAt : null,
+    manuallyMastered:
+      typeof item?.manuallyMastered === "boolean"
+        ? item.manuallyMastered
+        : false,
+    masteredCount:
+      typeof item?.masteredCount === "number" ? item.masteredCount : 0,
+    nextReviewAt: isDateKey(nextReviewAt) ? nextReviewAt : null,
+    playCount: typeof item?.playCount === "number" ? item.playCount : 0,
+    shadowCount: typeof item?.shadowCount === "number" ? item.shadowCount : 0,
+    status: isExpressionLearningStatus(item?.status)
+      ? item.status
+      : undefined,
+    studiedDates: Array.isArray(item?.studiedDates)
+      ? item.studiedDates.filter(
+          (date): date is string => isDateKey(date)
+        )
+      : [],
+  };
+  const normalizedMeaning = hasUsableMeaning(normalizedDefinition.meaning)
+    ? normalizedDefinition.meaning
+    : getMeaningForWord(normalizedWord);
+  const studyProgress = normalizeExpressionStudyProgress({
+    ...learningBase,
+  });
 
   return {
+    id:
+      typeof item?.id === "string" && item.id.trim()
+        ? item.id.trim()
+        : normalizedWord,
+    text:
+      typeof item?.text === "string" && item.text.trim()
+        ? item.text.trim()
+        : normalizedWord,
     word: normalizedWord,
-    meaning: hasUsableMeaning(normalizedDefinition.meaning)
-      ? normalizedDefinition.meaning
-      : getMeaningForWord(normalizedWord),
+    meaning: normalizedMeaning,
+    meaningZh:
+      typeof item?.meaningZh === "string" && item.meaningZh.trim()
+        ? item.meaningZh.trim()
+        : normalizedMeaning,
     partOfSpeech: normalizedDefinition.partOfSpeech,
     example: normalizedDefinition.example,
     exampleZh: normalizedDefinition.exampleZh,
@@ -216,6 +525,7 @@ function normalizeStoredVocabularyWord(
       typeof item?.sourceSentence === "string" && item.sourceSentence.trim()
         ? item.sourceSentence.trim()
         : undefined,
+    ...studyProgress,
     masteredCount:
       typeof item?.masteredCount === "number" ? item.masteredCount : 0,
     wrongCount: typeof item?.wrongCount === "number" ? item.wrongCount : 0,
@@ -263,13 +573,24 @@ function mergeVocabularyWord(
   const incomingMeaningUsable = hasUsableMeaning(incomingWord.meaning);
   const currentCreatedTime = getValidTime(currentWord.createdAt);
   const incomingCreatedTime = getValidTime(incomingWord.createdAt);
-
-  return {
+  const meaning =
+    incomingMeaningUsable && !currentMeaningUsable
+      ? incomingWord.meaning
+      : currentWord.meaning || incomingWord.meaning;
+  const meaningZh =
+    hasUsableMeaning(incomingWord.meaningZh) && !hasUsableMeaning(currentWord.meaningZh)
+      ? incomingWord.meaningZh
+      : currentWord.meaningZh || incomingWord.meaningZh || meaning;
+  const studiedDates = normalizeStudiedDates([
+    ...currentWord.studiedDates,
+    ...incomingWord.studiedDates,
+  ]);
+  const mergedWord: VocabularyWord = {
+    id: currentWord.id || incomingWord.id || currentWord.word,
+    text: currentWord.text || incomingWord.text || currentWord.word,
     word: currentWord.word,
-    meaning:
-      incomingMeaningUsable && !currentMeaningUsable
-        ? incomingWord.meaning
-        : currentWord.meaning || incomingWord.meaning,
+    meaning,
+    meaningZh,
     partOfSpeech: currentWord.partOfSpeech || incomingWord.partOfSpeech,
     example: currentWord.example || incomingWord.example,
     exampleZh: currentWord.exampleZh || incomingWord.exampleZh,
@@ -281,6 +602,30 @@ function mergeVocabularyWord(
     masteredCount: Math.max(currentWord.masteredCount, incomingWord.masteredCount),
     wrongCount: Math.max(currentWord.wrongCount, incomingWord.wrongCount),
     correctCount: Math.max(currentWord.correctCount, incomingWord.correctCount),
+    firstStudiedAt: getEarliestDateValue(
+      currentWord.firstStudiedAt,
+      incomingWord.firstStudiedAt
+    ),
+    lastStudiedAt: getLatestDateValue(
+      currentWord.lastStudiedAt,
+      incomingWord.lastStudiedAt
+    ),
+    manuallyMastered:
+      currentWord.manuallyMastered || incomingWord.manuallyMastered,
+    nextReviewAt: getEarliestReviewDate(
+      currentWord.nextReviewAt,
+      incomingWord.nextReviewAt
+    ),
+    playCount: Math.max(currentWord.playCount, incomingWord.playCount),
+    shadowCount: Math.max(currentWord.shadowCount, incomingWord.shadowCount),
+    status: "new",
+    streakDays: 0,
+    studiedDates,
+  };
+
+  return {
+    ...mergedWord,
+    ...normalizeExpressionStudyProgress(mergedWord),
   };
 }
 
@@ -312,14 +657,25 @@ export function mergeVocabularyWords(
 
 export function saveVocabularyWords(
   words: VocabularyWord[],
-  options: { sync?: boolean } = {}
+  options: { sync?: boolean | "immediate" } = {}
 ) {
   if (!canUseStorage()) return;
   localStorage.setItem(VOCABULARY_WORDS_KEY, JSON.stringify(words));
 
-  if (options.sync !== false) {
+  if (options.sync === false) return;
+
+  if (options.sync === "immediate") {
+    if (vocabularyCloudSyncTimer !== null) {
+      window.clearTimeout(vocabularyCloudSyncTimer);
+      vocabularyCloudSyncTimer = null;
+    }
+
+    void syncVocabularyWordsWithCloud();
     scheduleVocabularyCloudSync();
+    return;
   }
+
+  scheduleVocabularyCloudSync();
 }
 
 function parseCloudVocabularyResponse(raw: string) {
@@ -331,12 +687,15 @@ function parseCloudVocabularyResponse(raw: string) {
 
 async function requestCloudVocabulary(
   method: "GET" | "POST",
-  words?: VocabularyWord[]
+  words?: VocabularyWord[],
+  options: { keepalive?: boolean } = {}
 ) {
   if (!canUseStorage()) return null;
 
   const response = await fetch(`/api/vocabulary/sync?t=${Date.now()}`, {
     method,
+    cache: "no-store",
+    credentials: "same-origin",
     headers:
       method === "POST"
         ? {
@@ -344,6 +703,7 @@ async function requestCloudVocabulary(
           }
         : undefined,
     body: method === "POST" ? JSON.stringify({ words: words || [] }) : undefined,
+    keepalive: method === "POST" ? options.keepalive : undefined,
   });
 
   if (response.status === 401) return null;
@@ -356,11 +716,13 @@ async function requestCloudVocabulary(
   return parseCloudVocabularyResponse(text);
 }
 
-export async function syncVocabularyWordsWithCloud() {
+async function syncVocabularyWordsWithCloudOnce(
+  options: { keepalive?: boolean } = {}
+) {
   const localWords = loadVocabularyWords();
 
   try {
-    const cloudWords = await requestCloudVocabulary("POST", localWords);
+    const cloudWords = await requestCloudVocabulary("POST", localWords, options);
     if (!cloudWords) return localWords;
 
     const mergedWords = mergeVocabularyWords(localWords, cloudWords);
@@ -368,6 +730,32 @@ export async function syncVocabularyWordsWithCloud() {
     return mergedWords;
   } catch {
     return localWords;
+  }
+}
+
+export async function syncVocabularyWordsWithCloud(
+  options: { keepalive?: boolean } = {}
+) {
+  if (vocabularyCloudSyncInFlight) {
+    vocabularyCloudSyncRequested = true;
+    return vocabularyCloudSyncInFlight;
+  }
+
+  vocabularyCloudSyncInFlight = (async () => {
+    let syncedWords = await syncVocabularyWordsWithCloudOnce(options);
+
+    while (vocabularyCloudSyncRequested) {
+      vocabularyCloudSyncRequested = false;
+      syncedWords = await syncVocabularyWordsWithCloudOnce(options);
+    }
+
+    return syncedWords;
+  })();
+
+  try {
+    return await vocabularyCloudSyncInFlight;
+  } finally {
+    vocabularyCloudSyncInFlight = null;
   }
 }
 
@@ -394,6 +782,8 @@ export async function deleteVocabularyWordFromCloud(word: string) {
     await fetch(
       `/api/vocabulary/sync?word=${encodeURIComponent(normalizedWord)}`,
       {
+        cache: "no-store",
+        credentials: "same-origin",
         method: "DELETE",
       }
     );
@@ -409,6 +799,17 @@ export function scheduleVocabularyCloudSync() {
     vocabularyCloudSyncTimer = null;
     void syncVocabularyWordsWithCloud();
   }, 800);
+}
+
+export function flushVocabularyCloudSync() {
+  if (!canUseStorage()) return Promise.resolve(loadVocabularyWords());
+
+  if (vocabularyCloudSyncTimer !== null) {
+    window.clearTimeout(vocabularyCloudSyncTimer);
+    vocabularyCloudSyncTimer = null;
+  }
+
+  return syncVocabularyWordsWithCloud({ keepalive: true });
 }
 
 export function addVocabularyWord(word: string, sourceSentence?: string) {
@@ -433,19 +834,31 @@ export function addVocabularyWord(word: string, sourceSentence?: string) {
   }
 
   const nextWord: VocabularyWord = {
+    id: normalizedWord,
+    text: normalizedWord,
     word: normalizedWord,
     meaning: getMeaningForWord(normalizedWord),
+    meaningZh: getMeaningForWord(normalizedWord),
     partOfSpeech: "",
     example: "",
     exampleZh: "",
     createdAt: new Date().toISOString(),
     sourceSentence: sourceSentence?.trim() || undefined,
+    firstStudiedAt: null,
+    lastStudiedAt: null,
+    manuallyMastered: false,
+    nextReviewAt: null,
+    playCount: 0,
+    shadowCount: 0,
+    status: "new",
+    streakDays: 0,
+    studiedDates: [],
     masteredCount: 0,
     wrongCount: 0,
     correctCount: 0,
   };
 
-  saveVocabularyWords([...currentWords, nextWord]);
+  saveVocabularyWords([...currentWords, nextWord], { sync: "immediate" });
 
   return {
     ok: true as const,
@@ -465,18 +878,28 @@ export function updateVocabularyWord(
   const nextWords = currentWords.map((item) => {
     if (item.word !== normalizedWord) return item;
     didUpdate = true;
-
-    return {
+    const mergedItem = {
       ...item,
       ...updates,
+      id: updates.id || item.id || item.word,
+      text: updates.text || item.text || item.word,
+      meaningZh:
+        updates.meaningZh ||
+        (typeof updates.meaning === "string" ? updates.meaning : item.meaningZh) ||
+        item.meaning,
       word: item.word,
       createdAt: item.createdAt,
+    };
+
+    return {
+      ...mergedItem,
+      ...normalizeExpressionStudyProgress(mergedItem),
     };
   });
 
   if (!didUpdate) return null;
 
-  saveVocabularyWords(nextWords);
+  saveVocabularyWords(nextWords, { sync: "immediate" });
   return nextWords.find((item) => item.word === normalizedWord) || null;
 }
 
@@ -488,9 +911,14 @@ export function recordVocabularyAnswer(word: string, isCorrect: boolean) {
     if (item.word !== normalizedWord) return item;
 
     if (isCorrect) {
-      return {
+      const nextItem = {
         ...item,
         correctCount: item.correctCount + 1,
+      };
+
+      return {
+        ...nextItem,
+        ...normalizeExpressionStudyProgress(nextItem),
       };
     }
 
@@ -512,10 +940,15 @@ export function recordWrongBookReview(word: string, isCorrect: boolean) {
     if (item.word !== normalizedWord) return item;
 
     if (isCorrect) {
-      return {
+      const nextItem = {
         ...item,
         correctCount: item.correctCount + 1,
         wrongCount: Math.max(0, item.wrongCount - 1),
+      };
+
+      return {
+        ...nextItem,
+        ...normalizeExpressionStudyProgress(nextItem),
       };
     }
 
@@ -559,10 +992,13 @@ export function incrementVocabularyWordsMasteredCount(words: VocabularyWord[]) {
 
   const nextWords = currentWords.map((item) =>
     targetWords.has(item.word)
-      ? {
-          ...item,
-          masteredCount: item.masteredCount + 1,
-        }
+      ? applyExpressionStudyAction(
+          {
+            ...item,
+            masteredCount: item.masteredCount + 1,
+          },
+          "mastered"
+        )
       : item
   );
 

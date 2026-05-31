@@ -3,8 +3,7 @@
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
-import styles from "./ClassicScenesMenuPage.module.css";
+import styles from "./FinanceGovernmentMenuPage.module.css";
 
 type SessionResponse = {
   user?: {
@@ -32,6 +31,7 @@ type FinanceCard = {
   description: string;
   href: string;
   icon: FinanceCardIcon;
+  iconBackground: string;
   id: string;
   title: string;
 };
@@ -40,11 +40,12 @@ const financeCards: FinanceCard[] = [
   {
     id: "bank-finance",
     title: "银行与金融交易",
-    description: "开户、存款、取款、转账、等常用表达",
+    description: "开户、存款、取款、转账、理财等常用表达",
     count: 20,
     href: "/classic-scenes/bank-finance",
     icon: "bank",
-    accent: "#7f401f",
+    accent: "#4d7f42",
+    iconBackground: "#edf4e8",
   },
   {
     id: "identity-immigration",
@@ -53,7 +54,8 @@ const financeCards: FinanceCard[] = [
     count: 8,
     href: "/study/government_apply_ssn_zh",
     icon: "id",
-    accent: "#7f401f",
+    accent: "#db7743",
+    iconBackground: "#fff0e4",
   },
   {
     id: "public-services",
@@ -62,16 +64,18 @@ const financeCards: FinanceCard[] = [
     count: 10,
     href: "/study/government_snap_benefits_zh",
     icon: "government",
-    accent: "#7f401f",
+    accent: "#d99b24",
+    iconBackground: "#fff7df",
   },
   {
     id: "driver-vehicle",
     title: "驾照与车辆管理",
-    description: "驾照考试、换证、车辆注册、车检等场景",
+    description: "驾照考试、换证、车辆注册、年检等场景",
     count: 16,
     href: "/study/government_state_id_driver_license_zh",
     icon: "car",
-    accent: "#7f401f",
+    accent: "#3f838b",
+    iconBackground: "#eef7f4",
   },
   {
     id: "insurance-consulting",
@@ -80,7 +84,8 @@ const financeCards: FinanceCard[] = [
     count: 10,
     href: "/study/driver_new_driver_car_insurance_zh",
     icon: "shield",
-    accent: "#7f401f",
+    accent: "#7b6794",
+    iconBackground: "#f4eef5",
   },
   {
     id: "traffic-safety",
@@ -89,7 +94,8 @@ const financeCards: FinanceCard[] = [
     count: 8,
     href: "/study/driver_accident_insurance_claim_zh",
     icon: "cone",
-    accent: "#7f401f",
+    accent: "#d6763c",
+    iconBackground: "#fff1e5",
   },
   {
     id: "tax-government-forms",
@@ -98,7 +104,8 @@ const financeCards: FinanceCard[] = [
     count: 10,
     href: "/study/government_apply_itin_zh",
     icon: "document",
-    accent: "#7f401f",
+    accent: "#a5678f",
+    iconBackground: "#f7eef3",
   },
   {
     id: "all-finance",
@@ -107,7 +114,8 @@ const financeCards: FinanceCard[] = [
     count: 83,
     href: "/classic-scenes/bank-finance",
     icon: "grid",
-    accent: "#7f401f",
+    accent: "#4a8a62",
+    iconBackground: "#eef7ef",
   },
 ];
 
@@ -125,7 +133,17 @@ function getAvatarSrc(user?: SessionResponse["user"]) {
 function MenuIcon() {
   return (
     <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-      <path d="M8 11h16M8 16h16M8 21h16" />
+      <path d="M8.5 10.5h15M8.5 16h15M8.5 21.5h15" />
+    </svg>
+  );
+}
+
+function BrandMarkIcon() {
+  return (
+    <svg viewBox="0 0 72 72" aria-hidden="true" focusable="false">
+      <path d="M35.5 9.5c14.8 0 26.7 11.2 26.7 25.3S50.3 60.2 35.5 60.2c-3.7 0-7.2-.7-10.3-2.1l-13.1 4.5 4.1-12.3a24.3 24.3 0 0 1-7.4-17.4C8.8 20.7 20.8 9.5 35.5 9.5Z" />
+      <path d="M24.8 32.4v7.2M31.8 26.8v18.4M38.8 30.4v11.2M45.8 34.2v3.6" />
+      <circle cx="51.2" cy="36" r="2.1" />
     </svg>
   );
 }
@@ -134,6 +152,14 @@ function ChevronDown() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="m7 9 5 5 5-5" />
+    </svg>
+  );
+}
+
+function ArrowLeft() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M19 12H5M11 6l-6 6 6 6" />
     </svg>
   );
 }
@@ -148,58 +174,60 @@ function ArrowRight() {
 
 function CardIcon({ icon }: { icon: FinanceCardIcon }) {
   return (
-    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false">
       {icon === "bank" && (
         <>
-          <path d="M5 13h22L16 6 5 13Z" />
-          <path d="M8 14v10M14 14v10M20 14v10M26 14v10M5 26h22" />
+          <path d="M6.5 17.2 20 8.5l13.5 8.7H6.5Z" />
+          <path d="M10.5 18.8v12M16.8 18.8v12M23.2 18.8v12M29.5 18.8v12M7.5 32.8h25" />
         </>
       )}
       {icon === "id" && (
         <>
-          <path d="M9 5h14v22H9V5Z" />
-          <circle cx="16" cy="13" r="3.1" />
-          <path d="M11.5 23c1.1-3 7.9-3 9 0M12 8h8" />
+          <path d="M11 7h18v26H11V7Z" />
+          <circle cx="20" cy="17.2" r="3.6" />
+          <path d="M14.2 28.3c1.3-4 10.3-4 11.6 0M15.5 11.5h9" />
         </>
       )}
       {icon === "government" && (
         <>
-          <path d="M5 13h22L16 6 5 13Z" />
-          <path d="M8 14v10M14 14v10M20 14v10M26 14v10M5 26h22" />
+          <path d="M6.5 17.2 20 8.5l13.5 8.7H6.5Z" />
+          <path d="M10.5 18.8v12M16.8 18.8v12M23.2 18.8v12M29.5 18.8v12M7.5 32.8h25" />
+          <path d="M20 6v3.2" />
         </>
       )}
       {icon === "car" && (
         <>
-          <path d="m7 18 2-6h14l2 6" />
-          <path d="M6 18h20v7H6v-7Z" />
-          <circle cx="11" cy="21" r="1.6" />
-          <circle cx="21" cy="21" r="1.6" />
+          <path d="m8.5 22 3-8.2h17l3 8.2" />
+          <path d="M7.2 22h25.6v8.5H7.2V22Z" />
+          <path d="M12.2 30.5v2M27.8 30.5v2" />
+          <circle cx="13.2" cy="26.2" r="1.8" />
+          <circle cx="26.8" cy="26.2" r="1.8" />
         </>
       )}
       {icon === "shield" && (
         <>
-          <path d="M16 5 26 9v7c0 6-4 10-10 12C10 26 6 22 6 16V9l10-4Z" />
-          <path d="M16 11v10M11 16h10" />
+          <path d="M20 6.5 32 11v8.5c0 7-4.9 11.8-12 14-7.1-2.2-12-7-12-14V11l12-4.5Z" />
+          <path d="M20 13.8v12.4M13.8 20h12.4" />
         </>
       )}
       {icon === "cone" && (
         <>
-          <path d="M13 6h6l5 20H8l5-20Z" />
-          <path d="M11 17h10M10 22h12" />
+          <path d="M16.2 7.5h7.6l6 25H10.2l6-25Z" />
+          <path d="M13.5 21h13M12.3 27h15.4" />
         </>
       )}
       {icon === "document" && (
         <>
-          <path d="M9 5h10l5 5v17H9V5Z" />
-          <path d="M19 5v6h5M13 15h7M13 20h7M13 24h5" />
+          <path d="M11 6.8h15.5l4.5 4.8v21.6H11V6.8Z" />
+          <path d="M26.5 6.8v6h4.5M15.5 18.2h10M15.5 23.4h10M15.5 28.6h7.5" />
         </>
       )}
       {icon === "grid" && (
         <>
-          <rect x="7" y="7" width="7" height="7" rx="1.5" />
-          <rect x="18" y="7" width="7" height="7" rx="1.5" />
-          <rect x="7" y="18" width="7" height="7" rx="1.5" />
-          <rect x="18" y="18" width="7" height="7" rx="1.5" />
+          <rect x="9" y="9" width="8" height="8" rx="1.8" />
+          <rect x="23" y="9" width="8" height="8" rx="1.8" />
+          <rect x="9" y="23" width="8" height="8" rx="1.8" />
+          <rect x="23" y="23" width="8" height="8" rx="1.8" />
         </>
       )}
     </svg>
@@ -209,15 +237,24 @@ function CardIcon({ icon }: { icon: FinanceCardIcon }) {
 function HeroVisual() {
   return (
     <div className={styles.heroVisual} aria-hidden="true">
-      <span className={`${styles.spark} ${styles.sparkOne}`}>✦</span>
-      <span className={`${styles.spark} ${styles.sparkTwo}`}>✦</span>
-      <span className={styles.backPlate} />
-      <span className={styles.chatPlate}>
-        <span className={styles.chatBubble}>
-          <span />
-          <span />
-          <span />
+      <span className={styles.heroGlow} />
+      <span className={`${styles.spark} ${styles.sparkGold}`} />
+      <span className={`${styles.spark} ${styles.sparkWhite}`} />
+      <span className={styles.backCard}>
+        <span />
+        <span />
+      </span>
+      <span className={styles.frontCard}>
+        <span className={styles.bubble}>
+          <i />
+          <i />
+          <i />
         </span>
+      </span>
+      <span className={styles.leaf}>
+        <i />
+        <i />
+        <i />
       </span>
     </div>
   );
@@ -267,8 +304,10 @@ export default function FinanceGovernmentMenuPage() {
             <MenuIcon />
           </button>
 
-          <div className={styles.brand}>
-            <SpeakFlowBrandMark className={styles.brandMark} />
+          <div className={styles.brand} aria-label="SpeakFlow Voice Practice">
+            <span className={styles.brandMark}>
+              <BrandMarkIcon />
+            </span>
             <div className={styles.brandText}>
               <strong>SpeakFlow</strong>
               <span>VOICE PRACTICE</span>
@@ -295,7 +334,7 @@ export default function FinanceGovernmentMenuPage() {
 
         <section className={styles.hero}>
           <button className={styles.backLink} type="button" onClick={goBack}>
-            <span aria-hidden="true">←</span>
+            <ArrowLeft />
             返回上一级
           </button>
           <div className={styles.heroText}>
@@ -311,7 +350,12 @@ export default function FinanceGovernmentMenuPage() {
               key={card.id}
               type="button"
               className={styles.sceneCard}
-              style={{ "--card-accent": card.accent } as CSSProperties}
+              style={
+                {
+                  "--card-accent": card.accent,
+                  "--icon-bg": card.iconBackground,
+                } as CSSProperties
+              }
               onClick={() => router.push(card.href)}
               aria-label={`进入${card.title}`}
             >

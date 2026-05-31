@@ -3,9 +3,9 @@
   width: 100%;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.82), transparent 30%),
-    linear-gradient(180deg, #f4eee7 0%, #fbf5ee 48%, #f9efe4 100%);
-  color: #3d281b;
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.86), transparent 30%),
+    linear-gradient(180deg, #f4f0e6 0%, #fffdf5 48%, #f8f3e9 100%);
+  color: #1d3f24;
   font-family: var(--sf-font-zh), "Microsoft YaHei", Arial, sans-serif;
 }
 
@@ -26,10 +26,10 @@
   border: 1px solid rgba(166, 118, 76, 0.12);
   border-radius: 26px;
   background:
-    radial-gradient(circle at 50% 8%, rgba(193, 143, 96, 0.09), transparent 34%),
-    linear-gradient(180deg, #fffdf9 0%, #fbf3ea 48%, #fffaf5 100%);
+    radial-gradient(circle at 50% 8%, rgba(143, 169, 116, 0.12), transparent 34%),
+    linear-gradient(180deg, #fffdf7 0%, #fffdf8 48%, #fffaf1 100%);
   box-shadow:
-    0 18px 44px rgba(111, 73, 39, 0.1),
+    0 18px 44px rgba(58, 82, 45, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
@@ -42,7 +42,7 @@
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.86);
   box-shadow:
-    0 12px 28px rgba(107, 73, 42, 0.1),
+    0 12px 28px rgba(54, 76, 42, 0.11),
     inset 0 1px 0 rgba(255, 255, 255, 0.94);
 }
 
@@ -56,9 +56,9 @@
   border: 0;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.92);
-  color: #765032;
+  color: #2f6238;
   box-shadow:
-    0 8px 18px rgba(111, 73, 39, 0.12),
+    0 8px 18px rgba(58, 82, 45, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
@@ -82,7 +82,6 @@
   height: 44px;
   border-radius: 999px;
   object-fit: cover;
-  filter: sepia(0.48) saturate(0.82) hue-rotate(340deg);
 }
 
 .avatarDot {
@@ -91,9 +90,9 @@
   bottom: 7px;
   width: 12px;
   height: 12px;
-  border: 2px solid #fff7ef;
+  border: 2px solid #fffdf5;
   border-radius: 999px;
-  background: #b67f52;
+  background: #5d9349;
 }
 
 .brand {
@@ -102,7 +101,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  color: #4a2e1e;
+  color: #1b4725;
 }
 
 .brandIcon {
@@ -110,7 +109,7 @@
   width: 31px;
   height: 31px;
   place-items: center;
-  color: #955e2d;
+  color: #3f7a49;
 }
 
 .brandIcon svg {
@@ -130,7 +129,7 @@
 }
 
 .brandTitle {
-  color: #3d281b;
+  color: #173b20;
   font-size: clamp(1.24rem, 5.5vw, 1.55rem);
   font-weight: 900;
   line-height: 1;
@@ -139,7 +138,7 @@
 
 .brandSubtitle {
   margin-top: 5px;
-  color: #bb8a62;
+  color: #7b9b6b;
   font-size: clamp(0.62rem, 2.75vw, 0.78rem);
   font-weight: 800;
   line-height: 1;
@@ -164,7 +163,7 @@
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: #5c3924;
+  color: #d98f45;
 }
 
 .topicArrow:disabled {
@@ -187,7 +186,7 @@
   width: 52px;
   height: 52px;
   place-items: center;
-  color: #c29166;
+  color: #7ea374;
 }
 
 .topicIcon svg {
@@ -215,7 +214,7 @@
   max-width: 210px;
   margin: 0;
   overflow-wrap: anywhere;
-  color: #3d281b;
+  color: #193e21;
   font-size: clamp(1.18rem, 5.5vw, 1.42rem);
   font-weight: 900;
   line-height: 1.18;
@@ -223,7 +222,7 @@
 
 .topicProgress {
   margin: 5px 0 0;
-  color: #8d5f3f;
+  color: #426e3d;
   font-size: clamp(0.9rem, 4.2vw, 1.05rem);
   font-weight: 800;
   line-height: 1;
@@ -235,13 +234,13 @@
   margin: 0 18px;
   padding: 14px 16px 13px;
   overflow: hidden;
-  border: 1px solid rgba(202, 161, 126, 0.18);
+  border: 1px solid rgba(126, 159, 102, 0.18);
   border-radius: 26px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 252, 248, 0.92)),
-    radial-gradient(circle at 74% 64%, rgba(202, 161, 126, 0.14), transparent 30%);
+    radial-gradient(circle at 74% 64%, rgba(143, 169, 116, 0.16), transparent 30%);
   box-shadow:
-    0 13px 30px rgba(105, 70, 39, 0.08),
+    0 13px 30px rgba(58, 82, 45, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.96);
 }
 
@@ -260,7 +259,7 @@
   place-items: center;
   border-radius: 999px;
   overflow: hidden;
-  background: #f5e6d7;
+  background: #eef3e4;
 }
 
 .speakerAvatar svg {
@@ -273,9 +272,9 @@
   min-height: 28px;
   align-items: center;
   border-radius: 12px;
-  background: #f7ece1;
+  background: #eef5e9;
   padding: 0 14px;
-  color: #7c5235;
+  color: #214f2a;
   font-size: 0.9rem;
   font-weight: 800;
   white-space: nowrap;
@@ -288,13 +287,13 @@
   min-height: 106px;
   margin-top: 14px;
   place-items: center;
-  border: 1px solid rgba(220, 181, 148, 0.42);
+  border: 1px solid rgba(126, 159, 102, 0.46);
   border-radius: 18px;
   background:
-    radial-gradient(circle at 18% 12%, rgba(235, 207, 180, 0.18), transparent 30%),
-    rgba(255, 252, 248, 0.92);
+    radial-gradient(circle at 18% 12%, rgba(226, 236, 213, 0.3), transparent 30%),
+    rgba(255, 254, 249, 0.94);
   box-shadow:
-    0 10px 26px rgba(109, 75, 45, 0.08),
+    0 10px 26px rgba(58, 82, 45, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.94);
 }
 
@@ -305,16 +304,16 @@
   bottom: -17px;
   width: 24px;
   height: 24px;
-  border-right: 1px solid rgba(220, 181, 148, 0.42);
-  border-bottom: 1px solid rgba(220, 181, 148, 0.42);
-  background: rgba(255, 252, 248, 0.95);
+  border-right: 1px solid rgba(126, 159, 102, 0.46);
+  border-bottom: 1px solid rgba(126, 159, 102, 0.46);
+  background: rgba(255, 254, 249, 0.96);
   transform: rotate(45deg);
 }
 
 .quoteStart,
 .quoteEnd {
   position: absolute;
-  color: rgba(196, 147, 103, 0.34);
+  color: rgba(216, 143, 74, 0.55);
   font-size: 3rem;
   font-weight: 900;
   line-height: 1;
@@ -333,7 +332,7 @@
 .chinesePrompt {
   max-width: 92%;
   margin: 0;
-  color: #3d281b;
+  color: #1d3f24;
   font-size: clamp(1.1rem, 5.2vw, 1.36rem);
   font-weight: 900 !important;
   line-height: 1.34;
@@ -356,7 +355,7 @@
   width: 118px;
   height: 38px;
   border-radius: 18px 18px 5px 5px;
-  background: linear-gradient(180deg, #f3ddca, #d9b38e);
+  background: linear-gradient(180deg, #eef1df, #d6dfc4);
 }
 
 .bankSign {
@@ -364,7 +363,7 @@
   right: 67px;
   bottom: 43px;
   border-radius: 4px;
-  background: #c1946d;
+  background: #7fa174;
   padding: 3px 10px;
   color: white;
   font-size: 0.82rem;
@@ -377,7 +376,7 @@
   bottom: 0;
   width: 28px;
   height: 58px;
-  border-bottom: 28px solid #c9ab8d;
+  border-bottom: 28px solid #a5be95;
   border-left: 9px solid transparent;
   border-right: 9px solid transparent;
 }
@@ -391,9 +390,9 @@
   height: 34px;
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at 22% 56%, #c8ac8d 0 22%, transparent 24%),
-    radial-gradient(ellipse at 52% 26%, #c8ac8d 0 24%, transparent 26%),
-    radial-gradient(ellipse at 76% 58%, #c8ac8d 0 22%, transparent 24%);
+    radial-gradient(ellipse at 22% 56%, #99b88b 0 22%, transparent 24%),
+    radial-gradient(ellipse at 52% 26%, #99b88b 0 24%, transparent 26%),
+    radial-gradient(ellipse at 76% 58%, #99b88b 0 22%, transparent 24%);
 }
 
 .bankChairOne,
@@ -403,7 +402,7 @@
   width: 28px;
   height: 36px;
   border-radius: 10px 10px 4px 4px;
-  background: #d4b091;
+  background: #bacaa9;
 }
 
 .bankChairOne {
@@ -423,7 +422,7 @@
   align-items: center;
   gap: 8px;
   margin: 0;
-  color: #946238;
+  color: #2f6238;
   font-size: 0.9rem;
   font-weight: 800 !important;
   line-height: 1.2;
@@ -431,14 +430,14 @@
 
 .promptHint::before {
   content: "";
-  display: block;
-  width: 0.82rem;
-  height: 0.82rem;
+    display: block;
+    width: 0.82rem;
+    height: 0.82rem;
   border: 2px solid currentColor;
   border-radius: 50% 50% 46% 46%;
   opacity: 0.76;
   box-shadow:
-    inset 0 -0.24rem 0 rgba(148, 98, 56, 0.18),
+    inset 0 -0.24rem 0 rgba(47, 98, 56, 0.16),
     0 0.42rem 0 -0.28rem currentColor;
 }
 
@@ -450,11 +449,11 @@
 .methodCard {
   margin: 9px 18px 0;
   padding: 8px 12px 10px;
-  border: 1px solid rgba(202, 161, 126, 0.16);
+  border: 1px solid rgba(126, 159, 102, 0.16);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.9);
   box-shadow:
-    0 11px 24px rgba(105, 70, 39, 0.075),
+    0 11px 24px rgba(58, 82, 45, 0.075),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
@@ -463,12 +462,12 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 10px;
-  color: #7a4f31;
+  color: #234f2b;
 }
 
 .methodTitle span {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(179, 128, 88, 0.28), transparent);
+  background: linear-gradient(90deg, transparent, rgba(126, 159, 102, 0.34), transparent);
 }
 
 .methodTitle strong {
@@ -500,8 +499,8 @@
   height: 29px;
   place-items: center;
   border-radius: 999px;
-  background: #f3e4d6;
-  color: #966337;
+  background: #edf5e8;
+  color: #497d44;
 }
 
 .methodIcon svg {
@@ -522,8 +521,8 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: #8c5b33;
-  color: #fffaf5;
+  background: #5c8a50;
+  color: #fffdf7;
   font-size: 0.68rem;
   font-weight: 900;
 }
@@ -534,7 +533,7 @@
 }
 
 .stepCopy strong {
-  color: #3d281b;
+  color: #1d3f24;
   font-size: 0.68rem;
   font-weight: 900;
   line-height: 1.1;
@@ -543,7 +542,7 @@
 
 .stepCopy small {
   margin-top: 3px;
-  color: #8b5d3c;
+  color: #557750;
   font-size: 0.58rem;
   font-weight: 700;
   line-height: 1.18;
@@ -553,7 +552,7 @@
   display: grid;
   min-width: 10px;
   place-items: center;
-  color: #8a5631;
+  color: #d98f45;
   font-size: 1.08rem;
   font-weight: 900;
   line-height: 1;
@@ -574,12 +573,12 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1px solid rgba(207, 168, 135, 0.25);
+  border: 1px solid rgba(126, 159, 102, 0.22);
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.86);
-  color: #7b4b2d;
+  color: #2f6238;
   box-shadow:
-    0 9px 19px rgba(107, 73, 42, 0.1),
+    0 9px 19px rgba(58, 82, 45, 0.09),
     inset 0 1px 0 rgba(255, 255, 255, 0.94);
 }
 
@@ -598,7 +597,7 @@
 }
 
 .sentenceButton span {
-  color: #7b4b2d;
+  color: #2f6238;
   font-size: 0.9rem;
   font-weight: 900;
   line-height: 1;
@@ -611,14 +610,14 @@
   width: 88px;
   height: 88px;
   place-items: center;
-  border: 6px solid rgba(218, 187, 158, 0.56);
+  border: 6px solid rgba(232, 215, 184, 0.9);
   border-radius: 999px;
   background:
-    radial-gradient(circle at 35% 24%, rgba(255, 237, 215, 0.35), transparent 28%),
-    linear-gradient(145deg, #c99258, #905a2d);
-  color: #fffaf5;
+    radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.26), transparent 28%),
+    linear-gradient(145deg, #7fa978, #3f7a49);
+  color: #fffdf7;
   box-shadow:
-    0 14px 30px rgba(123, 77, 38, 0.25),
+    0 14px 30px rgba(47, 98, 56, 0.24),
     inset 0 2px 0 rgba(255, 255, 255, 0.25);
 }
 
@@ -637,8 +636,8 @@
 .micButtonActive {
   transform: scale(1.03);
   box-shadow:
-    0 16px 34px rgba(123, 77, 38, 0.32),
-    0 0 0 8px rgba(196, 143, 91, 0.12),
+    0 16px 34px rgba(47, 98, 56, 0.3),
+    0 0 0 8px rgba(126, 159, 102, 0.14),
     inset 0 2px 0 rgba(255, 255, 255, 0.25);
 }
 
@@ -646,7 +645,7 @@
 .micPulseTwo {
   position: absolute;
   inset: -15px;
-  border: 1px dashed rgba(202, 161, 126, 0.42);
+  border: 1px dashed rgba(126, 159, 102, 0.42);
   border-radius: 999px;
 }
 
@@ -662,7 +661,7 @@
   justify-content: center;
   gap: 8px;
   margin: 7px 18px 0;
-  color: #7c5235;
+  color: #2f6238;
   font-size: 0.86rem;
   font-weight: 800 !important;
   line-height: 1.25;
@@ -677,12 +676,12 @@
   margin: 7px 18px 0;
   padding: 8px 10px 8px 12px;
   overflow: hidden;
-  border: 1px solid rgba(212, 174, 142, 0.28);
+  border: 1px solid rgba(126, 159, 102, 0.24);
   border-radius: 15px;
   background:
-    radial-gradient(circle at 92% 50%, rgba(192, 133, 75, 0.16), transparent 30%),
-    rgba(255, 247, 238, 0.94);
-  box-shadow: 0 8px 20px rgba(105, 70, 39, 0.07);
+    radial-gradient(circle at 92% 50%, rgba(226, 236, 213, 0.5), transparent 30%),
+    rgba(255, 254, 249, 0.94);
+  box-shadow: 0 8px 20px rgba(58, 82, 45, 0.07);
 }
 
 .tipIcon {
@@ -691,7 +690,7 @@
   height: 22px;
   place-items: center;
   border-radius: 999px;
-  background: #a66e3d;
+  background: #638f5b;
   color: white;
   font-size: 0.84rem;
   font-weight: 900;
@@ -705,14 +704,14 @@
 }
 
 .tipCopy strong {
-  color: #7b4b2d;
+  color: #2f6238;
   font-size: 0.92rem;
   font-weight: 900;
   line-height: 1;
 }
 
 .tipCopy small {
-  color: #7d563a;
+  color: #4f704a;
   font-size: 0.68rem;
   font-weight: 700;
   line-height: 1.25;
@@ -732,7 +731,7 @@
   top: 3px;
   width: 34px;
   height: 45px;
-  border: 3px solid #946238;
+  border: 3px solid #4f704a;
   border-radius: 5px;
   background: #fff8ef;
   transform: rotate(7deg);
@@ -746,7 +745,7 @@
   width: 31px;
   height: 24px;
   border-radius: 4px 4px 12px 12px;
-  background: #a66e3d;
+  background: #638f5b;
   box-shadow: inset 0 -9px 0 rgba(255, 255, 255, 0.18);
 }
 
@@ -758,9 +757,9 @@
   width: 18px;
   height: 22px;
   background:
-    linear-gradient(#946238, #946238) 0 2px / 18px 2px no-repeat,
-    linear-gradient(#946238, #946238) 0 10px / 14px 2px no-repeat,
-    linear-gradient(#946238, #946238) 0 18px / 16px 2px no-repeat;
+    linear-gradient(#4f704a, #4f704a) 0 2px / 18px 2px no-repeat,
+    linear-gradient(#4f704a, #4f704a) 0 10px / 14px 2px no-repeat,
+    linear-gradient(#4f704a, #4f704a) 0 18px / 16px 2px no-repeat;
 }
 
 .resultTopicBar {
@@ -1712,4 +1711,861 @@
     width: 78px;
     height: 78px;
   }
+}
+
+.resultPhone {
+  padding: calc(10px + env(safe-area-inset-top)) 8px 14px;
+  border-color: rgba(126, 159, 102, 0.16);
+  background:
+    radial-gradient(circle at 50% 8%, rgba(143, 169, 116, 0.12), transparent 34%),
+    linear-gradient(180deg, #fffdf8 0%, #fffdf6 46%, #fbf7ed 100%);
+  box-shadow:
+    0 20px 48px rgba(58, 82, 45, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+
+.resultPhone .classicTopbar {
+  grid-template-columns: 70px minmax(0, 1fr) 70px;
+  min-height: 70px;
+  padding: 0 12px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 14px 32px rgba(58, 82, 45, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.resultPhone .menuButton,
+.resultPhone .avatarButton {
+  width: 54px;
+  height: 54px;
+  color: #2f6238;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 10px 22px rgba(58, 82, 45, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+
+.resultPhone .avatarImage {
+  width: 50px;
+  height: 50px;
+}
+
+.resultPhone .avatarDot {
+  right: 2px;
+  bottom: 7px;
+  border-color: #fffdf7;
+  background: #5d9349;
+}
+
+.resultPhone .brand {
+  gap: 12px;
+}
+
+.resultPhone .brandIcon {
+  width: 42px;
+  height: 42px;
+  color: #376a40;
+}
+
+.resultPhone .brandTitle {
+  color: #183d21;
+  font-size: clamp(1.55rem, 7vw, 1.95rem);
+  line-height: 0.98;
+}
+
+.resultPhone .brandSubtitle {
+  margin-top: 6px;
+  color: #456d3c;
+  font-size: clamp(0.7rem, 3vw, 0.88rem);
+  letter-spacing: 0.16em;
+}
+
+.resultPhone .resultTopicBar {
+  grid-template-columns: 38px 60px minmax(0, auto) 38px;
+  column-gap: 10px;
+  min-height: 112px;
+  padding: 17px 12px 9px;
+}
+
+.resultPhone .topicArrow {
+  width: 38px;
+  height: 38px;
+  color: #2f6238;
+}
+
+.resultPhone .topicArrow svg {
+  width: 32px;
+  height: 32px;
+}
+
+.resultPhone .topicIcon {
+  width: 60px;
+  height: 60px;
+  color: #7ea374;
+}
+
+.resultPhone .topicIcon svg {
+  width: 58px;
+  height: 58px;
+}
+
+.resultPhone .topicTitle {
+  max-width: 230px;
+  color: #1d3f24;
+  font-size: clamp(1.5rem, 7vw, 1.82rem);
+  font-weight: 900;
+  line-height: 1.08;
+}
+
+.resultPhone .topicProgress {
+  margin-top: 7px;
+  color: #304c2b;
+  font-size: clamp(1.04rem, 4.8vw, 1.2rem);
+  font-weight: 650;
+}
+
+.resultPhone .resultHint {
+  min-height: 28px;
+  margin: 0 30px 12px;
+  color: #536b4c;
+  font-size: 0.92rem;
+  font-weight: 650 !important;
+}
+
+.resultPhone .resultHintIcon {
+  width: 22px;
+  height: 22px;
+  color: #5f8658;
+}
+
+.resultExpressionPanel {
+  margin: 0 18px;
+  padding: 17px 10px 15px;
+  border: 1px solid rgba(126, 159, 102, 0.18);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 76% 4%, rgba(143, 169, 116, 0.08), transparent 32%),
+    rgba(255, 255, 252, 0.94);
+  box-shadow:
+    0 12px 30px rgba(58, 82, 45, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+
+.resultPhone .userExpressionCard {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.resultPhone .userExpressionLabel {
+  align-items: center;
+  gap: 12px;
+  color: #2f6238;
+}
+
+.resultPhone .userExpressionIcon {
+  width: 52px;
+  height: 52px;
+  color: inherit;
+}
+
+.resultPhone .userExpressionIcon svg {
+  width: 52px;
+  height: 52px;
+}
+
+.resultPhone .userExpressionLabel strong {
+  position: relative;
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  border-radius: 10px;
+  background: #f2f1e6;
+  padding: 0 14px;
+  color: #2f6238;
+  font-size: 0.94rem;
+  font-weight: 650;
+}
+
+.resultPhone .userExpressionLabel strong::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  bottom: -7px;
+  width: 13px;
+  height: 13px;
+  background: inherit;
+  transform: rotate(45deg);
+}
+
+.userExpressionBubble {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  align-items: center;
+  min-height: 66px;
+  gap: 12px;
+  margin: 10px 8px 0 28px;
+  border: 1px solid rgba(126, 159, 102, 0.34);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 28% 0%, rgba(143, 169, 116, 0.12), transparent 38%),
+    rgba(255, 255, 250, 0.94);
+  padding: 10px 11px 10px 22px;
+  box-shadow:
+    0 9px 22px rgba(58, 82, 45, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+
+.userExpressionBubble::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  bottom: -13px;
+  width: 22px;
+  height: 22px;
+  border-right: 1px solid rgba(126, 159, 102, 0.34);
+  border-bottom: 1px solid rgba(126, 159, 102, 0.34);
+  background: rgba(255, 255, 250, 0.98);
+  transform: rotate(45deg);
+}
+
+.resultPhone .userExpressionText {
+  margin: 0;
+  color: #20231d;
+  font-size: clamp(1.02rem, 4.8vw, 1.22rem);
+  font-weight: 520 !important;
+  line-height: 1.28;
+}
+
+.userExpressionSpeaker {
+  display: grid;
+  width: 45px;
+  height: 45px;
+  place-items: center;
+  border: 1px solid rgba(126, 159, 102, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #5f8658;
+  box-shadow:
+    0 9px 20px rgba(58, 82, 45, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.userExpressionSpeaker svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.userExpressionSpeaker svg path:not(:first-child) {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 3.2;
+}
+
+.resultPhone .expressionList {
+  gap: 10px;
+  margin: 18px 0 0;
+}
+
+.resultPhone .expressionCard {
+  grid-template-columns: minmax(0, 1fr) 56px;
+  min-height: 72px;
+  border-color: var(--tone-border);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 12% 10%, var(--tone-pale), transparent 36%),
+    rgba(255, 254, 250, 0.94);
+  box-shadow:
+    0 7px 18px rgba(58, 82, 45, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+
+.resultPhone .expressionCardFeatured {
+  min-height: 118px;
+  border-color: rgba(94, 134, 85, 0.72);
+  background:
+    radial-gradient(circle at 22% 6%, rgba(143, 169, 116, 0.12), transparent 40%),
+    rgba(255, 255, 250, 0.96);
+  box-shadow:
+    0 12px 25px rgba(58, 82, 45, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.resultPhone .expressionSelectArea {
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 10px;
+  padding: 11px 6px 11px 15px;
+}
+
+.resultPhone .expressionCardFeatured .expressionSelectArea {
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  padding: 18px 6px 16px 15px;
+}
+
+.resultPhone .variantRibbon {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  align-self: center;
+  border-radius: 999px;
+  background: var(--tone-soft);
+  color: var(--tone);
+  padding: 0;
+  clip-path: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68);
+}
+
+.resultPhone .expressionCardFeatured .variantRibbon {
+  width: 40px;
+  height: 70px;
+  align-self: start;
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(180deg, #8ca57d, #6f8c65);
+  color: #ffffff;
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 50% 75%, 0 88%);
+}
+
+.resultPhone .variantRibbon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.resultPhone .expressionCardFeatured .variantRibbon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.resultPhone .variantCopy {
+  gap: 8px;
+}
+
+.resultPhone .variantTitle {
+  color: var(--tone);
+  font-size: 0.98rem;
+  font-weight: 650;
+}
+
+.resultPhone .expressionCardFeatured .variantTitle {
+  font-size: 1rem;
+}
+
+.resultPhone .variantText {
+  color: #1d231b;
+  font-size: clamp(1.02rem, 4.8vw, 1.18rem);
+  font-weight: 520;
+  line-height: 1.2;
+}
+
+.resultPhone .expressionCardFeatured .variantText {
+  font-size: clamp(1.12rem, 5.1vw, 1.32rem);
+  font-weight: 760;
+}
+
+.resultPhone .variantNote {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 26px;
+  align-items: center;
+  border-radius: 8px;
+  background: #f3f1e6;
+  padding: 0 12px;
+  color: #5d7656;
+  font-size: 0.72rem;
+  font-weight: 560;
+}
+
+.resultPhone .variantSpeaker {
+  width: 43px;
+  height: 43px;
+  color: var(--speaker, var(--tone));
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 9px 20px rgba(58, 82, 45, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.resultPhone .expressionCardFeatured .variantSpeaker {
+  width: 46px;
+  height: 46px;
+  border-color: rgba(223, 133, 76, 0.22);
+  background:
+    radial-gradient(circle at 34% 26%, rgba(255, 255, 255, 0.28), transparent 28%),
+    linear-gradient(145deg, #efa77d, #df8450);
+  color: #ffffff;
+}
+
+.resultPhone .variantSpeaker svg {
+  width: 24px;
+  height: 24px;
+}
+
+.resultPhone .cornerStar {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, transparent 0 48%, #eba578 50%);
+  padding: 7px 7px 0 0;
+}
+
+.resultPhone .cornerStar svg {
+  width: 16px;
+  height: 16px;
+}
+
+.toneRecommended {
+  --tone: #5f8658;
+  --tone-soft: #edf4e8;
+  --tone-pale: rgba(126, 159, 102, 0.1);
+  --tone-border: rgba(95, 134, 88, 0.32);
+  --speaker: #df8450;
+}
+
+.toneIdiomatic {
+  --tone: #df7942;
+  --tone-soft: #fff0e6;
+  --tone-pale: rgba(223, 121, 66, 0.09);
+  --tone-border: rgba(223, 121, 66, 0.24);
+}
+
+.toneSimple {
+  --tone: #5b9aaa;
+  --tone-soft: #e9f3f5;
+  --tone-pale: rgba(91, 154, 170, 0.08);
+  --tone-border: rgba(91, 154, 170, 0.22);
+}
+
+.toneNatural {
+  --tone: #5f8658;
+  --tone-soft: #edf4e8;
+  --tone-pale: rgba(126, 159, 102, 0.09);
+  --tone-border: rgba(95, 134, 88, 0.24);
+}
+
+.resultPhone .followCard {
+  min-height: 178px;
+  margin: 13px 18px 0;
+  padding: 14px 14px 15px;
+  border-color: rgba(225, 202, 169, 0.54);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 50% 72%, rgba(143, 169, 116, 0.11), transparent 34%),
+    rgba(255, 254, 250, 0.94);
+  box-shadow:
+    0 11px 28px rgba(58, 82, 45, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.resultPhone .followTop {
+  gap: 10px;
+}
+
+.resultPhone .followReadButton {
+  gap: 10px;
+  color: #2f6238;
+}
+
+.resultPhone .followReadButton strong {
+  color: #2f6238;
+  font-size: 1rem;
+  font-weight: 760;
+}
+
+.resultPhone .followReadButton small {
+  margin-top: 4px;
+  color: #5e7058;
+  font-size: 0.78rem;
+  font-weight: 560;
+}
+
+.resultPhone .followBookIcon {
+  width: 47px;
+  height: 47px;
+  border-radius: 10px;
+  background: #f0f3e7;
+  color: #5f8658;
+}
+
+.resultPhone .followBookIcon svg {
+  width: 31px;
+  height: 31px;
+}
+
+.resultPhone .slowReadButton {
+  min-width: 100px;
+  height: 42px;
+  border-color: rgba(223, 121, 66, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 247, 241, 0.92);
+  color: #d56d37;
+  font-size: 0.88rem;
+}
+
+.resultPhone .slowReadButton svg {
+  width: 21px;
+  height: 21px;
+}
+
+.resultPhone .followControls {
+  grid-template-columns: minmax(0, 1fr) 88px minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.resultPhone .followControls .sentenceButton {
+  min-height: 47px;
+  border-color: rgba(225, 202, 169, 0.44);
+  border-radius: 999px;
+  background: rgba(255, 255, 252, 0.95);
+  color: #2f6238;
+  box-shadow:
+    0 10px 22px rgba(58, 82, 45, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.resultPhone .followControls .sentenceButton:last-child {
+  color: #d56d37;
+}
+
+.resultPhone .followControls .sentenceButton span {
+  font-size: 0.96rem;
+  font-weight: 650;
+}
+
+.resultPhone .followControls .sentenceButton svg {
+  width: 24px;
+  height: 24px;
+}
+
+.resultPhone .followMicButton {
+  width: 88px;
+  height: 88px;
+  border: 6px solid rgba(232, 215, 184, 0.9);
+  background:
+    radial-gradient(circle at 35% 24%, rgba(255, 255, 255, 0.26), transparent 28%),
+    linear-gradient(145deg, #7fa978, #3f7a49);
+  color: #fffdf7;
+  box-shadow:
+    0 14px 30px rgba(47, 98, 56, 0.24),
+    inset 0 2px 0 rgba(255, 255, 255, 0.25);
+}
+
+.resultPhone .followMicButton svg {
+  width: 44px;
+  height: 44px;
+}
+
+.resultPhone .followMicLabel {
+  color: #2f6238;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+@media (max-width: 374px) {
+  .resultPhone .classicTopbar {
+    grid-template-columns: 58px minmax(0, 1fr) 58px;
+  }
+
+  .resultExpressionPanel,
+  .resultPhone .followCard {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+  .resultPhone .expressionCardFeatured {
+    min-height: 112px;
+  }
+
+  .resultPhone .followControls {
+    grid-template-columns: minmax(0, 1fr) 78px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .resultPhone .followMicButton {
+    width: 78px;
+    height: 78px;
+  }
+}
+
+.resultPhone .classicTopbar {
+  min-height: 56px;
+}
+
+.resultPhone .menuButton,
+.resultPhone .avatarButton {
+  width: 48px;
+  height: 48px;
+}
+
+.resultPhone .avatarImage {
+  width: 44px;
+  height: 44px;
+}
+
+.resultPhone .brandIcon {
+  width: 31px;
+  height: 31px;
+}
+
+.resultPhone .brandTitle {
+  font-size: clamp(1.28rem, 5.8vw, 1.55rem);
+}
+
+.resultPhone .brandSubtitle {
+  margin-top: 5px;
+  font-size: clamp(0.58rem, 2.6vw, 0.72rem);
+}
+
+.resultPhone .resultTopicBar {
+  grid-template-columns: 30px 50px minmax(0, auto) 30px;
+  min-height: 76px;
+  padding: 7px 10px 4px;
+}
+
+.resultPhone .topicArrow {
+  width: 30px;
+  height: 30px;
+}
+
+.resultPhone .topicArrow svg {
+  width: 27px;
+  height: 27px;
+}
+
+.resultPhone .topicIcon {
+  width: 50px;
+  height: 50px;
+}
+
+.resultPhone .topicIcon svg {
+  width: 48px;
+  height: 48px;
+}
+
+.resultPhone .topicTitle {
+  max-width: 210px;
+  font-size: clamp(1.2rem, 5.4vw, 1.42rem);
+}
+
+.resultPhone .topicProgress {
+  margin-top: 4px;
+  font-size: clamp(0.88rem, 4vw, 1rem);
+}
+
+.resultPhone .resultHint {
+  min-height: 22px;
+  margin: 0 26px 5px;
+  font-size: 0.78rem;
+}
+
+.resultExpressionPanel {
+  padding: 10px 10px 10px;
+}
+
+.resultPhone .userExpressionIcon,
+.resultPhone .userExpressionIcon svg {
+  width: 38px;
+  height: 38px;
+}
+
+.resultPhone .userExpressionLabel strong {
+  min-height: 27px;
+  padding: 0 12px;
+  font-size: 0.84rem;
+}
+
+.userExpressionBubble {
+  grid-template-columns: minmax(0, 1fr) 40px;
+  min-height: 50px;
+  margin: 7px 8px 0 26px;
+  padding: 7px 9px 7px 17px;
+}
+
+.resultPhone .userExpressionText {
+  font-size: clamp(0.84rem, 3.85vw, 0.92rem);
+  line-height: 1.2;
+}
+
+.userExpressionSpeaker {
+  width: 39px;
+  height: 39px;
+}
+
+.userExpressionSpeaker svg {
+  width: 21px;
+  height: 21px;
+}
+
+.resultPhone .expressionList {
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.resultPhone .expressionCard {
+  grid-template-columns: minmax(0, 1fr) 42px;
+  min-height: 58px;
+}
+
+.resultPhone .expressionCardFeatured {
+  min-height: 86px;
+}
+
+.resultPhone .expressionSelectArea,
+.resultPhone .expressionCardFeatured .expressionSelectArea {
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 4px 8px 10px;
+}
+
+.resultPhone .expressionCardFeatured .expressionSelectArea {
+  padding-top: 12px;
+  padding-bottom: 10px;
+}
+
+.resultPhone .variantRibbon {
+  width: 42px;
+  height: 42px;
+}
+
+.resultPhone .expressionCardFeatured .variantRibbon {
+  width: 32px;
+  height: 60px;
+}
+
+.resultPhone .variantRibbon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.resultPhone .expressionCardFeatured .variantRibbon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.resultPhone .variantCopy {
+  gap: 5px;
+}
+
+.resultPhone .variantTitle,
+.resultPhone .expressionCardFeatured .variantTitle {
+  font-size: 0.78rem;
+}
+
+.resultPhone .variantText {
+  font-size: clamp(0.78rem, 3.48vw, 0.88rem);
+  line-height: 1.12;
+}
+
+.resultPhone .expressionCardFeatured .variantText {
+  font-size: clamp(0.86rem, 3.86vw, 0.96rem);
+  line-height: 1.12;
+}
+
+.resultPhone .variantNote {
+  min-height: 22px;
+  padding: 0 9px;
+  font-size: 0.62rem;
+}
+
+.resultPhone .expressionCard:not(.expressionCardFeatured) .variantNote {
+  display: none;
+}
+
+.resultPhone .variantSpeaker,
+.resultPhone .expressionCardFeatured .variantSpeaker {
+  width: 35px;
+  height: 35px;
+}
+
+.resultPhone .variantSpeaker svg {
+  width: 20px;
+  height: 20px;
+}
+
+.resultPhone .cornerStar {
+  width: 36px;
+  height: 36px;
+  padding: 5px 5px 0 0;
+}
+
+.resultPhone .cornerStar svg {
+  width: 13px;
+  height: 13px;
+}
+
+.resultPhone .followCard {
+  min-height: 126px;
+  margin-top: 8px;
+  padding: 9px 12px 9px;
+}
+
+.resultPhone .followReadButton strong {
+  font-size: 0.9rem;
+}
+
+.resultPhone .followReadButton small {
+  margin-top: 2px;
+  font-size: 0.66rem;
+}
+
+.resultPhone .followBookIcon {
+  width: 36px;
+  height: 36px;
+}
+
+.resultPhone .followBookIcon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.resultPhone .slowReadButton {
+  min-width: 86px;
+  height: 34px;
+  font-size: 0.72rem;
+}
+
+.resultPhone .slowReadButton svg {
+  width: 17px;
+  height: 17px;
+}
+
+.resultPhone .followControls {
+  grid-template-columns: minmax(0, 1fr) 68px minmax(0, 1fr);
+  gap: 8px;
+  margin-top: 7px;
+}
+
+.resultPhone .followControls .sentenceButton {
+  min-height: 39px;
+}
+
+.resultPhone .followControls .sentenceButton span {
+  font-size: 0.78rem;
+}
+
+.resultPhone .followControls .sentenceButton svg {
+  width: 21px;
+  height: 21px;
+}
+
+.resultPhone .followMicButton {
+  width: 68px;
+  height: 68px;
+  border-width: 5px;
+}
+
+.resultPhone .followMicButton svg {
+  width: 35px;
+  height: 35px;
+}
+
+.resultPhone .followMicLabel {
+  font-size: 0.68rem;
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
+import { syncVocabularyWordsWithCloud } from "@/lib/vocabulary";
 import styles from "./NewExpressionsPage.module.css";
 
 type SessionResponse = {
@@ -283,6 +284,10 @@ export default function NewExpressionsPage() {
         if (!cancelled) {
           setAvatarSrc(nextAvatar || "/default-avatar.png");
           setAvatarFailed(false);
+        }
+
+        if (session.user?.email || session.user?.name) {
+          void syncVocabularyWordsWithCloud();
         }
       } catch {
         if (!cancelled) {

@@ -21,6 +21,7 @@ import PlayIcon from "@/components/PlayIcon";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import {
   addVocabularyWord,
+  flushVocabularyCloudSync,
   generateVocabularyDefinition,
   hasUsableMeaning,
   syncVocabularyWordsWithCloud,
@@ -3020,6 +3021,7 @@ function SpeakEnglishClient() {
     initialRouteViewState.practiceStage
   );
   const freePracticeRoundIdRef = useRef(createFreePracticeRoundId());
+  const aiGuidedFollowPracticePendingRef = useRef(false);
   const guidedConversationTurnsRef = useRef<GuidedConversationTurn[]>([]);
   const guidedFollowupRequestKeyRef = useRef("");
   const freeConversationRequestKeyRef = useRef("");
@@ -3282,9 +3284,19 @@ function SpeakEnglishClient() {
     showNativeConfirmationPrompt &&
     !showQuickPanel &&
     !showAccountMenu;
+  const showGuidedReferenceEnglishReady =
+    isAiGuidedMode &&
+    practiceStage === "english" &&
+    Boolean(nativeSpeech) &&
+    isNativeSpeechConfirmed &&
+    !hasEnglishAttempt &&
+    !showQuickPanel &&
+    !showAccountMenu;
   const showGuidedReferenceEnglishListening =
     isAiGuidedMode &&
-    (showListeningPrompt || isPrimingEnglishSpeech) &&
+    (showListeningPrompt ||
+      isPrimingEnglishSpeech ||
+      showGuidedReferenceEnglishReady) &&
     practiceStage === "english" &&
     (Boolean(nativeSpeech) || isPrimingEnglishSpeech) &&
     !showQuickPanel &&
@@ -3690,6 +3702,27 @@ function SpeakEnglishClient() {
     void syncVocabularyWordsWithCloud();
   }, [accountEmail]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const flushVocabulary = () => {
+      void flushVocabularyCloudSync();
+    };
+    const flushVocabularyWhenHidden = () => {
+      if (document.visibilityState === "hidden") {
+        flushVocabulary();
+      }
+    };
+
+    window.addEventListener("pagehide", flushVocabulary);
+    document.addEventListener("visibilitychange", flushVocabularyWhenHidden);
+
+    return () => {
+      window.removeEventListener("pagehide", flushVocabulary);
+      document.removeEventListener("visibilitychange", flushVocabularyWhenHidden);
+    };
+  }, []);
+
   const refreshAccountSubscription = useCallback(async () => {
     setHasCheckedAccountSubscription(false);
     setIsLoadingAccountSubscription(true);
@@ -3954,6 +3987,21 @@ function SpeakEnglishClient() {
       freePracticeRoundIdRef.current
     );
     setFreePracticeUsageCount(result.count);
+  }
+
+  function recordAiGuidedBackendProgress(payload: {
+    completionId?: string;
+    countExpression?: boolean;
+    step?: "native" | "english" | "suggestions" | "follow";
+  }) {
+    if (typeof window === "undefined") return;
+
+    void fetch("/api/ai-guided-expression/progress", {
+      body: JSON.stringify(payload),
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    }).catch(() => {});
   }
 
   function requestAccountDeletion() {
@@ -4532,6 +4580,7 @@ function SpeakEnglishClient() {
 
   function openTrainingGroundMode() {
     setTrainingGroundMode("guided");
+    aiGuidedFollowPracticePendingRef.current = false;
     guidedConversationTurnsRef.current = [];
     resetGuidedFollowupState();
     prepareNextNativeRound();
@@ -4689,6 +4738,7 @@ function SpeakEnglishClient() {
     const confirmedSpeech = nativeSpeech.trim();
     if (!confirmedSpeech) return;
 
+    aiGuidedFollowPracticePendingRef.current = true;
     saveFreeStudyRouteState(message);
     handledStepRouteRef.current = `/ai-guided-expression/step-4:${confirmedSpeech}`;
     router.push("/ai-guided-expression/step-4");
@@ -4699,6 +4749,7 @@ function SpeakEnglishClient() {
     const suggestedSpeech = guidedResultSuggestion.trim();
     if (!suggestedSpeech || isLoadingGuidedFollowup) return;
 
+    aiGuidedFollowPracticePendingRef.current = true;
     saveFreeStudyRouteState("");
     handledStepRouteRef.current = `/ai-guided-expression/step-4:${suggestedSpeech}`;
     router.push("/ai-guided-expression/step-4");
@@ -4761,9 +4812,24 @@ function SpeakEnglishClient() {
         setHasEnglishAttempt(false);
         setHasNativeSpeech(true);
         setPracticeStage("native");
+        if (isAiGuidedMode) {
+          recordAiGuidedBackendProgress({ step: "native" });
+        }
       } else {
         saveFreeStudyRouteState(finalTranscript);
         setHasEnglishAttempt(true);
+        if (isAiGuidedMode) {
+          const guidedStep = aiGuidedFollowPracticePendingRef.current
+            ? "follow"
+            : "english";
+
+          recordAiGuidedBackendProgress({
+            completionId: freePracticeRoundIdRef.current,
+            countExpression: true,
+            step: guidedStep,
+          });
+          aiGuidedFollowPracticePendingRef.current = false;
+        }
         markFreePracticeRoundCompleted();
       }
     }
@@ -4843,6 +4909,8 @@ function SpeakEnglishClient() {
     const confirmedSpeech = nativeSpeech.trim();
     if (!confirmedSpeech) return;
 
+    aiGuidedFollowPracticePendingRef.current = false;
+    recordAiGuidedBackendProgress({ step: "native" });
     saveFreeStudyRouteState("");
     handledStepRouteRef.current = `/ai-guided-expression/step-4:${confirmedSpeech}`;
     router.push("/ai-guided-expression/step-4");

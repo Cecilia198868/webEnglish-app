@@ -3,7 +3,6 @@
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import styles from "./ClassicScenesMenuPage.module.css";
 
 type SessionResponse = {
@@ -31,98 +30,110 @@ type SceneCardIcon =
 type SceneCard = {
   accent: string;
   badge?: string;
-  count?: number;
   description: string;
   href?: string;
   icon: SceneCardIcon;
+  iconBackground: string;
   id: string;
-  status?: string;
+  meta: string;
   title: string;
 };
 
 const sceneCards: SceneCard[] = [
   {
-    id: "finance-government",
-    title: "金融与行政事务",
-    description: "银行、支付、税务、签证等场景",
-    count: 70,
+    accent: "#2f6a39",
+    description: "银行、支付、税务、\n签证等场景",
     href: "/classic-scenes/finance-government",
     icon: "bank",
-    accent: "#7f401f",
+    iconBackground: "#edf4e8",
+    id: "finance-government",
+    meta: "70 个课程",
+    title: "金融与行政事务",
   },
   {
-    id: "shopping-consumption",
-    title: "购物与消费",
-    description: "购物、退换、支付、讨价还价",
-    status: "课程整理中",
+    accent: "#d86835",
+    description: "购物、退换、支付、\n讨价还价",
     icon: "bag",
-    accent: "#8a4a25",
+    iconBackground: "#fff1e8",
+    id: "shopping-consumption",
+    meta: "课程整理中",
+    title: "购物与消费",
   },
   {
-    id: "restaurant-takeout",
-    title: "餐饮与外卖",
-    description: "点餐、外卖、咖啡、餐厅沟通",
-    status: "课程整理中",
+    accent: "#d45d35",
+    description: "点餐、外卖、咖啡、\n餐厅沟通",
     icon: "utensils",
-    accent: "#8b431d",
+    iconBackground: "#fff0eb",
+    id: "restaurant-takeout",
+    meta: "课程整理中",
+    title: "餐饮与外卖",
   },
   {
-    id: "transportation-travel",
-    title: "交通与出行",
-    description: "机场、地铁、打车、问路",
-    status: "课程整理中",
+    accent: "#3d8990",
+    description: "机场、地铁、打车、\n问路",
     icon: "car",
-    accent: "#8a4a25",
+    iconBackground: "#ecf6f4",
+    id: "transportation-travel",
+    meta: "课程整理中",
+    title: "交通与出行",
   },
   {
-    id: "housing-home",
-    title: "住宿与家居",
-    description: "酒店入住、租房、家居生活",
-    status: "课程整理中",
+    accent: "#7d965d",
+    description: "酒店入住、租房、\n家居生活",
     icon: "home",
-    accent: "#7f401f",
+    iconBackground: "#f3f5e9",
+    id: "housing-home",
+    meta: "课程整理中",
+    title: "住宿与家居",
   },
   {
-    id: "health-medical",
-    title: "健康与医疗",
-    description: "看病、买药、体检、健康咨询",
-    status: "课程整理中",
+    accent: "#4f9567",
+    description: "看病、买药、体检、\n健康咨询",
     icon: "shield",
-    accent: "#8b431d",
+    iconBackground: "#edf6ec",
+    id: "health-medical",
+    meta: "课程整理中",
+    title: "健康与医疗",
   },
   {
-    id: "service-repair",
-    title: "服务与维修",
-    description: "快递、售后、维修、美容美发",
-    status: "课程整理中",
+    accent: "#df8b22",
+    description: "快递、售后、维修、\n美容美发",
     icon: "wrench",
-    accent: "#7f401f",
+    iconBackground: "#fff6dd",
+    id: "service-repair",
+    meta: "课程整理中",
+    title: "服务与维修",
   },
   {
-    id: "education-work-social",
-    title: "教育、工作与社交生活",
-    description: "工作沟通、面试、社交、学校生活",
-    status: "课程整理中",
+    accent: "#766c83",
+    description: "工作沟通、面试、社交、\n学校生活",
     icon: "graduation",
-    accent: "#8a4a25",
+    iconBackground: "#f3eef1",
+    id: "education-work-social",
+    meta: "课程整理中",
+    title: "教育、工作与社交生活",
   },
   {
-    id: "guided",
-    title: "AI 引导表达",
-    description: "根据你的想法，AI 帮你组织更地道的表达",
+    accent: "#4b854a",
     badge: "NEW",
+    description: "根据你的想法，AI 帮你\n组织更地道的表达",
     href: "/ai-guided-expression/step-1",
     icon: "ai",
-    accent: "#7f401f",
+    iconBackground: "#eef6ea",
+    id: "guided",
+    meta: "",
+    title: "AI 引导表达",
   },
   {
-    id: "expression",
-    title: "新表达",
-    description: "学习最常用表达，让你的英语更自然",
+    accent: "#dd9228",
     badge: "NEW",
+    description: "学习最常用表达，\n让你的英语更自然",
     href: "/new-expressions",
     icon: "chat",
-    accent: "#7f401f",
+    iconBackground: "#fff4df",
+    id: "expression",
+    meta: "",
+    title: "新表达",
   },
 ];
 
@@ -140,15 +151,25 @@ function getAvatarSrc(user?: SessionResponse["user"]) {
 function MenuIcon() {
   return (
     <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-      <path d="M8 11h16M8 16h16M8 21h16" />
+      <path d="M8.5 10.5h15M8.5 16h15M8.5 21.5h15" />
     </svg>
   );
 }
 
-function ChevronDown() {
+function BrandMarkIcon() {
+  return (
+    <svg viewBox="0 0 72 72" aria-hidden="true" focusable="false">
+      <path d="M35.5 9.5c14.8 0 26.7 11.2 26.7 25.3S50.3 60.2 35.5 60.2c-3.7 0-7.2-.7-10.3-2.1l-13.1 4.5 4.1-12.3a24.3 24.3 0 0 1-7.4-17.4C8.8 20.7 20.8 9.5 35.5 9.5Z" />
+      <path d="M24.8 32.4v7.2M31.8 26.8v18.4M38.8 30.4v11.2M45.8 34.2v3.6" />
+      <circle cx="51.2" cy="36" r="2.1" />
+    </svg>
+  );
+}
+
+function ArrowLeft() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="m7 9 5 5 5-5" />
+      <path d="M19 12H5M11 6l-6 6 6 6" />
     </svg>
   );
 }
@@ -167,62 +188,65 @@ function CardIcon({ icon }: { icon: SceneCardIcon }) {
   }
 
   return (
-    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false">
       {icon === "bank" && (
         <>
-          <path d="M5 13h22L16 6 5 13Z" />
-          <path d="M8 14v10M14 14v10M20 14v10M26 14v10M5 26h22" />
+          <path d="M6.5 17.2 20 8.5l13.5 8.7H6.5Z" />
+          <path d="M10.5 18.8v12M16.8 18.8v12M23.2 18.8v12M29.5 18.8v12M7.5 32.8h25" />
         </>
       )}
       {icon === "bag" && (
         <>
-          <path d="M8 12h16l-1 15H9L8 12Z" />
-          <path d="M12 12a4 4 0 0 1 8 0" />
+          <path d="M10.5 16h19l-1.3 17H11.8L10.5 16Z" />
+          <path d="M15.2 16a4.8 4.8 0 0 1 9.6 0" />
+          <path d="M16 22h.1M24 22h.1" />
         </>
       )}
       {icon === "utensils" && (
         <>
-          <path d="M9 6v9M6 6v7a3 3 0 0 0 6 0V6M18 6v20M24 7c-3 2-5 6-5 11h5" />
+          <path d="M11 7.5v11M7.8 7.5v8.4a3.2 3.2 0 1 0 6.4 0V7.5" />
+          <path d="M23.2 7.5v25" />
+          <path d="M30.2 8.2c-4.1 2.8-6.8 7.6-6.8 14.4h6.8" />
         </>
       )}
       {icon === "car" && (
         <>
-          <path d="m7 18 2-6h14l2 6" />
-          <path d="M6 18h20v7H6v-7Z" />
-          <path d="M10 25v2M22 25v2" />
-          <circle cx="11" cy="21" r="1.6" />
-          <circle cx="21" cy="21" r="1.6" />
+          <path d="m8.5 22 3-8.2h17l3 8.2" />
+          <path d="M7.2 22h25.6v8.5H7.2V22Z" />
+          <path d="M12.2 30.5v2M27.8 30.5v2" />
+          <circle cx="13.2" cy="26.2" r="1.8" />
+          <circle cx="26.8" cy="26.2" r="1.8" />
         </>
       )}
       {icon === "home" && (
         <>
-          <path d="m5 16 11-9 11 9" />
-          <path d="M8 15v12h16V15" />
-          <path d="M13 27v-8h6v8" />
+          <path d="M6.5 20 20 8.8 33.5 20" />
+          <path d="M10.2 18.8v14h19.6v-14" />
+          <path d="M16.5 32.8v-9h7v9" />
         </>
       )}
       {icon === "shield" && (
         <>
-          <path d="M16 5 26 9v7c0 6-4 10-10 12C10 26 6 22 6 16V9l10-4Z" />
-          <path d="M16 11v10M11 16h10" />
+          <path d="M20 6.5 32 11v8.5c0 7-4.9 11.8-12 14-7.1-2.2-12-7-12-14V11l12-4.5Z" />
+          <path d="M20 13.8v12.4M13.8 20h12.4" />
         </>
       )}
       {icon === "wrench" && (
-        <path d="M21 6a7 7 0 0 0-8 9L6 22a3 3 0 1 0 4 4l7-7a7 7 0 0 0 9-8l-5 5-4-4 5-5Z" />
+        <path d="M27 7.5a8.5 8.5 0 0 0-10.2 10.7L8.6 26.4a3.6 3.6 0 1 0 5 5l8.2-8.2A8.5 8.5 0 0 0 32.5 13l-6.1 6.1-5.5-5.5L27 7.5Z" />
       )}
       {icon === "graduation" && (
         <>
-          <path d="m4 12 12-6 12 6-12 6L4 12Z" />
-          <path d="M9 15v6c4 3 10 3 14 0v-6" />
-          <path d="M27 13v8" />
+          <path d="m5.8 15 14.2-7 14.2 7L20 22 5.8 15Z" />
+          <path d="M11.2 18.2v7.5c5.4 3.6 12.2 3.6 17.6 0v-7.5" />
+          <path d="M33 16.2v10" />
         </>
       )}
       {icon === "chat" && (
         <>
-          <path d="M7 9h18v12H13l-6 5V9Z" />
-          <circle cx="13" cy="15" r="1.2" />
-          <circle cx="17" cy="15" r="1.2" />
-          <circle cx="21" cy="15" r="1.2" />
+          <path d="M8 11h24v16H16.5L8 33V11Z" />
+          <circle cx="16" cy="19" r="1.5" />
+          <circle cx="20" cy="19" r="1.5" />
+          <circle cx="24" cy="19" r="1.5" />
         </>
       )}
     </svg>
@@ -232,15 +256,24 @@ function CardIcon({ icon }: { icon: SceneCardIcon }) {
 function HeroVisual() {
   return (
     <div className={styles.heroVisual} aria-hidden="true">
-      <span className={`${styles.spark} ${styles.sparkOne}`}>✦</span>
-      <span className={`${styles.spark} ${styles.sparkTwo}`}>✦</span>
-      <span className={styles.backPlate} />
-      <span className={styles.chatPlate}>
-        <span className={styles.chatBubble}>
-          <span />
-          <span />
-          <span />
+      <span className={styles.heroGlow} />
+      <span className={`${styles.spark} ${styles.sparkGold}`} />
+      <span className={`${styles.spark} ${styles.sparkWhite}`} />
+      <span className={styles.backCard}>
+        <span />
+        <span />
+      </span>
+      <span className={styles.frontCard}>
+        <span className={styles.bubble}>
+          <i />
+          <i />
+          <i />
         </span>
+      </span>
+      <span className={styles.leaf}>
+        <i />
+        <i />
+        <i />
       </span>
     </div>
   );
@@ -276,7 +309,9 @@ export default function ClassicScenesMenuPage() {
   const goHome = () => router.push("/menu");
   const openAccount = () => router.push("/account");
   const openCard = (card: SceneCard) => {
-    if (card.href) router.push(card.href);
+    if (card.href) {
+      router.push(card.href);
+    }
   };
 
   return (
@@ -292,8 +327,10 @@ export default function ClassicScenesMenuPage() {
             <MenuIcon />
           </button>
 
-          <div className={styles.brand}>
-            <SpeakFlowBrandMark className={styles.brandMark} />
+          <div className={styles.brand} aria-label="SpeakFlow Voice Practice">
+            <span className={styles.brandMark}>
+              <BrandMarkIcon />
+            </span>
             <div className={styles.brandText}>
               <strong>SpeakFlow</strong>
               <span>VOICE PRACTICE</span>
@@ -314,13 +351,12 @@ export default function ClassicScenesMenuPage() {
               onError={() => setAvatarSrc("/default-avatar.png")}
               draggable={false}
             />
-            <ChevronDown />
           </button>
         </header>
 
         <section className={styles.hero}>
           <button className={styles.backLink} type="button" onClick={goHome}>
-            <span aria-hidden="true">←</span>
+            <ArrowLeft />
             返回上一级
           </button>
           <div className={styles.heroText}>
@@ -332,10 +368,25 @@ export default function ClassicScenesMenuPage() {
 
         <section className={styles.cardGrid} aria-label="经典场景分类">
           {sceneCards.map((card) => {
-            const tileStyle = { "--card-accent": card.accent } as CSSProperties;
-            const content = (
-              <>
-                {card.badge && <span className={styles.badge}>{card.badge}</span>}
+            const tileStyle = {
+              "--card-accent": card.accent,
+              "--icon-bg": card.iconBackground,
+            } as CSSProperties;
+
+            return (
+              <button
+                key={card.id}
+                type="button"
+                className={
+                  card.meta
+                    ? styles.sceneCard
+                    : `${styles.sceneCard} ${styles.shortCard}`
+                }
+                style={tileStyle}
+                onClick={() => openCard(card)}
+                aria-label={card.href ? `进入${card.title}` : `${card.title}，课程整理中`}
+              >
+                {card.badge ? <span className={styles.badge}>{card.badge}</span> : null}
                 <span className={styles.iconTile} aria-hidden="true">
                   <CardIcon icon={card.icon} />
                 </span>
@@ -343,42 +394,10 @@ export default function ClassicScenesMenuPage() {
                   <strong>{card.title}</strong>
                   <span>{card.description}</span>
                 </span>
-                <span className={styles.cardMeta}>
-                  {typeof card.count === "number"
-                    ? `${card.count} 个课程`
-                    : card.status}
-                </span>
+                {card.meta ? <span className={styles.cardMeta}>{card.meta}</span> : null}
                 <span className={styles.arrowCircle} aria-hidden="true">
                   <ArrowRight />
                 </span>
-              </>
-            );
-
-            if (!card.href) {
-              return (
-                <button
-                  key={card.id}
-                  type="button"
-                  className={`${styles.sceneCard} ${styles.pendingCard}`}
-                  style={tileStyle}
-                  onClick={() => openCard(card)}
-                  aria-label={`${card.title}，${card.status || "课程整理中"}`}
-                >
-                  {content}
-                </button>
-              );
-            }
-
-            return (
-              <button
-                key={card.id}
-                type="button"
-                className={styles.sceneCard}
-                style={tileStyle}
-                onClick={() => openCard(card)}
-                aria-label={`进入${card.title}`}
-              >
-                {content}
               </button>
             );
           })}

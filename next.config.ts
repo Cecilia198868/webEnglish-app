@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const devOrigins = ["192.168.88.8", "127.0.0.1", "localhost"];
 
 const nextConfig: NextConfig = {
+  devIndicators: false,
   ...(process.env.NODE_ENV === "production"
     ? {}
     : { allowedDevOrigins: devOrigins }),

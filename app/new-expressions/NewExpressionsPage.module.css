@@ -172,31 +172,32 @@
   display: grid;
   grid-template-columns: 4rem minmax(0, 1fr);
   align-items: center;
-  gap: 0.72rem;
-  min-height: 7.58rem;
-  padding-block: 0.7rem 1rem;
+  gap: 0.58rem;
+  min-height: 5.28rem;
+  padding-block: 0.28rem 0.62rem;
 }
 
 :global(.sf-new-expressions-hero svg) {
-  width: 4.05rem;
-  height: 4.05rem;
+  justify-self: center;
+  width: 3rem;
+  height: 3rem;
 }
 
 :global(.sf-new-expressions-hero h1) {
   margin: 0;
   color: #071642;
-  font-size: 2.48rem;
+  font-size: 2rem;
   font-weight: 900;
   line-height: 1.02;
   letter-spacing: 0;
 }
 
 :global(.sf-new-expressions-hero p) {
-  margin: 0.55rem 0 0;
+  margin: 0.34rem 0 0;
   color: #667396;
-  font-size: 0.98rem;
+  font-size: 0.82rem;
   font-weight: 650;
-  line-height: 1.35;
+  line-height: 1.24;
   letter-spacing: 0;
 }
 
@@ -576,12 +577,12 @@
   }
 
   :global(.sf-new-expressions-hero) {
-    min-height: 7.1rem;
-    padding-block: 0.56rem 0.84rem;
+    min-height: 5rem;
+    padding-block: 0.18rem 0.52rem;
   }
 
   :global(.sf-new-expressions-hero h1) {
-    font-size: 2.34rem;
+    font-size: 1.9rem;
   }
 
   :global(.sf-new-expressions-card-list) {

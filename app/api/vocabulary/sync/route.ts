@@ -9,21 +9,26 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-async function getCurrentUserEmail() {
+async function getCurrentVocabularyOwner() {
   const session = await getServerSession(authOptions);
-  return session?.user?.email?.trim().toLowerCase() || "";
+  return (
+    session?.user?.email?.trim().toLowerCase() ||
+    session?.user?.name?.trim().toLowerCase() ||
+    ""
+  );
 }
 
 export async function GET() {
-  const email = await getCurrentUserEmail();
-  if (!email) {
+  const owner = await getCurrentVocabularyOwner();
+  if (!owner) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const words = await listCloudVocabularyWords(email);
+    const words = await listCloudVocabularyWords(owner);
     return NextResponse.json({ words });
-  } catch {
+  } catch (error) {
+    console.error("Vocabulary cloud sync GET failed", error);
     return NextResponse.json(
       { error: "Vocabulary sync is unavailable" },
       { status: 500 }
@@ -32,8 +37,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const email = await getCurrentUserEmail();
-  if (!email) {
+  const owner = await getCurrentVocabularyOwner();
+  if (!owner) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -41,9 +46,10 @@ export async function POST(request: Request) {
     const body = (await request.json().catch(() => ({}))) as {
       words?: unknown;
     };
-    const words = await mergeCloudVocabularyWords(email, body.words);
+    const words = await mergeCloudVocabularyWords(owner, body.words);
     return NextResponse.json({ words });
-  } catch {
+  } catch (error) {
+    console.error("Vocabulary cloud sync POST failed", error);
     return NextResponse.json(
       { error: "Vocabulary sync is unavailable" },
       { status: 500 }
@@ -52,16 +58,17 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const email = await getCurrentUserEmail();
-  if (!email) {
+  const owner = await getCurrentVocabularyOwner();
+  if (!owner) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const url = new URL(request.url);
-    await deleteCloudVocabularyWord(email, url.searchParams.get("word") || "");
+    await deleteCloudVocabularyWord(owner, url.searchParams.get("word") || "");
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    console.error("Vocabulary cloud sync DELETE failed", error);
     return NextResponse.json(
       { error: "Vocabulary sync is unavailable" },
       { status: 500 }

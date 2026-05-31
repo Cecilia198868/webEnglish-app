@@ -14,6 +14,7 @@ export default async function StartPage() {
     <StartPageClient
       userEmail={session.user.email || "Signed-in user"}
       userImage={session.user.image || ""}
+      userName={session.user.name || ""}
     />
   );
 }

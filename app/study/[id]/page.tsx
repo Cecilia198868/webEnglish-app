@@ -17,6 +17,7 @@ import {
 import { getPrebuiltClassicExpressionSet } from "@/data/prebuiltClassicExpressions";
 import {
   addVocabularyWord,
+  flushVocabularyCloudSync,
   generateVocabularyDefinition,
   hasUsableMeaning,
   tokenizeEnglishSentence,
@@ -419,15 +420,15 @@ function TopicIcon({ lessonId, title }: { lessonId: string; title: string }) {
 function SpeakerAvatarIcon() {
   return (
     <svg aria-hidden="true" focusable="false" viewBox="0 0 72 72">
-      <circle cx="36" cy="36" r="33" fill="#f2dfcc" />
-      <path d="M20 61c3-11 9-17 16-17s13 6 16 17" fill="#8a562f" />
-      <path d="M24 25c2-10 9-16 18-14 9 2 13 10 10 20-2-7-7-10-14-9-7 1-11 2-14 3Z" fill="#6d4228" />
-      <circle cx="35" cy="31" r="16" fill="#ffe3cc" />
-      <path d="M25 31c2-5 7-8 15-8 5 0 9 2 12 6-2-11-10-17-20-14-8 2-12 8-12 17 2 0 3 0 5-1Z" fill="#7b4a2d" />
-      <circle cx="30" cy="33" r="1.8" fill="#55331f" />
-      <circle cx="41" cy="33" r="1.8" fill="#55331f" />
-      <path d="M31 41c3 2 6 2 9 0" fill="none" stroke="#55331f" strokeLinecap="round" strokeWidth="2" />
-      <path d="M28 48h16l-8 8-8-8Z" fill="#fff8ef" />
+      <circle cx="36" cy="36" r="33" fill="#f3eadc" />
+      <path d="M20 61c3-11 9-17 16-17s13 6 16 17" fill="#5d7f54" />
+      <path d="M24 25c2-10 9-16 18-14 9 2 13 10 10 20-2-7-7-10-14-9-7 1-11 2-14 3Z" fill="#6f5335" />
+      <circle cx="35" cy="31" r="16" fill="#ffe6cf" />
+      <path d="M25 31c2-5 7-8 15-8 5 0 9 2 12 6-2-11-10-17-20-14-8 2-12 8-12 17 2 0 3 0 5-1Z" fill="#7a5a38" />
+      <circle cx="30" cy="33" r="1.8" fill="#3d3025" />
+      <circle cx="41" cy="33" r="1.8" fill="#3d3025" />
+      <path d="M31 41c3 2 6 2 9 0" fill="none" stroke="#3d3025" strokeLinecap="round" strokeWidth="2" />
+      <path d="M28 48h16l-8 8-8-8Z" fill="#fffaf2" />
     </svg>
   );
 }
@@ -469,10 +470,16 @@ function BigMicIcon() {
 
 function UserResultIcon() {
   return (
-    <svg aria-hidden="true" focusable="false" viewBox="0 0 40 40">
-      <circle cx="20" cy="20" r="18" />
-      <circle cx="20" cy="15" r="6" />
-      <path d="M9 32c2.4-7.1 6.1-10.6 11-10.6S28.6 24.9 31 32" />
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 72 72">
+      <circle cx="36" cy="36" r="33" fill="#f3eadc" />
+      <path d="M20 61c3-11 9-17 16-17s13 6 16 17" fill="#5d7f54" />
+      <path d="M24 25c2-10 9-16 18-14 9 2 13 10 10 20-2-7-7-10-14-9-7 1-11 2-14 3Z" fill="#6f5335" />
+      <circle cx="35" cy="31" r="16" fill="#ffe6cf" />
+      <path d="M25 31c2-5 7-8 15-8 5 0 9 2 12 6-2-11-10-17-20-14-8 2-12 8-12 17 2 0 3 0 5-1Z" fill="#7a5a38" />
+      <circle cx="30" cy="33" r="1.8" fill="#3d3025" />
+      <circle cx="41" cy="33" r="1.8" fill="#3d3025" />
+      <path d="M31 41c3 2 6 2 9 0" fill="none" stroke="#3d3025" strokeLinecap="round" strokeWidth="2" />
+      <path d="M28 48h16l-8 8-8-8Z" fill="#fffaf2" />
     </svg>
   );
 }
@@ -501,8 +508,8 @@ function ResultVariantIcon({ variantKey }: { variantKey: ExpressionVariantKey })
   if (variantKey === "idiomatic") {
     return (
       <svg aria-hidden="true" focusable="false" viewBox="0 0 40 40">
-        <path d="M20 5 34 19 20 35 6 19 20 5Z" />
-        <path d="M13 19h14M20 5l-6 14 6 16 6-16-6-14Z" />
+        <path d="M11 6v12c0 3 2 5 5 5v11h3V23c3 0 5-2 5-5V6h-3v11h-2V6h-3v11h-2V6h-3Z" />
+        <path d="M29 6c-2 4-3 8-3 13v15h3V23h3V6h-3Z" />
       </svg>
     );
   }
@@ -510,8 +517,10 @@ function ResultVariantIcon({ variantKey }: { variantKey: ExpressionVariantKey })
   if (variantKey === "simple") {
     return (
       <svg aria-hidden="true" focusable="false" viewBox="0 0 40 40">
-        <path d="M11 29 26 14l5 5-15 15H9v-7Z" />
-        <path d="m23 17 5 5" />
+        <path d="M9 24h2l3-8h12l3 8h2a3 3 0 0 1 3 3v5h-4v-3H10v3H6v-5a3 3 0 0 1 3-3Z" />
+        <path d="M15 18h10l2 6H13l2-6Z" />
+        <circle cx="13" cy="29" r="2" />
+        <circle cx="27" cy="29" r="2" />
       </svg>
     );
   }
@@ -519,8 +528,8 @@ function ResultVariantIcon({ variantKey }: { variantKey: ExpressionVariantKey })
   if (variantKey === "natural") {
     return (
       <svg aria-hidden="true" focusable="false" viewBox="0 0 40 40">
-        <path d="M31 9C20 10 11 18 10 31c12-1 20-9 21-22Z" />
-        <path d="M12 29c5-5 10-9 16-13" />
+        <path d="M20 5 32 10v9c0 8-4.7 13.6-12 17-7.3-3.4-12-9-12-17v-9L20 5Z" />
+        <path d="M18 14h4v6h6v4h-6v6h-4v-6h-6v-4h6v-6Z" />
       </svg>
     );
   }
@@ -647,6 +656,27 @@ export default function StudyPage() {
     window.localStorage.removeItem("speakflow-appearance-preference");
     delete document.documentElement.dataset.speakflowAppearance;
     delete document.documentElement.dataset.speakflowTheme;
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const flushVocabulary = () => {
+      void flushVocabularyCloudSync();
+    };
+    const flushVocabularyWhenHidden = () => {
+      if (document.visibilityState === "hidden") {
+        flushVocabulary();
+      }
+    };
+
+    window.addEventListener("pagehide", flushVocabulary);
+    document.addEventListener("visibilitychange", flushVocabularyWhenHidden);
+
+    return () => {
+      window.removeEventListener("pagehide", flushVocabulary);
+      document.removeEventListener("visibilitychange", flushVocabularyWhenHidden);
+    };
   }, []);
 
   function clearAutoTimer() {
@@ -1821,6 +1851,33 @@ export default function StudyPage() {
     return createFallbackHighlightedExpressions(sentence);
   }
 
+  function renderClassicWordTokens(
+    text: string,
+    sourceSentence: string,
+    keyPrefix: string,
+    className = styles.highlightedWordToken
+  ) {
+    return tokenizeEnglishSentence(text).map((token, tokenIndex) =>
+      token.type === "word" && token.normalized ? (
+        <button
+          key={`${keyPrefix}-${token.value}-${tokenIndex}`}
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            handleWordClick(token.value, sourceSentence);
+          }}
+          className={className}
+        >
+          {token.value}
+        </button>
+      ) : (
+        <span key={`${keyPrefix}-${token.value}-${tokenIndex}`}>
+          {token.value}
+        </span>
+      )
+    );
+  }
+
   function renderClassicHighlightedText(
     text: string,
     variantKey?: ExpressionVariantKey
@@ -1832,35 +1889,39 @@ export default function StudyPage() {
 
     return segments.map((segment, index) =>
       segment.type === "expression" ? (
-        <button
+        <span
           key={`${segment.value}-${index}`}
-          type="button"
+          role="button"
+          tabIndex={0}
           onClick={(event) => {
             event.stopPropagation();
             handleExpressionClick(segment.expression, text);
           }}
+          onKeyDown={(event) => {
+            if (
+              event.target === event.currentTarget &&
+              (event.key === "Enter" || event.key === " ")
+            ) {
+              event.preventDefault();
+              event.stopPropagation();
+              handleExpressionClick(segment.expression, text);
+            }
+          }}
           className={styles.highlightedExpressionToken}
+          aria-label={`收藏表达 ${segment.value}`}
         >
-          {segment.value}
-        </button>
+          {renderClassicWordTokens(
+            segment.value,
+            text,
+            `classic-expression-${index}`
+          )}
+        </span>
       ) : (
         <span key={`${segment.value}-${index}`}>
-          {tokenizeEnglishSentence(segment.value).map((token, tokenIndex) =>
-            token.type === "word" && token.normalized ? (
-              <button
-                key={`${token.value}-${tokenIndex}`}
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  handleWordClick(token.value, text);
-                }}
-                className={styles.highlightedWordToken}
-              >
-                {token.value}
-              </button>
-            ) : (
-              <span key={`${token.value}-${tokenIndex}`}>{token.value}</span>
-            )
+          {renderClassicWordTokens(
+            segment.value,
+            text,
+            `classic-text-${index}`
           )}
         </span>
       )
@@ -2176,82 +2237,94 @@ export default function StudyPage() {
             学习不同表达方式，找到最适合你的说法
           </p>
 
-          <section className={styles.userExpressionCard} aria-label="你的表达">
-            <div className={styles.userExpressionLabel}>
-              <span className={styles.userExpressionIcon}>
-                <UserResultIcon />
-              </span>
-              <strong>你的表达</strong>
-            </div>
-            <p className={styles.userExpressionText}>
-              {renderClassicHighlightedText(spokenDisplay)}
-            </p>
-          </section>
+          <section className={styles.resultExpressionPanel} aria-label="表达对比">
+            <section className={styles.userExpressionCard} aria-label="你的表达">
+              <div className={styles.userExpressionLabel}>
+                <span className={styles.userExpressionIcon}>
+                  <UserResultIcon />
+                </span>
+                <strong>你的表达</strong>
+              </div>
+              <div className={styles.userExpressionBubble}>
+                <p className={styles.userExpressionText}>
+                  {renderClassicHighlightedText(spokenDisplay)}
+                </p>
+                <button
+                  type="button"
+                  className={styles.userExpressionSpeaker}
+                  aria-label="朗读你的表达"
+                  onClick={() => speakEnglish(spokenDisplay, 1)}
+                >
+                  <SpeakerIcon />
+                </button>
+              </div>
+            </section>
 
-          <section className={styles.expressionList} aria-label="推荐表达">
-            {isLoadingExpressionVariants ? (
-              <p className={styles.loadingExpressions}>正在生成表达...</p>
-            ) : (
-              resultVariants.map((variant, variantIndex) => {
-                const isSelected = selectedExpressionIndex === variantIndex;
-                const isFeatured = variant.key === "standard";
-                const toneClass = getResultVariantToneClass(variant.key);
+            <section className={styles.expressionList} aria-label="推荐表达">
+              {isLoadingExpressionVariants ? (
+                <p className={styles.loadingExpressions}>正在生成表达...</p>
+              ) : (
+                resultVariants.map((variant, variantIndex) => {
+                  const isSelected = selectedExpressionIndex === variantIndex;
+                  const isFeatured = variant.key === "standard";
+                  const toneClass = getResultVariantToneClass(variant.key);
 
-                return (
-                  <article
-                    key={`${variant.key}-${variantIndex}`}
-                    className={`${styles.expressionCard} ${toneClass} ${
-                      isFeatured ? styles.expressionCardFeatured : ""
-                    } ${isSelected ? styles.expressionCardSelected : ""}`}
-                  >
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      className={styles.expressionSelectArea}
-                      onClick={() => setSelectedExpressionIndex(variantIndex)}
-                      onKeyDown={(event) => {
-                        if (
-                          event.target === event.currentTarget &&
-                          (event.key === "Enter" || event.key === " ")
-                        ) {
-                          event.preventDefault();
-                          setSelectedExpressionIndex(variantIndex);
-                        }
-                      }}
-                      aria-label={`选择${variant.label}`}
+                  return (
+                    <article
+                      key={`${variant.key}-${variantIndex}`}
+                      className={`${styles.expressionCard} ${toneClass} ${
+                        isFeatured ? styles.expressionCardFeatured : ""
+                      } ${isSelected ? styles.expressionCardSelected : ""}`}
                     >
-                      <span className={styles.variantRibbon}>
-                        <ResultVariantIcon variantKey={variant.key} />
-                      </span>
-                      <span className={styles.variantCopy}>
-                        <span className={styles.variantTitle}>{variant.label}</span>
-                        <span className={styles.variantText}>
-                          {renderClassicHighlightedText(variant.text, variant.key)}
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        className={styles.expressionSelectArea}
+                        onClick={() => setSelectedExpressionIndex(variantIndex)}
+                        onKeyDown={(event) => {
+                          if (
+                            event.target === event.currentTarget &&
+                            (event.key === "Enter" || event.key === " ")
+                          ) {
+                            event.preventDefault();
+                            setSelectedExpressionIndex(variantIndex);
+                          }
+                        }}
+                        aria-label={`选择${variant.label}`}
+                      >
+                        <span className={styles.variantRibbon}>
+                          <ResultVariantIcon variantKey={variant.key} />
                         </span>
-                        <span className={styles.variantNote}>
-                          {getResultVariantNote(variant.key)}
+                        <span className={styles.variantCopy}>
+                          <span className={styles.variantTitle}>{variant.label}</span>
+                          <span className={styles.variantText}>
+                            {renderClassicHighlightedText(variant.text, variant.key)}
+                          </span>
+                          <span className={styles.variantNote}>
+                            {getResultVariantNote(variant.key)}
+                          </span>
                         </span>
-                      </span>
-                    </div>
+                      </div>
 
-                    <button
-                      type="button"
-                      className={styles.variantSpeaker}
-                      aria-label={`朗读${variant.label}`}
-                      onClick={() => readExpressionVariant(variant, variantIndex)}
-                    >
-                      <SpeakerIcon />
-                    </button>
+                      <button
+                        type="button"
+                        className={styles.variantSpeaker}
+                        aria-label={`朗读${variant.label}`}
+                        onClick={() => readExpressionVariant(variant, variantIndex)}
+                      >
+                        <SpeakerIcon />
+                      </button>
 
-                    {isFeatured ? (
-                      <span className={styles.cornerStar} aria-hidden="true">
-                        <ResultVariantIcon variantKey="standard" />
-                      </span>
-                    ) : null}
-                  </article>
-                );
-              })
-            )}
+                      {isFeatured ? (
+                        <span className={styles.cornerStar} aria-hidden="true">
+                          <ResultVariantIcon variantKey="standard" />
+                        </span>
+                      ) : null}
+                    </article>
+                  );
+                })
+              )}
+            </section>
           </section>
 
           <section className={styles.followCard} aria-label="跟读练习">

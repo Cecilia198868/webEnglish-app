@@ -1,6 +1,7 @@
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import {
   mergeVocabularyWords,
+  normalizeExpressionStudyProgress,
   normalizeVocabularyDefinition,
   normalizeVocabularyWord,
   type VocabularyWord,
@@ -51,16 +52,34 @@ function rowToVocabularyWord(row: UserVocabularyRow): VocabularyWord | null {
     meaning: row.meaning || "",
     partOfSpeech: row.part_of_speech || "",
   });
+  const masteredCount = cleanCount(row.mastered_count);
+  const correctCount = cleanCount(row.correct_count);
+  const studyProgress = normalizeExpressionStudyProgress({
+    correctCount,
+    masteredCount,
+  });
 
   return {
-    correctCount: cleanCount(row.correct_count),
+    correctCount,
     createdAt: cleanCreatedAt(row.created_at),
     example: definition.example,
     exampleZh: definition.exampleZh,
-    masteredCount: cleanCount(row.mastered_count),
+    id: word,
+    manuallyMastered: studyProgress.manuallyMastered,
+    masteredCount,
     meaning: definition.meaning,
+    meaningZh: definition.meaning,
+    nextReviewAt: studyProgress.nextReviewAt,
     partOfSpeech: definition.partOfSpeech,
+    playCount: studyProgress.playCount,
+    shadowCount: studyProgress.shadowCount,
     sourceSentence: row.source_sentence || undefined,
+    status: studyProgress.status,
+    streakDays: studyProgress.streakDays,
+    studiedDates: studyProgress.studiedDates,
+    text: word,
+    firstStudiedAt: studyProgress.firstStudiedAt,
+    lastStudiedAt: studyProgress.lastStudiedAt,
     word,
     wrongCount: cleanCount(row.wrong_count),
   };
@@ -78,16 +97,29 @@ function normalizeIncomingVocabularyWords(words: unknown) {
       if (!word) return null;
 
       const definition = normalizeVocabularyDefinition(record);
+      const studyProgress = normalizeExpressionStudyProgress(record);
 
       return {
         correctCount: cleanCount(record.correctCount),
         createdAt: cleanCreatedAt(record.createdAt),
         example: definition.example,
         exampleZh: definition.exampleZh,
+        firstStudiedAt: studyProgress.firstStudiedAt,
+        id: cleanText(record.id) || word,
+        lastStudiedAt: studyProgress.lastStudiedAt,
+        manuallyMastered: studyProgress.manuallyMastered,
         masteredCount: cleanCount(record.masteredCount),
         meaning: definition.meaning,
+        meaningZh: cleanText(record.meaningZh) || definition.meaning,
+        nextReviewAt: studyProgress.nextReviewAt,
         partOfSpeech: definition.partOfSpeech,
+        playCount: studyProgress.playCount,
+        shadowCount: studyProgress.shadowCount,
         sourceSentence: cleanText(record.sourceSentence) || undefined,
+        status: studyProgress.status,
+        streakDays: studyProgress.streakDays,
+        studiedDates: studyProgress.studiedDates,
+        text: cleanText(record.text) || word,
         word,
         wrongCount: cleanCount(record.wrongCount),
       };

@@ -45,17 +45,17 @@ const lessons: BankLesson[] = [
     id: "bank_open_new_account_zh",
     href: "/study/bank_open_new_account_zh",
     icon: "account",
-    accent: "#7b61ff",
-    tile: "#eee9ff",
+    accent: "#5d9349",
+    tile: "#f4f0df",
   },
   {
     number: 2,
-    title: "银行事务口语课",
+    title: "银行业务口语课",
     id: "bank_general_banking_zh",
     href: "/study/bank_general_banking_zh",
     icon: "headset",
-    accent: "#14b879",
-    tile: "#e7fbf2",
+    accent: "#548c86",
+    tile: "#edf5e8",
   },
   {
     number: 3,
@@ -63,8 +63,8 @@ const lessons: BankLesson[] = [
     id: "bank_atm_self_service_zh",
     href: "/study/bank_atm_self_service_zh",
     icon: "atm",
-    accent: "#ff843f",
-    tile: "#fff0e5",
+    accent: "#5f8553",
+    tile: "#f1f5e5",
   },
   {
     number: 4,
@@ -72,8 +72,8 @@ const lessons: BankLesson[] = [
     id: "bank_online_banking_app_zh",
     href: "/study/bank_online_banking_app_zh",
     icon: "phone",
-    accent: "#2f8ae8",
-    tile: "#eaf4ff",
+    accent: "#33594f",
+    tile: "#edf5e8",
   },
   {
     number: 5,
@@ -81,8 +81,8 @@ const lessons: BankLesson[] = [
     id: "bank_deposit_withdrawal_zh",
     href: "/study/bank_deposit_withdrawal_zh",
     icon: "cash",
-    accent: "#f7a92f",
-    tile: "#fff4df",
+    accent: "#6d9a57",
+    tile: "#f5f2e1",
   },
   {
     number: 6,
@@ -90,8 +90,8 @@ const lessons: BankLesson[] = [
     id: "bank_currency_exchange_remittance_zh",
     href: "/study/bank_currency_exchange_remittance_zh",
     icon: "exchange",
-    accent: "#10af75",
-    tile: "#e4faf0",
+    accent: "#5a7d54",
+    tile: "#fff1dd",
   },
   {
     number: 7,
@@ -99,8 +99,8 @@ const lessons: BankLesson[] = [
     id: "bank_international_wire_zh",
     href: "/study/bank_international_wire_zh",
     icon: "globe",
-    accent: "#8270e8",
-    tile: "#f0edff",
+    accent: "#4e8b83",
+    tile: "#eff5e8",
   },
   {
     number: 8,
@@ -108,8 +108,8 @@ const lessons: BankLesson[] = [
     id: "bank_savings_fixed_deposit_zh",
     href: "/study/bank_savings_fixed_deposit_zh",
     icon: "safe",
-    accent: "#2f8ae8",
-    tile: "#e9f5ff",
+    accent: "#5e8e55",
+    tile: "#f2f5e5",
   },
   {
     number: 9,
@@ -117,8 +117,8 @@ const lessons: BankLesson[] = [
     id: "bank_credit_card_application_zh",
     href: "/study/bank_credit_card_application_zh",
     icon: "clipboard",
-    accent: "#ed5190",
-    tile: "#fff0f8",
+    accent: "#5d9349",
+    tile: "#f4f0df",
   },
   {
     number: 10,
@@ -126,8 +126,8 @@ const lessons: BankLesson[] = [
     id: "bank_credit_card_lost_report_zh",
     href: "/study/bank_credit_card_lost_report_zh",
     icon: "lock",
-    accent: "#e64d88",
-    tile: "#fff0f7",
+    accent: "#33594f",
+    tile: "#edf5e8",
   },
   {
     number: 11,
@@ -135,8 +135,8 @@ const lessons: BankLesson[] = [
     id: "bank_credit_card_fraud_report_zh",
     href: "/study/bank_credit_card_fraud_report_zh",
     icon: "shieldAlert",
-    accent: "#ff7f35",
-    tile: "#fff0e7",
+    accent: "#5f8553",
+    tile: "#f1f5e5",
   },
   {
     number: 12,
@@ -144,8 +144,8 @@ const lessons: BankLesson[] = [
     id: "bank_fee_disputes_zh",
     href: "/study/bank_fee_disputes_zh",
     icon: "question",
-    accent: "#2f8ae8",
-    tile: "#eaf5ff",
+    accent: "#548c86",
+    tile: "#edf5e8",
   },
   {
     number: 13,
@@ -153,8 +153,8 @@ const lessons: BankLesson[] = [
     id: "bank_customer_service_calls_zh",
     href: "/study/bank_customer_service_calls_zh",
     icon: "call",
-    accent: "#0eb97b",
-    tile: "#e5fbf2",
+    accent: "#5a7d54",
+    tile: "#fff1dd",
   },
   {
     number: 14,
@@ -162,8 +162,8 @@ const lessons: BankLesson[] = [
     id: "bank_personal_loan_zh",
     href: "/study/bank_personal_loan_zh",
     icon: "person",
-    accent: "#8067e8",
-    tile: "#f0edff",
+    accent: "#5d9349",
+    tile: "#f4f0df",
   },
   {
     number: 15,
@@ -171,8 +171,8 @@ const lessons: BankLesson[] = [
     id: "bank_mortgage_consultation_zh",
     href: "/study/bank_mortgage_consultation_zh",
     icon: "house",
-    accent: "#f4ad36",
-    tile: "#fff4df",
+    accent: "#6d9a57",
+    tile: "#f5f2e1",
   },
   {
     number: 16,
@@ -180,8 +180,8 @@ const lessons: BankLesson[] = [
     id: "bank_safe_deposit_box_zh",
     href: "/study/bank_safe_deposit_box_zh",
     icon: "shield",
-    accent: "#2f8ae8",
-    tile: "#eaf5ff",
+    accent: "#33594f",
+    tile: "#edf5e8",
   },
   {
     number: 17,
@@ -189,8 +189,8 @@ const lessons: BankLesson[] = [
     id: "bank_insurance_products_zh",
     href: "/study/bank_insurance_products_zh",
     icon: "umbrella",
-    accent: "#18ad7c",
-    tile: "#e6fbf2",
+    accent: "#5d9349",
+    tile: "#f4f0df",
   },
   {
     number: 18,
@@ -198,8 +198,8 @@ const lessons: BankLesson[] = [
     id: "bank_wealth_management_zh",
     href: "/study/bank_wealth_management_zh",
     icon: "chart",
-    accent: "#f06d42",
-    tile: "#fff0e8",
+    accent: "#5a7d54",
+    tile: "#fff1dd",
   },
   {
     number: 19,
@@ -207,8 +207,8 @@ const lessons: BankLesson[] = [
     id: "bank_retirement_pension_zh",
     href: "/study/bank_retirement_pension_zh",
     icon: "retirement",
-    accent: "#8067e8",
-    tile: "#f0edff",
+    accent: "#548c86",
+    tile: "#edf5e8",
   },
   {
     number: 20,
@@ -216,8 +216,8 @@ const lessons: BankLesson[] = [
     id: "bank_close_account_zh",
     href: "/study/bank_close_account_zh",
     icon: "power",
-    accent: "#7d86a6",
-    tile: "#eff2f7",
+    accent: "#5d9349",
+    tile: "#f4f0df",
   },
 ];
 
@@ -248,18 +248,16 @@ function LessonIcon({ type }: { type: BankLessonIcon }) {
         </>
       ) : type === "atm" ? (
         <>
-          <rect x="9" y="9" width="30" height="30" rx="7" />
+          <rect x="10" y="9" width="28" height="30" rx="5" />
+          <path d="M15 16h18M15 25h4M22 25h4M29 25h4M15 31h4M22 31h4M29 31h4" />
           <text x="24" y="22" textAnchor="middle">
-            ATM
-          </text>
-          <text x="24" y="32" textAnchor="middle">
             ATM
           </text>
         </>
       ) : type === "phone" ? (
         <>
           <rect x="15" y="7" width="18" height="34" rx="4" />
-          <path d="M21 12h6M21 35h6" />
+          <path d="M21 12h6M21 35h6M19 29l5-5 5 5M24 24v8" />
         </>
       ) : type === "cash" ? (
         <>
@@ -375,7 +373,7 @@ export default function BankFinanceTransactionsPage() {
       <section className={styles.phone} aria-labelledby="bank-finance-title">
         <header className={styles.header}>
           <Link
-            aria-label="返回银行与金融菜单界面"
+            aria-label="返回金融与行政事务菜单界面"
             className={styles.backButton}
             href={backToFinanceMenuHref}
           >
