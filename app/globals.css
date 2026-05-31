@@ -1918,9 +1918,9 @@ body {
   min-height: 100dvh;
   overflow: hidden;
   padding:
-    max(clamp(28px, 5.2dvh, 42px), calc(env(safe-area-inset-top, 0px) + 16px))
+    max(clamp(22px, 3.4dvh, 28px), calc(env(safe-area-inset-top, 0px) + 12px))
     clamp(18px, 5vw, 28px)
-    max(clamp(18px, 3.8dvh, 30px), calc(env(safe-area-inset-bottom, 0px) + 16px));
+    max(clamp(10px, 2dvh, 16px), calc(env(safe-area-inset-bottom, 0px) + 8px));
   box-sizing: border-box;
 }
 
@@ -1961,7 +1961,7 @@ body {
 
 .sf-ai-guided-step-one-header {
   display: grid;
-  grid-template-columns: clamp(54px, 15vw, 68px) minmax(0, 1fr) clamp(56px, 15vw, 70px);
+  grid-template-columns: clamp(48px, 12.2vw, 54px) minmax(0, 1fr) clamp(50px, 12.6vw, 56px);
   gap: clamp(10px, 3vw, 16px);
   align-items: center;
 }
@@ -2029,7 +2029,7 @@ body {
 
 .sf-ai-guided-step-one-brand {
   display: inline-grid;
-  grid-template-columns: clamp(42px, 11.2vw, 52px) minmax(0, max-content);
+  grid-template-columns: clamp(38px, 10.4vw, 46px) minmax(0, max-content);
   justify-content: center;
   align-items: center;
   gap: clamp(10px, 2.8vw, 14px);
@@ -2062,7 +2062,7 @@ body {
 
 .sf-ai-guided-step-one-brand-title {
   color: #07113f;
-  font-size: clamp(25px, 7.2vw, 34px);
+  font-size: clamp(24px, 6.8vw, 30px);
   font-weight: 900;
   line-height: 0.95;
   letter-spacing: 0;
@@ -2071,9 +2071,9 @@ body {
 .sf-ai-guided-step-one-brand-subtitle {
   margin-top: clamp(5px, 1.4vw, 7px);
   color: #5d9fff;
-  font-size: clamp(9px, 2.85vw, 12px);
+  font-size: clamp(8px, 2.5vw, 10px);
   font-weight: 900;
-  letter-spacing: 3px;
+  letter-spacing: 2.6px;
   line-height: 1;
 }
 
@@ -2082,7 +2082,7 @@ body {
   grid-template-columns: minmax(110px, 0.9fr) minmax(150px, 1.45fr);
   gap: clamp(14px, 7vw, 40px);
   align-items: center;
-  margin-top: clamp(24px, 4.7dvh, 42px);
+  margin-top: clamp(17px, 2.5dvh, 22px);
 }
 
 .sf-ai-guided-step-one-back,
@@ -2136,7 +2136,7 @@ body {
   position: relative;
   display: grid;
   justify-items: center;
-  margin-top: clamp(28px, 5.2dvh, 48px);
+  margin-top: clamp(12px, 2dvh, 18px);
   text-align: center;
 }
 
@@ -2158,9 +2158,9 @@ body {
 .sf-ai-guided-step-one-hero h1 {
   margin: 0;
   color: #07113f;
-  font-size: clamp(42px, 13.4vw, 64px);
+  font-size: clamp(40px, 12.9vw, 56px);
   font-weight: 950;
-  line-height: 1.16;
+  line-height: 1.08;
   letter-spacing: 0;
 }
 
@@ -2170,9 +2170,9 @@ body {
 }
 
 .sf-ai-guided-step-one-hero p {
-  margin: clamp(16px, 3.7vw, 22px) 0 0;
+  margin: clamp(13px, 3.1vw, 16px) 0 0;
   color: #7c8ba8;
-  font-size: clamp(16px, 4.5vw, 22px);
+  font-size: clamp(15px, 4vw, 18px);
   font-weight: 800;
   line-height: 1.4;
   letter-spacing: 0;
@@ -2257,11 +2257,11 @@ body {
 
 .sf-ai-guided-stats {
   display: grid;
-  grid-template-columns: 1fr clamp(92px, 26vw, 118px) 1fr;
+  grid-template-columns: 1fr clamp(82px, 22vw, 96px) 1fr;
   align-items: center;
-  margin-top: clamp(24px, 4.4dvh, 42px);
-  min-height: clamp(86px, 22vw, 106px);
-  padding: clamp(12px, 3.2vw, 16px) clamp(16px, 4.6vw, 24px);
+  margin-top: clamp(16px, 2.7dvh, 24px);
+  min-height: clamp(78px, 19vw, 90px);
+  padding: clamp(10px, 2.7vw, 13px) clamp(14px, 4.2vw, 20px);
   border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: clamp(18px, 5vw, 26px);
   background: rgba(255, 255, 255, 0.76);
@@ -2273,7 +2273,7 @@ body {
 .sf-ai-guided-stat {
   display: flex;
   align-items: center;
-  gap: clamp(8px, 2.6vw, 14px);
+  gap: clamp(7px, 2.1vw, 10px);
   min-width: 0;
 }
 
@@ -2288,7 +2288,7 @@ body {
 
 .sf-ai-guided-stat-icon {
   display: grid;
-  width: clamp(34px, 9.6vw, 44px);
+  width: clamp(30px, 8.6vw, 38px);
   aspect-ratio: 1;
   place-items: center;
   color: #69b6ff;
@@ -2303,16 +2303,16 @@ body {
 .sf-ai-guided-stat span span {
   display: block;
   color: #7f8eac;
-  font-size: clamp(12px, 3.25vw, 15px);
+  font-size: clamp(11px, 2.95vw, 13px);
   font-weight: 800;
   line-height: 1.25;
 }
 
 .sf-ai-guided-stat strong {
   display: block;
-  margin-top: 5px;
+  margin-top: 4px;
   color: #07113f;
-  font-size: clamp(19px, 5.6vw, 27px);
+  font-size: clamp(18px, 5.1vw, 23px);
   font-weight: 950;
   line-height: 1;
 }
@@ -2320,7 +2320,7 @@ body {
 .sf-ai-guided-progress {
   position: relative;
   display: grid;
-  min-height: clamp(72px, 21vw, 96px);
+  min-height: clamp(66px, 18.4vw, 80px);
   place-items: center;
   text-align: center;
 }
@@ -2336,7 +2336,7 @@ body {
 
 .sf-ai-guided-progress circle {
   stroke: rgba(184, 203, 246, 0.45);
-  stroke-width: 10;
+  stroke-width: 9;
 }
 
 .sf-ai-guided-progress circle + circle {
@@ -2350,7 +2350,7 @@ body {
 .sf-ai-guided-progress strong {
   margin-top: 8px;
   color: #07113f;
-  font-size: clamp(25px, 7vw, 36px);
+  font-size: clamp(23px, 6vw, 29px);
   font-weight: 950;
   line-height: 1;
 }
@@ -2360,20 +2360,20 @@ body {
 }
 
 .sf-ai-guided-progress small {
-  margin-top: -10px;
+  margin-top: -8px;
   color: #5a96ff;
-  font-size: clamp(10px, 3vw, 14px);
+  font-size: clamp(9px, 2.6vw, 12px);
   font-weight: 900;
 }
 
 .sf-ai-guided-step-section {
-  margin-top: clamp(28px, 5dvh, 46px);
+  margin-top: clamp(20px, 3.2dvh, 30px);
 }
 
 .sf-ai-guided-step-section h2 {
-  margin: 0 0 clamp(14px, 3.4vw, 18px);
+  margin: 0 0 clamp(11px, 2.8vw, 14px);
   color: #174579;
-  font-size: clamp(18px, 5.4vw, 26px);
+  font-size: clamp(17px, 4.8vw, 21px);
   font-weight: 950;
   line-height: 1;
   letter-spacing: 0;
@@ -2390,7 +2390,7 @@ body {
 .sf-ai-guided-step-list {
   position: relative;
   display: grid;
-  gap: clamp(8px, 1.6dvh, 12px);
+  gap: clamp(7px, 1.1dvh, 10px);
 }
 
 .sf-ai-guided-step-list::before {
@@ -2407,14 +2407,14 @@ body {
 .sf-ai-guided-step-card {
   position: relative;
   display: grid;
-  grid-template-columns: clamp(44px, 11.5vw, 54px) clamp(54px, 14.5vw, 64px) minmax(0, 1fr) auto;
-  gap: clamp(10px, 2.8vw, 16px);
+  grid-template-columns: clamp(40px, 10.4vw, 46px) clamp(48px, 12.8vw, 55px) minmax(0, 1fr) auto;
+  gap: clamp(8px, 2.35vw, 11px);
   align-items: center;
-  min-height: clamp(66px, 16vw, 78px);
+  min-height: clamp(58px, 13.8vw, 64px);
   border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: clamp(16px, 4.2vw, 22px);
   background: rgba(255, 255, 255, 0.78);
-  padding: clamp(10px, 2.8vw, 14px) clamp(12px, 3.2vw, 16px) clamp(10px, 2.8vw, 14px) 0;
+  padding: clamp(8px, 2.1vw, 10px) clamp(10px, 2.8vw, 13px) clamp(8px, 2.1vw, 10px) 0;
   box-shadow:
     0 14px 30px rgba(69, 117, 185, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.94);
@@ -2424,14 +2424,14 @@ body {
   position: relative;
   z-index: 1;
   display: grid;
-  width: clamp(32px, 8.8vw, 40px);
+  width: clamp(28px, 7.7vw, 34px);
   aspect-ratio: 1;
   place-items: center;
   justify-self: center;
   border-radius: 999px;
   background: linear-gradient(135deg, #7aa5ff, #5c7cf5);
   color: #ffffff;
-  font-size: clamp(15px, 4.2vw, 20px);
+  font-size: clamp(14px, 3.75vw, 17px);
   font-weight: 950;
   box-shadow: 0 9px 18px rgba(94, 124, 244, 0.24);
 }
@@ -2465,12 +2465,12 @@ body {
 .sf-ai-guided-step-copy {
   display: grid;
   min-width: 0;
-  gap: 5px;
+  gap: 3px;
 }
 
 .sf-ai-guided-step-copy strong {
   color: #07113f;
-  font-size: clamp(15px, 4.3vw, 20px);
+  font-size: clamp(14px, 3.75vw, 17px);
   font-weight: 950;
   line-height: 1.12;
   letter-spacing: 0;
@@ -2478,7 +2478,7 @@ body {
 
 .sf-ai-guided-step-copy span {
   color: #7b8aa8;
-  font-size: clamp(11px, 3.25vw, 15px);
+  font-size: clamp(10px, 2.85vw, 12.5px);
   font-weight: 750;
   line-height: 1.25;
 }
@@ -2489,9 +2489,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 5px;
-  min-height: clamp(30px, 8.4vw, 38px);
+  min-height: clamp(27px, 7.2vw, 32px);
   border-radius: 999px;
-  font-size: clamp(11px, 3.2vw, 14px);
+  font-size: clamp(10px, 2.8vw, 12.5px);
   font-weight: 900;
   line-height: 1;
   white-space: nowrap;
@@ -2512,13 +2512,13 @@ body {
 }
 
 .sf-ai-guided-step-card-done .sf-ai-guided-step-state {
-  min-width: clamp(76px, 19vw, 96px);
+  min-width: clamp(68px, 17vw, 78px);
   background: rgba(92, 150, 255, 0.13);
   color: #5a96ff;
 }
 
 .sf-ai-guided-step-action {
-  min-width: clamp(86px, 23vw, 108px);
+  min-width: clamp(76px, 20vw, 88px);
   border: 0;
   background: linear-gradient(135deg, #8ac7ff, #58a9f4);
   color: #ffffff;
@@ -2542,12 +2542,12 @@ body {
 
 .sf-ai-guided-challenge {
   display: grid;
-  grid-template-columns: clamp(54px, 14.5vw, 66px) minmax(0, 1fr) clamp(94px, 25vw, 124px);
-  gap: clamp(10px, 3vw, 16px);
+  grid-template-columns: clamp(44px, 11.5vw, 52px) minmax(0, 1fr) clamp(84px, 22vw, 98px);
+  gap: clamp(8px, 2.4vw, 12px);
   align-items: center;
-  margin-top: clamp(22px, 4.4dvh, 38px);
-  min-height: clamp(72px, 18vw, 90px);
-  padding: clamp(12px, 3.4vw, 16px);
+  margin-top: clamp(17px, 2.7dvh, 24px);
+  min-height: clamp(58px, 14.6vw, 66px);
+  padding: clamp(9px, 2.6vw, 12px);
   border: 1px solid rgba(255, 255, 255, 0.92);
   border-radius: clamp(16px, 4.4vw, 22px);
   background: rgba(255, 255, 255, 0.78);
@@ -2579,19 +2579,19 @@ body {
 .sf-ai-guided-challenge-copy {
   display: grid;
   min-width: 0;
-  gap: 6px;
+  gap: 4px;
 }
 
 .sf-ai-guided-challenge-copy strong {
   color: #5d8bff;
-  font-size: clamp(15px, 4.4vw, 21px);
+  font-size: clamp(14px, 3.7vw, 17px);
   font-weight: 950;
   line-height: 1;
 }
 
 .sf-ai-guided-challenge-copy span {
   color: #7b8aa8;
-  font-size: clamp(11px, 3.15vw, 14px);
+  font-size: clamp(10px, 2.7vw, 12px);
   font-weight: 780;
   line-height: 1.3;
 }
@@ -2621,7 +2621,7 @@ body {
 
 .sf-ai-guided-challenge-progress strong {
   color: #7d8bad;
-  font-size: clamp(13px, 3.6vw, 18px);
+  font-size: clamp(12px, 3.1vw, 14px);
   font-weight: 950;
   line-height: 1;
 }
@@ -2630,14 +2630,14 @@ body {
   position: relative;
   display: grid;
   justify-items: center;
-  margin-top: clamp(18px, 4dvh, 34px);
+  margin-top: clamp(12px, 2.1dvh, 18px);
   padding-bottom: 2px;
 }
 
 .sf-ai-guided-record-button {
   position: relative;
   display: grid;
-  width: clamp(104px, 30vw, 136px);
+  width: clamp(86px, 23.4vw, 104px);
   aspect-ratio: 1;
   place-items: center;
   border: 0;
@@ -2661,7 +2661,7 @@ body {
   width: 84%;
   aspect-ratio: 1;
   place-items: center;
-  border: 7px solid rgba(255, 255, 255, 0.88);
+  border: 6px solid rgba(255, 255, 255, 0.88);
   border-radius: inherit;
   background: linear-gradient(145deg, #c79cff 0%, #67b8ff 100%);
   color: #ffffff;
@@ -2682,9 +2682,9 @@ body {
 
 .sf-ai-guided-record-wave {
   position: absolute;
-  top: 35%;
+  top: 34%;
   width: 30%;
-  height: 34px;
+  height: 28px;
   opacity: 0.42;
   background:
     repeating-linear-gradient(
@@ -2708,9 +2708,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: clamp(8px, 2dvh, 14px) 0 0;
+  margin: clamp(7px, 1.4dvh, 10px) 0 0;
   color: #8b9bbd;
-  font-size: clamp(13px, 3.8vw, 18px);
+  font-size: clamp(12px, 3.2vw, 14px);
   font-weight: 900;
   line-height: 1.2;
 }
@@ -13575,7 +13575,7 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
   overflow: visible !important;
   padding:
     max(22px, calc(env(safe-area-inset-top, 0px) + 12px))
-    18px
+    22px
     max(14px, calc(env(safe-area-inset-bottom, 0px) + 12px)) !important;
 }
 
@@ -13593,14 +13593,14 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-one-header {
-  grid-template-columns: 52px minmax(0, 1fr) 54px !important;
+  grid-template-columns: 46px minmax(0, 1fr) 48px !important;
   gap: 10px !important;
 }
 
 .sf-ai-guided-step-one-menu,
 .sf-ai-guided-step-one-avatar-button {
-  width: 52px !important;
-  height: 52px !important;
+  width: 46px !important;
+  height: 46px !important;
   border-color: rgba(255, 255, 255, 0.94) !important;
   background: rgba(255, 255, 255, 0.9) !important;
   box-shadow:
@@ -13609,9 +13609,9 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-one-avatar-button {
-  width: 54px !important;
-  height: 54px !important;
-  padding: 3px !important;
+  width: 48px !important;
+  height: 48px !important;
+  padding: 2px !important;
 }
 
 .sf-ai-guided-step-one-avatar-button::after {
@@ -13622,20 +13622,20 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-one-menu svg {
-  width: 25px !important;
-  height: 25px !important;
+  width: 22px !important;
+  height: 22px !important;
   stroke-width: 2.45 !important;
 }
 
 .sf-ai-guided-step-one-brand {
-  grid-template-columns: 50px minmax(0, max-content) !important;
-  gap: 10px !important;
+  grid-template-columns: 36px minmax(0, max-content) !important;
+  gap: 8px !important;
 }
 
 .sf-ai-guided-step-one-logo {
-  width: 50px !important;
-  height: 50px !important;
-  border-radius: 14px !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 12px !important;
   background: rgba(255, 255, 255, 0.92) !important;
   box-shadow: 0 14px 28px rgba(82, 128, 196, 0.1) !important;
 }
@@ -13643,35 +13643,35 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-one-logo svg,
 .sf-ai-guided-step-one-logo-mark {
   display: block !important;
-  width: 39px !important;
-  height: 39px !important;
+  width: 28px !important;
+  height: 28px !important;
 }
 
 .sf-ai-guided-step-one-brand-title {
   color: #1f1b3d !important;
-  font-size: 31px !important;
-  font-weight: 700 !important;
+  font-size: 23px !important;
+  font-weight: 750 !important;
   line-height: 0.98 !important;
 }
 
 .sf-ai-guided-step-one-brand-subtitle {
   margin-top: 5px !important;
   color: #5d8ff0 !important;
-  font-size: 10px !important;
+  font-size: 7.5px !important;
   font-weight: 650 !important;
-  letter-spacing: 0.2em !important;
+  letter-spacing: 0.22em !important;
   line-height: 1 !important;
 }
 
 .sf-ai-guided-step-one-toolbar {
-  grid-template-columns: 118px minmax(0, 1fr) !important;
-  gap: 16px !important;
-  margin-top: 24px !important;
+  grid-template-columns: 74px 162px !important;
+  gap: 40px !important;
+  margin-top: 20px !important;
 }
 
 .sf-ai-guided-step-one-back,
 .sf-ai-guided-step-one-mode {
-  min-height: 46px !important;
+  min-height: 42px !important;
   border-radius: 999px !important;
   border-color: rgba(255, 255, 255, 0.92) !important;
   background: rgba(255, 255, 255, 0.76) !important;
@@ -13683,26 +13683,26 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-one-back {
   gap: 8px !important;
   color: #174579 !important;
-  font-size: 18px !important;
+  font-size: 15px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-step-one-mode {
   gap: 8px !important;
   color: #7ebcff !important;
-  font-size: 19px !important;
+  font-size: 15px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-step-one-mode svg,
 .sf-ai-guided-step-one-back svg {
-  width: 22px !important;
-  height: 22px !important;
+  width: 18px !important;
+  height: 18px !important;
 }
 
 .sf-ai-guided-step-one-hero {
-  margin-top: 24px !important;
-  min-height: 154px !important;
+  margin-top: 18px !important;
+  min-height: 118px !important;
   align-content: center !important;
 }
 
@@ -13715,9 +13715,9 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-one-hero h1 {
   color: #1f1b3d !important;
-  font-size: 43px !important;
+  font-size: 40px !important;
   font-weight: 700 !important;
-  line-height: 1.16 !important;
+  line-height: 1.02 !important;
   text-shadow: none !important;
 }
 
@@ -13726,11 +13726,11 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-one-hero p {
-  margin-top: 15px !important;
+  margin-top: 8px !important;
   color: #6b668c !important;
-  font-size: 17px !important;
+  font-size: 15px !important;
   font-weight: 550 !important;
-  line-height: 1.45 !important;
+  line-height: 1.42 !important;
   text-shadow: none !important;
 }
 
@@ -13747,10 +13747,10 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-stats {
-  grid-template-columns: 1fr 83px 1fr !important;
-  min-height: 80px !important;
-  margin-top: 22px !important;
-  padding: 10px 13px !important;
+  grid-template-columns: 1fr 78px 1fr !important;
+  min-height: 72px !important;
+  margin: 24px 6px 0 !important;
+  padding: 8px 12px !important;
   border-radius: 22px !important;
   background: rgba(255, 255, 255, 0.78) !important;
   box-shadow:
@@ -13763,12 +13763,12 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-stat-icon {
-  width: 34px !important;
+  width: 31px !important;
 }
 
 .sf-ai-guided-stat span span {
   color: #6b668c !important;
-  font-size: 13px !important;
+  font-size: 11px !important;
   font-weight: 550 !important;
   line-height: 1.25 !important;
 }
@@ -13776,12 +13776,12 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-stat strong {
   margin-top: 4px !important;
   color: #1f1b3d !important;
-  font-size: 24px !important;
+  font-size: 20px !important;
   font-weight: 700 !important;
 }
 
 .sf-ai-guided-progress {
-  min-height: 76px !important;
+  min-height: 64px !important;
 }
 
 .sf-ai-guided-progress circle {
@@ -13789,53 +13789,65 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-progress strong {
-  margin-top: 5px !important;
+  margin-top: 3px !important;
   color: #1f1b3d !important;
-  font-size: 29px !important;
+  font-size: 24px !important;
   font-weight: 700 !important;
 }
 
 .sf-ai-guided-progress small {
   margin-top: -8px !important;
   color: #5d8ff0 !important;
-  font-size: 12px !important;
+  font-size: 11px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-step-section {
-  margin-top: 24px !important;
+  margin-top: 22px !important;
 }
 
 .sf-ai-guided-step-section h2 {
-  margin-bottom: 14px !important;
+  margin-bottom: 8px !important;
   color: #174579 !important;
-  font-size: 21px !important;
+  font-size: 17px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-step-section h2 span {
   color: rgba(99, 150, 255, 0.24) !important;
-  font-size: 14px !important;
+  font-size: 10px !important;
   font-weight: 650 !important;
   letter-spacing: 0.1em !important;
 }
 
 .sf-ai-guided-step-list {
-  gap: 8px !important;
+  gap: 6px !important;
 }
 
 .sf-ai-guided-step-list::before {
-  left: 26px !important;
+  left: 17px !important;
   top: 24px !important;
   bottom: 24px !important;
   width: 2px !important;
 }
 
 .sf-ai-guided-step-card {
-  grid-template-columns: 52px 56px minmax(0, 1fr) auto !important;
-  gap: 10px !important;
-  min-height: 66px !important;
-  padding: 9px 12px 9px 0 !important;
+  position: relative !important;
+  isolation: isolate !important;
+  grid-template-columns: 52px 43px minmax(0, 1fr) auto !important;
+  gap: 8px !important;
+  min-height: 62px !important;
+  padding: 7px 10px 7px 0 !important;
+  border-radius: 18px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.sf-ai-guided-step-card::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 0 0 42px !important;
+  z-index: -1 !important;
   border-radius: 18px !important;
   background: rgba(255, 255, 255, 0.8) !important;
   box-shadow:
@@ -13844,87 +13856,88 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-number {
-  width: 34px !important;
-  font-size: 17px !important;
+  width: 26px !important;
+  font-size: 13px !important;
   font-weight: 650 !important;
+  transform: translateX(-10px) !important;
 }
 
 .sf-ai-guided-step-icon {
-  width: 56px !important;
-  border-radius: 17px !important;
+  width: 43px !important;
+  border-radius: 13px !important;
 }
 
 .sf-ai-guided-step-copy {
-  gap: 4px !important;
+  gap: 3px !important;
 }
 
 .sf-ai-guided-step-copy strong {
   color: #1f1b3d !important;
-  font-size: 18px !important;
+  font-size: 14px !important;
   font-weight: 650 !important;
   line-height: 1.2 !important;
 }
 
 .sf-ai-guided-step-copy span {
   color: #6b668c !important;
-  font-size: 13px !important;
+  font-size: 10.5px !important;
   font-weight: 500 !important;
   line-height: 1.35 !important;
 }
 
 .sf-ai-guided-step-state,
 .sf-ai-guided-step-action {
-  min-height: 34px !important;
-  font-size: 13px !important;
+  min-height: 27px !important;
+  font-size: 10.5px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-step-card-done .sf-ai-guided-step-state {
-  min-width: 82px !important;
+  min-width: 64px !important;
 }
 
 .sf-ai-guided-step-action {
-  min-width: 96px !important;
+  min-width: 74px !important;
   background: linear-gradient(135deg, #8ac7ff, #58a9f4) !important;
   color: #ffffff !important;
 }
 
 .sf-ai-guided-challenge {
-  grid-template-columns: 54px minmax(0, 1fr) 106px !important;
-  gap: 12px !important;
-  min-height: 72px !important;
-  margin-top: 24px !important;
-  padding: 12px !important;
+  grid-template-columns: 46px minmax(0, 1fr) 92px !important;
+  gap: 10px !important;
+  min-height: 56px !important;
+  margin-top: 20px !important;
+  padding: 8px 9px !important;
   border-radius: 20px !important;
   background: rgba(255, 255, 255, 0.78) !important;
 }
 
 .sf-ai-guided-challenge-copy strong {
   color: #5d8ff0 !important;
-  font-size: 18px !important;
+  font-size: 14px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-challenge-copy span {
   color: #6b668c !important;
-  font-size: 13px !important;
+  font-size: 10.5px !important;
   font-weight: 500 !important;
   line-height: 1.35 !important;
 }
 
 .sf-ai-guided-challenge-progress strong {
   color: #6b668c !important;
-  font-size: 16px !important;
+  font-size: 12px !important;
   font-weight: 650 !important;
 }
 
 .sf-ai-guided-record {
-  margin-top: 14px !important;
+  margin-top: 15px !important;
   padding-bottom: 0 !important;
 }
 
 .sf-ai-guided-record-button {
-  width: 110px !important;
+  width: 90px !important;
 }
 
 .sf-ai-guided-record-core {
@@ -13938,9 +13951,9 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-record p {
-  margin-top: 8px !important;
+  margin-top: 6px !important;
   color: #6b668c !important;
-  font-size: 15px !important;
+  font-size: 12.5px !important;
   font-weight: 550 !important;
 }
 
