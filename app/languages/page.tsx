@@ -1,5 +1,5 @@
-import LanguageSelectionPageClient from "@/components/LanguageSelectionPageClient";
+import { redirect } from "next/navigation";
 
 export default async function LanguagesPage() {
-  return <LanguageSelectionPageClient />;
+  redirect("/");
 }

@@ -2025,6 +2025,9 @@ export default function StudyPage() {
                 “
               </span>
               <p className={styles.chinesePrompt}>{displayedChinese}</p>
+              {isListening ? (
+                <p className={styles.recordingPrompt}>正在录制您说的英文</p>
+              ) : null}
               <span aria-hidden="true" className={styles.quoteEnd}>
                 ”
               </span>
@@ -2122,7 +2125,7 @@ export default function StudyPage() {
 
           <p className={styles.micHint}>
             {isListening
-              ? liveTranscript || "正在听你说英文..."
+              ? "再次点击麦克风结束录音"
               : message || "点击麦克风开始练习"}
           </p>
 

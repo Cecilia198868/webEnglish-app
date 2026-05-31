@@ -11,7 +11,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
   const session = await getServerSession(authOptions);
 
   if (session?.user) {
-    redirect("/dashboard");
+    redirect("/start");
   }
 
   const params = await searchParams;

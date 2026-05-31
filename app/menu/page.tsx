@@ -1,5 +1,9 @@
-import MenuPage from "@/components/MenuPage";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
-export default function Page() {
-  return <MenuPage />;
+export default async function Page() {
+  const session = await getServerSession(authOptions);
+
+  redirect(session?.user ? "/start" : "/");
 }
