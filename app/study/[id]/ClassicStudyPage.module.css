@@ -774,206 +774,206 @@
 }
 
 .resultPhone .classicTopbar {
-  min-height: 56px;
+  min-height: 52px;
 }
 
 .resultPhone .menuButton,
 .resultPhone .avatarButton {
-  width: 48px;
-  height: 48px;
-}
-
-.resultPhone .avatarImage {
   width: 44px;
   height: 44px;
 }
 
+.resultPhone .avatarImage {
+  width: 40px;
+  height: 40px;
+}
+
 .resultPhone .avatarDot {
   right: 1px;
-  bottom: 6px;
+  bottom: 5px;
 }
 
 .resultPhone .brandIcon {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
 }
 
 .resultPhone .brandTitle {
-  font-size: clamp(1.24rem, 5.7vw, 1.5rem);
+  font-size: clamp(1.16rem, 5.15vw, 1.38rem);
 }
 
 .resultPhone .brandSubtitle {
-  margin-top: 5px;
-  font-size: clamp(0.62rem, 2.9vw, 0.76rem);
+  margin-top: 4px;
+  font-size: clamp(0.58rem, 2.55vw, 0.68rem);
 }
 
 .resultPhone .resultTopicBar {
-  min-height: 62px;
-  padding-top: 6px;
-  padding-bottom: 2px;
+  min-height: 56px;
+  padding-top: 5px;
+  padding-bottom: 1px;
 }
 
 .resultPhone .topicIcon {
-  width: 47px;
-  height: 47px;
+  width: 42px;
+  height: 42px;
 }
 
 .resultPhone .topicIcon svg {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
 }
 
 .resultPhone .topicTitle {
-  font-size: clamp(1.16rem, 5.5vw, 1.36rem);
+  font-size: clamp(1.04rem, 4.7vw, 1.22rem);
   line-height: 1.08;
 }
 
 .resultPhone .topicProgress {
   margin-top: 3px;
-  font-size: clamp(0.9rem, 4.1vw, 1rem);
+  font-size: clamp(0.82rem, 3.7vw, 0.92rem);
 }
 
 .resultPhone .resultHint {
-  min-height: 22px;
-  margin-bottom: 5px;
-  font-size: 0.78rem;
-}
-
-.resultPhone .userExpressionCard {
-  padding-top: 9px;
-  padding-bottom: 10px;
-}
-
-.resultPhone .userExpressionText {
-  margin-top: 8px;
-  font-size: clamp(0.98rem, 4.8vw, 1.13rem);
-  line-height: 1.2;
-}
-
-.resultPhone .expressionList {
-  gap: 7px;
-}
-
-.resultPhone .expressionCard {
-  min-height: 58px;
-}
-
-.resultPhone .expressionCardFeatured {
-  min-height: 68px;
-}
-
-.resultPhone .expressionSelectArea {
-  grid-template-columns: 36px minmax(0, 1fr);
-  gap: 8px;
-  padding: 8px 2px 8px 9px;
-}
-
-.resultPhone .variantRibbon {
-  width: 30px;
-  height: 45px;
-  padding-top: 8px;
-}
-
-.resultPhone .variantRibbon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.resultPhone .variantTitle {
+  min-height: 20px;
+  margin-bottom: 4px;
   font-size: 0.72rem;
 }
 
-.resultPhone .variantText {
-  font-size: clamp(0.9rem, 4vw, 1rem);
-  line-height: 1.06;
+.resultPhone .userExpressionCard {
+  padding-top: 8px;
+  padding-bottom: 9px;
 }
 
-.resultPhone .expressionCardFeatured .variantText {
-  font-size: clamp(0.96rem, 4.35vw, 1.06rem);
-}
-
-.resultPhone .variantNote {
-  font-size: 0.64rem;
-  line-height: 1.08;
-}
-
-.resultPhone .variantSpeaker {
-  width: 34px;
-  height: 34px;
-}
-
-.resultPhone .variantSpeaker svg {
-  width: 21px;
-  height: 21px;
-}
-
-.resultPhone .followCard {
+.resultPhone .userExpressionText {
   margin-top: 7px;
-  padding: 6px 9px 6px;
+  font-size: clamp(0.9rem, 4.1vw, 1rem);
+  line-height: 1.18;
 }
 
-.resultPhone .followReadButton {
-  gap: 8px;
+.resultPhone .expressionList {
+  gap: 6px;
 }
 
-.resultPhone .followReadButton strong {
-  font-size: 0.92rem;
+.resultPhone .expressionCard {
+  min-height: 54px;
 }
 
-.resultPhone .followReadButton small {
-  margin-top: 3px;
-  font-size: 0.63rem;
+.resultPhone .expressionCardFeatured {
+  min-height: 63px;
 }
 
-.resultPhone .followBookIcon {
-  width: 34px;
-  height: 34px;
+.resultPhone .expressionSelectArea {
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 7px;
+  padding: 7px 2px 7px 8px;
 }
 
-.resultPhone .followBookIcon svg {
-  width: 24px;
-  height: 24px;
+.resultPhone .variantRibbon {
+  width: 27px;
+  height: 40px;
+  padding-top: 7px;
 }
 
-.resultPhone .slowReadButton {
-  min-width: 90px;
-  height: 33px;
-  gap: 5px;
-  font-size: 0.68rem;
-}
-
-.resultPhone .slowReadButton svg {
+.resultPhone .variantRibbon svg {
   width: 18px;
   height: 18px;
 }
 
-.resultPhone .followControls {
-  grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
+.resultPhone .variantTitle {
+  font-size: 0.66rem;
+}
+
+.resultPhone .variantText {
+  font-size: clamp(0.82rem, 3.65vw, 0.94rem);
+  line-height: 1.08;
+}
+
+.resultPhone .expressionCardFeatured .variantText {
+  font-size: clamp(0.88rem, 3.95vw, 1rem);
+}
+
+.resultPhone .variantNote {
+  font-size: 0.58rem;
+  line-height: 1.06;
+}
+
+.resultPhone .variantSpeaker {
+  width: 31px;
+  height: 31px;
+}
+
+.resultPhone .variantSpeaker svg {
+  width: 19px;
+  height: 19px;
+}
+
+.resultPhone .followCard {
+  margin-top: 6px;
+  padding: 6px 8px 6px;
+}
+
+.resultPhone .followReadButton {
   gap: 7px;
+}
+
+.resultPhone .followReadButton strong {
+  font-size: 0.86rem;
+}
+
+.resultPhone .followReadButton small {
+  margin-top: 2px;
+  font-size: 0.58rem;
+}
+
+.resultPhone .followBookIcon {
+  width: 31px;
+  height: 31px;
+}
+
+.resultPhone .followBookIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.resultPhone .slowReadButton {
+  min-width: 82px;
+  height: 30px;
+  gap: 5px;
+  font-size: 0.62rem;
+}
+
+.resultPhone .slowReadButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.resultPhone .followControls {
+  grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr);
+  gap: 6px;
   margin-top: 5px;
 }
 
 .resultPhone .followControls .sentenceButton {
-  min-height: 39px;
+  min-height: 36px;
 }
 
 .resultPhone .followControls .sentenceButton span {
-  font-size: 0.8rem;
+  font-size: 0.74rem;
 }
 
 .resultPhone .followMicButton {
-  width: 64px;
-  height: 64px;
-  border-width: 5px;
+  width: 58px;
+  height: 58px;
+  border-width: 4px;
 }
 
 .resultPhone .followMicButton svg {
-  width: 33px;
-  height: 33px;
+  width: 30px;
+  height: 30px;
 }
 
 .resultPhone .followMicLabel {
-  font-size: 0.68rem;
+  font-size: 0.62rem;
 }
 
 .resultHint {
@@ -989,16 +989,26 @@
 }
 
 .resultHintIcon {
+  position: relative;
   display: grid;
   width: 20px;
   height: 20px;
   place-items: center;
-  border-radius: 999px;
-  background: #a87145;
-  color: #fff8ef;
-  font-size: 0.78rem;
-  font-weight: 900;
+  overflow: hidden;
+  color: #a87145;
+  font-size: 0;
   font-style: normal;
+}
+
+.resultHintIcon::before {
+  content: "";
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 2px solid currentColor;
+  border-radius: 50% 50% 45% 45%;
+  box-shadow:
+    inset 0 -0.2rem 0 rgba(168, 113, 69, 0.16),
+    0 0.38rem 0 -0.24rem currentColor;
 }
 
 .userExpressionCard {
