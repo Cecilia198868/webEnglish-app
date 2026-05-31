@@ -1791,6 +1791,75 @@ export default function StudyPage() {
     selectedExpression.key,
     selectedExpression.text,
   ]);
+
+  function getHighlightsForClassicText(
+    text: string,
+    variantKey?: ExpressionVariantKey
+  ) {
+    const sentence = text.trim();
+    if (!sentence) return [] as HighlightedExpression[];
+
+    const selectedText = selectedExpression.text?.trim();
+    if (selectedText === sentence && highlightedExpressions.length > 0) {
+      return highlightedExpressions;
+    }
+
+    const prebuiltHighlights =
+      variantKey && prebuiltClassicExpressionSet?.highlights?.[variantKey];
+
+    if (prebuiltHighlights?.length) {
+      return prebuiltHighlights;
+    }
+
+    return createFallbackHighlightedExpressions(sentence);
+  }
+
+  function renderClassicHighlightedText(
+    text: string,
+    variantKey?: ExpressionVariantKey
+  ) {
+    const segments = splitSentenceByHighlightedExpressions(
+      text,
+      getHighlightsForClassicText(text, variantKey)
+    );
+
+    return segments.map((segment, index) =>
+      segment.type === "expression" ? (
+        <button
+          key={`${segment.value}-${index}`}
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            handleExpressionClick(segment.expression, text);
+          }}
+          className={styles.highlightedExpressionToken}
+        >
+          {segment.value}
+        </button>
+      ) : (
+        <span key={`${segment.value}-${index}`}>
+          {tokenizeEnglishSentence(segment.value).map((token, tokenIndex) =>
+            token.type === "word" && token.normalized ? (
+              <button
+                key={`${token.value}-${tokenIndex}`}
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleWordClick(token.value, text);
+                }}
+                className={styles.highlightedWordToken}
+              >
+                {token.value}
+              </button>
+            ) : (
+              <span key={`${token.value}-${tokenIndex}`}>{token.value}</span>
+            )
+          )}
+        </span>
+      )
+    );
+  }
+
   function openNeighborLesson(targetLesson: { id: string; title: string }) {
     stopAutoPlay();
     window.localStorage.setItem("currentLessonTitle", targetLesson.title);
@@ -2107,7 +2176,9 @@ export default function StudyPage() {
               </span>
               <strong>你的表达</strong>
             </div>
-            <p className={styles.userExpressionText}>{spokenDisplay}</p>
+            <p className={styles.userExpressionText}>
+              {renderClassicHighlightedText(spokenDisplay)}
+            </p>
           </section>
 
           <section className={styles.expressionList} aria-label="推荐表达">
@@ -2126,10 +2197,20 @@ export default function StudyPage() {
                       isFeatured ? styles.expressionCardFeatured : ""
                     } ${isSelected ? styles.expressionCardSelected : ""}`}
                   >
-                    <button
-                      type="button"
+                    <div
+                      role="button"
+                      tabIndex={0}
                       className={styles.expressionSelectArea}
                       onClick={() => setSelectedExpressionIndex(variantIndex)}
+                      onKeyDown={(event) => {
+                        if (
+                          event.target === event.currentTarget &&
+                          (event.key === "Enter" || event.key === " ")
+                        ) {
+                          event.preventDefault();
+                          setSelectedExpressionIndex(variantIndex);
+                        }
+                      }}
                       aria-label={`选择${variant.label}`}
                     >
                       <span className={styles.variantRibbon}>
@@ -2137,12 +2218,14 @@ export default function StudyPage() {
                       </span>
                       <span className={styles.variantCopy}>
                         <span className={styles.variantTitle}>{variant.label}</span>
-                        <span className={styles.variantText}>{variant.text}</span>
+                        <span className={styles.variantText}>
+                          {renderClassicHighlightedText(variant.text, variant.key)}
+                        </span>
                         <span className={styles.variantNote}>
                           {getResultVariantNote(variant.key)}
                         </span>
                       </span>
-                    </button>
+                    </div>
 
                     <button
                       type="button"

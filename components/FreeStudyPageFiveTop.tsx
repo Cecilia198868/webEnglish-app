@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 type FreeStudyPageFiveTopProps = {
   userEnglishText: string;
   expressions: string[];
@@ -14,6 +16,12 @@ type FreeStudyPageFiveTopProps = {
   onAvatarError?: () => void;
   onPlayExpression: (index: number, rate?: number) => void;
   onSelectExpression: (index: number) => void;
+  renderExpressionText?: (
+    text: string,
+    index: number,
+    tone: string
+  ) => ReactNode;
+  renderUserExpressionText?: (text: string) => ReactNode;
 };
 
 const COPY = {
@@ -271,6 +279,8 @@ export default function FreeStudyPageFiveTop({
   onAvatarError,
   onPlayExpression,
   onSelectExpression,
+  renderExpressionText: renderInteractiveExpressionText,
+  renderUserExpressionText,
 }: FreeStudyPageFiveTopProps) {
   const displayText = userEnglishText.trim() || " ";
   const preparedExpressions = expressionMeta.map((meta, index) => ({
@@ -356,7 +366,9 @@ export default function FreeStudyPageFiveTop({
             <WaveGlyph />
           </div>
           <p lang="en" className="sf-free-study-page-five-user-text">
-            {displayText}
+            {renderUserExpressionText
+              ? renderUserExpressionText(displayText)
+              : displayText}
           </p>
           <button
             type="button"
@@ -399,7 +411,13 @@ export default function FreeStudyPageFiveTop({
                     <strong>{expression.badge}</strong>
                   )}
                   <p lang="en">
-                    {renderExpressionText(expression.text, expression.tone)}
+                    {renderInteractiveExpressionText
+                      ? renderInteractiveExpressionText(
+                          expression.text,
+                          index,
+                          expression.tone
+                        )
+                      : renderExpressionText(expression.text, expression.tone)}
                   </p>
                   {index === 0 ? (
                     <span className="sf-free-study-page-five-expression-note">

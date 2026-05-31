@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 
 type AiGuidedExpressionStepFiveProps = {
@@ -23,6 +24,12 @@ type AiGuidedExpressionStepFiveProps = {
   onSelectExpression: (index: number) => void;
   onFollowPractice: () => void;
   onSlowPlayback: () => void;
+  renderExpressionText?: (
+    text: string,
+    index: number,
+    tone: string
+  ) => ReactNode;
+  renderUserExpressionText?: (text: string) => ReactNode;
 };
 
 const COPY = {
@@ -331,6 +338,8 @@ export default function AiGuidedExpressionStepFive({
   onSelectExpression,
   onFollowPractice,
   onSlowPlayback,
+  renderExpressionText: renderInteractiveExpressionText,
+  renderUserExpressionText,
 }: AiGuidedExpressionStepFiveProps) {
   const displayEnglish = userEnglishText.trim() || "I'm practicing this sentence.";
   const displayNextChinese =
@@ -409,7 +418,9 @@ export default function AiGuidedExpressionStepFive({
               </span>
             </div>
             <p lang="en" className="sf-ai-guided-step-five-user-text">
-              {displayEnglish}
+              {renderUserExpressionText
+                ? renderUserExpressionText(displayEnglish)
+                : displayEnglish}
             </p>
             <button
               type="button"
@@ -500,7 +511,13 @@ export default function AiGuidedExpressionStepFive({
                         {meta.badge}
                       </p>
                       <p lang="en" className="sf-ai-guided-step-five-record-text">
-                        {renderExpressionText(text, meta.tone)}
+                        {renderInteractiveExpressionText
+                          ? renderInteractiveExpressionText(
+                              text,
+                              index,
+                              meta.tone
+                            )
+                          : renderExpressionText(text, meta.tone)}
                       </p>
                     </div>
                     <div className="sf-ai-guided-step-five-record-actions">

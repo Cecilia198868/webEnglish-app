@@ -5481,10 +5481,27 @@ function SpeakEnglishClient() {
     setVocabularyNotice("已收藏当前表达");
   }
 
+  function getHighlightsForReferenceText(text: string) {
+    const sentence = text.trim();
+    if (!sentence) return [] as HighlightedExpression[];
+
+    const selectedText = (
+      isFreeConversationMode
+        ? selectedFreeConversationExpression.text
+        : selectedExpression.text
+    )?.trim();
+
+    if (selectedText === sentence && highlightedExpressions.length > 0) {
+      return highlightedExpressions;
+    }
+
+    return createFallbackHighlightedExpressions(sentence);
+  }
+
   function renderReferenceResultText(text: string) {
     const segments = splitSentenceByHighlightedExpressions(
       text,
-      highlightedExpressions
+      getHighlightsForReferenceText(text)
     );
 
     return segments.map((segment, index) =>
@@ -5496,7 +5513,7 @@ function SpeakEnglishClient() {
             event.stopPropagation();
             handleExpressionClick(segment.expression, text);
           }}
-          className="pointer-events-auto inline cursor-pointer rounded-[0.35em] bg-[#fff4a3]/90 px-[0.08em] text-[#141438] shadow-[inset_0_-0.32em_0_rgba(255,209,64,0.68)]"
+          className="pointer-events-auto inline cursor-pointer rounded-[0.35em] border-0 bg-[#fff4a3]/90 px-[0.08em] text-[#141438] shadow-[inset_0_-0.32em_0_rgba(255,209,64,0.68)] [font:inherit] [line-height:inherit]"
         >
           {segment.value}
         </button>
@@ -5511,7 +5528,7 @@ function SpeakEnglishClient() {
                   event.stopPropagation();
                   handleWordClick(token.value, text);
                 }}
-                className="pointer-events-auto inline cursor-pointer rounded-[0.22em] text-inherit transition active:bg-[#fff4a3]/85"
+                className="pointer-events-auto inline cursor-pointer rounded-[0.22em] border-0 bg-transparent p-0 text-inherit transition active:bg-[#fff4a3]/85 [font:inherit] [line-height:inherit]"
               >
                 {token.value}
               </button>
@@ -6729,6 +6746,8 @@ function SpeakEnglishClient() {
               onSlowPlayback={() =>
                 readReferenceResultVariant(selectedExpressionIndex, 0.5)
               }
+              renderExpressionText={(text) => renderReferenceResultText(text)}
+              renderUserExpressionText={(text) => renderReferenceResultText(text)}
             />
           ) : null}
 
@@ -8002,6 +8021,8 @@ function SpeakEnglishClient() {
                 onAccountClick={openAccountPage}
                 onPlayExpression={readReferenceResultVariant}
                 onSelectExpression={setSelectedExpressionIndex}
+                renderExpressionText={(text) => renderReferenceResultText(text)}
+                renderUserExpressionText={(text) => renderReferenceResultText(text)}
               />
               <div
                 className="pointer-events-none absolute z-[121] flex items-center gap-1.5 font-black leading-none text-[#755cff] drop-shadow-[0_4px_10px_rgba(117,92,255,0.16)]"
