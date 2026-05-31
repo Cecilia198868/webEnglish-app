@@ -47,7 +47,7 @@ const MENU_ENTRIES: MenuEntry[] = [
     title: "经典场景口语练习",
     primary: "按真实生活场景练高频口语",
     secondary: "随时随地，开口自信说",
-    route: "/speak-english?menu=1&submenu=classic",
+    route: "/classic-scenes",
     ariaLabel: "进入经典场景口语练习下一级菜单",
   },
 ];

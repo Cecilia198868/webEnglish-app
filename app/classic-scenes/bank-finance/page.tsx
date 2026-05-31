@@ -36,8 +36,7 @@ type BankLesson = {
   title: string;
 };
 
-const backToFinanceMenuHref =
-  "/speak-english?menu=1&submenu=classic&classicCategory=finance-government";
+const backToFinanceMenuHref = "/classic-scenes";
 
 const lessons: BankLesson[] = [
   {

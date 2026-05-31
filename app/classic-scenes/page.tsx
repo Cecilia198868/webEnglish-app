@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import ClassicScenesMenuPage from "@/components/ClassicScenesMenuPage";
 
 export default function Page() {
-  redirect("/study/bank_open_new_account_zh");
+  return <ClassicScenesMenuPage />;
 }
