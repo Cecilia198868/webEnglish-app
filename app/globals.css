@@ -14159,12 +14159,11 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-two-frame {
-  grid-template-rows: auto auto minmax(300px, 1fr) 112px 190px !important;
+  display: block !important;
+  grid-template-rows: none !important;
+  height: 100dvh !important;
   min-height: 100dvh !important;
-  padding:
-    max(30px, calc(env(safe-area-inset-top, 0px) + 16px))
-    18px
-    max(14px, calc(env(safe-area-inset-bottom, 0px) + 12px)) !important;
+  padding: 0 !important;
   overflow: hidden !important;
 }
 
@@ -14180,20 +14179,25 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-two-frame::after {
   inset-inline: -28% !important;
   bottom: 31.5% !important;
-  height: 154px !important;
+  height: 16.5dvh !important;
   opacity: 0.42 !important;
 }
 
 .sf-ai-guided-step-two-header {
-  grid-template-columns: 52px minmax(0, 1fr) 54px !important;
+  position: absolute !important;
+  top: max(3dvh, calc(env(safe-area-inset-top, 0px) + 12px)) !important;
+  left: 18px !important;
+  right: 18px !important;
+  height: clamp(44px, 5.15dvh, 48px) !important;
+  grid-template-columns: clamp(42px, 4.94dvh, 46px) minmax(0, 1fr) clamp(44px, 5.15dvh, 48px) !important;
   gap: 10px !important;
   align-items: center !important;
 }
 
 .sf-ai-guided-step-two-menu,
 .sf-ai-guided-step-two-avatar-button {
-  width: 52px !important;
-  height: 52px !important;
+  width: clamp(42px, 4.94dvh, 46px) !important;
+  height: clamp(42px, 4.94dvh, 46px) !important;
   border-radius: 18px !important;
   border-color: rgba(255, 255, 255, 0.94) !important;
   background: rgba(255, 255, 255, 0.92) !important;
@@ -14205,23 +14209,23 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-two-menu span,
 .sf-ai-guided-step-two-menu span::before,
 .sf-ai-guided-step-two-menu span::after {
-  width: 24px !important;
-  height: 2.2px !important;
+  width: 22px !important;
+  height: 2px !important;
   background: #1f1b3d !important;
 }
 
 .sf-ai-guided-step-two-menu span::before {
-  top: -7px !important;
+  top: -6px !important;
 }
 
 .sf-ai-guided-step-two-menu span::after {
-  bottom: -7px !important;
+  bottom: -6px !important;
 }
 
 .sf-ai-guided-step-two-avatar-button {
-  width: 54px !important;
-  height: 54px !important;
-  padding: 3px !important;
+  width: clamp(44px, 5.15dvh, 48px) !important;
+  height: clamp(44px, 5.15dvh, 48px) !important;
+  padding: 2px !important;
   border-radius: 999px !important;
 }
 
@@ -14233,27 +14237,27 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-two-brand {
-  grid-template-columns: 50px minmax(0, max-content) !important;
-  gap: 10px !important;
+  grid-template-columns: clamp(34px, 3.86dvh, 36px) minmax(0, max-content) !important;
+  gap: 8px !important;
 }
 
 .sf-ai-guided-step-two-logo {
-  width: 50px !important;
-  height: 50px !important;
-  border-radius: 14px !important;
+  width: clamp(34px, 3.86dvh, 36px) !important;
+  height: clamp(34px, 3.86dvh, 36px) !important;
+  border-radius: 12px !important;
   background: rgba(255, 255, 255, 0.92) !important;
   box-shadow: 0 14px 28px rgba(82, 128, 196, 0.1) !important;
 }
 
 .sf-ai-guided-step-two-logo svg {
-  width: 39px !important;
-  height: 39px !important;
+  width: 28px !important;
+  height: 28px !important;
 }
 
 .sf-ai-guided-step-two-brand-title {
   color: #1f1b3d !important;
-  font-size: 31px !important;
-  font-weight: 700 !important;
+  font-size: clamp(22px, 2.47dvh, 23px) !important;
+  font-weight: 750 !important;
   line-height: 0.98 !important;
   text-shadow: none !important;
 }
@@ -14261,17 +14265,22 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-two-brand-subtitle {
   margin-top: 5px !important;
   color: #5d8ff0 !important;
-  font-size: 10px !important;
+  font-size: clamp(7px, 0.8dvh, 7.5px) !important;
   font-weight: 650 !important;
-  letter-spacing: 0.2em !important;
+  letter-spacing: 0.22em !important;
   line-height: 1 !important;
   text-shadow: none !important;
 }
 
 .sf-ai-guided-step-two-toolbar {
-  grid-template-columns: 118px minmax(0, 1fr) !important;
-  min-height: 49px !important;
-  margin-top: 25px !important;
+  position: absolute !important;
+  top: max(9.66dvh, calc(env(safe-area-inset-top, 0px) + 72px)) !important;
+  left: 18px !important;
+  right: 18px !important;
+  grid-template-columns: clamp(70px, 7.94dvh, 74px) clamp(154px, 17.38dvh, 162px) !important;
+  gap: clamp(34px, 4.29dvh, 40px) !important;
+  min-height: clamp(39px, 4.72dvh, 44px) !important;
+  margin-top: 0 !important;
   border-color: rgba(255, 255, 255, 0.92) !important;
   background: rgba(239, 248, 255, 0.66) !important;
   box-shadow:
@@ -14280,35 +14289,40 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-two-back {
-  height: 39px !important;
-  margin-left: 5px !important;
+  height: clamp(39px, 4.72dvh, 42px) !important;
+  margin-left: 0 !important;
   gap: 7px !important;
   color: #174579 !important;
-  font-size: 18px !important;
+  font-size: clamp(14px, 1.61dvh, 15px) !important;
   font-weight: 650 !important;
   background: rgba(255, 255, 255, 0.58) !important;
 }
 
 .sf-ai-guided-step-two-back svg {
-  width: 21px !important;
-  height: 21px !important;
+  width: 18px !important;
+  height: 18px !important;
   stroke-width: 2.4 !important;
 }
 
 .sf-ai-guided-step-two-mode {
   gap: 8px !important;
   color: #3785ff !important;
-  font-size: 20px !important;
+  font-size: clamp(14px, 1.61dvh, 15px) !important;
   font-weight: 650 !important;
   text-shadow: none !important;
 }
 
 .sf-ai-guided-step-two-mode svg {
-  width: 22px !important;
-  height: 22px !important;
+  width: 18px !important;
+  height: 18px !important;
 }
 
 .sf-ai-guided-step-two-hero {
+  position: absolute !important;
+  top: 14.38dvh !important;
+  left: 18px !important;
+  right: 18px !important;
+  height: 34.76dvh !important;
   min-height: 0 !important;
   align-content: center !important;
   padding-top: 8px !important;
@@ -14349,19 +14363,19 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-two-signal {
-  margin-bottom: 52px !important;
-  gap: 5px !important;
+  margin-bottom: clamp(38px, 4.72dvh, 44px) !important;
+  gap: 4px !important;
   color: #6d91ff !important;
 }
 
 .sf-ai-guided-step-two-signal span {
-  width: 4px !important;
+  width: 3px !important;
   border-radius: 999px !important;
 }
 
 .sf-ai-guided-step-two-hero h1 {
   color: #1f1b3d !important;
-  font-size: 38px !important;
+  font-size: clamp(30px, 3.43dvh, 32px) !important;
   font-weight: 700 !important;
   line-height: 1.16 !important;
   letter-spacing: 0 !important;
@@ -14374,9 +14388,9 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-two-hero p {
   display: block !important;
-  margin-top: 24px !important;
+  margin-top: 18px !important;
   color: #302b63 !important;
-  font-size: 20px !important;
+  font-size: clamp(15px, 1.72dvh, 16px) !important;
   font-weight: 550 !important;
   line-height: 1.55 !important;
   letter-spacing: 0 !important;
@@ -14389,8 +14403,12 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-two-wave-field {
-  height: 112px !important;
-  margin-inline: -42px !important;
+  position: absolute !important;
+  top: 41.5dvh !important;
+  left: -42px !important;
+  right: -42px !important;
+  height: 17dvh !important;
+  margin-inline: 0 !important;
 }
 
 .sf-ai-guided-step-two-wave-field span {
@@ -14406,12 +14424,18 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-two-tip {
-  grid-template-columns: 56px minmax(0, 1fr) 62px !important;
-  gap: 13px !important;
-  width: min(100% - 48px, 330px) !important;
-  min-height: 104px !important;
+  position: absolute !important;
+  top: 65.45dvh !important;
+  left: 44px !important;
+  right: auto !important;
+  grid-template-columns: clamp(42px, 4.72dvh, 44px) minmax(0, 1fr) clamp(44px, 4.94dvh, 46px) !important;
+  gap: 10px !important;
+  width: calc(100% - 88px) !important;
+  height: 10.3dvh !important;
+  min-height: 90px !important;
   align-self: center !important;
-  padding: 14px 17px !important;
+  max-width: none !important;
+  padding: 12px 14px !important;
   border-radius: 20px !important;
   background: rgba(255, 255, 255, 0.76) !important;
   box-shadow:
@@ -14420,12 +14444,12 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-two-tip-copy {
-  gap: 6px !important;
+  gap: 4px !important;
 }
 
 .sf-ai-guided-step-two-tip-copy strong {
   color: #1f1b3d !important;
-  font-size: 19px !important;
+  font-size: 16px !important;
   font-weight: 650 !important;
   line-height: 1.15 !important;
   text-shadow: none !important;
@@ -14433,7 +14457,7 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-two-tip-copy span {
   color: #6b668c !important;
-  font-size: 15px !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
   line-height: 1.38 !important;
   text-shadow: none !important;
@@ -14441,21 +14465,26 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-two-tip-wave {
   color: #347cff !important;
-  gap: 5px !important;
+  gap: 4px !important;
 }
 
 .sf-ai-guided-step-two-tip-wave span {
-  width: 4px !important;
+  width: 3px !important;
 }
 
 .sf-ai-guided-step-two-record {
-  min-height: 190px !important;
-  align-content: end !important;
+  position: absolute !important;
+  top: 79.18dvh !important;
+  left: 18px !important;
+  right: 18px !important;
+  height: 19.74dvh !important;
+  min-height: 0 !important;
+  align-content: center !important;
   padding-bottom: 0 !important;
 }
 
 .sf-ai-guided-step-two-mic {
-  width: 110px !important;
+  width: clamp(90px, 10.3dvh, 96px) !important;
 }
 
 .sf-ai-guided-step-two-mic-core {
@@ -14468,16 +14497,16 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-two-record-wave {
-  top: 46% !important;
+  top: 49% !important;
   width: 35% !important;
-  height: 38px !important;
-  opacity: 0.34 !important;
+  height: clamp(30px, 3.43dvh, 32px) !important;
+  opacity: 0.28 !important;
 }
 
 .sf-ai-guided-step-two-record p {
-  margin-top: 13px !important;
+  margin-top: 11px !important;
   color: #6b668c !important;
-  font-size: 16px !important;
+  font-size: clamp(12px, 1.4dvh, 13px) !important;
   font-weight: 550 !important;
   line-height: 1.25 !important;
   text-shadow: none !important;
@@ -14485,65 +14514,67 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 @media (max-width: 390px), (max-height: 820px) {
   .sf-ai-guided-step-two-frame {
-    grid-template-rows: auto auto minmax(275px, 1fr) 98px 164px !important;
-    padding:
-      max(22px, calc(env(safe-area-inset-top, 0px) + 12px))
-      16px
-      max(10px, calc(env(safe-area-inset-bottom, 0px) + 10px)) !important;
+    grid-template-rows: none !important;
+    padding: 0 !important;
   }
 
   .sf-ai-guided-step-two-header {
-    grid-template-columns: 48px minmax(0, 1fr) 50px !important;
+    left: 16px !important;
+    right: 16px !important;
+    grid-template-columns: clamp(40px, 4.94dvh, 44px) minmax(0, 1fr) clamp(42px, 5.15dvh, 46px) !important;
     gap: 9px !important;
   }
 
   .sf-ai-guided-step-two-menu,
   .sf-ai-guided-step-two-avatar-button {
-    width: 48px !important;
-    height: 48px !important;
+    width: clamp(40px, 4.94dvh, 44px) !important;
+    height: clamp(40px, 4.94dvh, 44px) !important;
   }
 
   .sf-ai-guided-step-two-avatar-button {
-    width: 50px !important;
-    height: 50px !important;
+    width: clamp(42px, 5.15dvh, 46px) !important;
+    height: clamp(42px, 5.15dvh, 46px) !important;
   }
 
   .sf-ai-guided-step-two-brand {
-    grid-template-columns: 44px minmax(0, max-content) !important;
-    gap: 9px !important;
+    grid-template-columns: clamp(32px, 3.86dvh, 35px) minmax(0, max-content) !important;
+    gap: 8px !important;
   }
 
   .sf-ai-guided-step-two-logo {
-    width: 44px !important;
-    height: 44px !important;
+    width: clamp(32px, 3.86dvh, 35px) !important;
+    height: clamp(32px, 3.86dvh, 35px) !important;
   }
 
   .sf-ai-guided-step-two-logo svg {
-    width: 34px !important;
-    height: 34px !important;
+    width: 78% !important;
+    height: 78% !important;
   }
 
   .sf-ai-guided-step-two-brand-title {
-    font-size: 27px !important;
+    font-size: clamp(20px, 2.47dvh, 22px) !important;
   }
 
   .sf-ai-guided-step-two-brand-subtitle {
-    font-size: 9px !important;
+    font-size: clamp(6.5px, 0.8dvh, 7px) !important;
   }
 
   .sf-ai-guided-step-two-toolbar {
-    grid-template-columns: 108px minmax(0, 1fr) !important;
-    min-height: 45px !important;
-    margin-top: 20px !important;
+    left: 16px !important;
+    right: 16px !important;
+    grid-template-columns: clamp(68px, 7.94dvh, 72px) clamp(146px, 17.38dvh, 156px) !important;
+    gap: clamp(24px, 4.29dvh, 34px) !important;
+    min-height: clamp(37px, 4.72dvh, 40px) !important;
+    margin-top: 0 !important;
   }
 
   .sf-ai-guided-step-two-back {
-    height: 36px !important;
-    font-size: 17px !important;
+    height: clamp(37px, 4.72dvh, 40px) !important;
+    font-size: clamp(13px, 1.61dvh, 14px) !important;
   }
 
   .sf-ai-guided-step-two-mode {
-    font-size: 18px !important;
+    font-size: clamp(13px, 1.61dvh, 14px) !important;
   }
 
   .sf-ai-guided-step-two-signal {
@@ -14551,44 +14582,48 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
   }
 
   .sf-ai-guided-step-two-hero h1 {
-    font-size: 34px !important;
+    font-size: clamp(28px, 3.43dvh, 30px) !important;
   }
 
   .sf-ai-guided-step-two-hero p {
     margin-top: 18px !important;
-    font-size: 18px !important;
+    font-size: clamp(14px, 1.72dvh, 15px) !important;
     line-height: 1.5 !important;
   }
 
   .sf-ai-guided-step-two-wave-field {
-    height: 98px !important;
+    height: 16.52dvh !important;
   }
 
   .sf-ai-guided-step-two-tip {
-    grid-template-columns: 50px minmax(0, 1fr) 54px !important;
-    width: min(100% - 36px, 316px) !important;
-    min-height: 90px !important;
+    left: 36px !important;
+    right: auto !important;
+    grid-template-columns: clamp(40px, 4.72dvh, 42px) minmax(0, 1fr) clamp(42px, 4.94dvh, 44px) !important;
+    width: calc(100% - 72px) !important;
+    min-height: 84px !important;
     padding: 12px 14px !important;
   }
 
   .sf-ai-guided-step-two-tip-copy strong {
-    font-size: 17px !important;
+    font-size: clamp(15px, 1.9dvh, 16px) !important;
   }
 
   .sf-ai-guided-step-two-tip-copy span {
-    font-size: 13px !important;
+    font-size: clamp(12px, 1.55dvh, 13px) !important;
   }
 
   .sf-ai-guided-step-two-mic {
-    width: 96px !important;
+    width: clamp(82px, 10.3dvh, 90px) !important;
   }
 
   .sf-ai-guided-step-two-record {
-    min-height: 164px !important;
+    left: 16px !important;
+    right: 16px !important;
+    min-height: 0 !important;
   }
 
   .sf-ai-guided-step-two-record p {
-    font-size: 14px !important;
+    font-size: clamp(11.5px, 1.4dvh, 12px) !important;
   }
 }
 
