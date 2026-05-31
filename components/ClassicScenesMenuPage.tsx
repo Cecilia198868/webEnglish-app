@@ -46,7 +46,7 @@ const sceneCards: SceneCard[] = [
     title: "金融与行政事务",
     description: "银行、支付、税务、签证等场景",
     count: 70,
-    href: "/classic-scenes/bank-finance",
+    href: "/classic-scenes/finance-government",
     icon: "bank",
     accent: "#7f401f",
   },

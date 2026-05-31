@@ -36,7 +36,7 @@ type BankLesson = {
   title: string;
 };
 
-const backToFinanceMenuHref = "/classic-scenes";
+const backToFinanceMenuHref = "/classic-scenes/finance-government";
 
 const lessons: BankLesson[] = [
   {
