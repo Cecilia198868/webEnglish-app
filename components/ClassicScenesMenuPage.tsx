@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 import styles from "./ClassicScenesMenuPage.module.css";
 
 type SceneCardIcon =
@@ -110,14 +111,6 @@ const sceneCards: SceneCard[] = [
     title: "教育、工作与社交生活",
   },
 ];
-
-function MenuIcon() {
-  return (
-    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-      <path d="M8.5 10.5h15M8.5 16h15M8.5 21.5h15" />
-    </svg>
-  );
-}
 
 function BrandMarkIcon() {
   return (
@@ -236,7 +229,7 @@ function HeroVisual() {
 
 export default function ClassicScenesMenuPage() {
   const router = useRouter();
-  const openAccount = () => router.push("/account");
+  const openHome = () => router.push("/start");
   const openCard = (card: SceneCard) => {
     if (card.href) {
       router.push(card.href);
@@ -250,10 +243,10 @@ export default function ClassicScenesMenuPage() {
           <button
             className={styles.menuButton}
             type="button"
-            aria-label="打开账户界面"
-            onClick={openAccount}
+            aria-label="回到首页"
+            onClick={openHome}
           >
-            <MenuIcon />
+            <HomeMenuIcon />
           </button>
 
           <div className={styles.brand} aria-label="SpeakFlow Voice Practice">

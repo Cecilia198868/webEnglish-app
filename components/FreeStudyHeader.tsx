@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 
 type FreeStudyHeaderProps = {
   accountLabel?: string;
   avatarAlt?: string;
   avatarSrc?: string;
+  menuIcon?: "menu" | "home";
   menuLabel?: string;
   onAccountClick: () => void;
   onAvatarError?: () => void;
@@ -16,6 +18,7 @@ export default function FreeStudyHeader({
   accountLabel = "Open account menu",
   avatarAlt = "user",
   avatarSrc = "",
+  menuIcon = "menu",
   menuLabel = "Open menu",
   onAccountClick,
   onAvatarError,
@@ -63,11 +66,19 @@ export default function FreeStudyHeader({
           type="button"
           aria-label={menuLabel}
           onClick={onMenuClick}
-          className="sf-free-study-header-menu-button"
+          className={`sf-free-study-header-menu-button ${
+            menuIcon === "home" ? "is-home" : ""
+          }`}
         >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
+          {menuIcon === "home" ? (
+            <HomeMenuIcon />
+          ) : (
+            <>
+              <span aria-hidden="true" className="sf-free-study-header-menu-line" />
+              <span aria-hidden="true" className="sf-free-study-header-menu-line" />
+              <span aria-hidden="true" className="sf-free-study-header-menu-line" />
+            </>
+          )}
         </button>
 
         <div className="sf-free-study-header-brand" aria-hidden="true">

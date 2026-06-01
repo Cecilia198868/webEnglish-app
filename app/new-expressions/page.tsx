@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import { syncVocabularyWordsWithCloud } from "@/lib/vocabulary";
 import styles from "./NewExpressionsPage.module.css";
@@ -12,14 +13,6 @@ type SessionResponse = {
     name?: string | null;
   } | null;
 };
-
-function BackIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 32 32">
-      <path d="M19 8 11 16l8 8M12 16h12" />
-    </svg>
-  );
-}
 
 function ArrowIcon() {
   return (
@@ -199,50 +192,6 @@ function LibraryIllustration() {
   );
 }
 
-function HomeTabIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 36 36">
-      <path d="M6 17.2 18 7l12 10.2v11.6c0 1.8-1.4 3.2-3.2 3.2H22v-9h-8v9H9.2A3.2 3.2 0 0 1 6 28.8V17.2Z" />
-    </svg>
-  );
-}
-
-function ChatTabIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 36 36">
-      <path d="M18 7C11 7 5.5 11.7 5.5 17.5c0 3.2 1.7 6 4.4 7.9L9 31l5.6-2.9c1.1.2 2.2.4 3.4.4 7 0 12.5-4.7 12.5-10.5S25 7 18 7Z" />
-      <circle cx="13" cy="17.7" r="1.5" />
-      <circle cx="18" cy="17.7" r="1.5" />
-      <circle cx="23" cy="17.7" r="1.5" />
-    </svg>
-  );
-}
-
-function BarsTabIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 36 36">
-      <path d="M7 28h5V15H7v13Zm8 0h5V7h-5v21Zm8 0h5V19h-5v9Z" />
-    </svg>
-  );
-}
-
-function UserTabIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 36 36">
-      <path d="M18 18.5a7 7 0 1 0 0-14 7 7 0 0 0 0 14ZM6.5 31.5c1.4-6.5 5.6-9.8 11.5-9.8s10.1 3.3 11.5 9.8H6.5Z" />
-    </svg>
-  );
-}
-
-function BookmarkTabIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 36 36">
-      <path d="M10 5.5h16c1.4 0 2.5 1.1 2.5 2.5v24L18 26.4 7.5 32V8c0-1.4 1.1-2.5 2.5-2.5Z" />
-      <path d="m18 10.2 1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6 1.8-3.6Z" fill="white" />
-    </svg>
-  );
-}
-
 export default function NewExpressionsPage() {
   useEffect(() => {
     let cancelled = false;
@@ -270,7 +219,7 @@ export default function NewExpressionsPage() {
       <section className="sf-new-expressions-phone" aria-label="新表达菜单">
         <header className="sf-new-expressions-header">
           <Link href="/start" aria-label="返回首页" className="sf-new-expressions-back">
-            <BackIcon />
+            <HomeMenuIcon />
           </Link>
 
           <div className="sf-new-expressions-brand" aria-label="SpeakFlow AI Voice Practice">
@@ -341,28 +290,6 @@ export default function NewExpressionsPage() {
           </Link>
         </div>
 
-        <nav className="sf-new-expressions-tabs" aria-label="底部导航">
-          <Link href="/start" className="sf-new-expressions-tab">
-            <HomeTabIcon />
-            <span>首页</span>
-          </Link>
-          <Link href="/ai-guided-expression/step-1" className="sf-new-expressions-tab">
-            <ChatTabIcon />
-            <span>AI引导表达</span>
-          </Link>
-          <Link href="/new-expressions" className="sf-new-expressions-tab is-active" aria-current="page">
-            <BookmarkTabIcon />
-            <span>新表达</span>
-          </Link>
-          <Link href="/free-study/step-1" className="sf-new-expressions-tab">
-            <BarsTabIcon />
-            <span>自由学习</span>
-          </Link>
-          <Link href="/account" className="sf-new-expressions-tab">
-            <UserTabIcon />
-            <span>我的</span>
-          </Link>
-        </nav>
       </section>
     </main>
   );

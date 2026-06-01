@@ -1577,6 +1577,18 @@ export default function StudyPage() {
     router.push(createLoginUrl(subscriptionCallbackUrl));
   }
 
+  function openLoginFromFreePracticeLimit() {
+    setShowFreePracticeLimitModal(false);
+    stopSequencePlayback();
+    router.push(createLoginUrl(subscriptionCallbackUrl));
+  }
+
+  function openRegisterFromFreePracticeLimit() {
+    setShowFreePracticeLimitModal(false);
+    stopSequencePlayback();
+    router.push("/register");
+  }
+
   function getSentenceCompletionId(index = currentIndex) {
     return `study:${lessonId}:${index}`;
   }
@@ -2147,6 +2159,8 @@ export default function StudyPage() {
         {showFreePracticeLimitModal ? (
           <FreePracticeLimitModal
             onDismiss={() => setShowFreePracticeLimitModal(false)}
+            onLogin={openLoginFromFreePracticeLimit}
+            onRegister={openRegisterFromFreePracticeLimit}
             onUnlockPro={openProFromFreePracticeLimit}
           />
         ) : null}
@@ -2427,6 +2441,8 @@ export default function StudyPage() {
         {showFreePracticeLimitModal ? (
           <FreePracticeLimitModal
             onDismiss={() => setShowFreePracticeLimitModal(false)}
+            onLogin={openLoginFromFreePracticeLimit}
+            onRegister={openRegisterFromFreePracticeLimit}
             onUnlockPro={openProFromFreePracticeLimit}
           />
         ) : null}
@@ -2926,6 +2942,8 @@ export default function StudyPage() {
         {showFreePracticeLimitModal ? (
           <FreePracticeLimitModal
             onDismiss={() => setShowFreePracticeLimitModal(false)}
+            onLogin={openLoginFromFreePracticeLimit}
+            onRegister={openRegisterFromFreePracticeLimit}
             onUnlockPro={openProFromFreePracticeLimit}
           />
         ) : null}

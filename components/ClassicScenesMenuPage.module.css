@@ -38,9 +38,9 @@
   height: 78px;
   place-items: center;
   border: 1px solid rgba(37, 83, 47, 0.11);
-  border-radius: 18px;
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.92);
-  color: #205d32;
+  color: #aeb8d4;
   box-shadow:
     0 10px 24px rgba(42, 72, 37, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.96);
@@ -54,12 +54,21 @@
 }
 
 .menuButton svg {
-  width: 34px;
-  height: 34px;
+  width: 1.45rem;
+  height: 1.45rem;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
+  stroke-linejoin: round;
   stroke-width: 2.5;
+}
+
+.menuButton :global(.sf-home-menu-icon) {
+  font-size: 1.36rem;
+}
+
+.menuButton :global(.sf-home-menu-icon span) {
+  font-size: 0.62rem;
 }
 
 .brand {

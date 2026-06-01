@@ -3,6 +3,7 @@
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import type { AiGuidedProgressSnapshot } from "@/lib/aiGuidedExpressionProgress";
 import { FREE_PRACTICE_DAILY_LIMIT } from "@/lib/freePracticeLimit";
@@ -89,14 +90,6 @@ function normalizeSubscriptionStatus(
 
 function hasProAccess(subscriptionStatus: SubscriptionStatus) {
   return subscriptionStatus !== "free";
-}
-
-function MenuGlyph() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M5 7h14M5 12h14M5 17h14" />
-    </svg>
-  );
 }
 
 function MicGlyph() {
@@ -281,11 +274,11 @@ export default function AiGuidedExpressionStepOne() {
           <header className="sf-ai-guided-step-one-header">
             <button
               type="button"
-              aria-label="打开账户界面"
-              onClick={() => router.push("/account")}
-              className="sf-ai-guided-step-one-menu"
+              aria-label="回到首页"
+              onClick={() => router.push("/start")}
+              className="sf-ai-guided-step-one-menu is-home"
             >
-              <MenuGlyph />
+              <HomeMenuIcon />
             </button>
 
             <div

@@ -91,6 +91,23 @@
   box-shadow: 0 17px 34px rgba(95, 89, 162, 0.13);
 }
 
+:global(.sf-vocabulary-menu-button.is-home) {
+  color: #aeb8d4;
+}
+
+:global(.sf-vocabulary-menu-button.is-home .sf-home-menu-icon) {
+  font-size: 1.28rem;
+}
+
+:global(.sf-vocabulary-menu-button.is-home .sf-home-menu-icon svg) {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+:global(.sf-vocabulary-menu-button.is-home .sf-home-menu-icon span) {
+  font-size: 0.55rem;
+}
+
 :global(.sf-vocabulary-header-spacer) {
   justify-self: end;
   pointer-events: none;
@@ -127,6 +144,10 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 4.1;
+}
+
+:global(.sf-vocabulary-menu-button.is-home .sf-home-menu-icon path) {
+  stroke-width: 2.6;
 }
 
 :global(.sf-vocabulary-brand) {

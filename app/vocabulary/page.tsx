@@ -3,6 +3,7 @@
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ExpressionLearningLimitModal from "@/components/ExpressionLearningLimitModal";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 import PlayIcon from "@/components/PlayIcon";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import {
@@ -167,14 +168,6 @@ function BackIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 32 32">
       <path d="M19.5 7.5 11 16l8.5 8.5" />
-    </svg>
-  );
-}
-
-function MenuIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 32 32">
-      <path d="M8 10h16M8 16h16M8 22h10" />
     </svg>
   );
 }
@@ -1050,6 +1043,12 @@ export default function VocabularyPage() {
     navigateTo("/account");
   }
 
+  function openHomeFromVocabulary() {
+    setShowExpressionLibrary(false);
+    setShowExpressionLimitModal(false);
+    navigateTo("/start");
+  }
+
   function openProFromExpressionLimit() {
     setShowExpressionLimitModal(false);
     navigateTo(createLoginUrl(subscriptionCallbackUrl));
@@ -1554,11 +1553,11 @@ export default function VocabularyPage() {
         <header className="sf-vocabulary-learning-header">
           <button
             type="button"
-            aria-label="打开账户界面"
-            className="sf-vocabulary-menu-button"
-            onClick={openAccountFromVocabulary}
+            aria-label="回到首页"
+            className="sf-vocabulary-menu-button is-home"
+            onClick={openHomeFromVocabulary}
           >
-            <MenuIcon />
+            <HomeMenuIcon />
           </button>
 
           <div className="sf-vocabulary-brand" aria-label="SpeakFlow AI Voice Practice">

@@ -13,6 +13,7 @@ import FreeStudyPageThree from "@/components/FreeStudyPageThree";
 import FreeStudyPageFour from "@/components/FreeStudyPageFour";
 import FreeStudyPageFiveTop from "@/components/FreeStudyPageFiveTop";
 import FreeStudyPageFiveBottomBar from "@/components/FreeStudyPageFiveBottomBar";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 import AiGuidedExpressionStepFour from "@/components/AiGuidedExpressionStepFour";
 import AiGuidedExpressionStepFive from "@/components/AiGuidedExpressionStepFive";
 import FreeUsageMeter from "@/components/FreeUsageMeter";
@@ -4044,6 +4045,24 @@ function SpeakEnglishClient() {
     setShowFreePracticeLimitModal(true);
   }
 
+  function showFreePracticeLimitAfterCompletion() {
+    refreshFreePracticeUsageCount();
+
+    if (!accountEmail) {
+      setShowFreePracticeLimitModal(true);
+      return;
+    }
+
+    void refreshAccountSubscription().then((nextSubscriptionStatus) => {
+      if (hasProAccess(nextSubscriptionStatus)) {
+        setShowFreePracticeLimitModal(false);
+        return;
+      }
+
+      setShowFreePracticeLimitModal(true);
+    });
+  }
+
   function openProFromFreePracticeLimit() {
     setShowFreePracticeLimitModal(false);
 
@@ -4059,6 +4078,16 @@ function SpeakEnglishClient() {
     setShowExpressionMenu(false);
     setShowClassicCoursePicker(false);
     resetClassicCoursePicker();
+  }
+
+  function openLoginFromFreePracticeLimit() {
+    setShowFreePracticeLimitModal(false);
+    router.push(createLoginUrl(subscriptionCallbackUrl));
+  }
+
+  function openRegisterFromFreePracticeLimit() {
+    setShowFreePracticeLimitModal(false);
+    router.push("/register");
   }
 
   async function ensureFreePracticeAvailable(
@@ -4089,6 +4118,10 @@ function SpeakEnglishClient() {
       freePracticeRoundIdRef.current
     );
     setFreePracticeUsageCount(result.count);
+
+    if (result.didRecord && result.limitReached) {
+      showFreePracticeLimitAfterCompletion();
+    }
   }
 
   function recordAiGuidedBackendProgress(payload: {
@@ -4664,6 +4697,21 @@ function SpeakEnglishClient() {
     setShowClassicCoursePicker(false);
     resetClassicCoursePicker();
     router.push("/account");
+  }
+
+  function openLoggedInHomePage() {
+    if (isListening) {
+      cancelRecognition();
+    }
+
+    setPrimingPracticeStage(null);
+    setShowAccountMenu(false);
+    setAccountPanelView("menu");
+    setShowAvatarEditor(false);
+    setShowQuickPanel(false);
+    setShowClassicCoursePicker(false);
+    resetClassicCoursePicker();
+    router.push("/start");
   }
 
   function openAccountPage() {
@@ -6716,10 +6764,12 @@ function SpeakEnglishClient() {
               />
               <button
                 type="button"
-                aria-label="Open menu"
-                onClick={togglePracticeMenu}
-                className="absolute left-[6.5%] top-[3.1%] h-[6.2%] w-[10.5%] rounded-full border-0 bg-transparent"
-              />
+                aria-label="回到首页"
+                onClick={openLoggedInHomePage}
+                className="absolute left-[6.5%] top-[3.1%] z-[94] grid h-[6.2%] w-[10.5%] place-items-center rounded-full border-0 bg-white text-[#aeb8d4] shadow-[0_14px_28px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.94)]"
+              >
+                <HomeMenuIcon className="sf-guided-reference-home-icon" />
+              </button>
               <button
                 type="button"
                 aria-label={accountCopy.openAccountMenu}
@@ -8148,8 +8198,9 @@ function SpeakEnglishClient() {
 
           {showReferenceLanding ? (
             <FreeStudyPageOne
-              menuLabel="打开账户界面"
-              onMenuClick={openMenuPage}
+              menuIcon="home"
+              menuLabel="回到首页"
+              onMenuClick={openLoggedInHomePage}
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openAccountPage}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
@@ -8432,8 +8483,13 @@ function SpeakEnglishClient() {
 
           {!showReferenceLanding && !showReferenceConfirmation && !showAccountMenu ? (
             <FreeStudyHeader
-              menuLabel="打开账户界面"
-              onMenuClick={openMenuPage}
+              menuIcon={showClassicCoursePicker ? "home" : "menu"}
+              menuLabel={
+                showClassicCoursePicker ? "回到首页" : "打开账户界面"
+              }
+              onMenuClick={
+                showClassicCoursePicker ? openLoggedInHomePage : openMenuPage
+              }
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openReferenceAccountMenu}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
@@ -11310,7 +11366,10 @@ function SpeakEnglishClient() {
 
         {showFreePracticeLimitModal ? (
           <FreePracticeLimitModal
+            isSignedIn={Boolean(accountEmail)}
             onDismiss={() => setShowFreePracticeLimitModal(false)}
+            onLogin={openLoginFromFreePracticeLimit}
+            onRegister={openRegisterFromFreePracticeLimit}
             onUnlockPro={openProFromFreePracticeLimit}
           />
         ) : null}

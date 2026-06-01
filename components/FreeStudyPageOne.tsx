@@ -1,11 +1,13 @@
 "use client";
 
 import { useRef } from "react";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 
 type FreeStudyPageOneProps = {
   accountLabel?: string;
   avatarAlt?: string;
   avatarSrc?: string;
+  menuIcon?: "menu" | "home";
   menuLabel?: string;
   onAccountClick: () => void;
   onAvatarError?: () => void;
@@ -182,6 +184,7 @@ export default function FreeStudyPageOne({
   accountLabel = "打开账户页面",
   avatarAlt = "用户头像",
   avatarSrc = "",
+  menuIcon = "menu",
   menuLabel = "打开菜单",
   onAccountClick,
   onAvatarError,
@@ -222,9 +225,11 @@ export default function FreeStudyPageOne({
               event.preventDefault();
               activateMenu();
             }}
-            className="sf-free-study-page-one-menu"
+            className={`sf-free-study-page-one-menu ${
+              menuIcon === "home" ? "is-home" : ""
+            }`}
           >
-            <MenuGlyph />
+            {menuIcon === "home" ? <HomeMenuIcon /> : <MenuGlyph />}
           </button>
 
           <div className="sf-free-study-page-one-brand" aria-label="SpeakFlow AI Voice Practice">
