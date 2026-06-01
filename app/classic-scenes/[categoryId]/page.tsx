@@ -6,7 +6,18 @@ import {
 } from "@/data/classicSceneCategoryMenus";
 
 export function generateStaticParams() {
-  return classicSceneCategoryMenuIds.map((categoryId) => ({ categoryId }));
+  return classicSceneCategoryMenuIds
+    .filter(
+      (categoryId) =>
+        categoryId !== "shopping-consumption" &&
+        categoryId !== "restaurant-takeout" &&
+        categoryId !== "transportation-travel" &&
+        categoryId !== "housing-home" &&
+        categoryId !== "health-medical" &&
+        categoryId !== "service-repair" &&
+        categoryId !== "education-work-social"
+    )
+    .map((categoryId) => ({ categoryId }));
 }
 
 export default async function Page({

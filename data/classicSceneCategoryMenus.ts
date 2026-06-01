@@ -49,6 +49,7 @@ export type ClassicSceneSubcategory = {
   accent: string;
   count: number;
   description: string;
+  href?: string;
   icon: ClassicSceneCategoryIcon;
   id: string;
   tile: string;
@@ -82,6 +83,7 @@ export const classicSceneCategoryMenus: Record<
     cards: [
       {
         id: "basic-shopping",
+        href: "/classic-scenes/shopping-consumption/basic-shopping",
         title: "基础购物场景",
         description: "询问商品、挑选物品、\n了解信息",
         count: 18,
@@ -91,6 +93,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "payment-checkout",
+        href: "/classic-scenes/shopping-consumption/payment-checkout",
         title: "支付与结账",
         description: "付款方式、结账流程、\n开发票",
         count: 14,
@@ -100,6 +103,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "returns-after-sale",
+        href: "/classic-scenes/shopping-consumption/returns-after-sale",
         title: "退换货与售后",
         description: "退换货流程、售后服务、\n问题解决",
         count: 16,
@@ -109,6 +113,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "bargain-promotion",
+        href: "/classic-scenes/shopping-consumption/bargain-promotion",
         title: "讨价还价与促销",
         description: "讨价还价、使用优惠、\n促销活动",
         count: 12,
@@ -118,6 +123,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "special-shopping",
+        href: "/classic-scenes/shopping-consumption/special-shopping",
         title: "特殊消费场景",
         description: "旅行购物、免税购物、\n奢侈品消费",
         count: 10,
@@ -127,6 +133,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "daily-bill-management",
+        href: "/classic-scenes/shopping-consumption/daily-bill-management",
         title: "日常消费与账单管理",
         description: "日常消费、账单查看、\n费用管理",
         count: 15,
@@ -147,6 +154,7 @@ export const classicSceneCategoryMenus: Record<
     cards: [
       {
         id: "basic-ordering",
+        href: "/classic-scenes/restaurant-takeout/basic-ordering",
         title: "基础点餐场景",
         description: "浏览菜单、点餐、\n口味要求等",
         count: 16,
@@ -156,6 +164,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "restaurant-dining",
+        href: "/classic-scenes/restaurant-takeout/restaurant-dining",
         title: "餐厅就餐沟通",
         description: "询问推荐、加菜、\n换座、结账等",
         count: 18,
@@ -165,6 +174,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "takeout-delivery",
+        href: "/classic-scenes/restaurant-takeout/takeout-delivery",
         title: "外卖相关场景",
         description: "下单、备注要求、\n催单、取餐等",
         count: 15,
@@ -174,6 +184,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "special-dining",
+        href: "/classic-scenes/restaurant-takeout/special-dining",
         title: "特殊餐饮场景",
         description: "素食、过敏、生日、\n节日、酒吧等",
         count: 14,
@@ -183,6 +194,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "restaurant-payment-after-sale",
+        href: "/classic-scenes/restaurant-takeout/restaurant-payment-after-sale",
         title: "餐饮支付与售后",
         description: "付款方式、退款、\n投诉、问题处理等",
         count: 12,
@@ -192,6 +204,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "restaurant-reservation-group",
+        href: "/classic-scenes/restaurant-takeout/restaurant-reservation-group",
         title: "餐饮预约与团体用餐",
         description: "预订座位、团体点餐、\n活动安排等",
         count: 12,
@@ -212,6 +225,7 @@ export const classicSceneCategoryMenus: Record<
     cards: [
       {
         id: "airport-scenes",
+        href: "/classic-scenes/transportation-travel/airport-scenes",
         title: "机场相关场景",
         description: "值机、安检、登机、\n行李提取、海关等",
         count: 16,
@@ -221,6 +235,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "public-transport",
+        href: "/classic-scenes/transportation-travel/public-transport",
         title: "公共交通出行",
         description: "地铁、公交、火车、\n轻轨、有轨电车等",
         count: 18,
@@ -230,6 +245,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "taxi-rideshare",
+        href: "/classic-scenes/transportation-travel/taxi-rideshare",
         title: "打车与网约车",
         description: "叫车、确认路线、费用、\n等待、到达目的地等",
         count: 14,
@@ -239,6 +255,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "directions-navigation",
+        href: "/classic-scenes/transportation-travel/directions-navigation",
         title: "问路与导航",
         description: "询问方向、看地图、\n理解路线、导航指引等",
         count: 12,
@@ -248,6 +265,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "car-rental-self-driving",
+        href: "/classic-scenes/transportation-travel/car-rental-self-driving",
         title: "租车与自驾出行",
         description: "租车流程、驾驶规则、\n加油、停车、还车等",
         count: 13,
@@ -257,6 +275,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "travel-emergency",
+        href: "/classic-scenes/transportation-travel/travel-emergency",
         title: "交通问题与应急",
         description: "交通延误、丢失物品、\n事故处理、紧急求助等",
         count: 11,
@@ -277,6 +296,7 @@ export const classicSceneCategoryMenus: Record<
     cards: [
       {
         id: "hotel-stay",
+        href: "/classic-scenes/housing-home/hotel-stay",
         title: "酒店住宿场景",
         description: "预订酒店、入住办理、\n客房服务、退房等",
         count: 16,
@@ -286,6 +306,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "rent-viewing",
+        href: "/classic-scenes/housing-home/rent-viewing",
         title: "租房与看房",
         description: "找房渠道、看房沟通、\n签约租房、搬家等",
         count: 18,
@@ -295,6 +316,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "daily-home-life",
+        href: "/classic-scenes/housing-home/daily-home-life",
         title: "日常家居生活",
         description: "家居购物、清洁整理、\n维修维护、家务等",
         count: 15,
@@ -304,6 +326,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "housing-problems",
+        href: "/classic-scenes/housing-home/housing-problems",
         title: "住房问题处理",
         description: "房屋维修、邻里问题、\n投诉建议、纠纷解决等",
         count: 12,
@@ -312,14 +335,24 @@ export const classicSceneCategoryMenus: Record<
         tile: "#eef6ff",
       },
       {
+        id: "home-supplies-shopping",
+        href: "/classic-scenes/housing-home/home-supplies-shopping",
+        title: "家居用品采购",
+        description: "家具家电、装饰用品、\n厨房用品、收纳用品等",
+        count: 14,
+        icon: "cart",
+        accent: "#e6673f",
+        tile: "#fff1e8",
+      },
+      {
         id: "long-term-housing",
+        href: "/classic-scenes/housing-home/long-term-housing",
         title: "长期住房规划",
         description: "购房流程、贷款咨询、\n装修布置、房产管理等",
         count: 13,
         icon: "clipboard",
         accent: "#e6673f",
         tile: "#fff1e8",
-        wide: true,
       },
     ],
   },
@@ -334,6 +367,7 @@ export const classicSceneCategoryMenus: Record<
     cards: [
       {
         id: "first-visit",
+        href: "/classic-scenes/health-medical/first-visit",
         title: "初诊与看病流程",
         description: "挂号、问诊、检查、\n诊断、治疗等",
         count: 18,
@@ -343,6 +377,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "pharmacy-medicine",
+        href: "/classic-scenes/health-medical/pharmacy-medicine",
         title: "买药与药店场景",
         description: "药品咨询、处方购买、\n用药说明等",
         count: 15,
@@ -352,6 +387,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "checkup-prevention",
+        href: "/classic-scenes/health-medical/checkup-prevention",
         title: "体检与预防保健",
         description: "体检项目、报告解读、\n预防接种等",
         count: 14,
@@ -361,6 +397,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "medical-insurance",
+        href: "/classic-scenes/health-medical/medical-insurance",
         title: "医疗保险相关",
         description: "保险咨询、报销流程、\n理赔服务等",
         count: 12,
@@ -370,6 +407,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "medical-emergency",
+        href: "/classic-scenes/health-medical/medical-emergency",
         title: "紧急医疗与求助",
         description: "突发疾病、急救求助、\n急诊就医等",
         count: 11,
@@ -379,6 +417,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "health-followup",
+        href: "/classic-scenes/health-medical/health-followup",
         title: "健康管理与后续",
         description: "康复随访、慢病管理、\n生活方式建议等",
         count: 13,
@@ -399,6 +438,7 @@ export const classicSceneCategoryMenus: Record<
     cards: [
       {
         id: "delivery-logistics",
+        href: "/classic-scenes/service-repair/delivery-logistics",
         title: "快递与物流服务",
         description: "寄件、收件、查询、\n跟踪物流等场景",
         count: 16,
@@ -408,6 +448,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "after-sale-return",
+        href: "/classic-scenes/service-repair/after-sale-return",
         title: "售后服务与退换",
         description: "退换货、退款、保修、\n产品售后等场景",
         count: 15,
@@ -417,6 +458,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "home-appliance-repair",
+        href: "/classic-scenes/service-repair/home-appliance-repair",
         title: "家居与家电维修",
         description: "水电维修、家具维修、\n家电故障等场景",
         count: 14,
@@ -426,6 +468,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "beauty-hair-service",
+        href: "/classic-scenes/service-repair/beauty-hair-service",
         title: "美容美发服务",
         description: "发型设计、剪发、染发、\n护肤、美甲等场景",
         count: 12,
@@ -435,6 +478,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "electronics-repair",
+        href: "/classic-scenes/service-repair/electronics-repair",
         title: "电子产品与日常维修",
         description: "手机电脑维修、屏幕更换、\n配件维修等场景",
         count: 13,
@@ -444,6 +488,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "professional-services",
+        href: "/classic-scenes/service-repair/professional-services",
         title: "其他专业服务",
         description: "清洁服务、搬家服务、\n开锁换锁、宠物服务等",
         count: 11,
@@ -464,6 +509,7 @@ export const classicSceneCategoryMenus: Record<
     cards: [
       {
         id: "school-campus",
+        href: "/classic-scenes/education-work-social/school-campus",
         title: "学校教育与校园生活",
         description: "课程学习、校园活动、\n师生交流、留学生生活等",
         count: 16,
@@ -473,6 +519,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "job-interview",
+        href: "/classic-scenes/education-work-social/job-interview",
         title: "求职与面试准备",
         description: "简历撰写、求职申请、\n面试技巧、职业礼仪等",
         count: 15,
@@ -482,6 +529,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "workplace-communication",
+        href: "/classic-scenes/education-work-social/workplace-communication",
         title: "职场沟通与日常工作",
         description: "工作沟通、会议讨论、\n邮件写作、项目协作等",
         count: 18,
@@ -491,6 +539,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "social-relationship",
+        href: "/classic-scenes/education-work-social/social-relationship",
         title: "社交活动与人际关系",
         description: "交友聊天、聚会活动、\n兴趣爱好、处理冲突等",
         count: 14,
@@ -500,6 +549,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "career-growth",
+        href: "/classic-scenes/education-work-social/career-growth",
         title: "职业发展与工作进阶",
         description: "职业规划、技能提升、\n晋升谈判、职场转型等",
         count: 13,
@@ -509,6 +559,7 @@ export const classicSceneCategoryMenus: Record<
       },
       {
         id: "community-integration",
+        href: "/classic-scenes/education-work-social/community-integration",
         title: "校园与社区融合",
         description: "社区生活、志愿服务、\n文化适应、日常事务等",
         count: 12,

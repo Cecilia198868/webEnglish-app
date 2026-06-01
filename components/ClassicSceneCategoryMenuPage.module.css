@@ -329,6 +329,7 @@
     linear-gradient(135deg, #ffffff 0%, #ffffff 46%, var(--card-tile) 100%);
   color: #0c1324;
   text-align: left;
+  text-decoration: none;
   box-shadow:
     0 15px 28px rgba(57, 54, 38, 0.055),
     inset 0 1px 0 rgba(255, 255, 255, 0.98);

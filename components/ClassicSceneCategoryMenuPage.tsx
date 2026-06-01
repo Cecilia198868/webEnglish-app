@@ -302,13 +302,9 @@ function SceneCard({ card }: { card: ClassicSceneSubcategory }) {
     "--card-tile": card.tile,
   } as CSSProperties;
 
-  return (
-    <button
-      type="button"
-      className={`${styles.sceneCard} ${card.wide ? styles.sceneCardWide : ""}`}
-      style={style}
-      aria-label={`${card.title}，${card.count} 个课程`}
-    >
+  const className = `${styles.sceneCard} ${card.wide ? styles.sceneCardWide : ""}`;
+  const content = (
+    <>
       <span className={styles.cardIconWrap} aria-hidden="true">
         <SceneIcon type={card.icon} />
       </span>
@@ -323,6 +319,30 @@ function SceneCard({ card }: { card: ClassicSceneSubcategory }) {
       <span className={styles.arrowCircle} aria-hidden="true">
         <ArrowRightIcon />
       </span>
+    </>
+  );
+
+  if (card.href) {
+    return (
+      <Link
+        aria-label={`进入${card.title}三级菜单，${card.count} 个课程`}
+        className={className}
+        href={card.href}
+        style={style}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className={className}
+      style={style}
+      aria-label={`${card.title}，${card.count} 个课程`}
+    >
+      {content}
     </button>
   );
 }
