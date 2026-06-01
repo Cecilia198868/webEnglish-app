@@ -36,11 +36,14 @@ import {
 } from "@/lib/expressionHighlights";
 import {
   FREE_PRACTICE_DAILY_LIMIT,
+  type FreePracticeScope,
   getFreePracticeUsage,
+  hasFreePracticeCompletion,
   isFreePracticeLimitReached,
   recordFreePracticeCompletion,
 } from "@/lib/freePracticeLimit";
 import type { AppLanguage } from "@/lib/i18n";
+import { createLoginUrl, subscriptionCallbackUrl } from "@/lib/loginRedirect";
 
 type KeyboardMode = "zh" | "en" | "handwriting" | "symbols";
 type PracticeStage = "native" | "english";
@@ -122,6 +125,7 @@ type SessionResponse = {
     photoURL?: string | null;
     photoUrl?: string | null;
     picture?: string | null;
+    role?: "user" | "admin" | null;
   } | null;
 };
 
@@ -193,6 +197,7 @@ type InterfaceLanguageOption = {
 };
 
 type AccountMenuAction =
+  | "adminDashboard"
   | "subscription"
   | "voice"
   | "manageSubscription"
@@ -260,6 +265,7 @@ type AccountMenuIconName =
   | "file"
   | "lock"
   | "info"
+  | "dashboard"
   | "logout";
 
 type HelpCenterArticle = {
@@ -349,6 +355,38 @@ function CloseGlyph({ className = "" }: { className?: string }) {
       <span className="absolute left-1/2 top-1/2 h-[2.4px] w-4 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full bg-current" />
     </span>
   );
+}
+
+function SoundWaveIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      focusable="false"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2.2"
+      viewBox="0 0 24 24"
+    >
+      <path d="M5 9.5h3.2L12.5 6v12l-4.3-3.5H5v-5Z" />
+      <path d="M15.4 9.2a4.2 4.2 0 0 1 0 5.6" />
+      <path d="M18.2 6.8a7.8 7.8 0 0 1 0 10.4" />
+    </svg>
+  );
+}
+
+function ProFeatureIcon({ name }: { name: string }) {
+  if (name !== "speaker") {
+    return (
+      <span aria-hidden="true" className="text-[1.75rem] leading-none">
+        {name}
+      </span>
+    );
+  }
+
+  return <SoundWaveIcon className="h-8 w-8 text-[#7460e8]" />;
 }
 
 function AccountLineIcon({
@@ -457,6 +495,14 @@ function AccountLineIcon({
           <path d="M16 14v7M16 10.5h.02" />
         </>
       ) : null}
+      {name === "dashboard" ? (
+        <>
+          <rect height="8" rx="2" width="8" x="5" y="6" />
+          <rect height="8" rx="2" width="8" x="19" y="6" />
+          <rect height="8" rx="2" width="8" x="5" y="18" />
+          <rect height="8" rx="2" width="8" x="19" y="18" />
+        </>
+      ) : null}
       {name === "logout" ? (
         <>
           <path d="M13 6H8v20h5M18 11l5 5-5 5M23 16H12" />
@@ -528,7 +574,7 @@ const accountPanelCopy = {
       {
         title: "Learning Experience",
         items: [
-          { action: "voice", icon: "🎧", label: "Voice" },
+          { action: "voice", icon: "headphones", label: "Voice" },
           { action: "fontSize", icon: "🔤", label: "Font Size" },
           { icon: "🌐", label: "Interface Language" },
           { icon: "🔔", label: "Notifications" },
@@ -601,7 +647,7 @@ const accountPanelCopy = {
         description: "Turn video, subtitles, and audio into personal training courses.",
       },
       {
-        icon: "🔊",
+        icon: "speaker",
         title: "Premium AI Voice",
         description: "More natural, realistic pronunciation and intonation.",
       },
@@ -673,7 +719,7 @@ const accountPanelCopy = {
       {
         title: "学习体验",
         items: [
-          { action: "voice", icon: "🎧", label: "声音" },
+          { action: "voice", icon: "headphones", label: "声音" },
           { action: "fontSize", icon: "🔤", label: "字体大小" },
           { icon: "🌐", label: "界面语言" },
           { icon: "🔔", label: "通知" },
@@ -744,7 +790,7 @@ const accountPanelCopy = {
         description: "视频、字幕、音频一键变成专属训练课程。",
       },
       {
-        icon: "🔊",
+        icon: "speaker",
         title: "高级 AI 语音",
         description: "更自然、更真实的发音与语调。",
       },
@@ -1620,6 +1666,7 @@ const accountHomeContent = {
   en: {
     account: "Account",
     accountManagement: "Account Management",
+    adminDashboard: "Admin Dashboard",
     contactFeedback: "Contact & Feedback",
     dataAndSecurity: "Data & Security",
     fontSize: "Font Size",
@@ -1636,6 +1683,7 @@ const accountHomeContent = {
   "zh-CN": {
     account: "账户",
     accountManagement: "\u8d26\u53f7\u7ba1\u7406",
+    adminDashboard: "\u540e\u53f0\u7ba1\u7406",
     contactFeedback: "联系与反馈",
     dataAndSecurity: "数据与安全",
     fontSize: "字体大小",
@@ -3107,6 +3155,7 @@ function SpeakEnglishClient() {
   const [accountName, setAccountName] = useState("");
   const [accountEmail, setAccountEmail] = useState("");
   const [accountImage, setAccountImage] = useState("");
+  const [accountRole, setAccountRole] = useState<"user" | "admin">("user");
   const [accountImageFailed, setAccountImageFailed] = useState(false);
   const [hasLoadedAccountSession, setHasLoadedAccountSession] =
     useState(false);
@@ -3179,6 +3228,9 @@ function SpeakEnglishClient() {
   const proFeatureItems = accountCopy.proFeatures;
   const voiceMenuItemLabel = language === "en" ? "Voice" : "声音";
   const isAiGuidedMode = trainingGroundMode === "guided";
+  const activeFreePracticeScope: FreePracticeScope = isAiGuidedMode
+    ? "guided"
+    : "free";
   const isFreeConversationMode = false;
   const isPrimingNativeSpeech =
     primingPracticeStage === "native" &&
@@ -3397,6 +3449,7 @@ function SpeakEnglishClient() {
   const hasCanceledAtPeriodEnd =
     accountSubscriptionStatus === "cancels_at_period_end";
   const isAccountPro = hasProAccess(accountSubscriptionStatus);
+  const isAccountAdmin = accountRole === "admin";
   const shouldShowFreePracticeUsageMeter =
     !isAccountPro &&
     hasLoadedAccountSession &&
@@ -3506,8 +3559,10 @@ function SpeakEnglishClient() {
     : subscriptionManagementCopy.freePlan;
 
   const refreshFreePracticeUsageCount = useCallback(() => {
-    setFreePracticeUsageCount(getFreePracticeUsage("free").count);
-  }, []);
+    setFreePracticeUsageCount(
+      getFreePracticeUsage(activeFreePracticeScope).count
+    );
+  }, [activeFreePracticeScope]);
 
   useEffect(() => {
     refreshFreePracticeUsageCount();
@@ -3667,19 +3722,28 @@ function SpeakEnglishClient() {
         if (cancelled) return;
 
         const nextName = session.user?.name || "";
-        const nextEmail = session.user?.email || session.user?.name || "";
+        const nextEmail = (
+          session.user?.email ||
+          session.user?.name ||
+          ""
+        )
+          .trim()
+          .toLowerCase();
+        const nextRole = session.user?.role === "admin" ? "admin" : "user";
         const savedAvatar = window.localStorage.getItem(
           getAccountAvatarStorageKey(nextEmail || nextName)
         );
 
         setAccountName(nextName);
         setAccountEmail(nextEmail);
+        setAccountRole(nextRole);
         setAccountImage(savedAvatar || getSessionAvatar(session.user));
         setAccountImageFailed(false);
       } catch {
         if (!cancelled) {
           setAccountName("");
           setAccountEmail("");
+          setAccountRole("user");
           setAccountImage("");
         }
       } finally {
@@ -3956,6 +4020,12 @@ function SpeakEnglishClient() {
 
   function openProFromFreePracticeLimit() {
     setShowFreePracticeLimitModal(false);
+
+    if (!accountEmail) {
+      router.push(createLoginUrl(subscriptionCallbackUrl));
+      return;
+    }
+
     setShowQuickPanel(true);
     setShowAccountMenu(true);
     setAccountPanelView("subscription");
@@ -3965,8 +4035,14 @@ function SpeakEnglishClient() {
     resetClassicCoursePicker();
   }
 
-  async function ensureFreePracticeAvailable() {
-    if (!isFreePracticeLimitReached("free")) return true;
+  async function ensureFreePracticeAvailable(
+    completionId = freePracticeRoundIdRef.current
+  ) {
+    if (hasFreePracticeCompletion(activeFreePracticeScope, completionId)) {
+      return true;
+    }
+
+    if (!isFreePracticeLimitReached(activeFreePracticeScope)) return true;
 
     const nextSubscriptionStatus = await refreshAccountSubscription();
 
@@ -3983,7 +4059,7 @@ function SpeakEnglishClient() {
     if (hasProAccess(accountSubscriptionStatus)) return;
 
     const result = recordFreePracticeCompletion(
-      "free",
+      activeFreePracticeScope,
       freePracticeRoundIdRef.current
     );
     setFreePracticeUsageCount(result.count);
@@ -4015,6 +4091,11 @@ function SpeakEnglishClient() {
   }
 
   function handleAccountMenuAction(action?: AccountMenuAction) {
+    if (action === "adminDashboard") {
+      window.location.href = "/admin";
+      return;
+    }
+
     if (action === "subscription") {
       setAccountPanelView("subscription");
       return;
@@ -4246,6 +4327,11 @@ function SpeakEnglishClient() {
   async function startStripeCheckout(selectedPlan: ProPlan = selectedProPlan) {
     if (isStartingCheckout) return;
 
+    if (!accountEmail) {
+      router.push(createLoginUrl(subscriptionCallbackUrl));
+      return;
+    }
+
     setIsStartingCheckout(true);
     setCheckoutError("");
 
@@ -4261,6 +4347,11 @@ function SpeakEnglishClient() {
         url?: unknown;
       };
       const url = typeof data.url === "string" ? data.url : "";
+
+      if (response.status === 401) {
+        router.push(createLoginUrl(subscriptionCallbackUrl));
+        return;
+      }
 
       if (!response.ok || !url) {
         const errorMessage =
@@ -4405,8 +4496,8 @@ function SpeakEnglishClient() {
     setAuthoritativeEnglish("");
   }
 
-  function prepareNextNativeRound() {
-    freePracticeRoundIdRef.current = createFreePracticeRoundId();
+  function prepareNextNativeRound(roundId = createFreePracticeRoundId()) {
+    freePracticeRoundIdRef.current = roundId;
     setPrimingPracticeStage(null);
     setPracticeStage("native");
     setNativeSpeech("");
@@ -4425,8 +4516,11 @@ function SpeakEnglishClient() {
     resetFreeConversationState();
   }
 
-  function prepareGuidedSuggestedEnglishRound(suggestion: string) {
-    freePracticeRoundIdRef.current = createFreePracticeRoundId();
+  function prepareGuidedSuggestedEnglishRound(
+    suggestion: string,
+    roundId = createFreePracticeRoundId()
+  ) {
+    freePracticeRoundIdRef.current = roundId;
     setPrimingPracticeStage("english");
     setPracticeStage("english");
     setNativeSpeech(suggestion);
@@ -4444,7 +4538,9 @@ function SpeakEnglishClient() {
     resetFreeConversationState();
   }
 
-  function prepareFreeConversationAnswerRound() {
+  function prepareFreeConversationAnswerRound(
+    roundId = createFreePracticeRoundId()
+  ) {
     const activeQuestion = freeConversationResponse
       ? {
           english: freeConversationResponse.questionEnglish,
@@ -4454,7 +4550,7 @@ function SpeakEnglishClient() {
         }
       : freeConversationQuestionPrompt;
 
-    freePracticeRoundIdRef.current = createFreePracticeRoundId();
+    freePracticeRoundIdRef.current = roundId;
     setPrimingPracticeStage("english");
     setPracticeStage("english");
     setNativeSpeech("");
@@ -5079,14 +5175,26 @@ function SpeakEnglishClient() {
         : isStartingNextNativeRound
           ? "native"
           : practiceStage);
+    const shouldCreateNewPracticeRound =
+      isStartingGuidedSuggestedEnglishRound ||
+      isStartingFreeConversationAnswerRound ||
+      isStartingNextNativeRound;
+    const guardedPracticeRoundId = shouldCreateNewPracticeRound
+      ? createFreePracticeRoundId()
+      : freePracticeRoundIdRef.current;
+    const shouldGuardFreePractice =
+      nextPracticeStage === "native" ||
+      isStartingGuidedSuggestedEnglishRound ||
+      isStartingFreeConversationAnswerRound ||
+      (nextPracticeStage === "english" &&
+        !hasEnglishAttempt &&
+        Boolean(nativeSpeech.trim()));
 
     setPrimingPracticeStage(nextPracticeStage);
 
     if (
-      (nextPracticeStage === "native" ||
-        isStartingGuidedSuggestedEnglishRound ||
-        isStartingFreeConversationAnswerRound) &&
-      !(await ensureFreePracticeAvailable())
+      shouldGuardFreePractice &&
+      !(await ensureFreePracticeAvailable(guardedPracticeRoundId))
     ) {
       shouldCommitSpeechRef.current = false;
       setPrimingPracticeStage(null);
@@ -5094,11 +5202,14 @@ function SpeakEnglishClient() {
     }
 
     if (isStartingGuidedSuggestedEnglishRound) {
-      prepareGuidedSuggestedEnglishRound(guidedSuggestedChinese);
+      prepareGuidedSuggestedEnglishRound(
+        guidedSuggestedChinese,
+        guardedPracticeRoundId
+      );
     } else if (isStartingFreeConversationAnswerRound) {
-      prepareFreeConversationAnswerRound();
+      prepareFreeConversationAnswerRound(guardedPracticeRoundId);
     } else if (isStartingNextNativeRound) {
-      prepareNextNativeRound();
+      prepareNextNativeRound(guardedPracticeRoundId);
     }
 
     const recognition = new RecognitionConstructor();
@@ -6472,6 +6583,15 @@ function SpeakEnglishClient() {
           icon: "lock",
           label: accountHome.accountManagement,
         },
+        ...(isAccountAdmin
+          ? [
+              {
+                action: "adminDashboard" as const,
+                icon: "dashboard" as const,
+                label: accountHome.adminDashboard,
+              },
+            ]
+          : []),
       ],
     },
     {
@@ -6881,9 +7001,7 @@ function SpeakEnglishClient() {
                         onClick={() => readReferenceResultVariant(0, 1)}
                         className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-[#0b62df] shadow-[0_10px_24px_rgba(64,112,190,0.14),inset_0_1px_0_rgba(255,255,255,0.96)]"
                       >
-                        <span aria-hidden="true" className="ml-0.5 text-sm">
-                          ▶
-                        </span>
+                        <PlayIcon className="h-4 w-4 translate-x-[1px]" />
                       </button>
                     </div>
                   </div>
@@ -6921,9 +7039,7 @@ function SpeakEnglishClient() {
                             onClick={() => readReferenceResultVariant(index, 1)}
                             className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-[#0b62df] shadow-[0_10px_24px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.96)]"
                           >
-                            <span aria-hidden="true" className="ml-0.5 text-xs">
-                              ▶
-                            </span>
+                            <PlayIcon className="h-3.5 w-3.5 translate-x-[1px]" />
                           </button>
                         </div>
                       </div>
@@ -7234,12 +7350,7 @@ function SpeakEnglishClient() {
                               onClick={() => readReferenceResultVariant(index, 1)}
                               className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-[#0b62df] shadow-[0_10px_24px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.96)]"
                             >
-                              <span
-                                aria-hidden="true"
-                                className="ml-0.5 text-xs leading-none"
-                              >
-                                ▶
-                              </span>
+                              <PlayIcon className="h-3.5 w-3.5 translate-x-[1px]" />
                             </button>
                             <button
                               type="button"
@@ -7247,12 +7358,7 @@ function SpeakEnglishClient() {
                               onClick={() => readReferenceResultVariant(index, 1)}
                               className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-[#0b62df] shadow-[0_10px_24px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.96)]"
                             >
-                              <span
-                                aria-hidden="true"
-                                className="text-[0.72rem] font-black leading-none"
-                              >
-                                ≋
-                              </span>
+                              <SoundWaveIcon className="h-4 w-4" />
                             </button>
                           </div>
                         </div>
@@ -8229,12 +8335,7 @@ function SpeakEnglishClient() {
                               aria-label={`Play ${label || "expression"}`}
                               className="grid h-9 w-9 place-items-center rounded-full bg-white/95 text-[#40358f] shadow-[0_8px_18px_rgba(84,72,146,0.1)]"
                             >
-                              <span
-                                aria-hidden="true"
-                                className="ml-0.5 text-[0.72rem]"
-                              >
-                                ▶
-                              </span>
+                              <PlayIcon className="h-3.5 w-3.5 translate-x-[1px]" />
                             </button>
                             <button
                               type="button"
@@ -8244,12 +8345,7 @@ function SpeakEnglishClient() {
                               aria-label={`Read ${label || "expression"}`}
                               className="grid h-9 w-9 place-items-center rounded-full bg-white/95 text-[#40358f] shadow-[0_8px_18px_rgba(84,72,146,0.1)]"
                             >
-                              <span
-                                aria-hidden="true"
-                                className="text-[0.72rem] font-black"
-                              >
-                                ≋
-                              </span>
+                              <SoundWaveIcon className="h-4 w-4" />
                             </button>
                           </div>
                         </div>
@@ -9661,7 +9757,7 @@ function SpeakEnglishClient() {
                           className="flex items-center gap-4 rounded-[24px] border border-white/78 bg-white/72 px-4 py-4 shadow-[0_14px_34px_rgba(84,72,146,0.1)]"
                         >
                           <span className="grid h-14 w-14 shrink-0 place-items-center rounded-[20px] bg-[#efeaff] text-[1.75rem] shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
-                            {feature.icon}
+                            <ProFeatureIcon name={feature.icon} />
                           </span>
                           <span className="min-w-0">
                             <span className="block text-[1.08rem] font-extrabold leading-6 text-[#201833]">
@@ -9701,7 +9797,7 @@ function SpeakEnglishClient() {
                         <span
                           className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[0.95rem] font-extrabold transition ${
                             selectedProPlan === "monthly"
-                              ? "bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] text-white"
+                              ? "bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] !text-white"
                               : "border-2 border-[#b8aed8] text-transparent"
                           }`}
                         >
@@ -9740,7 +9836,7 @@ function SpeakEnglishClient() {
                         <span
                           className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[0.95rem] font-extrabold transition ${
                             selectedProPlan === "yearly"
-                              ? "bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] text-white"
+                              ? "bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] !text-white"
                               : "border-2 border-[#b8aed8] text-transparent"
                           }`}
                         >
@@ -9749,7 +9845,7 @@ function SpeakEnglishClient() {
                         <span className="min-w-0 flex-1">
                           <span className="flex flex-wrap items-center gap-2 text-[1rem] font-extrabold text-[#201833]">
                             {accountCopy.proPlans.yearly.label}
-                            <span className="rounded-[10px] bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] px-2.5 py-1 text-[0.78rem] text-white">
+                            <span className="rounded-[10px] bg-[linear-gradient(135deg,#7a5cff_0%,#c85cff_100%)] px-2.5 py-1 text-[0.78rem] !text-white">
                               {accountCopy.proPlans.yearly.recommended}
                             </span>
                           </span>
@@ -9772,10 +9868,10 @@ function SpeakEnglishClient() {
                       disabled={isStartingCheckout}
                       aria-busy={isStartingCheckout}
                       aria-label={`${accountCopy.proCta}: ${selectedProPlanDetails.label}`}
-                      className="mt-7 flex min-h-[4.1rem] w-full items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#6f55ff_0%,#a549ff_58%,#c85cff_100%)] px-5 text-[1.12rem] font-extrabold text-white shadow-[0_22px_50px_rgba(126,92,255,0.32)] transition disabled:opacity-70"
+                      className="mt-7 flex min-h-[4.1rem] w-full items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#6f55ff_0%,#a549ff_58%,#c85cff_100%)] px-5 text-[1.12rem] font-extrabold !text-white shadow-[0_22px_50px_rgba(126,92,255,0.32)] transition disabled:opacity-70 [&_*]:!text-white"
                     >
                       <CrownIcon
-                        className={`mr-2 h-7 w-7 ${
+                        className={`mr-2 h-7 w-7 !text-white ${
                           isStartingCheckout ? "animate-pulse" : ""
                         }`}
                       />
@@ -9874,7 +9970,7 @@ function SpeakEnglishClient() {
 
                         <button
                           type="button"
-                          className="mt-6 flex min-h-[4.15rem] w-full items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#6f55ff_0%,#a549ff_58%,#c85cff_100%)] px-5 text-[1.14rem] font-black text-white shadow-[0_22px_50px_rgba(126,92,255,0.34)]"
+                          className="mt-6 flex min-h-[4.15rem] w-full items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,#6f55ff_0%,#a549ff_58%,#c85cff_100%)] px-5 text-[1.14rem] font-black !text-white shadow-[0_22px_50px_rgba(126,92,255,0.34)] [&_*]:!text-white"
                         >
                           {accountCopy.confirmAndPay}
                         </button>
@@ -10064,10 +10160,13 @@ function SpeakEnglishClient() {
                     : "justify-start pt-14"
               }`}
             >
-              {shouldShowFreePracticeUsageMeter && !showLandingPrompt ? (
+              {shouldShowFreePracticeUsageMeter ? (
                 <FreeUsageMeter
                   className="mb-6"
+                  actionLabel={isAiGuidedMode ? "AI引导试用" : "试用"}
+                  isPro={isAccountPro}
                   limit={FREE_PRACTICE_DAILY_LIMIT}
+                  unitLabel="句"
                   used={freePracticeUsageCount}
                 />
               ) : null}

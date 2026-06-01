@@ -35,6 +35,7 @@ import {
   isFreePracticeLimitReached,
   recordFreePracticeCompletion,
 } from "@/lib/freePracticeLimit";
+import { createLoginUrl, subscriptionCallbackUrl } from "@/lib/loginRedirect";
 import styles from "./ClassicStudyPage.module.css";
 
 type Lesson = {
@@ -935,10 +936,12 @@ export default function StudyPage() {
     }
   }
 
-  function handleNext() {
+  async function handleNext() {
     stopSequencePlayback();
     if (currentIndex < pairs.length - 1) {
       const newIndex = currentIndex + 1;
+
+      if (!(await ensureFreePracticeAvailable(newIndex))) return;
 
       setCurrentIndex(newIndex);
       currentIndexRef.current = newIndex;
@@ -1571,7 +1574,7 @@ export default function StudyPage() {
   function openProFromFreePracticeLimit() {
     setShowFreePracticeLimitModal(false);
     stopSequencePlayback();
-    router.push("/speak-english?menu=1&pro=1");
+    router.push(createLoginUrl(subscriptionCallbackUrl));
   }
 
   function getSentenceCompletionId(index = currentIndex) {

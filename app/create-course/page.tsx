@@ -36,6 +36,27 @@ type ExtractTextResponse = {
   error?: string;
 };
 
+function AudioImportIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="h-7 w-7 text-white"
+      fill="none"
+      focusable="false"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2.2"
+      viewBox="0 0 24 24"
+    >
+      <path d="M4 13v-1a8 8 0 0 1 16 0v1" />
+      <path d="M4 13v4a2 2 0 0 0 2 2h2v-8H6a2 2 0 0 0-2 2Z" />
+      <path d="M20 13v4a2 2 0 0 1-2 2h-2v-8h2a2 2 0 0 1 2 2Z" />
+      <path d="M14 19c-.6.8-1.3 1.2-2 1.2s-1.4-.4-2-1.2" />
+    </svg>
+  );
+}
+
 function extractCourseName(sourceText: string, fallback = DEFAULT_YOUTUBE_COURSE_NAME) {
   const bracketMatch = sourceText.match(/《([^》]+)》/);
   if (bracketMatch?.[1]?.trim()) {
@@ -1374,7 +1395,7 @@ export default function CreateCoursePage() {
                     className="flex min-h-[4.75rem] items-center gap-4 rounded-[18px] bg-white/70 px-4 py-3 text-left shadow-[0_14px_32px_rgba(84,72,146,0.08),inset_0_1px_0_rgba(255,255,255,0.92)] transition hover:bg-white/82"
                   >
                     <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[12px] bg-[linear-gradient(135deg,#d7f2ff_0%,#9dd7ff_100%)] text-[1.45rem] shadow-[0_10px_22px_rgba(91,140,255,0.14)]">
-                      🎧
+                      <AudioImportIcon />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-[1.03rem] font-black leading-6 text-[#201833]">

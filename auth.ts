@@ -8,7 +8,10 @@ import {
   consumePasswordlessCode,
   normalizePasswordlessTarget,
 } from "@/lib/passwordlessCodes";
-import { ensurePasswordlessUserProfile } from "@/lib/userStore";
+import {
+  ensurePasswordlessUserProfile,
+  getUserRoleByEmail,
+} from "@/lib/userStore";
 
 type WechatProfile = {
   errcode?: number;
@@ -271,6 +274,7 @@ export const authOptions: NextAuthOptions = {
       if (email) token.email = email;
       if (user?.name) token.name = user.name;
       if (user?.image) token.picture = user.image;
+      if (email) token.role = await getUserRoleByEmail(email);
 
       return token;
     },
@@ -281,6 +285,7 @@ export const authOptions: NextAuthOptions = {
           typeof token.name === "string" ? token.name : session.user.email;
         session.user.image =
           typeof token.picture === "string" ? token.picture : "";
+        session.user.role = token.role === "admin" ? "admin" : "user";
       }
 
       return session;

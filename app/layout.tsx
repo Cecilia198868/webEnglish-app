@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import { Geist, Geist_Mono, Sora } from "next/font/google";
 import LanguageProvider from "@/components/LanguageProvider";
+import PageViewTracker from "@/components/PageViewTracker";
 import PwaRegister from "@/components/PwaRegister";
 import { normalizeLanguage, LANGUAGE_COOKIE_NAME } from "@/lib/i18n";
 import "./globals.css";
@@ -90,6 +91,7 @@ export default async function RootLayout({
       >
         <LanguageProvider initialLanguage={initialLanguage}>
           <PwaRegister />
+          <PageViewTracker />
           {children}
         </LanguageProvider>
       </body>

@@ -3,6 +3,7 @@
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ExpressionLearningLimitModal from "@/components/ExpressionLearningLimitModal";
+import FreeUsageMeter from "@/components/FreeUsageMeter";
 import PlayIcon from "@/components/PlayIcon";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import {
@@ -12,6 +13,7 @@ import {
   getExpressionLearningUsageCount,
   recordLearnedExpression,
 } from "@/lib/freeExpressionLearningLimit";
+import { createLoginUrl, subscriptionCallbackUrl } from "@/lib/loginRedirect";
 import {
   applyExpressionStudyAction,
   deleteVocabularyWordFromCloud,
@@ -1084,7 +1086,7 @@ export default function VocabularyPage() {
 
   function openProFromExpressionLimit() {
     setShowExpressionLimitModal(false);
-    navigateTo("/account");
+    navigateTo(createLoginUrl(subscriptionCallbackUrl));
   }
 
   function openExpressionAt(index: number, options: { closeLibrary?: boolean } = {}) {
@@ -1688,6 +1690,14 @@ export default function VocabularyPage() {
               {displayedExpression?.status === "mastered" ? "已达标" : "我已掌握"}
             </button>
           </p>
+
+          <FreeUsageMeter
+            actionLabel="学习"
+            isPro={isAccountPro}
+            limit={FREE_EXPRESSION_LEARNING_LIMIT}
+            unitLabel="个"
+            used={expressionLearningUsageCount}
+          />
         </section>
 
         {displayedExpression ? (

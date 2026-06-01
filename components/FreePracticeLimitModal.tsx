@@ -19,12 +19,12 @@ export default function FreePracticeLimitModal({
       <div className="w-full max-w-[360px] rounded-[30px] border border-white/80 bg-[#fbf9ff] px-6 py-7 text-center shadow-[0_28px_80px_rgba(28,18,62,0.42)]">
         <h2
           id="free-practice-limit-title"
-          className="text-[1.6rem] font-black leading-tight"
+          className="text-[1.55rem] font-black leading-tight"
         >
-          🎉 今天的免费练习已完成
+          今天的免费试用已用完
         </h2>
         <p className="mt-3 text-[1rem] font-bold leading-7 text-[#6f6685]">
-          继续你的英语输出之旅。
+          免费用户每天可体验 5 句。开通 SpeakFlow Pro 后，可以继续无限练习。
         </p>
 
         <div className="mt-6 px-5 text-left">

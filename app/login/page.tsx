@@ -8,12 +8,19 @@ import {
   isXAuthConfigured,
 } from "@/auth";
 import LoginPageClient from "@/components/LoginPageClient";
+import { getSafeInternalCallbackUrl } from "@/lib/loginRedirect";
 
-export default async function LoginPage() {
+type LoginPageProps = {
+  searchParams: Promise<{ callbackUrl?: string | string[] | undefined }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
   const session = await getServerSession(authOptions);
+  const params = await searchParams;
+  const callbackUrl = getSafeInternalCallbackUrl(params.callbackUrl);
 
   if (session?.user) {
-    redirect("/start");
+    redirect(callbackUrl);
   }
 
   return (

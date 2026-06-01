@@ -3,12 +3,17 @@
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import FreeUsageMeter from "@/components/FreeUsageMeter";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import type {
   AiGuidedProgressSnapshot,
   AiGuidedStepId,
   AiGuidedStepStatus,
 } from "@/lib/aiGuidedExpressionProgress";
+import {
+  FREE_PRACTICE_DAILY_LIMIT,
+  getFreePracticeUsage,
+} from "@/lib/freePracticeLimit";
 
 type SessionResponse = {
   user?: {
@@ -18,6 +23,13 @@ type SessionResponse = {
     photoUrl?: string | null;
     picture?: string | null;
   } | null;
+};
+
+type SubscriptionStatus = "free" | "pro" | "cancels_at_period_end";
+
+type AccountSubscriptionResponse = {
+  cancelAtPeriodEnd?: boolean | null;
+  subscriptionStatus?: SubscriptionStatus;
 };
 
 type GuidedStepCopy = {
@@ -89,6 +101,22 @@ function getAvatarSrc(user?: SessionResponse["user"]) {
     user?.picture ||
     "/default-avatar.png"
   );
+}
+
+function normalizeSubscriptionStatus(
+  subscriptionStatus?: SubscriptionStatus | null,
+  cancelAtPeriodEnd?: boolean | null
+): SubscriptionStatus {
+  if (cancelAtPeriodEnd === true) return "cancels_at_period_end";
+
+  return subscriptionStatus === "pro" ||
+    subscriptionStatus === "cancels_at_period_end"
+    ? subscriptionStatus
+    : "free";
+}
+
+function hasProAccess(subscriptionStatus: SubscriptionStatus) {
+  return subscriptionStatus !== "free";
 }
 
 function progressTone(status: AiGuidedStepStatus) {
@@ -215,6 +243,8 @@ export default function AiGuidedExpressionStepOne() {
   const [avatarSrc, setAvatarSrc] = useState("/default-avatar.png");
   const [progress, setProgress] =
     useState<AiGuidedProgressSnapshot>(defaultProgress);
+  const [freeTrialUsed, setFreeTrialUsed] = useState(0);
+  const [isAccountPro, setIsAccountPro] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -225,18 +255,36 @@ export default function AiGuidedExpressionStepOne() {
           fetch("/api/auth/session", { cache: "no-store" }),
           fetch("/api/ai-guided-expression/progress", { cache: "no-store" }),
         ]);
+        const subscriptionResponse = await fetch("/api/me/subscription", {
+          cache: "no-store",
+        }).catch(() => null);
         const session = (await sessionResponse.json()) as SessionResponse;
         const progressData =
           (await progressResponse.json()) as AiGuidedProgressSnapshot;
+        const subscriptionData =
+          subscriptionResponse?.ok
+            ? ((await subscriptionResponse.json()) as AccountSubscriptionResponse)
+            : null;
 
         if (!cancelled) {
           setAvatarSrc(getAvatarSrc(session.user));
           setProgress(progressData);
+          setFreeTrialUsed(getFreePracticeUsage("guided").count);
+          setIsAccountPro(
+            hasProAccess(
+              normalizeSubscriptionStatus(
+                subscriptionData?.subscriptionStatus,
+                subscriptionData?.cancelAtPeriodEnd
+              )
+            )
+          );
         }
       } catch {
         if (!cancelled) {
           setAvatarSrc("/default-avatar.png");
           setProgress(defaultProgress);
+          setFreeTrialUsed(getFreePracticeUsage("guided").count);
+          setIsAccountPro(false);
         }
       }
     }
@@ -376,6 +424,15 @@ export default function AiGuidedExpressionStepOne() {
               </span>
             </div>
           </section>
+
+          <FreeUsageMeter
+            actionLabel="AI引导试用"
+            className="mb-5 mt-3"
+            isPro={isAccountPro}
+            limit={FREE_PRACTICE_DAILY_LIMIT}
+            unitLabel="句"
+            used={freeTrialUsed}
+          />
 
           <section className="sf-ai-guided-step-section" aria-label="练习步骤">
             <h2>

@@ -4,9 +4,9 @@ type ExpressionLearningLimitModalProps = {
 };
 
 const proBenefits = [
-  "学习重要表达",
+  "学习更多重要表达",
   "建立长期英语记忆",
-  "随时复习与输出",
+  "随时复习与跟读",
 ];
 
 export default function ExpressionLearningLimitModal({
@@ -25,10 +25,10 @@ export default function ExpressionLearningLimitModal({
           id="expression-learning-limit-title"
           className="text-[1.55rem] font-black leading-tight"
         >
-          这个表达值得被记住。
+          今天的学习试用已用完
         </h2>
         <p className="mt-4 text-[1.05rem] font-extrabold leading-7 text-[#6f6685]">
-          SpeakFlow Pro 可帮助你：
+          SpeakFlow Pro 可以帮你继续学习和复习表达。
         </p>
 
         <div className="mt-5 px-5 text-left">

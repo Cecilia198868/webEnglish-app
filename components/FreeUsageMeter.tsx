@@ -67,7 +67,10 @@ export default function FreeUsageMeter({
           {clampedUsed}/{limit}
         </span>
       </div>
-      <div className="mt-2 grid gap-1.5" style={{ gridTemplateColumns: `repeat(${limit}, minmax(0, 1fr))` }}>
+      <div
+        className="mt-2 grid gap-1.5"
+        style={{ gridTemplateColumns: `repeat(${limit}, minmax(0, 1fr))` }}
+      >
         {Array.from({ length: limit }).map((_, index) => (
           <span
             key={index}

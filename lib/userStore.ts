@@ -2,6 +2,12 @@ import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import {
+  getDefaultRoleForEmail,
+  getEffectiveUserRole,
+  normalizeUserRole,
+  type UserRole,
+} from "@/lib/userRoles";
 
 export type SubscriptionStatus = "free" | "pro" | "cancels_at_period_end";
 
@@ -9,6 +15,7 @@ export type StoredUser = {
   email: string;
   passwordHash: string;
   createdAt: string;
+  role?: UserRole;
   subscriptionStatus?: SubscriptionStatus;
   stripeCustomerId?: string;
   stripeSubscriptionId?: string;
@@ -28,6 +35,7 @@ type ProfileRow = {
   cancel_at_period_end?: boolean | null;
   current_period_end?: string | null;
   email: string;
+  role?: UserRole | null;
   stripe_customer_id?: string | null;
   stripe_subscription_id?: string | null;
   subscription_status?: SubscriptionStatus | null;
@@ -56,6 +64,7 @@ function profileToStoredUser(profile: ProfileRow): StoredUser {
     currentPeriodEnd: profile.current_period_end || undefined,
     email: normalizeEmail(profile.email),
     passwordHash: "",
+    role: getEffectiveUserRole(profile.email, profile.role),
     stripeCustomerId: profile.stripe_customer_id || undefined,
     stripeSubscriptionId: profile.stripe_subscription_id || undefined,
     subscriptionStatus: normalizeSubscriptionStatus(profile.subscription_status),
@@ -84,6 +93,30 @@ export async function findProfileByEmail(email: string) {
   if (!normalizedEmail) return null;
 
   return findProfileByColumn("email", normalizedEmail);
+}
+
+async function findProfileRoleByEmail(email: string) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) return null;
+
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("email, role")
+      .eq("email", normalizedEmail)
+      .maybeSingle<{ email: string; role?: UserRole | null }>();
+
+    if (error) {
+      return null;
+    }
+
+    return data
+      ? getEffectiveUserRole(data.email, data.role)
+      : getDefaultRoleForEmail(normalizedEmail);
+  } catch {
+    return null;
+  }
 }
 
 export async function findProfileByStripeCustomerId(stripeCustomerId: string) {
@@ -243,6 +276,7 @@ export async function createUser(email: string, password: string) {
     email: normalizedEmail,
     passwordHash: hashPassword(password),
     createdAt: new Date().toISOString(),
+    role: getDefaultRoleForEmail(normalizedEmail),
   };
 
   users.push(nextUser);
@@ -263,6 +297,7 @@ async function ensureLocalPasswordlessUser(email: string) {
     email: normalizedEmail,
     passwordHash: "",
     createdAt: new Date().toISOString(),
+    role: getDefaultRoleForEmail(normalizedEmail),
     subscriptionStatus: "free",
   };
 
@@ -302,6 +337,22 @@ export async function validateUserPassword(email: string, password: string) {
   }
 
   return verifyPassword(password, user.passwordHash) ? user : null;
+}
+
+export async function getUserRoleByEmail(email: string) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) return "user";
+
+  const profileRole = await findProfileRoleByEmail(normalizedEmail);
+  if (profileRole) return profileRole;
+
+  const users = await loadUsers().catch(() => []);
+  const localUser =
+    users.find((user) => user.email === normalizedEmail) || null;
+
+  return localUser
+    ? getEffectiveUserRole(normalizedEmail, normalizeUserRole(localUser.role))
+    : getDefaultRoleForEmail(normalizedEmail);
 }
 
 export async function updateUserSubscriptionByEmail(

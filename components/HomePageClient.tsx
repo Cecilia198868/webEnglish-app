@@ -3,11 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import {
-  FREE_EXPRESSION_LEARNING_LIMIT,
-  isExpressionLearningLimitReached,
-} from "@/lib/freeExpressionLearningLimit";
+import { FREE_PRACTICE_DAILY_LIMIT } from "@/lib/freePracticeLimit";
 import styles from "./HomePageClient.module.css";
 
 const featureCards = [
@@ -82,14 +78,8 @@ function Sparkle({ className = "" }: { className?: string }) {
 
 export default function HomePageClient() {
   const router = useRouter();
-  const [showLimitModal, setShowLimitModal] = useState(false);
 
   function startPractice() {
-    if (isExpressionLearningLimitReached()) {
-      setShowLimitModal(true);
-      return;
-    }
-
     router.push("/ai-guided-expression/step-1");
   }
 
@@ -179,36 +169,9 @@ export default function HomePageClient() {
             ♢
           </span>
           <strong>无需登录也可以先体验</strong>
-          <small>免费用户每天可先体验 {FREE_EXPRESSION_LEARNING_LIMIT} 句，登录后可保存记录，同步到所有设备</small>
+          <small>免费用户每天可先体验 {FREE_PRACTICE_DAILY_LIMIT} 句，登录后可保存记录，同步到所有设备</small>
         </div>
       </section>
-
-      {showLimitModal ? (
-        <div className={styles.modalBackdrop} role="dialog" aria-modal="true">
-          <section className={styles.limitModal} aria-labelledby="free-limit-title">
-            <span className={styles.modalBadge} aria-hidden="true">
-              Pro
-            </span>
-            <h2 id="free-limit-title">今天的免费试用已用完</h2>
-            <p>
-              免费用户每天可体验 {FREE_EXPRESSION_LEARNING_LIMIT} 句。登录并开通
-              SpeakFlow Pro 后，可以继续无限练习并同步学习记录。
-            </p>
-            <div className={styles.modalActions}>
-              <Link href="/login" className={styles.modalPrimary}>
-                登录并订阅
-              </Link>
-              <button
-                type="button"
-                className={styles.modalSecondary}
-                onClick={() => setShowLimitModal(false)}
-              >
-                稍后再说
-              </button>
-            </div>
-          </section>
-        </div>
-      ) : null}
     </main>
   );
 }
