@@ -77,6 +77,12 @@
   padding: 0;
 }
 
+.classicTopbar .avatarButton {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .avatarImage {
   width: 44px;
   height: 44px;
@@ -582,7 +588,7 @@
   grid-template-columns: minmax(0, 1fr) 88px minmax(0, 1fr);
   align-items: center;
   gap: clamp(18px, 6vw, 28px);
-  margin: 24px 22px 0;
+  margin: 48px 22px 0;
 }
 
 .sentenceButton {
@@ -1663,7 +1669,7 @@
   .practiceControls {
     grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr);
     gap: 16px;
-    margin-top: 19px;
+    margin-top: 38px;
   }
 
   .micButton {

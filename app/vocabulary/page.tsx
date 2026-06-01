@@ -3,7 +3,6 @@
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ExpressionLearningLimitModal from "@/components/ExpressionLearningLimitModal";
-import FreeUsageMeter from "@/components/FreeUsageMeter";
 import PlayIcon from "@/components/PlayIcon";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import {
@@ -114,37 +113,6 @@ function getDateKey(date = new Date()) {
   return `${year}-${month}-${day}`;
 }
 
-function getExpressionStatusLabel(status: VocabularyWord["status"]) {
-  if (status === "mastered") return "已掌握";
-  if (status === "familiar") return "熟悉中";
-  if (status === "learning") return "学习中";
-  return "新表达";
-}
-
-function getExpressionStatusTone(status: VocabularyWord["status"]) {
-  if (status === "mastered") return "mastered";
-  if (status === "familiar") return "familiar";
-  if (status === "learning") return "learning";
-  return "new";
-}
-
-function getReviewLabel(nextReviewAt: string | null, todayKey = getDateKey()) {
-  if (!nextReviewAt) return "暂无";
-  if (nextReviewAt <= todayKey) return "今天";
-
-  const [year, month, day] = nextReviewAt.split("-").map(Number);
-  const reviewDate = new Date(year, month - 1, day);
-  const today = new Date(`${todayKey}T00:00:00`);
-  const dayDiff = Math.round(
-    (reviewDate.getTime() - today.getTime()) / (24 * 60 * 60 * 1000)
-  );
-
-  if (dayDiff === 1) return "明天";
-  if (dayDiff > 1 && dayDiff <= 7) return `${dayDiff}天后`;
-
-  return `${month}/${day}`;
-}
-
 function formatStatPercent(count: number, total: number) {
   if (!total) return "0%";
 
@@ -199,6 +167,14 @@ function BackIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 32 32">
       <path d="M19.5 7.5 11 16l8.5 8.5" />
+    </svg>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 32 32">
+      <path d="M8 10h16M8 16h16M8 22h10" />
     </svg>
   );
 }
@@ -907,16 +883,6 @@ export default function VocabularyPage() {
     FREE_EXPRESSION_LEARNING_LIMIT - expressionLearningUsageCount
   );
   const recentlyAddedCount = words.filter(isRecentlyAdded).length;
-  const displayedStatusLabel = displayedExpression
-    ? getExpressionStatusLabel(displayedExpression.status)
-    : "";
-  const displayedStatusTone = displayedExpression
-    ? getExpressionStatusTone(displayedExpression.status)
-    : "new";
-  const displayedStudyDays = displayedExpression?.studiedDates.length || 0;
-  const displayedReviewLabel = displayedExpression
-    ? getReviewLabel(displayedExpression.nextReviewAt, todayKey)
-    : "暂无";
   const normalizedLibrarySearchQuery = librarySearchQuery.trim().toLowerCase();
   const sortedLibraryWords = useMemo(() => {
     const nextWords = [...words];
@@ -1588,11 +1554,11 @@ export default function VocabularyPage() {
         <header className="sf-vocabulary-learning-header">
           <button
             type="button"
-            aria-label="回到新表达菜单"
-            className="sf-vocabulary-back-button"
-            onClick={returnToNewExpressionMenu}
+            aria-label="打开账户界面"
+            className="sf-vocabulary-menu-button"
+            onClick={openAccountFromVocabulary}
           >
-            <BackIcon />
+            <MenuIcon />
           </button>
 
           <div className="sf-vocabulary-brand" aria-label="SpeakFlow AI Voice Practice">
@@ -1603,296 +1569,239 @@ export default function VocabularyPage() {
             </span>
           </div>
 
-          <button
-            type="button"
-            aria-label="打开账户界面"
-            className="sf-vocabulary-avatar-button"
-            onClick={openAccountFromVocabulary}
-          >
-            {accountImage && !accountImageFailed ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={accountImage}
-                alt={accountEmail || accountName || "账户头像"}
-                draggable={false}
-                onError={() => setAccountImageFailed(true)}
-              />
-            ) : (
-              <span className="sf-vocabulary-avatar-fallback">
-                {accountAvatarLabel}
-              </span>
-            )}
-            <i />
-          </button>
+          <span className="sf-vocabulary-header-spacer" aria-hidden="true" />
         </header>
 
-        <section className="sf-vocabulary-learning-title">
-          <SparkleIcon />
-          <h1>学习新表达</h1>
-          <p>科学学习 · 多练多说 · 自然掌握</p>
-        </section>
+        <div className="sf-vocabulary-learning-scroll">
+          <button
+            type="button"
+            aria-label="回到新表达菜单"
+            className="sf-vocabulary-back-button"
+            onClick={returnToNewExpressionMenu}
+          >
+            <BackIcon />
+          </button>
 
-        <section
-          className="sf-vocabulary-progress-panel"
-          style={progressStyle}
-          aria-label="学习进度"
-        >
-          <div className="sf-vocabulary-progress-copy">
-            <h2>我的学习进度</h2>
+          <section className="sf-vocabulary-learning-title">
+            <SparkleIcon />
+            <h1>学习新表达</h1>
             <p>
-              总表达数 <strong>{totalExpressionCount}</strong> 个
-            </p>
-            <div className="sf-vocabulary-progress-bar" aria-hidden="true">
-              <i />
-            </div>
-            <div className="sf-vocabulary-progress-meta">
-              <span>
-                第 <strong>{currentExpressionNumber}</strong> / {totalExpressionCount} 个
-              </span>
-              <b>{progressPercent}%</b>
-            </div>
-          </div>
-
-          <div className="sf-vocabulary-stat-grid">
-            <article className="sf-vocabulary-stat-card is-mastered">
-              <span>
-                <BookmarkStatIcon />
-              </span>
-              <p>已掌握</p>
-              <strong>{masteredExpressionCount}</strong>
-              <em>{formatStatPercent(masteredExpressionCount, totalExpressionCount)}</em>
-            </article>
-            <article className="sf-vocabulary-stat-card is-learning">
-              <span>
-                <BookStatIcon />
-              </span>
-              <p>学习中</p>
-              <strong>{learningExpressionCount}</strong>
-              <em>{formatStatPercent(learningExpressionCount, totalExpressionCount)}</em>
-            </article>
-            <article className="sf-vocabulary-stat-card is-review">
-              <span>
-                <RecentStatIcon />
-              </span>
-              <p>待复习</p>
-              <strong>{reviewExpressionCount}</strong>
-              <em>{formatStatPercent(reviewExpressionCount, totalExpressionCount)}</em>
-            </article>
-          </div>
-
-          <p className="sf-vocabulary-progress-note">
-            达到掌握标准的表达会自动归入「已掌握」
-            <button
-              type="button"
-              disabled={!displayedExpression || displayedExpression.status === "mastered"}
-              onClick={markCurrentExpressionMastered}
-            >
-              {displayedExpression?.status === "mastered" ? "已达标" : "我已掌握"}
-            </button>
-          </p>
-
-          <FreeUsageMeter
-            actionLabel="学习"
-            isPro={isAccountPro}
-            limit={FREE_EXPRESSION_LEARNING_LIMIT}
-            unitLabel="个"
-            used={expressionLearningUsageCount}
-          />
-        </section>
-
-        {displayedExpression ? (
-          <>
-            <section className="sf-vocabulary-study-card sf-vocabulary-word-card">
-              <div className="sf-vocabulary-card-copy">
-                <span className="sf-vocabulary-saved-pill">
-                  <StarIcon />
-                  {displayedStatusLabel}
-                </span>
-                <div className="sf-vocabulary-word-line">
-                  <h2>{displayedExpressionText}</h2>
-                  <button
-                    type="button"
-                    aria-label={`播放表达 ${displayedExpressionText}`}
-                    className="sf-vocabulary-audio-button"
-                    onClick={() => playCurrentExpressionText(displayedExpressionText)}
-                  >
-                    <SpeakerIcon />
-                  </button>
-                </div>
-                <i className="sf-vocabulary-card-rule" />
-                <div className="sf-vocabulary-label">
-                  <MeaningIcon />
-                  <span>中文含义</span>
-                </div>
-                <p className="sf-vocabulary-meaning">{displayedMeaningText}</p>
-              </div>
-              <div className="sf-vocabulary-card-art">
-                <WordIllustration />
-              </div>
-              <div className="sf-vocabulary-card-stats">
-                <span>
-                  <SpeakerIcon />
-                  <b>跟读次数</b>
-                  <strong>{displayedExpression.shadowCount} 次</strong>
-                </span>
-                <span>
-                  <BookStatIcon />
-                  <b>学习天数</b>
-                  <strong>{displayedStudyDays} 天</strong>
-                </span>
-                <span>
-                  <RecentStatIcon />
-                  <b>连续天数</b>
-                  <strong>{displayedExpression.streakDays} 天</strong>
-                </span>
-                <span className={`is-${displayedStatusTone}`}>
-                  <BookmarkStatIcon />
-                  <b>掌握标准</b>
-                  <strong>{displayedExpression.status === "mastered" ? "已达标" : "未达标"}</strong>
-                </span>
-              </div>
-            </section>
-
-            <section className="sf-vocabulary-study-card sf-vocabulary-example-card">
-              <div className="sf-vocabulary-card-copy">
-                <span className="sf-vocabulary-example-pill">
-                  <QuoteIcon />
-                  例句
-                </span>
-                <div className="sf-vocabulary-example-line">
-                  <h2>
-                    {displayedExampleText ? (
-                      <HighlightedExample
-                        expression={displayedExpressionText}
-                        sentence={displayedExampleText}
-                      />
-                    ) : (
-                      "这个表达还没有例句。"
-                    )}
-                  </h2>
-                  <button
-                    type="button"
-                    aria-label="播放例句"
-                    className="sf-vocabulary-audio-button"
-                    onClick={() =>
-                      playCurrentExpressionText(
-                        displayedExampleText || displayedExpressionText
-                      )
-                    }
-                    disabled={!displayedExampleText && !displayedExpressionText}
-                  >
-                    <SpeakerIcon />
-                  </button>
-                </div>
-                <i className="sf-vocabulary-card-rule" />
-                <div className="sf-vocabulary-label">
-                  <TranslationIcon />
-                  <span>中文翻译</span>
-                </div>
-                <p className="sf-vocabulary-translation">
-                  {displayedExampleZhText ||
-                    (isExampleTranslationLoading
-                      ? "中文例句生成中..."
-                      : "翻译待补充")}
-                </p>
-              </div>
-              <div className="sf-vocabulary-card-art">
-                <ExampleIllustration />
-              </div>
-              <div className="sf-vocabulary-card-stats">
-                <span>
-                  <SpeakerIcon />
-                  <b>跟读次数</b>
-                  <strong>{displayedExpression.shadowCount} 次</strong>
-                </span>
-                <span>
-                  <BookStatIcon />
-                  <b>学习天数</b>
-                  <strong>{displayedStudyDays} 天</strong>
-                </span>
-                <span>
-                  <RecentStatIcon />
-                  <b>连续天数</b>
-                  <strong>{displayedExpression.streakDays} 天</strong>
-                </span>
-                <span className="is-review">
-                  <RecentStatIcon />
-                  <b>下次复习</b>
-                  <strong>{displayedReviewLabel}</strong>
-                </span>
-              </div>
-            </section>
-          </>
-        ) : (
-          <section className="sf-vocabulary-empty-card">
-            <h2>
-              {hasFinishedLoadingVocabulary
-                ? "还没有收藏的新表达"
-                : "正在加载新表达"}
-            </h2>
-            <p>
-              {hasFinishedLoadingVocabulary
-                ? "在练习页点击英文词汇后，会自动保存到这里。"
-                : "正在读取你的表达库和云端同步数据。"}
+              已掌握 <strong>{masteredExpressionCount}</strong> 个表达
             </p>
           </section>
-        )}
 
-        <nav className="sf-vocabulary-learning-actions" aria-label="学习控制">
-          <button
-            type="button"
-            aria-label="上一个表达"
-            className="sf-vocabulary-nav-action"
-            disabled={!hasPrevious}
-            onClick={() => openExpressionAt(Math.max(currentIndex - 1, 0))}
+          {displayedExpression ? (
+            <>
+              <section className="sf-vocabulary-study-card sf-vocabulary-word-card">
+                <div className="sf-vocabulary-card-copy">
+                  <span className="sf-vocabulary-saved-pill">
+                    <StarIcon />
+                    已收藏
+                  </span>
+                  <div className="sf-vocabulary-word-line">
+                    <h2>{displayedExpressionText}</h2>
+                    <button
+                      type="button"
+                      aria-label={`播放表达 ${displayedExpressionText}`}
+                      className="sf-vocabulary-audio-button"
+                      onClick={() => playCurrentExpressionText(displayedExpressionText)}
+                    >
+                      <SpeakerIcon />
+                    </button>
+                  </div>
+                  <i className="sf-vocabulary-card-rule" />
+                  <div className="sf-vocabulary-label">
+                    <MeaningIcon />
+                    <span>中文含义</span>
+                  </div>
+                  <p className="sf-vocabulary-meaning">{displayedMeaningText}</p>
+                </div>
+                <div className="sf-vocabulary-card-art">
+                  <WordIllustration />
+                </div>
+              </section>
+
+              <section className="sf-vocabulary-study-card sf-vocabulary-example-card">
+                <div className="sf-vocabulary-card-copy">
+                  <span className="sf-vocabulary-example-pill">
+                    <QuoteIcon />
+                    例句
+                  </span>
+                  <div className="sf-vocabulary-example-line">
+                    <h2>
+                      {displayedExampleText ? (
+                        <HighlightedExample
+                          expression={displayedExpressionText}
+                          sentence={displayedExampleText}
+                        />
+                      ) : (
+                        "这个表达还没有例句。"
+                      )}
+                    </h2>
+                    <button
+                      type="button"
+                      aria-label="播放例句"
+                      className="sf-vocabulary-audio-button"
+                      onClick={() =>
+                        playCurrentExpressionText(
+                          displayedExampleText || displayedExpressionText
+                        )
+                      }
+                      disabled={!displayedExampleText && !displayedExpressionText}
+                    >
+                      <SpeakerIcon />
+                    </button>
+                  </div>
+                  <i className="sf-vocabulary-card-rule" />
+                  <div className="sf-vocabulary-label">
+                    <TranslationIcon />
+                    <span>中文翻译</span>
+                  </div>
+                  <p className="sf-vocabulary-translation">
+                    {displayedExampleZhText ||
+                      (isExampleTranslationLoading
+                        ? "中文例句生成中..."
+                        : "翻译待补充")}
+                  </p>
+                </div>
+                <div className="sf-vocabulary-card-art">
+                  <ExampleIllustration />
+                </div>
+              </section>
+            </>
+          ) : (
+            <section className="sf-vocabulary-empty-card">
+              <h2>
+                {hasFinishedLoadingVocabulary
+                  ? "还没有收藏的新表达"
+                  : "正在加载新表达"}
+              </h2>
+              <p>
+                {hasFinishedLoadingVocabulary
+                  ? "在练习页点击英文词汇后，会自动保存到这里。"
+                  : "正在读取你的表达库和云端同步数据。"}
+              </p>
+            </section>
+          )}
+
+          <section
+            className="sf-vocabulary-progress-panel"
+            style={progressStyle}
+            aria-label="学习进度"
           >
-            <ArrowLeftIcon />
-            <span>上一个</span>
-          </button>
+            <div className="sf-vocabulary-progress-copy">
+              <h2>我的学习进度</h2>
+              <p>
+                总表达数 <strong>{totalExpressionCount}</strong> 个
+              </p>
+              <div className="sf-vocabulary-progress-bar" aria-hidden="true">
+                <i />
+              </div>
+              <div className="sf-vocabulary-progress-meta">
+                <span>
+                  第 <strong>{currentExpressionNumber}</strong> / {totalExpressionCount} 个
+                </span>
+                <b>{progressPercent}%</b>
+              </div>
+            </div>
 
-          <button
-            type="button"
-            aria-label="播放跟读"
-            className="sf-vocabulary-follow-action"
-            disabled={!speechText}
-            onClick={() => shadowCurrentExpression(1)}
-          >
-            <PlayIcon />
-            <span>跟读</span>
-          </button>
+            <div className="sf-vocabulary-stat-grid">
+              <article className="sf-vocabulary-stat-card is-mastered">
+                <span>
+                  <BookmarkStatIcon />
+                </span>
+                <p>已掌握</p>
+                <strong>{masteredExpressionCount}</strong>
+                <em>{formatStatPercent(masteredExpressionCount, totalExpressionCount)}</em>
+              </article>
+              <article className="sf-vocabulary-stat-card is-learning">
+                <span>
+                  <BookStatIcon />
+                </span>
+                <p>学习中</p>
+                <strong>{learningExpressionCount}</strong>
+                <em>{formatStatPercent(learningExpressionCount, totalExpressionCount)}</em>
+              </article>
+              <article className="sf-vocabulary-stat-card is-review">
+                <span>
+                  <RecentStatIcon />
+                </span>
+                <p>待复习</p>
+                <strong>{reviewExpressionCount}</strong>
+                <em>{formatStatPercent(reviewExpressionCount, totalExpressionCount)}</em>
+              </article>
+            </div>
 
-          <button
-            type="button"
-            aria-label="慢速播放"
-            className="sf-vocabulary-slow-action"
-            disabled={!speechText}
-            onClick={() =>
-              playCurrentExpressionText(speechText || displayedExpressionText, 0.5)
-            }
-          >
-            <strong>0.5x</strong>
-            <span>慢速</span>
-          </button>
+            <p className="sf-vocabulary-progress-note">
+              达到掌握标准的表达会自动归入「已掌握」
+              <button
+                type="button"
+                disabled={!displayedExpression || displayedExpression.status === "mastered"}
+                onClick={markCurrentExpressionMastered}
+              >
+                {displayedExpression?.status === "mastered" ? "已达标" : "我已掌握"}
+              </button>
+            </p>
+          </section>
+        </div>
 
-          <button
-            type="button"
-            aria-label="下一个表达"
-            className="sf-vocabulary-nav-action"
-            disabled={!hasNext}
-            onClick={() =>
-              openExpressionAt(Math.min(currentIndex + 1, words.length - 1))
-            }
-          >
-            <span>下一个</span>
-            <ArrowRightIcon />
-          </button>
-        </nav>
+        <footer className="sf-vocabulary-fixed-footer">
+          <nav className="sf-vocabulary-learning-actions" aria-label="学习控制">
+            <button
+              type="button"
+              aria-label="上一个表达"
+              className="sf-vocabulary-nav-action"
+              disabled={!hasPrevious}
+              onClick={() => openExpressionAt(Math.max(currentIndex - 1, 0))}
+            >
+              <ArrowLeftIcon />
+              <span>上一个</span>
+            </button>
 
-        <p className="sf-vocabulary-tip">
-          <LightbulbIcon />
-          小贴士：点击发音按钮听标准发音，跟读练习效果更佳哦！
-          {!isAccountPro && remainingDailyFreeCount === 0 ? " 今日免费学习次数已用完。" : ""}
-        </p>
+            <button
+              type="button"
+              aria-label="播放跟读"
+              className="sf-vocabulary-follow-action"
+              disabled={!speechText}
+              onClick={() => shadowCurrentExpression(1)}
+            >
+              <PlayIcon />
+              <span>跟读</span>
+            </button>
+
+            <button
+              type="button"
+              aria-label="慢速播放"
+              className="sf-vocabulary-slow-action"
+              disabled={!speechText}
+              onClick={() =>
+                playCurrentExpressionText(speechText || displayedExpressionText, 0.5)
+              }
+            >
+              <strong>0.5x</strong>
+              <span>慢速</span>
+            </button>
+
+            <button
+              type="button"
+              aria-label="下一个表达"
+              className="sf-vocabulary-nav-action"
+              disabled={!hasNext}
+              onClick={() =>
+                openExpressionAt(Math.min(currentIndex + 1, words.length - 1))
+              }
+            >
+              <span>下一个</span>
+              <ArrowRightIcon />
+            </button>
+          </nav>
+
+          <p className="sf-vocabulary-tip">
+            <LightbulbIcon />
+            小贴士：点击发音按钮听标准发音，跟读练习效果更佳哦！
+            {!isAccountPro && remainingDailyFreeCount === 0 ? " 今日免费学习次数已用完。" : ""}
+          </p>
+        </footer>
 
         {showExpressionLibrary ? (
           <section className="sf-vocabulary-library-panel" aria-label="表达库">

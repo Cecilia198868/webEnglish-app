@@ -277,6 +277,7 @@ export default function AiGuidedExpressionStepOne() {
         aria-label="AI引导表达学习第一页"
       >
         <div className="sf-ai-guided-step-one-frame">
+          <div className="sf-ai-guided-step-one-scroll">
           <header className="sf-ai-guided-step-one-header">
             <button
               type="button"
@@ -436,6 +437,7 @@ export default function AiGuidedExpressionStepOne() {
               <ChatGlyph />
             </span>
           </section>
+          </div>
 
           <button
             type="button"

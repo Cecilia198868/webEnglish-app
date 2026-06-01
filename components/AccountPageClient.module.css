@@ -1,46 +1,56 @@
 .page {
-  min-height: 100svh;
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
   background:
-    radial-gradient(circle at 16% 8%, rgba(181, 226, 255, 0.58), transparent 32%),
-    radial-gradient(circle at 92% 18%, rgba(225, 206, 255, 0.58), transparent 34%),
-    linear-gradient(180deg, #f3fbff 0%, #fbf8ff 52%, #ffffff 100%);
-  color: #10163b;
+    radial-gradient(circle at 13% 0%, rgba(196, 234, 255, 0.78), transparent 34%),
+    radial-gradient(circle at 88% 18%, rgba(221, 210, 255, 0.74), transparent 34%),
+    linear-gradient(180deg, #edf9ff 0%, #f8f5ff 48%, #ffffff 100%);
+  color: #11163b;
+  font-family: var(--sf-font-zh), "Microsoft YaHei", Arial, sans-serif;
+}
+
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+  letter-spacing: 0;
 }
 
 .phone {
-  width: 100%;
-  max-width: 430px;
-  min-height: 100svh;
+  width: min(100%, 430px);
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: clamp(28px, 8vw, 44px) clamp(18px, 6vw, 28px) 32px;
+  padding: calc(env(safe-area-inset-top, 0px) + 28px) 18px
+    calc(env(safe-area-inset-bottom, 0px) + 34px);
+  overflow-x: hidden;
 }
 
 .profile {
   display: grid;
-  grid-template-columns: 86px minmax(0, 1fr);
+  grid-template-columns: clamp(78px, 24vw, 98px) minmax(0, 1fr);
   align-items: center;
-  gap: 18px;
+  gap: clamp(16px, 5vw, 22px);
   margin-top: 20px;
-  border: 1px solid rgba(229, 236, 255, 0.92);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.88);
-  padding: 18px;
+  border: 1px solid rgba(224, 232, 255, 0.9);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: clamp(15px, 4.6vw, 20px);
   box-shadow:
-    0 22px 58px rgba(91, 122, 182, 0.12),
+    0 22px 58px rgba(91, 120, 186, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.98);
 }
 
 .avatar {
   display: grid;
-  width: 86px;
-  height: 86px;
+  width: clamp(78px, 24vw, 98px);
+  height: clamp(78px, 24vw, 98px);
   place-items: center;
   overflow: hidden;
-  border: 4px solid #ffffff;
+  border: 5px solid #ffffff;
   border-radius: 999px;
-  background: linear-gradient(135deg, #8c6dff 0%, #4aa4ff 100%);
-  color: #ffffff;
-  box-shadow: 0 16px 30px rgba(103, 91, 238, 0.24);
+  background: #edf3ff;
+  box-shadow: 0 15px 32px rgba(117, 103, 230, 0.18);
 }
 
 .avatar img {
@@ -48,11 +58,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.avatar span {
-  font-size: 1.5rem;
-  font-weight: 900;
 }
 
 .profileCopy {
@@ -68,102 +73,174 @@
 
 .profileCopy p {
   color: #765cff;
-  font-size: clamp(0.82rem, 3.3vw, 0.94rem);
+  font-size: clamp(1rem, 4.4vw, 1.18rem);
   font-weight: 900;
+  line-height: 1.05;
 }
 
 .profileCopy h1 {
+  overflow: hidden;
   color: #10163b;
-  font-size: clamp(1.52rem, 7vw, 2rem);
+  font-size: clamp(2rem, 9vw, 2.7rem);
   font-weight: 950;
-  line-height: 1.1;
-  overflow-wrap: anywhere;
+  line-height: 1.04;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .profileCopy span {
+  overflow: hidden;
   color: rgba(21, 31, 68, 0.58);
-  font-size: clamp(0.82rem, 3.3vw, 0.94rem);
-  font-weight: 800;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
+  font-size: clamp(1rem, 4.3vw, 1.14rem);
+  font-weight: 850;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.optionList {
-  display: grid;
-  gap: 16px;
-  margin-top: 26px;
+.section {
+  margin-top: clamp(22px, 7vw, 34px);
 }
 
-.optionRow {
-  display: grid;
-  grid-template-columns: 56px minmax(0, 1fr) 24px;
-  align-items: center;
-  gap: 14px;
-  min-height: 88px;
-  border: 1px solid rgba(229, 236, 255, 0.92);
-  border-radius: 24px;
+.section h2 {
+  margin: 0 0 10px 14px;
+  color: #10163b;
+  font-size: clamp(1rem, 4.4vw, 1.12rem);
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.sectionCard {
+  overflow: hidden;
+  border: 1px solid rgba(224, 232, 255, 0.9);
+  border-radius: 26px;
   background: rgba(255, 255, 255, 0.92);
-  color: inherit;
-  padding: 14px 16px;
-  text-decoration: none;
   box-shadow:
-    0 18px 42px rgba(91, 122, 182, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+    0 18px 46px rgba(91, 120, 186, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
 }
 
-.optionIcon {
+.row,
+.logoutRow {
   display: grid;
-  width: 56px;
-  height: 56px;
+  width: 100%;
+  grid-template-columns: 54px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 15px;
+  min-height: 76px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 13px 16px;
+  text-align: left;
+  text-decoration: none;
+}
+
+.row + .row {
+  border-top: 1px solid rgba(222, 226, 244, 0.78);
+}
+
+.rowIcon,
+.logoutIcon {
+  display: grid;
+  width: 48px;
+  height: 48px;
   place-items: center;
-  border-radius: 18px;
+  border-radius: 14px;
+  color: #302b63;
+  background: transparent;
+}
+
+.rowIcon[data-tone="purple"] {
+  border-radius: 16px;
+  background: linear-gradient(135deg, #7d5cff 0%, #5d87ff 100%);
   color: #ffffff;
 }
 
-.optionIcon[data-tone="home"] {
-  background: linear-gradient(135deg, #7d5cff 0%, #5f8eff 100%);
+.rowIcon[data-tone="blue"] {
+  color: #4d7dff;
 }
 
-.optionIcon[data-tone="settings"] {
-  background: linear-gradient(135deg, #55d2ce 0%, #4d9eff 100%);
+.rowIcon[data-tone="cyan"] {
+  color: #33bdd0;
 }
 
-.optionIcon[data-tone="admin"] {
-  background: linear-gradient(135deg, #8d5cff 0%, #2f72ff 100%);
+.rowIcon[data-tone="indigo"] {
+  color: #5d5bff;
 }
 
-.optionIcon svg {
-  width: 31px;
-  height: 31px;
+.rowIcon svg,
+.logoutIcon svg {
+  width: 30px;
+  height: 30px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2.6;
+  stroke-width: 2.7;
 }
 
-.optionCopy {
+.rowIcon svg path,
+.logoutIcon svg path,
+.rowIcon svg rect,
+.logoutIcon svg rect,
+.rowIcon svg circle,
+.logoutIcon svg circle {
+  vector-effect: non-scaling-stroke;
+}
+
+.rowCopy {
   display: grid;
   min-width: 0;
   gap: 6px;
 }
 
-.optionCopy strong {
-  color: #10163b;
-  font-size: clamp(1.06rem, 4.7vw, 1.24rem);
-  font-weight: 950;
-  line-height: 1.18;
+.rowTitleLine {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
-.optionCopy small {
-  color: rgba(21, 31, 68, 0.6);
-  font-size: clamp(0.82rem, 3.4vw, 0.94rem);
-  font-weight: 800;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
+.rowTitleLine strong {
+  overflow: hidden;
+  color: #10163b;
+  font-size: clamp(1.1rem, 5vw, 1.34rem);
+  font-weight: 950;
+  line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowTitleLine em {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #e8fff2;
+  color: #286d4a;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+  padding: 7px 10px;
+}
+
+.rowCopy small {
+  overflow: hidden;
+  color: rgba(21, 31, 68, 0.58);
+  font-size: clamp(0.92rem, 3.9vw, 1.02rem);
+  font-weight: 820;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chevron {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  justify-self: end;
   color: #765cff;
 }
 
@@ -174,37 +251,61 @@
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 3.2;
+  stroke-width: 3.5;
+}
+
+.logoutRow {
+  grid-template-columns: 54px minmax(0, 1fr);
+  margin-top: 16px;
+  border: 1px solid rgba(224, 232, 255, 0.9);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 18px 46px rgba(91, 120, 186, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+.logoutRow strong {
+  color: #10163b;
+  font-size: clamp(1.02rem, 4.4vw, 1.14rem);
+  font-weight: 900;
 }
 
 @media (max-width: 389px) {
   .phone {
-    padding-right: 16px;
-    padding-left: 16px;
+    padding-right: 14px;
+    padding-left: 14px;
   }
 
   .profile {
-    grid-template-columns: 72px minmax(0, 1fr);
-    gap: 14px;
-    border-radius: 24px;
-    padding: 15px;
+    border-radius: 26px;
   }
 
-  .avatar {
-    width: 72px;
-    height: 72px;
+  .sectionCard {
+    border-radius: 23px;
   }
 
-  .optionRow {
-    grid-template-columns: 50px minmax(0, 1fr) 22px;
+  .row,
+  .logoutRow {
+    grid-template-columns: 48px minmax(0, 1fr) 22px;
     gap: 12px;
-    min-height: 82px;
+    min-height: 70px;
     padding: 12px 14px;
   }
 
-  .optionIcon {
-    width: 50px;
-    height: 50px;
-    border-radius: 16px;
+  .logoutRow {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  .rowIcon,
+  .logoutIcon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .rowIcon svg,
+  .logoutIcon svg {
+    width: 27px;
+    height: 27px;
   }
 }

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import AccountPageClient from "@/components/AccountPageClient";
-import { getUserRoleByEmail } from "@/lib/userStore";
+import { DEFAULT_ADMIN_EMAIL, normalizeUserEmail } from "@/lib/userRoles";
 
 export default async function AccountPage() {
   const session = await getServerSession(authOptions);
@@ -12,11 +12,11 @@ export default async function AccountPage() {
   }
 
   const userEmail = session.user.email || "";
-  const userRole = userEmail ? await getUserRoleByEmail(userEmail) : "user";
+  const isAdmin = normalizeUserEmail(userEmail) === DEFAULT_ADMIN_EMAIL;
 
   return (
     <AccountPageClient
-      isAdmin={userRole === "admin"}
+      isAdmin={isAdmin}
       userEmail={userEmail}
       userImage={session.user.image || ""}
       userName={session.user.name || ""}

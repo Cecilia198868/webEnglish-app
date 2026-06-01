@@ -185,6 +185,29 @@ type AccountPanelView =
   | "interfaceLanguage"
   | "notifications"
   | "fontSize";
+
+const accountPanelDeepLinkViews = new Set<AccountPanelView>([
+  "account",
+  "subscription",
+  "voice",
+  "manageSubscription",
+  "referrals",
+  "helpCenter",
+  "reportIssue",
+  "aboutSpeakFlow",
+  "accountManagement",
+  "interfaceLanguage",
+  "notifications",
+  "fontSize",
+]);
+
+function getAccountPanelViewFromSearch(value: string | null) {
+  const normalizedValue = value?.trim() as AccountPanelView | undefined;
+  return normalizedValue && accountPanelDeepLinkViews.has(normalizedValue)
+    ? normalizedValue
+    : null;
+}
+
 type ProPlan = "monthly" | "yearly";
 type FontSizePreference = "small" | "standard" | "large";
 
@@ -3882,6 +3905,9 @@ function SpeakEnglishClient() {
     const shouldOpenAccount = searchParams.get("account") === "1";
     const checkoutStatus = searchParams.get("checkout");
     const requestedSubmenu = searchParams.get("submenu");
+    const requestedAccountPanel = getAccountPanelViewFromSearch(
+      searchParams.get("panel") || searchParams.get("accountPanel")
+    );
     const requestedClassicCategory = searchParams.get("classicCategory");
     const requestedClassicSection = searchParams.get("classicSection");
     if (searchParams.get("menu") !== "1" && !shouldOpenPro && !shouldOpenAccount)
@@ -3927,7 +3953,7 @@ function SpeakEnglishClient() {
       }
     } else if (shouldOpenAccount) {
       setShowAccountMenu(true);
-      setAccountPanelView("menu");
+      setAccountPanelView(requestedAccountPanel || "menu");
     }
     window.history.replaceState(null, "", "/speak-english");
 

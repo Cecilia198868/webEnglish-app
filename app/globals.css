@@ -17068,6 +17068,383 @@ body .sf-ai-guided-method-chat {
   }
 }
 
+/* AI guided expression step 1 standard-screen fit */
+body .sf-ai-guided-step-one-page {
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  overflow: hidden !important;
+}
+
+body .sf-ai-guided-step-one-phone,
+body .sf-ai-guided-step-one-frame {
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  min-height: 100dvh !important;
+  overflow: hidden !important;
+}
+
+body .sf-ai-guided-step-one-frame {
+  display: flex !important;
+  flex-direction: column !important;
+  padding:
+    max(1rem, calc(env(safe-area-inset-top, 0px) + 0.55rem))
+    clamp(1rem, 4.3vw, 1.55rem)
+    max(0.75rem, calc(env(safe-area-inset-bottom, 0px) + 0.5rem)) !important;
+}
+
+body .sf-ai-guided-step-one-scroll {
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  padding-bottom: 0.18rem !important;
+  scrollbar-width: none !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+body .sf-ai-guided-step-one-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+
+body .sf-ai-guided-step-one-header {
+  grid-template-columns: 3.45rem minmax(0, 1fr) 3.45rem !important;
+  gap: 0.6rem !important;
+}
+
+body .sf-ai-guided-step-one-menu {
+  width: 3.45rem !important;
+  height: 3.45rem !important;
+}
+
+body .sf-ai-guided-step-one-brand {
+  grid-template-columns: 2.7rem minmax(0, max-content) !important;
+  gap: 0.55rem !important;
+}
+
+body .sf-ai-guided-step-one-logo {
+  width: 2.7rem !important;
+  height: 2.7rem !important;
+  border-radius: 0.9rem !important;
+}
+
+body .sf-ai-guided-step-one-brand-title {
+  font-size: clamp(1.8rem, 7.2vw, 2.35rem) !important;
+  line-height: 0.94 !important;
+}
+
+body .sf-ai-guided-step-one-brand-subtitle {
+  margin-top: 0.34rem !important;
+  font-size: clamp(0.58rem, 2.35vw, 0.72rem) !important;
+  letter-spacing: 0.07em !important;
+}
+
+body .sf-ai-guided-step-one-hero {
+  margin-top: clamp(1.15rem, 3.1dvh, 1.7rem) !important;
+}
+
+body .sf-ai-guided-step-one-hero h1 {
+  font-size: clamp(2.65rem, 11.6vw, 3.28rem) !important;
+  line-height: 1.08 !important;
+}
+
+body .sf-ai-guided-step-one-hero p {
+  margin-top: clamp(0.72rem, 1.7dvh, 0.95rem) !important;
+  font-size: clamp(1rem, 4vw, 1.18rem) !important;
+  line-height: 1.28 !important;
+}
+
+body .sf-ai-guided-step-one-diamond-left {
+  top: 44% !important;
+}
+
+body .sf-ai-guided-rocket {
+  right: 1.2% !important;
+  top: 29% !important;
+  width: clamp(3.25rem, 13vw, 4rem) !important;
+}
+
+body .sf-ai-guided-rocket-trail {
+  right: 9.5% !important;
+  top: 64% !important;
+}
+
+body .sf-ai-guided-stats {
+  grid-template-columns: minmax(0, 1fr) clamp(5rem, 21vw, 5.85rem) minmax(0, 1fr) !important;
+  min-height: clamp(6rem, 14.4dvh, 7.25rem) !important;
+  margin-top: clamp(1rem, 2.3dvh, 1.35rem) !important;
+  padding: clamp(0.7rem, 2.7vw, 0.95rem) clamp(0.8rem, 4vw, 1.15rem) !important;
+  border-radius: clamp(1.35rem, 5.5vw, 1.8rem) !important;
+}
+
+body .sf-ai-guided-stat-icon {
+  width: clamp(2rem, 8.2vw, 2.45rem) !important;
+}
+
+body .sf-ai-guided-stat span span {
+  font-size: clamp(0.82rem, 3.15vw, 0.95rem) !important;
+}
+
+body .sf-ai-guided-stat strong {
+  font-size: clamp(1.45rem, 5.6vw, 1.85rem) !important;
+}
+
+body .sf-ai-guided-progress {
+  min-height: clamp(4.6rem, 12vw, 5.2rem) !important;
+}
+
+body .sf-ai-guided-progress strong {
+  font-size: clamp(1.78rem, 6.8vw, 2.18rem) !important;
+}
+
+body .sf-ai-guided-progress small {
+  font-size: clamp(0.75rem, 2.85vw, 0.9rem) !important;
+}
+
+body .sf-ai-guided-free-card {
+  min-height: clamp(4.2rem, 10.4dvh, 5.1rem) !important;
+  margin-top: clamp(0.9rem, 2dvh, 1.1rem) !important;
+  gap: 0.82rem !important;
+  padding: clamp(0.82rem, 2.8vw, 1rem) clamp(1rem, 4vw, 1.25rem) !important;
+  border-radius: clamp(1.25rem, 5vw, 1.55rem) !important;
+}
+
+body .sf-ai-guided-free-card-top strong,
+body .sf-ai-guided-free-card-top span {
+  font-size: clamp(1.24rem, 5vw, 1.55rem) !important;
+}
+
+body .sf-ai-guided-free-bars span {
+  height: 0.4rem !important;
+}
+
+body .sf-ai-guided-flow-section {
+  margin-top: clamp(0.95rem, 2.2dvh, 1.25rem) !important;
+}
+
+body .sf-ai-guided-flow-section h2 {
+  margin-bottom: clamp(0.72rem, 1.8dvh, 0.92rem) !important;
+  font-size: clamp(1.35rem, 5.4vw, 1.7rem) !important;
+}
+
+body .sf-ai-guided-flow-list {
+  gap: clamp(0.28rem, 1.6vw, 0.55rem) !important;
+}
+
+body .sf-ai-guided-flow-list::before {
+  top: clamp(1.75rem, 7.2vw, 2.1rem) !important;
+}
+
+body .sf-ai-guided-flow-icon {
+  width: clamp(3.1rem, 14vw, 4.05rem) !important;
+}
+
+body .sf-ai-guided-flow-item {
+  gap: 0.34rem !important;
+}
+
+body .sf-ai-guided-flow-item strong {
+  font-size: clamp(0.9rem, 3.9vw, 1.08rem) !important;
+  line-height: 1.05 !important;
+}
+
+body .sf-ai-guided-flow-item small {
+  font-size: clamp(0.72rem, 3.25vw, 0.9rem) !important;
+  line-height: 1.18 !important;
+}
+
+body .sf-ai-guided-method-card {
+  min-height: auto !important;
+  margin-top: clamp(0.9rem, 2.1dvh, 1.15rem) !important;
+  padding: clamp(0.78rem, 2.6vw, 0.95rem) clamp(5.1rem, 21vw, 6.4rem)
+    clamp(0.72rem, 2.3vw, 0.9rem) clamp(2.65rem, 10.5vw, 3.25rem) !important;
+  border-radius: clamp(1.2rem, 5vw, 1.55rem) !important;
+}
+
+body .sf-ai-guided-method-ribbon {
+  left: clamp(0.75rem, 3.2vw, 1rem) !important;
+  width: clamp(2rem, 8.6vw, 2.45rem) !important;
+  height: clamp(3.35rem, 13.2vw, 4.15rem) !important;
+}
+
+body .sf-ai-guided-method-content h2 {
+  margin-bottom: clamp(0.42rem, 1.4dvh, 0.58rem) !important;
+  font-size: clamp(1.18rem, 4.9vw, 1.52rem) !important;
+  line-height: 1.08 !important;
+}
+
+body .sf-ai-guided-method-rows {
+  gap: clamp(0.22rem, 0.8dvh, 0.36rem) !important;
+}
+
+body .sf-ai-guided-method-row {
+  grid-template-columns: clamp(1.18rem, 5vw, 1.4rem) minmax(7.2rem, 1.15fr) minmax(4.45rem, 0.85fr) !important;
+  gap: clamp(0.32rem, 1.5vw, 0.48rem) !important;
+}
+
+body .sf-ai-guided-method-row > span {
+  width: clamp(1.18rem, 5vw, 1.4rem) !important;
+  font-size: clamp(0.64rem, 2.65vw, 0.78rem) !important;
+}
+
+body .sf-ai-guided-method-row strong {
+  font-size: clamp(0.68rem, 2.85vw, 0.84rem) !important;
+  line-height: 1.08 !important;
+  white-space: nowrap !important;
+}
+
+body .sf-ai-guided-method-row small {
+  font-size: clamp(0.66rem, 2.78vw, 0.82rem) !important;
+  line-height: 1.08 !important;
+  white-space: nowrap !important;
+}
+
+body .sf-ai-guided-method-chat {
+  right: clamp(0.45rem, 2vw, 0.75rem) !important;
+  width: clamp(4rem, 18vw, 5.3rem) !important;
+  opacity: 0.9 !important;
+}
+
+body .sf-ai-guided-start-button {
+  flex: 0 0 auto !important;
+  min-height: clamp(3.75rem, 8.6dvh, 4.45rem) !important;
+  margin-top: clamp(0.6rem, 1.5dvh, 0.9rem) !important;
+  font-size: clamp(1.55rem, 6.7vw, 2rem) !important;
+}
+
+body .sf-ai-guided-start-button svg {
+  width: clamp(1.55rem, 6.4vw, 1.9rem) !important;
+  height: clamp(1.55rem, 6.4vw, 1.9rem) !important;
+}
+
+@media (max-width: 395px) {
+  body .sf-ai-guided-step-one-frame {
+    padding-inline: 0.86rem !important;
+  }
+
+  body .sf-ai-guided-step-one-header {
+    grid-template-columns: 3.15rem minmax(0, 1fr) 3.15rem !important;
+  }
+
+  body .sf-ai-guided-step-one-menu {
+    width: 3.15rem !important;
+    height: 3.15rem !important;
+  }
+
+  body .sf-ai-guided-step-one-brand {
+    grid-template-columns: 2.35rem minmax(0, max-content) !important;
+  }
+
+  body .sf-ai-guided-step-one-logo {
+    width: 2.35rem !important;
+    height: 2.35rem !important;
+  }
+
+  body .sf-ai-guided-step-one-brand-title {
+    font-size: 1.78rem !important;
+  }
+
+  body .sf-ai-guided-step-one-hero h1 {
+    font-size: 2.62rem !important;
+  }
+
+  body .sf-ai-guided-method-card {
+    padding-right: 4.4rem !important;
+  }
+
+  body .sf-ai-guided-method-row {
+    grid-template-columns: 1.16rem minmax(6.75rem, 1.2fr) minmax(4rem, 0.8fr) !important;
+    gap: 0.28rem !important;
+  }
+
+  body .sf-ai-guided-method-row strong {
+    font-size: 0.66rem !important;
+  }
+
+  body .sf-ai-guided-method-row small {
+    font-size: 0.64rem !important;
+  }
+
+  body .sf-ai-guided-method-chat {
+    right: 0.2rem !important;
+    width: 4.25rem !important;
+    opacity: 0.38 !important;
+  }
+}
+
+@media (max-height: 820px) {
+  body .sf-ai-guided-step-one-frame {
+    padding-top: max(0.76rem, calc(env(safe-area-inset-top, 0px) + 0.42rem)) !important;
+    padding-bottom: max(0.58rem, calc(env(safe-area-inset-bottom, 0px) + 0.38rem)) !important;
+  }
+
+  body .sf-ai-guided-step-one-hero {
+    margin-top: 0.92rem !important;
+  }
+
+  body .sf-ai-guided-step-one-hero h1 {
+    font-size: clamp(2.38rem, 10.7vw, 2.9rem) !important;
+  }
+
+  body .sf-ai-guided-step-one-hero p {
+    margin-top: 0.52rem !important;
+  }
+
+  body .sf-ai-guided-stats {
+    min-height: 5.65rem !important;
+    margin-top: 0.82rem !important;
+  }
+
+  body .sf-ai-guided-free-card {
+    min-height: 4rem !important;
+    margin-top: 0.72rem !important;
+    gap: 0.58rem !important;
+    padding-block: 0.68rem !important;
+  }
+
+  body .sf-ai-guided-flow-section {
+    margin-top: 0.72rem !important;
+  }
+
+  body .sf-ai-guided-flow-section h2 {
+    margin-bottom: 0.48rem !important;
+    font-size: 1.28rem !important;
+  }
+
+  body .sf-ai-guided-flow-icon {
+    width: 2.82rem !important;
+  }
+
+  body .sf-ai-guided-flow-item strong {
+    font-size: 0.82rem !important;
+  }
+
+  body .sf-ai-guided-flow-item small {
+    font-size: 0.64rem !important;
+  }
+
+  body .sf-ai-guided-method-card {
+    margin-top: 0.64rem !important;
+    padding-top: 0.62rem !important;
+    padding-bottom: 0.58rem !important;
+  }
+
+  body .sf-ai-guided-method-content h2 {
+    margin-bottom: 0.34rem !important;
+    font-size: 1.08rem !important;
+  }
+
+  body .sf-ai-guided-method-rows {
+    gap: 0.18rem !important;
+  }
+
+  body .sf-ai-guided-start-button {
+    min-height: 3.45rem !important;
+    margin-top: 0.55rem !important;
+    font-size: 1.45rem !important;
+  }
+}
+
 body .sf-ai-guided-step-two-avatar-button,
 body .sf-ai-guided-step-four-avatar-button,
 body .sf-ai-guided-step-five-avatar-button,

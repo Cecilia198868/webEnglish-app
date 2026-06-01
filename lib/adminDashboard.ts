@@ -1,5 +1,6 @@
 import type { Session } from "next-auth";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import { DEFAULT_ADMIN_EMAIL, normalizeUserEmail } from "@/lib/userRoles";
 import { getUserRoleByEmail, loadUsers } from "@/lib/userStore";
 
 type AdminProfileRow = {
@@ -179,7 +180,7 @@ function calculateVisitorStats(pageViews: PageViewRow[]) {
 }
 
 export async function getAdminAccessFromSession(session: Session | null) {
-  const email = session?.user?.email?.trim().toLowerCase() || "";
+  const email = normalizeUserEmail(session?.user?.email || "");
   if (!email) {
     return { email: "", isAdmin: false, role: "user" as const };
   }
@@ -188,7 +189,7 @@ export async function getAdminAccessFromSession(session: Session | null) {
 
   return {
     email,
-    isAdmin: role === "admin",
+    isAdmin: email === DEFAULT_ADMIN_EMAIL,
     role,
   };
 }

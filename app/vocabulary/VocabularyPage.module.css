@@ -20,15 +20,18 @@
 
 :global(.sf-vocabulary-learning-phone) {
   position: relative;
+  display: flex;
   width: min(100%, 430px);
   max-width: 430px;
+  height: 100dvh;
   min-height: 100dvh;
+  flex-direction: column;
   margin: 0 auto;
-  overflow-x: hidden;
+  overflow: hidden;
   padding:
     max(0.5rem, calc(env(safe-area-inset-top, 0px) + 0.4rem))
     0.96rem
-    max(0.52rem, calc(env(safe-area-inset-bottom, 0px) + 0.4rem));
+    0;
   border: 1px solid rgba(211, 205, 255, 0.82);
   border-radius: 0 0 1.35rem 1.35rem;
   background:
@@ -60,6 +63,7 @@
 }
 
 :global(.sf-vocabulary-back-button),
+:global(.sf-vocabulary-menu-button),
 :global(.sf-vocabulary-avatar-button),
 :global(.sf-vocabulary-audio-button),
 :global(.sf-vocabulary-learning-actions button),
@@ -69,7 +73,8 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-:global(.sf-vocabulary-back-button),
+:global(.sf-vocabulary-menu-button),
+:global(.sf-vocabulary-header-spacer),
 :global(.sf-vocabulary-avatar-button) {
   display: grid;
   place-items: center;
@@ -79,18 +84,42 @@
   cursor: pointer;
 }
 
-:global(.sf-vocabulary-back-button) {
+:global(.sf-vocabulary-menu-button) {
   border-radius: 999px;
   color: #0b1747;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 17px 34px rgba(95, 89, 162, 0.13);
 }
 
+:global(.sf-vocabulary-header-spacer) {
+  justify-self: end;
+  pointer-events: none;
+}
+
+:global(.sf-vocabulary-back-button) {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  top: 0.92rem;
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  place-items: center;
+  padding: 0;
+  border-radius: 0.2rem;
+  color: #0b1747;
+  background: rgba(255, 255, 255, 0.84);
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(95, 89, 162, 0.08);
+}
+
+:global(.sf-vocabulary-menu-button svg),
 :global(.sf-vocabulary-back-button svg) {
   width: 1.55rem;
   height: 1.55rem;
 }
 
+:global(.sf-vocabulary-menu-button path),
 :global(.sf-vocabulary-back-button path),
 :global(.sf-vocabulary-nav-action path) {
   fill: none;
@@ -174,6 +203,22 @@
   background: #35ce64;
 }
 
+:global(.sf-vocabulary-learning-scroll) {
+  position: relative;
+  z-index: 3;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0.2rem 0 calc(8.9rem + env(safe-area-inset-bottom, 0px));
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+:global(.sf-vocabulary-learning-scroll::-webkit-scrollbar) {
+  display: none;
+}
+
 :global(.sf-vocabulary-learning-title) {
   position: relative;
   display: grid;
@@ -183,7 +228,8 @@
   align-items: center;
   justify-content: center;
   justify-items: center;
-  padding: 0.66rem 0 0.52rem;
+  min-height: 5.34rem;
+  padding: 1.08rem 3rem 0.68rem;
   text-align: center;
 }
 
@@ -200,7 +246,7 @@
 :global(.sf-vocabulary-learning-title h1) {
   margin: 0;
   color: #071642;
-  font-size: 1.74rem;
+  font-size: clamp(1.88rem, 9vw, 2.16rem);
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: 0;
@@ -210,8 +256,8 @@
   grid-column: 1 / -1;
   margin: 0;
   color: #121b58;
-  font-size: 0.96rem;
-  font-weight: 560;
+  font-size: 0.92rem;
+  font-weight: 650;
   line-height: 1.2;
   letter-spacing: 0;
 }
@@ -263,7 +309,7 @@
 :global(.sf-vocabulary-progress-panel) {
   display: grid;
   gap: 0.78rem;
-  margin: 0.08rem 0 0.7rem;
+  margin: 0.72rem 0 0;
   padding: 0.86rem 0.88rem 0.72rem;
   border: 1px solid rgba(217, 212, 255, 0.9);
   border-radius: 1.15rem;
@@ -463,12 +509,12 @@
 }
 
 :global(.sf-vocabulary-word-card) {
-  margin-top: 0;
+  margin-top: 0.08rem;
 }
 
 :global(.sf-vocabulary-example-card) {
   min-height: 11.16rem;
-  margin-top: 0.5rem;
+  margin-top: 0.62rem;
 }
 
 :global(.sf-vocabulary-card-copy) {
@@ -752,12 +798,28 @@
   line-height: 1.5;
 }
 
+:global(.sf-vocabulary-fixed-footer) {
+  position: absolute;
+  z-index: 12;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding:
+    0.72rem
+    0.96rem
+    max(0.58rem, calc(env(safe-area-inset-bottom, 0px) + 0.48rem));
+  background:
+    linear-gradient(180deg, rgba(247, 249, 255, 0), rgba(248, 249, 255, 0.96) 21%, rgba(247, 248, 255, 0.99) 100%);
+  box-shadow: 0 -18px 34px rgba(98, 85, 166, 0.08);
+  backdrop-filter: blur(10px);
+}
+
 :global(.sf-vocabulary-learning-actions) {
   display: grid;
   grid-template-columns: 1.22fr 0.82fr 0.88fr 1.22fr;
   gap: 0.52rem;
   align-items: center;
-  margin-top: 0.54rem;
+  margin: 0;
 }
 
 :global(.sf-vocabulary-learning-actions button) {
@@ -857,7 +919,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.38rem;
-  margin: 0.42rem auto 0;
+  margin: 0.52rem auto 0;
   padding: 0.18rem 0.58rem;
   border: 1px solid rgba(211, 205, 255, 0.76);
   border-radius: 999px;
@@ -1024,6 +1086,7 @@
 }
 
 :global(.sf-vocabulary-back-button:active),
+:global(.sf-vocabulary-menu-button:active),
 :global(.sf-vocabulary-avatar-button:active),
 :global(.sf-vocabulary-audio-button:active),
 :global(.sf-vocabulary-learning-actions button:not(:disabled):active) {
@@ -1981,10 +2044,20 @@
     font-size: 0.52rem;
   }
 
-  :global(.sf-vocabulary-back-button),
+  :global(.sf-vocabulary-menu-button),
+  :global(.sf-vocabulary-header-spacer),
   :global(.sf-vocabulary-avatar-button) {
     width: 2.96rem;
     height: 2.96rem;
+  }
+
+  :global(.sf-vocabulary-back-button) {
+    width: 2.08rem;
+    height: 2.08rem;
+  }
+
+  :global(.sf-vocabulary-learning-title) {
+    padding-inline: 2.62rem;
   }
 
   :global(.sf-vocabulary-card-copy) {
@@ -2057,7 +2130,7 @@
 
   :global(.sf-vocabulary-progress-panel) {
     gap: 0.62rem;
-    margin-bottom: 0.62rem;
+    margin-bottom: 0;
     padding-block: 0.76rem 0.64rem;
   }
 
@@ -2094,7 +2167,7 @@
   }
 
   :global(.sf-vocabulary-learning-actions) {
-    margin-top: 0.46rem;
+    margin-top: 0;
   }
 
   :global(.sf-vocabulary-tip) {
@@ -2111,14 +2184,22 @@
     min-height: 3.34rem;
   }
 
-  :global(.sf-vocabulary-back-button),
+  :global(.sf-vocabulary-menu-button),
+  :global(.sf-vocabulary-header-spacer),
   :global(.sf-vocabulary-avatar-button) {
     width: 2.96rem;
     height: 2.96rem;
   }
 
+  :global(.sf-vocabulary-back-button) {
+    width: 2.08rem;
+    height: 2.08rem;
+    top: 0.78rem;
+  }
+
   :global(.sf-vocabulary-learning-title) {
-    padding-top: 0.62rem;
+    min-height: 4.9rem;
+    padding-top: 0.82rem;
     padding-bottom: 0.48rem;
   }
 
@@ -2137,7 +2218,7 @@
 
   :global(.sf-vocabulary-progress-panel) {
     gap: 0.56rem;
-    margin-bottom: 0.58rem;
+    margin-bottom: 0;
     padding-block: 0.72rem 0.62rem;
   }
 
@@ -2195,7 +2276,7 @@
   }
 
   :global(.sf-vocabulary-learning-actions) {
-    margin-top: 0.52rem;
+    margin-top: 0;
   }
 
   :global(.sf-vocabulary-nav-action),
