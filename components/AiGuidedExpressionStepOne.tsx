@@ -39,8 +39,6 @@ const defaultProgress: AiGuidedProgressSnapshot = {
   totalCompleted: 0,
 };
 
-const ringCircumference = 302;
-
 const learningFlow = [
   {
     description: "说出你的想法",
@@ -49,36 +47,23 @@ const learningFlow = [
     tone: "violet",
   },
   {
-    description: "确认识别结果",
-    icon: "check",
-    title: "检查",
+    description: "获得自然英文说法",
+    icon: "robot",
+    title: "AI 引导表达",
     tone: "blue",
   },
   {
-    description: "大胆开口表达",
-    icon: "speak",
-    title: "说英文",
+    description: "跟读并提升发音",
+    icon: "chat",
+    title: "跟读练习",
     tone: "blue",
   },
   {
-    description: "获得更自然表达",
-    icon: "sparkle",
-    title: "AI优化",
-    tone: "violet",
-  },
-  {
-    description: "AI引导继续对话",
+    description: "AI 引导继续对话",
     icon: "light",
-    title: "下一句",
+    title: "继续下一句",
     tone: "blue",
   },
-] as const;
-
-const learningWays = [
-  ["1", "先说出你想表达的中文", "从自己的想法开始"],
-  ["2", "尝试自己说英文", "不怕说错，大胆开口"],
-  ["3", "AI提供多种更地道的表达", "准确 · 地道 · 礼貌 · 简洁"],
-  ["4", "AI推荐下一句继续对话", "不会冷场，不会卡壳"],
 ] as const;
 
 function normalizeSubscriptionStatus(
@@ -106,15 +91,6 @@ function MicGlyph() {
   );
 }
 
-function SparkleGlyph() {
-  return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-      <path d="m25 5 4.6 11.4L41 21l-11.4 4.6L25 37l-4.6-11.4L9 21l11.4-4.6L25 5Z" />
-      <path d="m10 31 2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5ZM38 4l1.4 3.6L43 9l-3.6 1.4L38 14l-1.4-3.6L33 9l3.6-1.4L38 4Z" />
-    </svg>
-  );
-}
-
 function FlameGlyph() {
   return (
     <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
@@ -123,28 +99,20 @@ function FlameGlyph() {
   );
 }
 
-function ShieldGlyph() {
+function RobotGlyph() {
   return (
     <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-      <path d="M24 5 40 12v11c0 10.2-6.4 16.4-16 20-9.6-3.6-16-9.8-16-20V12L24 5Z" />
+      <rect x="10" y="14" width="28" height="23" rx="7" />
+      <path d="M18 14v-4M30 14v-4M15 26h.1M33 26h.1M20 32c3 2 8 2 11 0" />
     </svg>
   );
 }
 
-function CheckListGlyph() {
+function ChatGlyph() {
   return (
     <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-      <path d="M15 8v7M33 8v7M12 13h24a5 5 0 0 1 5 5v18a5 5 0 0 1-5 5H12a5 5 0 0 1-5-5V18a5 5 0 0 1 5-5Z" />
-      <path d="m16 28 5 5 11-13" />
-    </svg>
-  );
-}
-
-function SpeakingGlyph() {
-  return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-      <path d="M23 41c-8-2-13-8.2-13-16.3C10 14.6 16.1 8 25.4 8 33 8 38 13.4 38 20.4c0 3.6-1.3 6.8-3.7 9.1" />
-      <path d="M29 27c2.2.5 4 1.5 6 3M31 21h9M30 15c2.2-.5 4-1.5 6-3" />
+      <path d="M8 18c0-7 6-12 16-12s16 5 16 12-6 12-16 12c-1.7 0-3.4-.1-4.9-.5L10 36l2.4-8.2C9.6 25.8 8 23.2 8 18Z" />
+      <path d="M17 19h.1M24 19h.1M31 19h.1" />
     </svg>
   );
 }
@@ -158,25 +126,11 @@ function LightGlyph() {
   );
 }
 
-function BookmarkGlyph() {
+function CheckCircleGlyph() {
   return (
     <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-      <path d="M11 6h26v36L24 34l-13 8V6Z" />
-      <path d="m24 14 2.4 4.8 5.3.8-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7 5.3-.8L24 14Z" />
-    </svg>
-  );
-}
-
-function ChatGlyph() {
-  return (
-    <svg viewBox="0 0 96 96" aria-hidden="true" focusable="false">
-      <path d="M17 23c0-9.9 8.1-18 18-18h27c9.9 0 18 8.1 18 18v22c0 9.9-8.1 18-18 18H42L20 78l5.4-16.8C20.4 58 17 52.6 17 46V23Z" />
-      <path d="M58 55c0-8.8 7.2-16 16-16h3c8.8 0 16 7.2 16 16v8c0 8.8-7.2 16-16 16h-7.5L56 89l3.2-11.2C48.9 76.9 42 70 42 60v-5h16Z" />
-      <circle cx="38" cy="35" r="3.5" />
-      <circle cx="49" cy="35" r="3.5" />
-      <circle cx="60" cy="35" r="3.5" />
-      <circle cx="66" cy="61" r="3" />
-      <circle cx="76" cy="61" r="3" />
+      <circle cx="24" cy="24" r="17" />
+      <path d="m16 24 6 6 11-13" />
     </svg>
   );
 }
@@ -192,9 +146,8 @@ function RocketGlyph() {
 }
 
 function FlowIcon({ icon }: { icon: (typeof learningFlow)[number]["icon"] }) {
-  if (icon === "check") return <CheckListGlyph />;
-  if (icon === "speak") return <SpeakingGlyph />;
-  if (icon === "sparkle") return <SparkleGlyph />;
+  if (icon === "robot") return <RobotGlyph />;
+  if (icon === "chat") return <ChatGlyph />;
   if (icon === "light") return <LightGlyph />;
   return <MicGlyph />;
 }
@@ -255,201 +208,153 @@ export default function AiGuidedExpressionStepOne({
 
   const dailyGoal = Math.max(progress.dailyGoal, 1);
   const todayCompleted = Math.max(progress.todayCompleted, 0);
-  const ringPercent = Math.min(100, Math.round((todayCompleted / dailyGoal) * 100));
-  const ringOffset =
-    ringCircumference - (ringCircumference * ringPercent) / 100;
-  const ringStyle = {
-    "--ai-guided-ring-offset": `${ringOffset}`,
+  const freeUsed = Math.min(todayCompleted, FREE_PRACTICE_DAILY_LIMIT);
+  const isGuestTrial = showGuestProgress || !isAccountPro;
+  const trialCompleted = isGuestTrial ? freeUsed : todayCompleted;
+  const trialGoal = isGuestTrial ? FREE_PRACTICE_DAILY_LIMIT : dailyGoal;
+  const trialLabel = isGuestTrial ? "今日免费" : "今日练习";
+  const trialSubLabel = isGuestTrial ? "AI 引导试用" : "AI 引导表达";
+  const saveTitle = showGuestProgress ? "登录保存记录" : "已保存记录";
+  const saveSubtitle = showGuestProgress ? "继续无限练" : "继续稳步练";
+  const noteText = showGuestProgress
+    ? `免费体验 ${FREE_PRACTICE_DAILY_LIMIT} 句，登录即可保存学习记录`
+    : "学习记录已保存，继续跟着 AI 练习";
+  const trialCountStyle = {
+    "--ai-guided-trial-progress": `${Math.min(
+      100,
+      Math.round((trialCompleted / trialGoal) * 100)
+    )}%`,
   } as CSSProperties;
-  const freeUsed = Math.min(
-    todayCompleted,
-    FREE_PRACTICE_DAILY_LIMIT
-  );
-  const trialLabel = isAccountPro ? "今日AI引导练习" : "今日免费AI引导试用";
-  const trialCount = isAccountPro
-    ? `${todayCompleted}/${dailyGoal}`
-    : `${freeUsed}/${FREE_PRACTICE_DAILY_LIMIT}`;
 
   return (
     <main className="sf-ai-guided-step-one-page">
       <section
         className="sf-ai-guided-step-one-phone"
-        aria-label="AI引导表达学习第一页"
+        aria-label="AI 引导表达学习第一页"
       >
         <div className="sf-ai-guided-step-one-frame">
           <div className="sf-ai-guided-step-one-scroll">
-          <header className="sf-ai-guided-step-one-header">
-            <button
-              type="button"
-              aria-label="回到首页"
-              onClick={() => router.push("/start")}
-              className="sf-ai-guided-step-one-menu is-home"
-            >
-              <HomeMenuIcon label={null} />
-            </button>
+            <header className="sf-ai-guided-step-one-header">
+              <button
+                type="button"
+                aria-label="回到首页"
+                onClick={() => router.push("/start")}
+                className="sf-ai-guided-step-one-menu is-home"
+              >
+                <HomeMenuIcon label={null} />
+              </button>
 
-            <div
-              className="sf-ai-guided-step-one-brand"
-              aria-label="SpeakFlow AI Voice Practice"
-            >
-              <span aria-hidden="true" className="sf-ai-guided-step-one-logo">
-                <SpeakFlowBrandMark className="sf-ai-guided-step-one-logo-mark" />
-              </span>
-              <span className="sf-ai-guided-step-one-brand-copy">
-                <span className="sf-ai-guided-step-one-brand-title">
-                  SpeakFlow
+              <div
+                className="sf-ai-guided-step-one-brand"
+                aria-label="SpeakFlow AI Voice Practice"
+              >
+                <span aria-hidden="true" className="sf-ai-guided-step-one-logo">
+                  <SpeakFlowBrandMark className="sf-ai-guided-step-one-logo-mark" />
                 </span>
-                <span className="sf-ai-guided-step-one-brand-subtitle">
-                  AI VOICE PRACTICE
-                </span>
-              </span>
-            </div>
-
-            <span aria-hidden="true" />
-          </header>
-
-          {showGuestProgress ? <GuestAiPracticeProgress /> : null}
-
-          <section className="sf-ai-guided-step-one-hero">
-            <span
-              aria-hidden="true"
-              className="sf-ai-guided-step-one-diamond sf-ai-guided-step-one-diamond-left"
-            />
-            <span
-              aria-hidden="true"
-              className="sf-ai-guided-step-one-diamond sf-ai-guided-step-one-diamond-top"
-            />
-            <span aria-hidden="true" className="sf-ai-guided-rocket">
-              <RocketGlyph />
-            </span>
-            <span aria-hidden="true" className="sf-ai-guided-rocket-trail" />
-
-            <h1>
-              先说中文，
-              <span>再大胆说英语</span>
-            </h1>
-            <p>AI 会一步步帮你说得更自然、更地道。</p>
-          </section>
-
-          <section className="sf-ai-guided-stats" aria-label="学习进度">
-            <div className="sf-ai-guided-stat sf-ai-guided-stat-left">
-              <span aria-hidden="true" className="sf-ai-guided-stat-icon">
-                <FlameGlyph />
-              </span>
-              <span>
-                <span>连续练习</span>
-                <strong>{progress.streakDays} 天</strong>
-              </span>
-            </div>
-
-            <div
-              className="sf-ai-guided-progress"
-              aria-label={`今日练习 ${todayCompleted}/${dailyGoal}`}
-              style={ringStyle}
-            >
-              <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-                <circle cx="60" cy="60" r="48" />
-                <circle cx="60" cy="60" r="48" />
-              </svg>
-              <strong>
-                {todayCompleted}<span>/{dailyGoal}</span>
-              </strong>
-              <small>今日练习</small>
-            </div>
-
-            <div className="sf-ai-guided-stat sf-ai-guided-stat-right">
-              <span aria-hidden="true" className="sf-ai-guided-stat-icon">
-                <ShieldGlyph />
-              </span>
-              <span>
-                <span>表达提升</span>
-                <strong>Lv.{progress.level}</strong>
-              </span>
-            </div>
-          </section>
-
-          <section
-            className="sf-ai-guided-free-card"
-            aria-label={`${trialLabel} ${trialCount}`}
-          >
-            <div className="sf-ai-guided-free-card-top">
-              <strong>{trialLabel}</strong>
-              <span>{trialCount}</span>
-            </div>
-            <div className="sf-ai-guided-free-bars" aria-hidden="true">
-              {Array.from({ length: FREE_PRACTICE_DAILY_LIMIT }).map((_, index) => (
-                <span
-                  key={index}
-                  className={index < freeUsed ? "is-used" : undefined}
-                />
-              ))}
-            </div>
-          </section>
-
-          <section className="sf-ai-guided-flow-section" aria-label="学习流程">
-            <h2>
-              <span aria-hidden="true" />
-              <strong>学习流程</strong>
-              <span aria-hidden="true" />
-            </h2>
-
-            <div className="sf-ai-guided-flow-list">
-              {learningFlow.map((item) => (
-                <div className="sf-ai-guided-flow-item" key={item.title}>
-                  <span
-                    aria-hidden="true"
-                    className={`sf-ai-guided-flow-icon is-${item.tone}`}
-                  >
-                    <FlowIcon icon={item.icon} />
+                <span className="sf-ai-guided-step-one-brand-copy">
+                  <span className="sf-ai-guided-step-one-brand-title">
+                    SpeakFlow
                   </span>
-                  <strong>{item.title}</strong>
-                  <small>{item.description}</small>
-                </div>
-              ))}
-            </div>
-          </section>
+                  <span className="sf-ai-guided-step-one-brand-subtitle">
+                    AI VOICE PRACTICE
+                  </span>
+                </span>
+              </div>
 
-          <section className="sf-ai-guided-method-card" aria-label="SpeakFlow 学习方式">
-            <span aria-hidden="true" className="sf-ai-guided-method-ribbon">
-              <BookmarkGlyph />
-            </span>
-            <span
-              aria-hidden="true"
-              className="sf-ai-guided-method-sparkle sf-ai-guided-method-sparkle-one"
-            />
-            <span
-              aria-hidden="true"
-              className="sf-ai-guided-method-sparkle sf-ai-guided-method-sparkle-two"
-            />
+              <span aria-hidden="true" />
+            </header>
 
-            <div className="sf-ai-guided-method-content">
-              <h2>SpeakFlow 学习方式</h2>
-              <div className="sf-ai-guided-method-rows">
-                {learningWays.map(([number, title, detail]) => (
-                  <div className="sf-ai-guided-method-row" key={number}>
-                    <span>{number}</span>
-                    <strong>{title}</strong>
-                    <small>{detail}</small>
+            {showGuestProgress ? (
+              <GuestAiPracticeProgress className="sf-ai-guided-step-one-guest-progress" />
+            ) : null}
+
+            <section className="sf-ai-guided-step-one-hero">
+              <span
+                aria-hidden="true"
+                className="sf-ai-guided-step-one-diamond sf-ai-guided-step-one-diamond-left"
+              />
+              <span
+                aria-hidden="true"
+                className="sf-ai-guided-step-one-diamond sf-ai-guided-step-one-diamond-top"
+              />
+              <span aria-hidden="true" className="sf-ai-guided-rocket">
+                <RocketGlyph />
+              </span>
+              <span aria-hidden="true" className="sf-ai-guided-rocket-trail" />
+
+              <h1>
+                先说中文，
+                <span>再大胆说英语</span>
+              </h1>
+              <p>AI 会一步步帮你说得更自然、更地道。</p>
+            </section>
+
+            <section
+              className="sf-ai-guided-trial-card"
+              aria-label={`${trialLabel}${trialSubLabel} ${trialCompleted}/${trialGoal}`}
+              style={trialCountStyle}
+            >
+              <div className="sf-ai-guided-trial-copy">
+                <span aria-hidden="true" className="sf-ai-guided-trial-icon">
+                  <FlameGlyph />
+                </span>
+                <span>
+                  <strong>{trialLabel}</strong>
+                  <small>{trialSubLabel}</small>
+                </span>
+              </div>
+
+              <div className="sf-ai-guided-trial-count">
+                <strong>{trialCompleted}</strong>
+                <span>/{trialGoal}</span>
+              </div>
+
+              <div className="sf-ai-guided-trial-save">
+                <strong>{saveTitle}</strong>
+                <small>{saveSubtitle}</small>
+              </div>
+            </section>
+
+            <section className="sf-ai-guided-flow-section" aria-label="学习流程">
+              <h2>
+                <span aria-hidden="true" />
+                <strong>学习流程</strong>
+                <span aria-hidden="true" />
+              </h2>
+
+              <div className="sf-ai-guided-flow-list">
+                {learningFlow.map((item, index) => (
+                  <div className="sf-ai-guided-flow-item" key={item.title}>
+                    <span
+                      aria-hidden="true"
+                      className={`sf-ai-guided-flow-icon is-${item.tone}`}
+                    >
+                      <FlowIcon icon={item.icon} />
+                    </span>
+                    <span className="sf-ai-guided-flow-number">{index + 1}</span>
+                    <strong>{item.title}</strong>
+                    <small>{item.description}</small>
                   </div>
                 ))}
               </div>
-            </div>
-
-            <span aria-hidden="true" className="sf-ai-guided-method-chat">
-              <ChatGlyph />
-            </span>
-          </section>
+            </section>
           </div>
 
-          <button
-            type="button"
-            aria-label="进入AI引导表达学习第二页"
-            onClick={openStepTwo}
-            className="sf-ai-guided-start-button"
-          >
-            <MicGlyph />
-            <span>开始练习</span>
-          </button>
+          <div className="sf-ai-guided-step-one-bottom">
+            <button
+              type="button"
+              aria-label="进入 AI 引导表达学习第二页"
+              onClick={openStepTwo}
+              className="sf-ai-guided-start-button"
+            >
+              <MicGlyph />
+              <span>开始 AI 引导表达</span>
+            </button>
+            <p className="sf-ai-guided-trial-note">
+              <CheckCircleGlyph />
+              <span>{noteText}</span>
+            </p>
+          </div>
         </div>
       </section>
     </main>

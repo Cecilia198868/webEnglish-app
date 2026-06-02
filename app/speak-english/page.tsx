@@ -188,28 +188,6 @@ type AccountPanelView =
   | "notifications"
   | "fontSize";
 
-const accountPanelDeepLinkViews = new Set<AccountPanelView>([
-  "account",
-  "subscription",
-  "voice",
-  "manageSubscription",
-  "referrals",
-  "helpCenter",
-  "reportIssue",
-  "aboutSpeakFlow",
-  "accountManagement",
-  "interfaceLanguage",
-  "notifications",
-  "fontSize",
-]);
-
-function getAccountPanelViewFromSearch(value: string | null) {
-  const normalizedValue = value?.trim() as AccountPanelView | undefined;
-  return normalizedValue && accountPanelDeepLinkViews.has(normalizedValue)
-    ? normalizedValue
-    : null;
-}
-
 type ProPlan = "monthly" | "yearly";
 type FontSizePreference = "small" | "standard" | "large";
 
@@ -3911,68 +3889,59 @@ function SpeakEnglishClient() {
     if (typeof window === "undefined") return;
 
     const searchParams = new URLSearchParams(window.location.search);
+    const shouldOpenAccount = searchParams.get("account") === "1";
+    const shouldOpenPro = searchParams.get("pro") === "1";
+    if (!shouldOpenAccount && !shouldOpenPro) return;
+    if (!hasLoadedAccountSession) return;
+
+    if (shouldOpenPro) {
+      router.replace(
+        accountEmail
+          ? "/account?panel=subscription"
+          : createLoginUrl("/account?panel=subscription")
+      );
+      return;
+    }
+
+    router.replace(accountEmail ? "/account" : "/menu");
+  }, [accountEmail, hasLoadedAccountSession, router]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const searchParams = new URLSearchParams(window.location.search);
     const shouldOpenPro = searchParams.get("pro") === "1";
     const shouldOpenAccount = searchParams.get("account") === "1";
-    const shouldReturnToAccountPage =
-      searchParams.get("fromAccount") === "1" || shouldOpenAccount;
-    const checkoutStatus = searchParams.get("checkout");
+    if (shouldOpenPro || shouldOpenAccount) return;
+
     const requestedSubmenu = searchParams.get("submenu");
-    const requestedAccountPanel = getAccountPanelViewFromSearch(
-      searchParams.get("panel") || searchParams.get("accountPanel")
-    );
     const requestedClassicCategory = searchParams.get("classicCategory");
     const requestedClassicSection = searchParams.get("classicSection");
-    if (searchParams.get("menu") !== "1" && !shouldOpenPro && !shouldOpenAccount)
-      return;
+    if (searchParams.get("menu") !== "1") return;
 
     const refreshTimers: number[] = [];
-    setAccountPanelReturnTarget(
-      shouldOpenPro || shouldOpenAccount
-        ? shouldReturnToAccountPage
-          ? "account"
-          : "local"
-        : "local"
-    );
-    setShowQuickPanel(!shouldOpenAccount);
-    if (!shouldOpenPro && !shouldOpenAccount) {
-      if (requestedSubmenu === "expression") {
-        setShowExpressionMenu(true);
-        setShowClassicCoursePicker(false);
-        setSelectedClassicCourseCategoryId("");
-        setSelectedClassicCourseSectionId("");
-        setClassicCourseSearchQuery("");
-      } else if (requestedSubmenu === "classic") {
-        const classicCategory = classicCourseCategories.find(
-          (category) => category.id === requestedClassicCategory
-        );
-        const classicSection =
-          classicCategory?.sections.find(
-            (section) => section.id === requestedClassicSection
-          ) || null;
+    setAccountPanelReturnTarget("local");
+    setShowQuickPanel(true);
+    if (requestedSubmenu === "expression") {
+      setShowExpressionMenu(true);
+      setShowClassicCoursePicker(false);
+      setSelectedClassicCourseCategoryId("");
+      setSelectedClassicCourseSectionId("");
+      setClassicCourseSearchQuery("");
+    } else if (requestedSubmenu === "classic") {
+      const classicCategory = classicCourseCategories.find(
+        (category) => category.id === requestedClassicCategory
+      );
+      const classicSection =
+        classicCategory?.sections.find(
+          (section) => section.id === requestedClassicSection
+        ) || null;
 
-        setShowExpressionMenu(false);
-        setShowClassicCoursePicker(true);
-        setSelectedClassicCourseCategoryId(classicCategory?.id || "");
-        setSelectedClassicCourseSectionId(classicSection?.id || "");
-        setClassicCourseSearchQuery("");
-      }
-    }
-    if (shouldOpenPro) {
-      setShowAccountMenu(true);
-      setAccountPanelView("subscription");
-
-      if (checkoutStatus === "success") {
-        [1200, 3200, 7000].forEach((delay) => {
-          refreshTimers.push(
-            window.setTimeout(() => {
-              setAccountSubscriptionRefreshKey(Date.now());
-            }, delay)
-          );
-        });
-      }
-    } else if (shouldOpenAccount) {
-      setShowAccountMenu(true);
-      setAccountPanelView(requestedAccountPanel || "menu");
+      setShowExpressionMenu(false);
+      setShowClassicCoursePicker(true);
+      setSelectedClassicCourseCategoryId(classicCategory?.id || "");
+      setSelectedClassicCourseSectionId(classicSection?.id || "");
+      setClassicCourseSearchQuery("");
     }
     window.history.replaceState(null, "", "/speak-english");
 
@@ -4089,13 +4058,14 @@ function SpeakEnglishClient() {
       return;
     }
 
-    setShowQuickPanel(true);
-    setShowAccountMenu(true);
-    setAccountPanelView("subscription");
+    setShowQuickPanel(false);
+    setShowAccountMenu(false);
+    setAccountPanelView("menu");
     setShowAvatarEditor(false);
     setShowExpressionMenu(false);
     setShowClassicCoursePicker(false);
     resetClassicCoursePicker();
+    router.push("/account?panel=subscription");
   }
 
   function openLoginFromFreePracticeLimit() {
@@ -4781,10 +4751,11 @@ function SpeakEnglishClient() {
     setShowQuickPanel(false);
     setShowClassicCoursePicker(false);
     resetClassicCoursePicker();
-    setShowAccountMenu(true);
+    setShowAccountMenu(false);
     setAccountPanelView("menu");
     setAccountPanelReturnTarget("local");
     setShowAvatarEditor(false);
+    router.push(accountEmail ? "/account" : "/menu");
   }
 
   function openReferenceAccountMenu() {
@@ -4796,16 +4767,11 @@ function SpeakEnglishClient() {
     setShowQuickPanel(false);
     setShowClassicCoursePicker(false);
     resetClassicCoursePicker();
-    setShowAccountMenu((current) => {
-      const next = !current;
-      if (next) {
-        setAccountPanelView("menu");
-        setAccountPanelReturnTarget("local");
-      } else {
-        setShowAvatarEditor(false);
-      }
-      return next;
-    });
+    setShowAccountMenu(false);
+    setAccountPanelView("menu");
+    setAccountPanelReturnTarget("local");
+    setShowAvatarEditor(false);
+    router.push(accountEmail ? "/account" : "/menu");
   }
 
   function openTrainingGroundMode() {

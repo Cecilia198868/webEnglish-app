@@ -1,11 +1,9 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import StartPageClient from "@/components/StartPageClient";
-import { featuredLessonRecords } from "@/data/featuredCourses";
 import { classicSceneCategoryMenus } from "@/data/classicSceneCategoryMenus";
 import { restaurantSceneSectionMenus } from "@/data/restaurantSceneSectionMenus";
 import { getAiGuidedProgress } from "@/lib/aiGuidedExpressionProgress";
-import { parseTrainingContent } from "@/lib/training";
 
 const DEFAULT_AI_PROGRESS = {
   challengeCompleted: 0,
@@ -16,12 +14,6 @@ const DEFAULT_AI_PROGRESS = {
   todayCompleted: 0,
   totalCompleted: 0,
 };
-
-const FEATURED_LESSON_SUMMARIES = featuredLessonRecords.map((lesson) => ({
-  id: lesson.id,
-  title: lesson.title,
-  total: parseTrainingContent(lesson.txt_content || "").length,
-}));
 
 async function loadAiProgress(email: string) {
   if (!email) return DEFAULT_AI_PROGRESS;
@@ -72,7 +64,6 @@ export default async function StartPage() {
     <StartPageClient
       aiProgress={aiProgress}
       fallbackContinueStudy={createFallbackContinueStudy()}
-      featuredLessons={FEATURED_LESSON_SUMMARIES}
       userEmail={session?.user?.email || ""}
       userImage={session?.user?.image || ""}
       userName={session?.user?.name || ""}

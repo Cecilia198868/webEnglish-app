@@ -539,6 +539,573 @@
   white-space: nowrap;
 }
 
+.starterPage {
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 86% 18%, rgba(151, 136, 255, 0.22), transparent 26%),
+    radial-gradient(circle at 10% 36%, rgba(77, 139, 255, 0.14), transparent 30%),
+    linear-gradient(180deg, #f7fbff 0%, #f3f5ff 48%, #ffffff 100%);
+  color: #10163b;
+}
+
+.starterPhone {
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 430px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 26px) 18px
+    calc(env(safe-area-inset-bottom, 0px) + 24px);
+  overflow: hidden;
+}
+
+.starterPhone::before {
+  position: absolute;
+  top: 166px;
+  right: -72px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(126, 91, 255, 0.16), rgba(94, 139, 255, 0.08));
+  content: "";
+}
+
+.starterTopBar {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 54px;
+  align-items: center;
+  gap: 10px;
+}
+
+.starterMenuButton,
+.starterAvatar {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow:
+    0 18px 36px rgba(94, 117, 180, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.starterMenuButton {
+  background: rgba(255, 255, 255, 0.92);
+  color: #10163b;
+}
+
+.starterMenuButton svg {
+  width: 27px;
+  height: 27px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 3.3;
+}
+
+.starterBrand {
+  display: inline-grid;
+  grid-template-columns: 54px minmax(0, max-content);
+  justify-self: center;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  color: #10163b;
+  text-decoration: none;
+}
+
+.starterBrandIcon {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 14px 28px rgba(92, 125, 202, 0.13);
+}
+
+.starterBrandIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.starterBrandCopy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.starterBrandCopy strong {
+  color: #10163b;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: clamp(1.88rem, 7.2vw, 2.28rem);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 0.95;
+  white-space: nowrap;
+}
+
+.starterBrandCopy small {
+  color: #6d5cff;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: clamp(0.76rem, 3.2vw, 0.94rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.starterAvatar {
+  overflow: hidden;
+  justify-self: end;
+  border: 4px solid rgba(255, 255, 255, 0.86);
+  background: linear-gradient(135deg, #19d1c7, #07957f);
+  color: #ffffff;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: 1.42rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.starterAvatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.starterHero {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(118px, 39vw);
+  align-items: center;
+  min-height: 230px;
+  margin-top: 32px;
+}
+
+.starterHeroCopy {
+  min-width: 0;
+}
+
+.starterHeroCopy h1 {
+  margin: 0;
+  color: #10163b;
+  font-size: clamp(2.12rem, 9vw, 2.88rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.22;
+}
+
+.starterHeroCopy h1 span:first-of-type {
+  background: linear-gradient(90deg, #7758ff, #3387ff);
+  background-clip: text;
+  color: transparent;
+}
+
+.starterBenefitRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  color: rgba(21, 31, 68, 0.68);
+  font-size: clamp(0.78rem, 3.4vw, 0.94rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.starterBenefitRow span,
+.starterTrust {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.starterBenefitRow i {
+  width: 1px;
+  height: 16px;
+  background: rgba(21, 31, 68, 0.24);
+}
+
+.starterBenefitRow svg,
+.starterTrust svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+  color: #765cff;
+}
+
+.starterRobot {
+  width: min(39vw, 168px);
+  justify-self: end;
+  transform: translateX(10px);
+  filter: drop-shadow(0 24px 34px rgba(91, 92, 218, 0.18));
+}
+
+.starterRecommended {
+  position: relative;
+  z-index: 2;
+  margin-top: 10px;
+  border: 6px solid rgba(255, 255, 255, 0.96);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 78% 24%, rgba(135, 104, 255, 0.17), transparent 31%),
+    linear-gradient(135deg, rgba(246, 240, 255, 0.98), rgba(255, 255, 255, 0.96));
+  box-shadow:
+    0 22px 48px rgba(91, 92, 218, 0.14),
+    inset 0 0 0 1px rgba(185, 191, 255, 0.3);
+}
+
+.starterRibbon {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 50px;
+  border-radius: 20px 0 18px 0;
+  background: linear-gradient(135deg, #7d5cff, #6c59ff);
+  color: #ffffff;
+  font-size: clamp(1rem, 4.2vw, 1.2rem);
+  font-weight: 900;
+  padding: 0 22px;
+  box-shadow: 0 16px 26px rgba(102, 85, 238, 0.28);
+}
+
+.starterRibbon svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.starterRecommendedBody {
+  position: relative;
+  min-height: 264px;
+  padding: 84px 24px 24px;
+}
+
+.starterRecommendedCopy {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 260px);
+}
+
+.starterRecommendedCopy h2 {
+  margin: 0;
+  color: #10163b;
+  font-size: clamp(1.78rem, 7.4vw, 2.32rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.18;
+}
+
+.starterRecommendedCopy h2 span {
+  background: linear-gradient(90deg, #7758ff, #3c7cff);
+  background-clip: text;
+  color: transparent;
+}
+
+.starterRecommendedCopy p {
+  margin: 22px 0 0;
+  color: rgba(21, 31, 68, 0.68);
+  font-size: clamp(0.9rem, 3.7vw, 1.05rem);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.starterBubbleArt {
+  position: absolute;
+  top: 78px;
+  right: 18px;
+  display: grid;
+  width: 132px;
+  height: 116px;
+  place-items: center;
+  pointer-events: none;
+}
+
+.starterBubbleArt::before,
+.starterBubbleArt::after {
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  content: "";
+}
+
+.starterBubbleArt::before {
+  top: 18px;
+  left: 20px;
+  width: 88px;
+  height: 64px;
+  box-shadow: 0 16px 30px rgba(105, 85, 238, 0.14);
+}
+
+.starterBubbleArt::after {
+  right: 0;
+  bottom: 14px;
+  width: 58px;
+  height: 42px;
+}
+
+.starterBubbleArt span,
+.starterBubbleArt small {
+  position: absolute;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #7159ff, #8872ff);
+}
+
+.starterBubbleArt span {
+  top: 0;
+  left: 8px;
+  width: 82px;
+  height: 58px;
+}
+
+.starterBubbleArt small {
+  right: 6px;
+  bottom: 8px;
+  width: 58px;
+  height: 38px;
+  background: #ffffff;
+}
+
+.starterBubbleArt span::before,
+.starterBubbleArt span::after,
+.starterBubbleArt small::before {
+  position: absolute;
+  top: 25px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 22px 0 0 rgba(255, 255, 255, 0.9);
+  content: "";
+}
+
+.starterBubbleArt span::before {
+  left: 22px;
+}
+
+.starterBubbleArt span::after {
+  right: 17px;
+}
+
+.starterBubbleArt small::before {
+  top: 15px;
+  left: 14px;
+  background: #7d6cff;
+  box-shadow: 18px 0 0 #7d6cff;
+}
+
+.starterPrimaryCta {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 66px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #8b4cff, #2f64ff);
+  color: #ffffff;
+  font-size: clamp(1.12rem, 4.8vw, 1.36rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.1;
+  text-decoration: none;
+  box-shadow:
+    0 16px 30px rgba(74, 91, 255, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.starterCtaIcon svg {
+  width: 31px;
+  height: 31px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.2;
+}
+
+.starterCtaChevron svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.2;
+}
+
+.starterMore {
+  position: relative;
+  z-index: 2;
+  margin-top: 24px;
+}
+
+.starterSectionHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding-left: 16px;
+}
+
+.starterSectionHeading::before {
+  position: absolute;
+  left: 0;
+  width: 4px;
+  height: 22px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #765cff, #8b64ff);
+  content: "";
+}
+
+.starterSectionHeading h2 {
+  margin: 0;
+  color: #10163b;
+  font-size: clamp(1.22rem, 5vw, 1.46rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.18;
+}
+
+.starterSectionHeading span {
+  color: rgba(21, 31, 68, 0.54);
+  font-size: clamp(0.76rem, 3.4vw, 0.88rem);
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.starterPracticeStack {
+  display: grid;
+  gap: 12px;
+}
+
+.starterPracticeCard {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) 26px;
+  align-items: center;
+  gap: 14px;
+  min-height: 90px;
+  border: 1px solid rgba(226, 235, 252, 0.94);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #10163b;
+  padding: 12px 14px;
+  text-decoration: none;
+  box-shadow:
+    0 18px 38px rgba(95, 122, 184, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.starterPracticeCard[data-tone="violet"] {
+  --starter-accent: #805cff;
+  --starter-accent-2: #5f72ff;
+}
+
+.starterPracticeCard[data-tone="cyan"] {
+  --starter-accent: #25c9c8;
+  --starter-accent-2: #1ab0d8;
+}
+
+.starterPracticeCard[data-tone="pink"] {
+  --starter-accent: #ff5b9a;
+  --starter-accent-2: #f44982;
+}
+
+.starterPracticeIcon {
+  display: grid;
+  width: 62px;
+  height: 62px;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--starter-accent), var(--starter-accent-2));
+  color: #ffffff;
+  box-shadow:
+    0 13px 24px color-mix(in srgb, var(--starter-accent) 22%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+
+.starterPracticeIcon svg {
+  width: 35px;
+  height: 35px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.2;
+}
+
+.starterPracticeCopy {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+}
+
+.starterPracticeCopy strong {
+  color: #10163b;
+  font-size: clamp(1.05rem, 4.8vw, 1.24rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.18;
+  white-space: nowrap;
+}
+
+.starterPracticeCopy small {
+  overflow: hidden;
+  color: rgba(21, 31, 68, 0.58);
+  font-size: clamp(0.78rem, 3.4vw, 0.9rem);
+  font-weight: 700;
+  line-height: 1.28;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.starterPracticeChevron {
+  display: grid;
+  place-items: center;
+  color: #6e58ff;
+}
+
+.starterPracticeChevron svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.2;
+}
+
+.starterTrust {
+  justify-content: center;
+  width: 100%;
+  margin-top: 22px;
+  color: rgba(21, 31, 68, 0.58);
+  font-size: clamp(0.78rem, 3.4vw, 0.92rem);
+  font-weight: 800;
+  line-height: 1.3;
+  text-align: center;
+}
+
 @media (max-width: 389px) {
   .phone {
     padding-right: 14px;
@@ -586,6 +1153,69 @@
     justify-self: start;
     min-height: 38px;
     padding: 0 15px;
+  }
+
+  .starterPhone {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .starterTopBar {
+    grid-template-columns: 48px minmax(0, 1fr) 48px;
+    gap: 8px;
+  }
+
+  .starterMenuButton,
+  .starterAvatar,
+  .starterBrandIcon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .starterBrand {
+    grid-template-columns: 46px minmax(0, max-content);
+    gap: 7px;
+  }
+
+  .starterHero {
+    grid-template-columns: minmax(0, 1fr) 112px;
+    min-height: 214px;
+    margin-top: 26px;
+  }
+
+  .starterRobot {
+    width: 132px;
+    transform: translateX(20px);
+  }
+
+  .starterRecommendedBody {
+    min-height: 250px;
+    padding: 78px 18px 20px;
+  }
+
+  .starterBubbleArt {
+    width: 104px;
+    right: 8px;
+  }
+
+  .starterRecommendedCopy {
+    width: min(100%, 236px);
+  }
+
+  .starterPrimaryCta {
+    min-height: 60px;
+    gap: 10px;
+  }
+
+  .starterPracticeCard {
+    grid-template-columns: 56px minmax(0, 1fr) 24px;
+    gap: 12px;
+    padding: 11px 12px;
+  }
+
+  .starterPracticeIcon {
+    width: 56px;
+    height: 56px;
   }
 }
 

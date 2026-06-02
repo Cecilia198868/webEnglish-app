@@ -1,4 +1,4 @@
-export const subscriptionCallbackUrl = "/speak-english?pro=1";
+export const subscriptionCallbackUrl = "/account?panel=subscription";
 
 export function createLoginUrl(callbackUrl = subscriptionCallbackUrl) {
   return `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;

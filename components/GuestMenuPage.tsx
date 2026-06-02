@@ -28,21 +28,21 @@ const guestMenuRows: Array<{
   },
   {
     description: "解锁全部功能，畅享无限练习",
-    href: "/speak-english?pro=1",
+    href: "/login?callbackUrl=%2Faccount%3Fpanel%3Dsubscription",
     icon: "star",
     label: "升级 Pro",
     tone: "pro",
   },
   {
     description: "常见问题与使用指南",
-    href: "/speak-english?account=1&panel=helpCenter",
+    href: "/menu?panel=help",
     icon: "help",
     label: "帮助",
     tone: "help",
   },
   {
     description: "了解 SpeakFlow",
-    href: "/speak-english?account=1&panel=aboutSpeakFlow",
+    href: "/menu?panel=about",
     icon: "info",
     label: "关于",
     tone: "about",
@@ -128,7 +128,10 @@ export default function GuestMenuPage() {
               <span className={styles.brandText}>SpeakFlow</span>
             </Link>
 
-            <Link href="/speak-english?pro=1" className={styles.proPill}>
+            <Link
+              href="/login?callbackUrl=%2Faccount%3Fpanel%3Dsubscription"
+              className={styles.proPill}
+            >
               <CrownIcon />
               <span>Pro</span>
             </Link>

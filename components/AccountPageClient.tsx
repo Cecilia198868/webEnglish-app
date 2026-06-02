@@ -52,8 +52,7 @@ type RowProps = {
 };
 
 const accountAvatarStoragePrefix = "speakflow-account-avatar";
-const accountPanelUrl = (panel: string) =>
-  `/speak-english?account=1&fromAccount=1&panel=${panel}`;
+const accountPageUrl = (panel: string) => `/account?panel=${panel}`;
 
 function getAccountAvatarStorageKey(identifier: string) {
   return `${accountAvatarStoragePrefix}:${identifier || "local-user"}`;
@@ -386,20 +385,20 @@ export default function AccountPageClient({
 
         <Section>
           <Row
-            href="/speak-english?pro=1&fromAccount=1"
+            href={accountPageUrl("subscription")}
             icon="star"
             label="SpeakFlow Pro"
             description={subscriptionCopy.subtitle}
             badge={subscriptionCopy.badge}
           />
           <Row
-            href={accountPanelUrl("manageSubscription")}
+            href={accountPageUrl("manageSubscription")}
             icon="card"
             label="管理订阅"
           />
-          <Row href={accountPanelUrl("referrals")} icon="gift" label="邀请好友" />
+          <Row href={accountPageUrl("referrals")} icon="gift" label="邀请好友" />
           <Row
-            href={accountPanelUrl("accountManagement")}
+            href={accountPageUrl("accountManagement")}
             icon="lock"
             label="账号管理"
           />
@@ -409,31 +408,31 @@ export default function AccountPageClient({
         </Section>
 
         <Section title="学习体验">
-          <Row href={accountPanelUrl("voice")} icon="headphones" label="声音" />
-          <Row href={accountPanelUrl("fontSize")} icon="text" label="字体大小" />
+          <Row href={accountPageUrl("voice")} icon="headphones" label="声音" />
+          <Row href={accountPageUrl("fontSize")} icon="text" label="字体大小" />
           <Row
-            href={accountPanelUrl("interfaceLanguage")}
+            href={accountPageUrl("interfaceLanguage")}
             icon="globe"
             label="界面语言"
           />
           <Row
-            href={accountPanelUrl("notifications")}
+            href={accountPageUrl("notifications")}
             icon="bell"
             label="通知"
           />
         </Section>
 
         <Section title="帮助">
-          <Row href={accountPanelUrl("helpCenter")} icon="help" label="帮助中心" />
+          <Row href={accountPageUrl("helpCenter")} icon="help" label="帮助中心" />
           <Row
-            href={accountPanelUrl("reportIssue")}
+            href={accountPageUrl("reportIssue")}
             icon="feedback"
             label="联系与反馈"
           />
           <Row href="/terms" icon="document" label="用户协议" />
           <Row href="/privacy" icon="lock" label="隐私政策" />
           <Row
-            href={accountPanelUrl("aboutSpeakFlow")}
+            href={accountPageUrl("aboutSpeakFlow")}
             icon="info"
             label="关于 SpeakFlow"
           />

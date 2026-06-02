@@ -17747,3 +17747,687 @@ body .sf-guided-reference-home-icon span {
     gap: 4px;
   }
 }
+
+.sf-home-return-hint {
+  position: fixed;
+  z-index: 2147483000;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 999px;
+  background: rgba(16, 22, 59, 0.88);
+  box-shadow:
+    0 16px 36px rgba(39, 37, 84, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.15;
+  padding: 8px 12px;
+  pointer-events: none;
+  text-align: center;
+  animation: sfHomeReturnHint 5.2s ease forwards;
+}
+
+@keyframes sfHomeReturnHint {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+
+  12%,
+  82% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}
+
+/* AI guided expression step 1: 2026 reference redesign */
+body .sf-ai-guided-step-one-page {
+  width: 100% !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(205, 236, 255, 0.95), transparent 32%),
+    radial-gradient(circle at 88% 2%, rgba(222, 241, 255, 0.92), transparent 30%),
+    linear-gradient(180deg, #eaf8ff 0%, #f8fcff 52%, #eef7ff 100%) !important;
+  color: #07113f !important;
+}
+
+body .sf-ai-guided-step-one-phone {
+  width: min(100%, 430px) !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  margin: 0 auto !important;
+  overflow: hidden !important;
+}
+
+body .sf-ai-guided-step-one-frame {
+  box-sizing: border-box !important;
+  display: flex !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  flex-direction: column !important;
+  padding:
+    max(1rem, calc(env(safe-area-inset-top, 0px) + 0.75rem))
+    clamp(1rem, 4vw, 1.45rem)
+    max(0.8rem, calc(env(safe-area-inset-bottom, 0px) + 0.65rem)) !important;
+  overflow: hidden !important;
+}
+
+body .sf-ai-guided-step-one-scroll {
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  padding-bottom: 0.9rem !important;
+  scrollbar-width: none !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+body .sf-ai-guided-step-one-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+
+body .sf-ai-guided-step-one-header {
+  display: grid !important;
+  grid-template-columns: 2.8rem minmax(0, 1fr) 2.8rem !important;
+  align-items: center !important;
+  gap: 0.7rem !important;
+}
+
+body .sf-ai-guided-step-one-menu.is-home {
+  display: grid !important;
+  width: 2.8rem !important;
+  height: 2.8rem !important;
+  place-items: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #000000 !important;
+  padding: 0 !important;
+}
+
+body .sf-ai-guided-step-one-menu.is-home .sf-home-menu-icon svg {
+  width: 1.62rem !important;
+  height: 1.62rem !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 3.2 !important;
+}
+
+body .sf-ai-guided-step-one-brand {
+  display: inline-grid !important;
+  grid-template-columns: clamp(3.4rem, 13.5vw, 4.25rem) minmax(0, max-content) !important;
+  justify-self: center !important;
+  align-items: center !important;
+  gap: clamp(0.68rem, 2.6vw, 0.9rem) !important;
+  min-width: 0 !important;
+}
+
+body .sf-ai-guided-step-one-logo {
+  display: grid !important;
+  width: clamp(3.4rem, 13.5vw, 4.25rem) !important;
+  height: clamp(3.4rem, 13.5vw, 4.25rem) !important;
+  place-items: center !important;
+  border-radius: clamp(1rem, 4.4vw, 1.34rem) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 1.1rem 2.2rem rgba(84, 121, 204, 0.13) !important;
+}
+
+body .sf-ai-guided-step-one-logo-mark {
+  width: 78% !important;
+  height: 78% !important;
+}
+
+body .sf-ai-guided-step-one-brand-title {
+  color: #07113f !important;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif !important;
+  font-size: clamp(2.15rem, 9.5vw, 3.2rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  line-height: 0.92 !important;
+  white-space: nowrap !important;
+}
+
+body .sf-ai-guided-step-one-brand-subtitle {
+  margin-top: 0.55rem !important;
+  color: #3b7dff !important;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif !important;
+  font-size: clamp(0.78rem, 3.2vw, 1.02rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+body .sf-ai-guided-step-one-page .sf-guest-ai-progress {
+  width: min(100%, 348px) !important;
+  margin: 0.6rem auto 0 !important;
+  padding: 0.46rem 0.75rem 0.52rem !important;
+  border-radius: 1rem !important;
+}
+
+body .sf-ai-guided-step-one-hero {
+  position: relative !important;
+  display: grid !important;
+  justify-items: center !important;
+  margin-top: clamp(2rem, 6dvh, 3.7rem) !important;
+  text-align: center !important;
+}
+
+body .sf-ai-guided-step-one-hero::before {
+  content: none !important;
+}
+
+body .sf-ai-guided-step-one-hero h1 {
+  margin: 0 !important;
+  color: #07113f !important;
+  font-size: clamp(3rem, 13.8vw, 4.45rem) !important;
+  font-weight: 950 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.08 !important;
+}
+
+body .sf-ai-guided-step-one-hero h1 span {
+  display: block !important;
+  color: #3f86ff !important;
+  text-shadow: 0 0.06rem 0 rgba(255, 255, 255, 0.68) !important;
+}
+
+body .sf-ai-guided-step-one-hero p {
+  margin: clamp(0.85rem, 2.2dvh, 1.15rem) 0 0 !important;
+  color: #657393 !important;
+  font-size: clamp(1.05rem, 4.35vw, 1.32rem) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.42 !important;
+}
+
+body .sf-ai-guided-step-one-diamond {
+  position: absolute !important;
+  transform: rotate(45deg) !important;
+  background: linear-gradient(135deg, #a170ff, #6e8cff) !important;
+}
+
+body .sf-ai-guided-step-one-diamond-left {
+  left: 6% !important;
+  top: 44% !important;
+  width: clamp(1.05rem, 4.5vw, 1.35rem) !important;
+  height: clamp(1.05rem, 4.5vw, 1.35rem) !important;
+}
+
+body .sf-ai-guided-step-one-diamond-top {
+  right: 12% !important;
+  top: -12% !important;
+  width: clamp(0.72rem, 3vw, 1rem) !important;
+  height: clamp(0.72rem, 3vw, 1rem) !important;
+  background: #ffffff !important;
+  opacity: 0.92 !important;
+}
+
+body .sf-ai-guided-rocket {
+  position: absolute !important;
+  right: 0.4rem !important;
+  top: 42% !important;
+  width: clamp(3.45rem, 14.5vw, 4.6rem) !important;
+  color: #3f86ff !important;
+  filter: drop-shadow(0 1rem 1.5rem rgba(46, 112, 255, 0.18)) !important;
+}
+
+body .sf-ai-guided-rocket svg {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+body .sf-ai-guided-rocket path {
+  fill: currentColor !important;
+}
+
+body .sf-ai-guided-rocket-trail {
+  position: absolute !important;
+  right: 2rem !important;
+  top: 83% !important;
+  width: 6.8rem !important;
+  height: 0.36rem !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, rgba(82, 146, 255, 0), rgba(82, 146, 255, 0.5)) !important;
+  transform: rotate(-2deg) !important;
+}
+
+body .sf-ai-guided-trial-card {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 0 !important;
+  min-height: clamp(5.45rem, 13.5dvh, 6.85rem) !important;
+  margin-top: clamp(2rem, 5.4dvh, 3.25rem) !important;
+  border: 1px solid rgba(225, 239, 255, 0.82) !important;
+  border-radius: clamp(1.55rem, 7vw, 2.1rem) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow:
+    0 1.45rem 3.2rem rgba(83, 119, 190, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+  overflow: hidden !important;
+}
+
+body .sf-ai-guided-trial-card::after {
+  position: absolute !important;
+  left: 1.5rem !important;
+  right: 1.5rem !important;
+  bottom: 0.62rem !important;
+  height: 0.18rem !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(90deg, #5c9dff var(--ai-guided-trial-progress), transparent 0),
+    rgba(230, 239, 255, 0.8) !important;
+  content: "" !important;
+  opacity: 0.55 !important;
+}
+
+body .sf-ai-guided-trial-copy,
+body .sf-ai-guided-trial-save {
+  display: grid !important;
+  align-items: center !important;
+  min-width: 0 !important;
+}
+
+body .sf-ai-guided-trial-copy {
+  grid-template-columns: clamp(2.15rem, 9vw, 2.8rem) minmax(0, 1fr) !important;
+  gap: 0.82rem !important;
+  padding-left: clamp(1.3rem, 5.2vw, 1.8rem) !important;
+}
+
+body .sf-ai-guided-trial-icon {
+  color: #69b6ff !important;
+}
+
+body .sf-ai-guided-trial-icon svg {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  fill: currentColor !important;
+}
+
+body .sf-ai-guided-trial-copy strong,
+body .sf-ai-guided-trial-save strong {
+  display: block !important;
+  color: #07113f !important;
+  font-size: clamp(0.9rem, 3.85vw, 1.12rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+body .sf-ai-guided-trial-copy small,
+body .sf-ai-guided-trial-save small {
+  display: block !important;
+  margin-top: 0.32rem !important;
+  color: #657393 !important;
+  font-size: clamp(0.82rem, 3.45vw, 1rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+body .sf-ai-guided-trial-count {
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: center !important;
+  min-width: clamp(5.2rem, 22vw, 6.25rem) !important;
+  min-height: 3.35rem !important;
+  border-right: 1px solid rgba(213, 226, 246, 0.95) !important;
+  border-left: 1px solid rgba(213, 226, 246, 0.95) !important;
+  color: #07113f !important;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif !important;
+  line-height: 1 !important;
+  padding: 0 clamp(0.9rem, 3.5vw, 1.2rem) !important;
+}
+
+body .sf-ai-guided-trial-count strong {
+  color: #367cff !important;
+  font-size: clamp(2.75rem, 11vw, 3.55rem) !important;
+  font-weight: 900 !important;
+}
+
+body .sf-ai-guided-trial-count span {
+  color: #07113f !important;
+  font-size: clamp(1.78rem, 7.4vw, 2.25rem) !important;
+  font-weight: 900 !important;
+}
+
+body .sf-ai-guided-trial-save {
+  justify-content: center !important;
+  padding: 0 clamp(0.8rem, 3.4vw, 1.25rem) !important;
+}
+
+body .sf-ai-guided-flow-section {
+  margin-top: clamp(2.1rem, 5.3dvh, 3.15rem) !important;
+}
+
+body .sf-ai-guided-flow-section h2 {
+  display: grid !important;
+  grid-template-columns: auto max-content auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: clamp(0.8rem, 3.5vw, 1.25rem) !important;
+  margin: 0 0 clamp(1.55rem, 4dvh, 2.15rem) !important;
+  color: #07113f !important;
+  font-size: clamp(1.7rem, 7.3vw, 2.25rem) !important;
+  font-weight: 950 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.08 !important;
+  text-align: center !important;
+}
+
+body .sf-ai-guided-flow-section h2 > span {
+  display: block !important;
+  width: 0.74rem !important;
+  height: 0.74rem !important;
+  border-radius: 0.12rem !important;
+  background: linear-gradient(135deg, #3f86ff, #5a96ff) !important;
+  transform: rotate(45deg) !important;
+}
+
+body .sf-ai-guided-flow-section h2 strong {
+  font-weight: inherit !important;
+}
+
+body .sf-ai-guided-flow-list {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: clamp(0.65rem, 2.8vw, 1.05rem) !important;
+}
+
+body .sf-ai-guided-flow-list::before {
+  position: absolute !important;
+  top: clamp(2.3rem, 9.5vw, 3rem) !important;
+  right: 13% !important;
+  left: 13% !important;
+  border-top: 2px dashed rgba(84, 141, 255, 0.34) !important;
+  content: "" !important;
+}
+
+body .sf-ai-guided-flow-item {
+  position: relative !important;
+  z-index: 1 !important;
+  display: grid !important;
+  justify-items: center !important;
+  gap: 0.42rem !important;
+  min-width: 0 !important;
+  text-align: center !important;
+}
+
+body .sf-ai-guided-flow-icon {
+  display: grid !important;
+  width: clamp(4.4rem, 18vw, 5.45rem) !important;
+  aspect-ratio: 1 !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 1rem 1.75rem rgba(55, 125, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+body .sf-ai-guided-flow-icon.is-violet {
+  background: linear-gradient(135deg, #a06cff 0%, #7359ff 100%) !important;
+}
+
+body .sf-ai-guided-flow-icon.is-blue {
+  background: linear-gradient(135deg, #5db4ff 0%, #267cff 100%) !important;
+}
+
+body .sf-ai-guided-flow-icon svg {
+  width: 52% !important;
+  height: 52% !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 3.2 !important;
+}
+
+body .sf-ai-guided-flow-number {
+  display: grid !important;
+  width: clamp(1.32rem, 5.4vw, 1.65rem) !important;
+  aspect-ratio: 1 !important;
+  place-items: center !important;
+  margin-top: -0.56rem !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, #8f68ff 0%, #357ff9 100%) !important;
+  color: #ffffff !important;
+  font-size: clamp(0.78rem, 3.2vw, 0.95rem) !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+body .sf-ai-guided-flow-item strong {
+  color: #07113f !important;
+  font-size: clamp(0.98rem, 4.25vw, 1.22rem) !important;
+  font-weight: 950 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.12 !important;
+  white-space: nowrap !important;
+}
+
+body .sf-ai-guided-flow-item small {
+  color: #657393 !important;
+  font-size: clamp(0.78rem, 3.35vw, 0.95rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.18 !important;
+}
+
+body .sf-ai-guided-step-one-bottom {
+  flex: 0 0 auto !important;
+}
+
+body .sf-ai-guided-start-button {
+  display: inline-grid !important;
+  grid-template-columns: auto minmax(0, max-content) !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: clamp(0.8rem, 3.4vw, 1.15rem) !important;
+  width: 100% !important;
+  min-height: clamp(4.45rem, 9.8dvh, 5.25rem) !important;
+  margin-top: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, #59b8ff 0%, #247dff 52%, #1262ee 100%) !important;
+  box-shadow:
+    0 1.2rem 2rem rgba(38, 121, 255, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -2px 0 rgba(3, 67, 207, 0.35) !important;
+  color: #ffffff !important;
+  font-size: clamp(1.6rem, 7.2vw, 2.3rem) !important;
+  font-weight: 950 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+}
+
+body .sf-ai-guided-start-button svg {
+  width: clamp(1.75rem, 7.1vw, 2.2rem) !important;
+  height: clamp(1.75rem, 7.1vw, 2.2rem) !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 3.2 !important;
+}
+
+body .sf-ai-guided-trial-note {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.62rem !important;
+  margin: clamp(1.1rem, 2.7dvh, 1.45rem) 0 0 !important;
+  color: #7b85a5 !important;
+  font-size: clamp(0.96rem, 4.05vw, 1.18rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  text-align: center !important;
+}
+
+body .sf-ai-guided-trial-note svg {
+  flex: 0 0 auto !important;
+  width: 1.45rem !important;
+  height: 1.45rem !important;
+  fill: none !important;
+  stroke: #c6adff !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 3 !important;
+}
+
+@media (max-width: 390px) {
+  body .sf-ai-guided-step-one-frame {
+    padding-inline: 0.75rem !important;
+  }
+
+  body .sf-ai-guided-step-one-header {
+    grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem !important;
+  }
+
+  body .sf-ai-guided-step-one-brand {
+    grid-template-columns: 2.95rem minmax(0, max-content) !important;
+    gap: 0.55rem !important;
+  }
+
+  body .sf-ai-guided-step-one-logo {
+    width: 2.95rem !important;
+    height: 2.95rem !important;
+  }
+
+  body .sf-ai-guided-step-one-brand-title {
+    font-size: 2.18rem !important;
+  }
+
+  body .sf-ai-guided-step-one-brand-subtitle {
+    font-size: 0.72rem !important;
+  }
+
+  body .sf-ai-guided-step-one-hero h1 {
+    font-size: 2.92rem !important;
+  }
+
+  body .sf-ai-guided-trial-card {
+    grid-template-columns: minmax(0, 1fr) 4.95rem minmax(0, 1fr) !important;
+  }
+
+  body .sf-ai-guided-trial-copy {
+    gap: 0.55rem !important;
+    padding-left: 1rem !important;
+  }
+
+  body .sf-ai-guided-trial-copy strong,
+  body .sf-ai-guided-trial-save strong {
+    font-size: 0.86rem !important;
+  }
+
+  body .sf-ai-guided-trial-copy small,
+  body .sf-ai-guided-trial-save small {
+    font-size: 0.78rem !important;
+  }
+
+  body .sf-ai-guided-trial-count strong {
+    font-size: 2.58rem !important;
+  }
+
+  body .sf-ai-guided-trial-count span {
+    font-size: 1.58rem !important;
+  }
+
+  body .sf-ai-guided-flow-list {
+    gap: 0.46rem !important;
+  }
+
+  body .sf-ai-guided-flow-icon {
+    width: 3.95rem !important;
+  }
+
+  body .sf-ai-guided-flow-item strong {
+    font-size: 0.9rem !important;
+  }
+
+  body .sf-ai-guided-flow-item small {
+    font-size: 0.72rem !important;
+  }
+}
+
+@media (max-height: 820px) {
+  body .sf-ai-guided-step-one-frame {
+    padding-top: max(0.72rem, calc(env(safe-area-inset-top, 0px) + 0.42rem)) !important;
+    padding-bottom: max(0.55rem, calc(env(safe-area-inset-bottom, 0px) + 0.42rem)) !important;
+  }
+
+  body .sf-ai-guided-step-one-hero {
+    margin-top: 1.35rem !important;
+  }
+
+  body .sf-ai-guided-step-one-hero h1 {
+    font-size: clamp(2.55rem, 11.5vw, 3.15rem) !important;
+  }
+
+  body .sf-ai-guided-step-one-hero p {
+    margin-top: 0.62rem !important;
+    font-size: 0.98rem !important;
+  }
+
+  body .sf-ai-guided-trial-card {
+    min-height: 5rem !important;
+    margin-top: 1.25rem !important;
+  }
+
+  body .sf-ai-guided-flow-section {
+    margin-top: 1.35rem !important;
+  }
+
+  body .sf-ai-guided-flow-section h2 {
+    margin-bottom: 0.9rem !important;
+    font-size: 1.55rem !important;
+  }
+
+  body .sf-ai-guided-flow-icon {
+    width: 3.65rem !important;
+  }
+
+  body .sf-ai-guided-flow-item {
+    gap: 0.28rem !important;
+  }
+
+  body .sf-ai-guided-flow-item strong {
+    font-size: 0.82rem !important;
+  }
+
+  body .sf-ai-guided-flow-item small {
+    font-size: 0.66rem !important;
+  }
+
+  body .sf-ai-guided-start-button {
+    min-height: 3.7rem !important;
+    font-size: 1.5rem !important;
+  }
+
+  body .sf-ai-guided-trial-note {
+    margin-top: 0.72rem !important;
+    font-size: 0.9rem !important;
+  }
+}

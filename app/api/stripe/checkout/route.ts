@@ -93,7 +93,7 @@ export async function POST(req: Request) {
     await upsertProfileStripeCustomerByEmail(email, stripeCustomer.id);
 
     const session = await stripe.checkout.sessions.create({
-      cancel_url: `${appUrl}/speak-english?pro=1&checkout=cancel`,
+      cancel_url: `${appUrl}/account?checkout=cancel`,
       client_reference_id: email,
       customer: stripeCustomer.id,
       line_items: [
@@ -108,7 +108,7 @@ export async function POST(req: Request) {
         plan,
       },
       payment_method_types: ["card"],
-      success_url: `${appUrl}/speak-english?pro=1&checkout=success`,
+      success_url: `${appUrl}/account?checkout=success`,
     });
 
     if (!session.url) {

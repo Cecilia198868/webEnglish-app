@@ -46,7 +46,7 @@ export async function POST() {
     const stripe = new Stripe(stripeSecretKey);
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: stripeCustomerId,
-      return_url: `${appUrl}/speak-english?account=1`,
+      return_url: `${appUrl}/account`,
     });
 
     if (!portalSession.url) {
