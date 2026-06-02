@@ -4,6 +4,7 @@ import {
   getAdminDashboardStats,
 } from "@/lib/adminDashboard";
 import { createLoginUrl } from "@/lib/loginRedirect";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
@@ -50,7 +51,27 @@ export default async function AdminPage() {
   return (
     <main className="min-h-screen bg-[#f7f4ff] px-6 py-10 text-[#19162d]">
       <section className="mx-auto max-w-5xl">
-        <div className="rounded-3xl bg-white p-8 shadow-[0_22px_60px_rgba(72,54,132,0.14)]">
+        <div className="relative rounded-3xl bg-white p-8 pr-24 shadow-[0_22px_60px_rgba(72,54,132,0.14)]">
+          <Link
+            href="/account"
+            aria-label="退出后台，返回账户"
+            className="absolute right-6 top-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#f4f0ff] text-[#2c2652] shadow-[0_12px_28px_rgba(72,54,132,0.12)] transition hover:-translate-y-0.5 hover:bg-[#ece5ff] focus:outline-none focus:ring-4 focus:ring-[#d9ceff]"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 24 24"
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2.6"
+            >
+              <path d="m6 6 12 12" />
+              <path d="m18 6-12 12" />
+            </svg>
+          </Link>
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#8b77d8]">
             Admin
           </p>
