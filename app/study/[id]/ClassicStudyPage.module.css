@@ -2685,7 +2685,7 @@
 .studyTopbar {
   position: relative;
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr) max-content;
+  grid-template-columns: 76px minmax(0, 1fr) 84px;
   gap: 7px;
   min-height: 106px;
   align-items: flex-start;
@@ -2755,17 +2755,19 @@
 .switchCourseButton {
   position: static;
   display: inline-flex;
-  min-height: 53px;
+  width: 84px;
+  min-height: 42px;
   align-items: center;
   align-self: start;
+  justify-content: center;
   justify-self: end;
-  gap: 7px;
+  gap: 0;
   border: 1px solid rgba(35, 70, 32, 0.11);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.88);
   color: #143f1e;
-  padding: 0 13px;
-  font-size: 0.92rem;
+  padding: 0 8px;
+  font-size: 0.72rem;
   font-weight: 900;
   line-height: 1;
   white-space: nowrap;
@@ -2775,19 +2777,11 @@
 }
 
 .switchCourseButton svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 3;
+  display: none;
 }
 
 .switchCourseButton svg:last-child {
-  width: 17px;
-  height: 17px;
-  stroke-width: 3.2;
+  display: none;
 }
 
 .studyPhone .brand {
@@ -3270,7 +3264,7 @@
 
 @media (max-width: 410px) {
   .studyTopbar {
-    grid-template-columns: 68px minmax(0, 1fr) max-content;
+    grid-template-columns: 68px minmax(0, 1fr) 76px;
     gap: 6px;
   }
 
@@ -3292,20 +3286,19 @@
   }
 
   .switchCourseButton {
-    min-height: 50px;
-    gap: 6px;
-    padding: 0 10px;
-    font-size: 0.84rem;
+    width: 76px;
+    min-height: 38px;
+    gap: 0;
+    padding: 0 6px;
+    font-size: 0.66rem;
   }
 
   .switchCourseButton svg {
-    width: 19px;
-    height: 19px;
+    display: none;
   }
 
   .switchCourseButton svg:last-child {
-    width: 16px;
-    height: 16px;
+    display: none;
   }
 
   .studyPhone .brand {
@@ -3424,15 +3417,15 @@
   }
 
   .switchCourseButton {
-    min-height: 50px;
-    gap: 6px;
-    padding: 0 8px;
-    font-size: 0.78rem;
+    width: 70px;
+    min-height: 36px;
+    gap: 0;
+    padding: 0 5px;
+    font-size: 0.6rem;
   }
 
   .switchCourseButton svg {
-    width: 19px;
-    height: 19px;
+    display: none;
   }
 
   .studyPhone .brand {
