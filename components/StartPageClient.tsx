@@ -488,9 +488,8 @@ export default function StartPageClient({
   );
   const showGuestHome = !isSignedIn;
   const guestMenuHref = "/menu";
-  const subscriberMenuHref = "/account";
-  const menuHref = showGuestHome ? guestMenuHref : subscriberMenuHref;
-  const menuLabel = showGuestHome ? "打开游客菜单" : "打开订阅用户账户界面";
+  const menuHref = guestMenuHref;
+  const menuLabel = "打开游客菜单";
   const showStarterHome = showGuestHome;
 
   if (showStarterHome) {
@@ -632,25 +631,6 @@ export default function StartPageClient({
     <main className={styles.page}>
       <section className={styles.phone} aria-label="订阅者 SpeakFlow 学习首页">
         <header className={styles.topBar}>
-          <Link href={menuHref} className={styles.menuButton} aria-label={menuLabel}>
-            <MenuIcon />
-          </Link>
-          <Link href="/start" className={styles.brand} aria-label="SpeakFlow 首页">
-            <span className={styles.brandIcon}>
-              <Image
-                alt=""
-                height={64}
-                priority
-                sizes="48px"
-                src="/brand/speakflow-app-icon.png"
-                width={64}
-              />
-            </span>
-            <span className={styles.brandCopy}>
-              <strong>SpeakFlow</strong>
-              <small>AI VOICE PRACTICE</small>
-            </span>
-          </Link>
           <Link
             href="/account"
             className={styles.subscriberAvatarButton}
@@ -675,6 +655,23 @@ export default function StartPageClient({
             </span>
             <span className={styles.subscriberProBadge}>PRO</span>
           </Link>
+          <Link href="/start" className={styles.brand} aria-label="SpeakFlow 首页">
+            <span className={styles.brandIcon}>
+              <Image
+                alt=""
+                height={64}
+                priority
+                sizes="48px"
+                src="/brand/speakflow-app-icon.png"
+                width={64}
+              />
+            </span>
+            <span className={styles.brandCopy}>
+              <strong>SpeakFlow</strong>
+              <small>AI VOICE PRACTICE</small>
+            </span>
+          </Link>
+          <span className={styles.topBarSpacer} aria-hidden="true" />
         </header>
 
         <section className={styles.proStatusCard} aria-label="SpeakFlow Pro 状态">

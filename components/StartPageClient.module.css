@@ -24,7 +24,7 @@
   position: relative;
   z-index: 3;
   display: grid;
-  grid-template-columns: 58px minmax(0, 1fr) 70px;
+  grid-template-columns: 70px minmax(0, 1fr) 70px;
   align-items: center;
   gap: 8px;
 }
@@ -109,12 +109,19 @@
 
 .subscriberAvatarButton {
   position: relative;
-  justify-self: end;
+  justify-self: start;
   display: grid;
   width: 58px;
   height: 58px;
   place-items: center;
   text-decoration: none;
+}
+
+.topBarSpacer {
+  display: block;
+  width: 58px;
+  height: 58px;
+  justify-self: end;
 }
 
 .subscriberAvatar {
@@ -1364,7 +1371,7 @@
   }
 
   .topBar {
-    grid-template-columns: 50px minmax(0, 1fr) 62px;
+    grid-template-columns: 62px minmax(0, 1fr) 62px;
   }
 
   .menuButton {
@@ -1391,6 +1398,11 @@
   }
 
   .subscriberAvatarButton {
+    width: 54px;
+    height: 54px;
+  }
+
+  .topBarSpacer {
     width: 54px;
     height: 54px;
   }
