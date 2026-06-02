@@ -2929,9 +2929,9 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.96);
 }
 
-.sf-ai-guided-step-two-menu span,
-.sf-ai-guided-step-two-menu span::before,
-.sf-ai-guided-step-two-menu span::after {
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon),
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::before,
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::after {
   display: block;
   width: clamp(22px, 6.5vw, 30px);
   height: 2.5px;
@@ -2939,22 +2939,22 @@ body {
   background: currentColor;
 }
 
-.sf-ai-guided-step-two-menu span {
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon) {
   position: relative;
 }
 
-.sf-ai-guided-step-two-menu span::before,
-.sf-ai-guided-step-two-menu span::after {
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::before,
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::after {
   content: "";
   position: absolute;
   left: 0;
 }
 
-.sf-ai-guided-step-two-menu span::before {
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::before {
   top: -8px;
 }
 
-.sf-ai-guided-step-two-menu span::after {
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::after {
   bottom: -8px;
 }
 
@@ -14533,19 +14533,19 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
     inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
 }
 
-.sf-ai-guided-step-two-menu span,
-.sf-ai-guided-step-two-menu span::before,
-.sf-ai-guided-step-two-menu span::after {
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon),
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::before,
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::after {
   width: 22px !important;
   height: 2px !important;
   background: #1f1b3d !important;
 }
 
-.sf-ai-guided-step-two-menu span::before {
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::before {
   top: -6px !important;
 }
 
-.sf-ai-guided-step-two-menu span::after {
+.sf-ai-guided-step-two-menu > span:not(.sf-home-menu-icon)::after {
   bottom: -6px !important;
 }
 
@@ -17626,6 +17626,65 @@ body .sf-guided-reference-home-icon svg {
 
 body .sf-guided-reference-home-icon span {
   font-size: clamp(0.42rem, 1.45vw, 0.58rem);
+}
+
+body .sf-free-study-header-menu-button.is-home,
+body .sf-free-study-page-one-menu.is-home,
+body .sf-free-study-page-two-menu,
+body .sf-free-study-page-three-back,
+body .sf-free-study-page-four-menu,
+body .sf-free-study-page-five-top-menu,
+body .sf-ai-guided-step-one-menu.is-home,
+body .sf-ai-guided-step-two-menu,
+body .sf-ai-guided-step-four-menu,
+body .sf-ai-guided-step-five-menu {
+  color: #000000 !important;
+}
+
+body .sf-free-study-header-menu-button.is-home .sf-home-menu-icon,
+body .sf-free-study-page-one-menu.is-home .sf-home-menu-icon,
+body .sf-free-study-page-two-menu .sf-home-menu-icon,
+body .sf-free-study-page-three-back .sf-home-menu-icon,
+body .sf-free-study-page-four-menu .sf-home-menu-icon,
+body .sf-free-study-page-five-top-menu .sf-home-menu-icon,
+body .sf-ai-guided-step-one-menu.is-home .sf-home-menu-icon,
+body .sf-ai-guided-step-two-menu .sf-home-menu-icon,
+body .sf-ai-guided-step-four-menu .sf-home-menu-icon,
+body .sf-ai-guided-step-five-menu .sf-home-menu-icon,
+body .sf-guided-reference-home-icon {
+  display: grid !important;
+  place-items: center !important;
+  font-size: 1rem !important;
+}
+
+body .sf-free-study-header-menu-button.is-home .sf-home-menu-icon svg,
+body .sf-free-study-page-one-menu.is-home .sf-home-menu-icon svg,
+body .sf-free-study-page-two-menu .sf-home-menu-icon svg,
+body .sf-free-study-page-three-back .sf-home-menu-icon svg,
+body .sf-free-study-page-four-menu .sf-home-menu-icon svg,
+body .sf-free-study-page-five-top-menu .sf-home-menu-icon svg,
+body .sf-ai-guided-step-one-menu.is-home .sf-home-menu-icon svg,
+body .sf-ai-guided-step-two-menu .sf-home-menu-icon svg,
+body .sf-ai-guided-step-four-menu .sf-home-menu-icon svg,
+body .sf-ai-guided-step-five-menu .sf-home-menu-icon svg,
+body .sf-guided-reference-home-icon svg {
+  width: clamp(1.45rem, 5.4vw, 1.78rem) !important;
+  height: clamp(1.45rem, 5.4vw, 1.78rem) !important;
+  stroke-width: 3 !important;
+}
+
+body .sf-free-study-header-menu-button.is-home .sf-home-menu-icon span,
+body .sf-free-study-page-one-menu.is-home .sf-home-menu-icon span,
+body .sf-free-study-page-two-menu .sf-home-menu-icon span,
+body .sf-free-study-page-three-back .sf-home-menu-icon span,
+body .sf-free-study-page-four-menu .sf-home-menu-icon span,
+body .sf-free-study-page-five-top-menu .sf-home-menu-icon span,
+body .sf-ai-guided-step-one-menu.is-home .sf-home-menu-icon span,
+body .sf-ai-guided-step-two-menu .sf-home-menu-icon span,
+body .sf-ai-guided-step-four-menu .sf-home-menu-icon span,
+body .sf-ai-guided-step-five-menu .sf-home-menu-icon span,
+body .sf-guided-reference-home-icon span {
+  display: none !important;
 }
 
 @media (max-width: 395px) {

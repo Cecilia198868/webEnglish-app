@@ -71,7 +71,7 @@ export default function FreeStudyHeader({
           }`}
         >
           {menuIcon === "home" ? (
-            <HomeMenuIcon />
+            <HomeMenuIcon label={null} showHint={false} />
           ) : (
             <>
               <span aria-hidden="true" className="sf-free-study-header-menu-line" />

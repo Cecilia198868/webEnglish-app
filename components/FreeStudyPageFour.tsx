@@ -1,6 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 
 type FreeStudyPageFourProps = {
   isRecordingEnglish: boolean;
@@ -61,19 +62,6 @@ function getFontFitBounds(characterCount: number) {
   if (characterCount <= 48) return { min: 0.92, max: 1.22 };
   if (characterCount <= 70) return { min: 0.82, max: 1.08 };
   return { min: 0.74, max: 0.96 };
-}
-
-function MenuGlyph() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
-      <path
-        d="M8 10h16M8 16h16M8 22h16"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="2.5"
-      />
-    </svg>
-  );
 }
 
 function WaveGlyph() {
@@ -192,7 +180,7 @@ export default function FreeStudyPageFour({
             onClick={onMenuClick}
             className="sf-free-study-page-four-menu"
           >
-            <MenuGlyph />
+            <HomeMenuIcon label={null} showHint={false} />
           </button>
 
           <div

@@ -3458,7 +3458,6 @@ function SpeakEnglishClient() {
     accountSubscriptionStatus === "cancels_at_period_end";
   const isAccountPro = hasProAccess(accountSubscriptionStatus);
   const isAccountAdmin = accountRole === "admin";
-  const menuPageLabel = accountEmail ? "打开账户界面" : "打开游客菜单";
   const shouldShowFreePracticeUsageMeter =
     !isAccountPro &&
     hasLoadedAccountSession &&
@@ -4670,21 +4669,6 @@ function SpeakEnglishClient() {
     }
 
     setShowQuickPanel(true);
-  }
-
-  function openMenuPage() {
-    if (isListening) {
-      cancelRecognition();
-    }
-
-    setPrimingPracticeStage(null);
-    setShowAccountMenu(false);
-    setAccountPanelView("menu");
-    setShowAvatarEditor(false);
-    setShowQuickPanel(false);
-    setShowClassicCoursePicker(false);
-    resetClassicCoursePicker();
-    router.push(accountEmail ? "/account" : "/menu");
   }
 
   function openLoggedInHomePage() {
@@ -6794,7 +6778,11 @@ function SpeakEnglishClient() {
                 onClick={openLoggedInHomePage}
                 className="absolute left-[6.5%] top-[3.1%] z-[94] grid h-[6.2%] w-[10.5%] place-items-center rounded-full border-0 bg-white text-[#aeb8d4] shadow-[0_14px_28px_rgba(64,112,190,0.12),inset_0_1px_0_rgba(255,255,255,0.94)]"
               >
-                <HomeMenuIcon className="sf-guided-reference-home-icon" />
+                <HomeMenuIcon
+                  className="sf-guided-reference-home-icon"
+                  label={null}
+                  showHint={false}
+                />
               </button>
               <button
                 type="button"
@@ -6835,11 +6823,11 @@ function SpeakEnglishClient() {
                 <header className="sf-ai-guided-step-two-header">
                   <button
                     type="button"
-                    aria-label={menuPageLabel}
-                    onClick={openMenuPage}
+                    aria-label="回到学习首页"
+                    onClick={openLoggedInHomePage}
                     className="sf-ai-guided-step-two-menu"
                   >
-                    <span aria-hidden="true" />
+                    <HomeMenuIcon label={null} showHint={false} />
                   </button>
 
                   <div
@@ -6997,10 +6985,9 @@ function SpeakEnglishClient() {
                 ) : undefined
               }
               headingText="太棒了！ 你想表达的是："
-              menuIcon="menu"
-              menuLabel={menuPageLabel}
+              menuLabel="回到学习首页"
               variant="guided"
-              onMenuClick={openMenuPage}
+              onMenuClick={openLoggedInHomePage}
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openAccountPage}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
@@ -7021,8 +7008,8 @@ function SpeakEnglishClient() {
                   <GuestAiPracticeProgress used={freePracticeUsageCount} />
                 ) : undefined
               }
-              menuLabel={menuPageLabel}
-              onMenuClick={openMenuPage}
+              menuLabel="回到学习首页"
+              onMenuClick={openLoggedInHomePage}
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openAccountPage}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
@@ -7044,8 +7031,8 @@ function SpeakEnglishClient() {
                   <GuestAiPracticeProgress used={freePracticeUsageCount} />
                 ) : undefined
               }
-              menuLabel={menuPageLabel}
-              onMenuClick={openMenuPage}
+              menuLabel="回到学习首页"
+              onMenuClick={openLoggedInHomePage}
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openAccountPage}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
@@ -8263,8 +8250,8 @@ function SpeakEnglishClient() {
 
           {showReferenceListening ? (
             <FreeStudyPageTwo
-              menuLabel={menuPageLabel}
-              onMenuClick={openMenuPage}
+              menuLabel="回到学习首页"
+              onMenuClick={openLoggedInHomePage}
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openAccountPage}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
@@ -8279,9 +8266,8 @@ function SpeakEnglishClient() {
           {showReferenceConfirmation ? (
             <FreeStudyPageThree
               chineseText={nativeSpeech}
-              menuIcon="menu"
-              menuLabel={menuPageLabel}
-              onMenuClick={openMenuPage}
+              menuLabel="回到学习首页"
+              onMenuClick={openLoggedInHomePage}
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openAccountPage}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
@@ -8297,8 +8283,8 @@ function SpeakEnglishClient() {
             <FreeStudyPageFour
               isRecordingEnglish={isListening || showReferenceEnglishPrompt}
               nativeSpeech={nativeSpeech}
-              menuLabel={menuPageLabel}
-              onMenuClick={openMenuPage}
+              menuLabel="回到学习首页"
+              onMenuClick={openLoggedInHomePage}
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openAccountPage}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
@@ -8319,7 +8305,7 @@ function SpeakEnglishClient() {
                 onAvatarError={() => setAccountImageFailed(true)}
                 onAiGuidedPractice={openAiGuidedExpressionStepOne}
                 onRetryEnglish={openFreeStudyStepFourForRetry}
-                onMenuClick={openMenuPage}
+                onMenuClick={openLoggedInHomePage}
                 onAccountClick={openAccountPage}
                 onPlayExpression={readReferenceResultVariant}
                 onSelectExpression={setSelectedExpressionIndex}
@@ -8534,13 +8520,9 @@ function SpeakEnglishClient() {
 
           {!showReferenceLanding && !showReferenceConfirmation && !showAccountMenu ? (
             <FreeStudyHeader
-              menuIcon={showClassicCoursePicker ? "home" : "menu"}
-              menuLabel={
-                showClassicCoursePicker ? "回到首页" : "打开账户界面"
-              }
-              onMenuClick={
-                showClassicCoursePicker ? openLoggedInHomePage : openMenuPage
-              }
+              menuIcon="home"
+              menuLabel="回到学习首页"
+              onMenuClick={openLoggedInHomePage}
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openReferenceAccountMenu}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}

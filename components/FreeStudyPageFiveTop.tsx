@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 
 type FreeStudyPageFiveTopProps = {
   userEnglishText: string;
@@ -30,7 +31,7 @@ const COPY = {
   aiTitle: "\u4e0d\u77e5\u9053\u8bf4\u4ec0\u4e48\uff1f",
   change: "\u6362\u4e00\u6362",
   freeMode: "\u81ea\u7531\u5b66\u4e60",
-  menuLabel: "\u6253\u5f00\u8d26\u6237\u754c\u9762",
+  menuLabel: "\u56de\u5230\u5b66\u4e60\u9996\u9875",
   pageLabel: "\u81ea\u7531\u5b66\u4e60\u82f1\u6587\u7ed3\u679c",
   playExpression: "\u64ad\u653e\u5f53\u524d\u53e5\u5b50",
   recommended: "\u63a8\u8350\u8868\u8fbe",
@@ -76,19 +77,6 @@ function BackGlyph() {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="2.7"
-      />
-    </svg>
-  );
-}
-
-function MenuGlyph() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
-      <path
-        d="M8 10h16M8 16h16M8 22h16"
-        stroke="currentColor"
-        strokeLinecap="round"
         strokeWidth="2.7"
       />
     </svg>
@@ -314,7 +302,7 @@ export default function FreeStudyPageFiveTop({
             onClick={onMenuClick}
             className="sf-free-study-page-five-top-menu"
           >
-            <MenuGlyph />
+            <HomeMenuIcon label={null} showHint={false} />
           </button>
 
           <div

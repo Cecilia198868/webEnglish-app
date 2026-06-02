@@ -1,5 +1,7 @@
 "use client";
 
+import HomeMenuIcon from "@/components/HomeMenuIcon";
+
 type FreeStudyPageTwoProps = {
   accountLabel?: string;
   avatarAlt?: string;
@@ -47,19 +49,6 @@ function WaveGlyph({ className = "" }: { className?: string }) {
         stroke="currentColor"
         strokeLinecap="round"
         strokeWidth="3.4"
-      />
-    </svg>
-  );
-}
-
-function MenuGlyph() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
-      <path
-        d="M8 10h16M8 16h16M8 22h16"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="2.5"
       />
     </svg>
   );
@@ -195,7 +184,7 @@ export default function FreeStudyPageTwo({
             onClick={onMenuClick}
             className="sf-free-study-page-two-menu"
           >
-            <MenuGlyph />
+            <HomeMenuIcon label={null} showHint={false} />
           </button>
 
           <div className="sf-free-study-page-two-brand" aria-label="SpeakFlow AI Voice Practice">

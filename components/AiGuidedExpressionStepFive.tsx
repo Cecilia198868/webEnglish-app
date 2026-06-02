@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 
 type AiGuidedExpressionStepFiveProps = {
@@ -41,7 +42,7 @@ const COPY = {
   follow: "跟读练习",
   followAria: "回到第四页跟读练习",
   loadingNext: "正在为你准备下一句...",
-  menuLabel: "回到主菜单",
+  menuLabel: "回到学习首页",
   mode: "AI引导表达",
   nextDescription: "AI 根据上下文和你的情绪，为你推荐的下一句中文",
   nextFallback: "那我们休息一下，过会儿再去散步吧。",
@@ -84,19 +85,6 @@ const expressionMeta = [
     tone: "purple",
   },
 ] as const;
-
-function MenuGlyph() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
-      <path
-        d="M8 10h16M8 16h16M8 22h16"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="2.5"
-      />
-    </svg>
-  );
-}
 
 function SparklesGlyph() {
   return (
@@ -343,7 +331,7 @@ export default function AiGuidedExpressionStepFive({
             onClick={onMenuClick}
             className="sf-ai-guided-step-five-menu"
           >
-            <MenuGlyph />
+            <HomeMenuIcon label={null} showHint={false} />
           </button>
 
           <div

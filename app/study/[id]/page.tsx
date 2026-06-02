@@ -2090,9 +2090,8 @@ export default function StudyPage() {
               onClick={handleClassicHomeClick}
             >
               <span className={styles.homeIconBox}>
-                <HomeMenuIcon label={null} />
+                <HomeMenuIcon label={null} showHint={false} />
               </span>
-              <span>学习首页</span>
             </button>
 
             <div className={styles.brand} aria-label="SpeakFlow Voice Practice">
@@ -2314,9 +2313,8 @@ export default function StudyPage() {
               onClick={handleClassicHomeClick}
             >
               <span className={styles.homeIconBox}>
-                <HomeMenuIcon label={null} />
+                <HomeMenuIcon label={null} showHint={false} />
               </span>
-              <span>学习首页</span>
             </button>
 
             <div className={styles.brand} aria-label="SpeakFlow Voice Practice">

@@ -1402,7 +1402,7 @@ export default function VocabularyPage() {
               className="sf-expression-library-back"
               onClick={openHomeFromVocabulary}
             >
-              <HomeMenuIcon label={null} />
+              <HomeMenuIcon label={null} showHint={false} />
             </button>
 
             <div className="sf-expression-library-brand" aria-label="SpeakFlow AI Voice Practice">
@@ -1754,7 +1754,7 @@ export default function VocabularyPage() {
             className="sf-vocabulary-menu-button is-home"
             onClick={openHomeFromVocabulary}
           >
-            <HomeMenuIcon label={null} />
+            <HomeMenuIcon label={null} showHint={false} />
           </button>
 
           <div className="sf-vocabulary-brand" aria-label="SpeakFlow AI Voice Practice">
@@ -1775,7 +1775,7 @@ export default function VocabularyPage() {
             className="sf-vocabulary-back-button"
             onClick={openHomeFromVocabulary}
           >
-            <HomeMenuIcon label={null} />
+            <HomeMenuIcon label={null} showHint={false} />
           </button>
 
           <section className="sf-vocabulary-learning-title">

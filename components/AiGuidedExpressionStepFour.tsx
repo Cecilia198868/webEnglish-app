@@ -1,6 +1,7 @@
 "use client";
 
 import type { CSSProperties, ReactNode } from "react";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 
 type AiGuidedExpressionStepFourProps = {
@@ -21,7 +22,7 @@ const COPY = {
   accountLabel: "打开账户界面",
   body: "看着这句中文，用英语说出来",
   emptyNative: "这里会显示你确认好的中文",
-  menuLabel: "回到主菜单",
+  menuLabel: "回到学习首页",
   pageLabel: "AI 引导表达英文录音",
   readyStatus: "点击麦克风开始录音",
   recordingStatus: "点击麦克风开始录音",
@@ -62,19 +63,6 @@ function getLineHeight(fontSizeRem: number) {
   if (fontSizeRem >= 1.55) return 1.24;
   if (fontSizeRem >= 1.3) return 1.32;
   return 1.38;
-}
-
-function MenuGlyph() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
-      <path
-        d="M8 10h16M8 16h16M8 22h16"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="2.5"
-      />
-    </svg>
-  );
 }
 
 function WaveGlyph() {
@@ -195,7 +183,7 @@ export default function AiGuidedExpressionStepFour({
             onClick={onMenuClick}
             className="sf-ai-guided-step-four-menu"
           >
-            <MenuGlyph />
+            <HomeMenuIcon label={null} showHint={false} />
           </button>
 
           <div

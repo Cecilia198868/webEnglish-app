@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useLayoutEffect, useRef } from "react";
+import HomeMenuIcon from "@/components/HomeMenuIcon";
 
 type FreeStudyPageThreeProps = {
   chineseText: string;
@@ -11,7 +12,6 @@ type FreeStudyPageThreeProps = {
   headingText?: string;
   headerAddon?: ReactNode;
   menuLabel?: string;
-  menuIcon?: "back" | "menu";
   variant?: "free" | "guided";
   onEditChinese: (value: string) => void;
   onRetryChinese: () => void;
@@ -76,19 +76,6 @@ function BackGlyph() {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="2.7"
-      />
-    </svg>
-  );
-}
-
-function MenuGlyph() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 32 32">
-      <path
-        d="M8 10h16M8 16h16M8 22h16"
-        stroke="currentColor"
-        strokeLinecap="round"
         strokeWidth="2.7"
       />
     </svg>
@@ -256,7 +243,6 @@ export default function FreeStudyPageThree({
   headingText = COPY.received,
   headerAddon,
   menuLabel = COPY.retryAria,
-  menuIcon = "back",
   variant = "free",
   onEditChinese,
   onRetryChinese,
@@ -317,7 +303,7 @@ export default function FreeStudyPageThree({
             onClick={returnToRecording}
             className="sf-free-study-page-three-back"
           >
-            {menuIcon === "menu" ? <MenuGlyph /> : <BackGlyph />}
+            <HomeMenuIcon label={null} showHint={false} />
           </button>
 
           <div
