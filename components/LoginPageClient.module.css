@@ -26,6 +26,38 @@
   backdrop-filter: blur(18px);
 }
 
+.backButton {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid rgba(224, 220, 237, 0.88);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #6654e8;
+  text-decoration: none;
+  box-shadow:
+    0 10px 22px rgba(82, 67, 126, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+
+.backButton svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.8;
+}
+
+.backButton:active {
+  transform: translateY(1px);
+}
+
 .handle {
   display: block;
   width: 44px;
@@ -254,6 +286,7 @@
 }
 
 :global(html[data-app-theme]) .sheet,
+:global(html[data-app-theme]) .backButton,
 :global(html[data-app-theme]) .oauthButton,
 :global(html[data-app-theme]) .moreItem,
 :global(html[data-app-theme]) .notice,
@@ -267,6 +300,7 @@
 }
 
 :global(html[data-app-theme]) .sheet h1,
+:global(html[data-app-theme]) .backButton,
 :global(html[data-app-theme]) .oauthButton,
 :global(html[data-app-theme]) .moreItem span,
 :global(html[data-app-theme]) .passwordless strong {

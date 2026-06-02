@@ -69,6 +69,14 @@ function XMark() {
   );
 }
 
+function BackMark() {
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path d="M19 8 11 16l8 8M12 16h14" />
+    </svg>
+  );
+}
+
 function ShieldMark() {
   return (
     <svg viewBox="0 0 32 32" aria-hidden="true">
@@ -107,6 +115,9 @@ export default function LoginPageClient({
   return (
     <main className={styles.page}>
       <section className={styles.sheet} aria-label="登录 SpeakFlow">
+        <Link href="/" className={styles.backButton} aria-label="返回首页">
+          <BackMark />
+        </Link>
         <span className={styles.handle} aria-hidden="true" />
         <h1>欢迎使用 SpeakFlow <span aria-hidden="true">👋</span></h1>
         <p>选择一种继续方式</p>
