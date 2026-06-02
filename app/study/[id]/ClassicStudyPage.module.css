@@ -2651,10 +2651,12 @@
 }
 
 .resultPhone .studyTopbar {
-  display: flex;
-  min-height: 92px;
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) 84px;
+  gap: 7px;
+  min-height: 106px;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: stretch;
   padding: 0;
   border-radius: 0;
   background: transparent;
@@ -3263,7 +3265,8 @@
 }
 
 @media (max-width: 410px) {
-  .studyTopbar {
+  .studyTopbar,
+  .resultPhone .studyTopbar {
     grid-template-columns: 68px minmax(0, 1fr) 76px;
     gap: 6px;
   }
@@ -3391,7 +3394,8 @@
     padding-left: 12px;
   }
 
-  .studyTopbar {
+  .studyTopbar,
+  .resultPhone .studyTopbar {
     min-height: 86px;
   }
 
