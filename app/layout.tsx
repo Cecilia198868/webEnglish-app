@@ -98,7 +98,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#c7bbff",
+  themeColor: "#f7f9ff",
 };
 
 export default async function RootLayout({
@@ -114,6 +114,11 @@ export default async function RootLayout({
   return (
     <html
       lang={initialLanguage}
+      suppressHydrationWarning
+      data-app-theme="light"
+      data-app-brightness="standard"
+      data-speakflow-font-size="standard"
+      data-speakflow-theme="light"
       className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} h-full antialiased`}
     >
       <body

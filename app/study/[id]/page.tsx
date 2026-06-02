@@ -3060,8 +3060,8 @@ export default function StudyPage() {
         ) : null}
 
         {showRenameCourseDialog ? (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#171129]/72 p-4 backdrop-blur-[10px]">
-            <div className="w-full max-w-[390px] rounded-[30px] border border-white/80 bg-[#f8f5ff] p-6 text-[#201833] shadow-[0_28px_80px_rgba(28,18,62,0.42)]">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--overlay-bg)] p-4 backdrop-blur-[10px]">
+            <div className="w-full max-w-[390px] rounded-[30px] border border-[var(--border-color)] bg-[var(--card-bg-solid)] p-6 text-[var(--text-primary)] shadow-[0_28px_80px_var(--shadow-color)]">
               <h2 className="text-[1.45rem] font-extrabold">更改文件名</h2>
               <label className="mt-5 block">
                 <span className="sr-only">课程文件名</span>
@@ -3070,21 +3070,21 @@ export default function StudyPage() {
                   onChange={(event) => setRenameCourseTitle(event.target.value)}
                   onKeyDown={handleRenameCourseKeyDown}
                   autoFocus
-                  className="h-14 w-full rounded-[18px] border border-[#c9bfff] bg-white px-4 text-[1rem] font-bold text-[#201833] outline-none shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
+                  className="h-14 w-full rounded-[18px] border border-[var(--border-color)] bg-[var(--input-bg)] px-4 text-[1rem] font-bold text-[var(--input-text)] outline-none shadow-[inset_0_1px_0_var(--theme-inset)]"
                 />
               </label>
               <div className="mt-6 grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={closeRenameCourseDialog}
-                  className="rounded-[18px] border border-[#d8d0f4] bg-white px-4 py-4 text-[1.05rem] font-extrabold text-[#6f668a] hover:bg-[#efeaff]"
+                  className="rounded-[18px] border border-[var(--border-color)] bg-[var(--button-bg)] px-4 py-4 text-[1.05rem] font-extrabold text-[var(--button-text)] hover:bg-[var(--chip-bg)]"
                 >
                   取消
                 </button>
                 <button
                   type="button"
                   onClick={renameCurrentCourse}
-                  className="rounded-[18px] bg-[#5f73ff] px-4 py-4 text-[1.05rem] font-extrabold text-white shadow-[0_12px_28px_rgba(95,115,255,0.28)] hover:bg-[#5267f1]"
+                  className="rounded-[18px] bg-[var(--accent-primary)] px-4 py-4 text-[1.05rem] font-extrabold text-white shadow-[0_12px_28px_var(--shadow-color)]"
                 >
                   保存
                 </button>
@@ -3094,12 +3094,12 @@ export default function StudyPage() {
         ) : null}
 
         {pendingExpression ? (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#171129]/72 p-4 backdrop-blur-[10px]">
-            <div className="w-full max-w-[390px] rounded-[30px] border border-white/80 bg-[#f8f5ff] p-6 text-[#201833] shadow-[0_28px_80px_rgba(28,18,62,0.42)]">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--overlay-bg)] p-4 backdrop-blur-[10px]">
+            <div className="w-full max-w-[390px] rounded-[30px] border border-[var(--border-color)] bg-[var(--card-bg-solid)] p-6 text-[var(--text-primary)] shadow-[0_28px_80px_var(--shadow-color)]">
               <h2 className="text-[1.6rem] font-extrabold">
                 {pendingExpression.meaning}
               </h2>
-              <p className="mt-5 rounded-[20px] border border-[#c9bfff] bg-white px-5 py-4 text-[1.65rem] font-extrabold text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+              <p className="mt-5 rounded-[20px] border border-[var(--border-color)] bg-[var(--card-bg)] px-5 py-4 text-[1.65rem] font-extrabold text-[var(--text-primary)] shadow-[inset_0_1px_0_var(--theme-inset)]">
                 {pendingExpression.phrase}
               </p>
               <div className="mt-6 grid grid-cols-2 gap-3">
@@ -3107,7 +3107,7 @@ export default function StudyPage() {
                   type="button"
                   onClick={handleConfirmAddExpression}
                   disabled={isSavingExpression}
-                  className="rounded-[18px] bg-[#5f73ff] px-4 py-4 text-[1.08rem] font-extrabold text-white shadow-[0_12px_28px_rgba(95,115,255,0.28)] hover:bg-[#5267f1] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-[18px] bg-[var(--accent-primary)] px-4 py-4 text-[1.08rem] font-extrabold text-white shadow-[0_12px_28px_var(--shadow-color)] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {pendingExpression.kind === "word"
                     ? "➕ 收藏单词"
@@ -3118,7 +3118,7 @@ export default function StudyPage() {
                   onClick={() => {
                     closeExpressionModal();
                   }}
-                  className="rounded-[18px] border border-[#d8d0f4] bg-white px-4 py-4 text-[1.08rem] font-extrabold text-[#6f668a] hover:bg-[#efeaff]"
+                  className="rounded-[18px] border border-[var(--border-color)] bg-[var(--button-bg)] px-4 py-4 text-[1.08rem] font-extrabold text-[var(--button-text)] hover:bg-[var(--chip-bg)]"
                 >
                   取消
                 </button>

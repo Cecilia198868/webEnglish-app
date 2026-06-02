@@ -55,7 +55,7 @@ function CrownIcon() {
 
 function CheckIcon() {
   return (
-    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#f0ecff] text-[1.05rem] font-black text-[#392f6d]">
+    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[var(--chip-bg)] text-[1.05rem] font-black text-[var(--chip-text)]">
       ✓
     </span>
   );
@@ -71,19 +71,19 @@ export default function FreePracticeLimitModal({
 
   return (
     <div
-      className="fixed inset-0 z-[120] flex items-center justify-center bg-[#171129]/72 p-3 text-[#201833] backdrop-blur-[10px]"
+      className="fixed inset-0 z-[120] flex items-center justify-center bg-[var(--overlay-bg)] p-3 text-[var(--text-primary)] backdrop-blur-[10px]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="free-practice-limit-title"
     >
-      <div className="w-full max-w-[392px] rounded-[30px] border border-white/80 bg-[#fbfaff] px-6 py-7 text-center shadow-[0_28px_80px_rgba(28,18,62,0.42)] sm:max-w-[420px] sm:px-7">
+      <div className="w-full max-w-[392px] rounded-[30px] border border-[var(--border-color)] bg-[var(--card-bg-solid)] px-6 py-7 text-center shadow-[0_28px_80px_var(--shadow-color)] sm:max-w-[420px] sm:px-7">
         <h2
           id="free-practice-limit-title"
-          className="text-[clamp(1.65rem,7vw,2.12rem)] font-black leading-tight text-[#171633]"
+          className="text-[clamp(1.65rem,7vw,2.12rem)] font-black leading-tight text-[var(--text-primary)]"
         >
           今天的学习试用已用完
         </h2>
-        <p className="mx-auto mt-4 max-w-[20rem] text-[clamp(1.02rem,4.6vw,1.28rem)] font-semibold leading-8 text-[#4f4b70]">
+        <p className="mx-auto mt-4 max-w-[20rem] text-[clamp(1.02rem,4.6vw,1.28rem)] font-semibold leading-8 text-[var(--text-secondary)]">
           {isSignedIn
             ? "订阅 SpeakFlow Pro 后，可以继续无限练习和复习表达。"
             : "登录后可保存你的练习记录，随时继续学习。"}
@@ -104,7 +104,7 @@ export default function FreePracticeLimitModal({
             {benefits.map((benefit) => (
               <div
                 key={benefit}
-                className="flex items-center gap-3 text-[clamp(1rem,4.2vw,1.18rem)] font-bold leading-6 text-[#343052]"
+                className="flex items-center gap-3 text-[clamp(1rem,4.2vw,1.18rem)] font-bold leading-6 text-[var(--text-primary)]"
               >
                 <CheckIcon />
                 <span>{benefit}</span>
@@ -138,7 +138,7 @@ export default function FreePracticeLimitModal({
             <button
               type="button"
               onClick={onUnlockPro}
-              className="flex min-h-[70px] items-center justify-center gap-4 rounded-[23px] border border-[#ded7fb] bg-white/64 px-5 text-left text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.92)]"
+              className="flex min-h-[70px] items-center justify-center gap-4 rounded-[23px] border border-[var(--border-color)] bg-[var(--button-bg)] px-5 text-left text-[var(--button-text)] shadow-[inset_0_1px_0_var(--theme-inset)]"
             >
               <span className="grid h-10 w-10 shrink-0 place-items-center text-[#7a55ff]">
                 <CrownIcon />

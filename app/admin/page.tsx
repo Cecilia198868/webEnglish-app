@@ -32,7 +32,7 @@ export default async function AdminPage() {
 
   if (!access.isAdmin) {
     return (
-      <main className="min-h-screen bg-[#f7f4ff] px-6 py-10 text-[#19162d]">
+      <main className="min-h-screen bg-[var(--app-bg)] px-6 py-10 text-[var(--text-primary)]">
         <section className="mx-auto max-w-3xl rounded-3xl bg-white p-8 shadow-[0_22px_60px_rgba(72,54,132,0.14)]">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#8b77d8]">
             403 Forbidden
@@ -49,7 +49,7 @@ export default async function AdminPage() {
   const stats = await getAdminDashboardStats();
 
   return (
-    <main className="min-h-screen bg-[#f7f4ff] px-6 py-10 text-[#19162d]">
+    <main className="min-h-screen bg-[var(--app-bg)] px-6 py-10 text-[var(--text-primary)]">
       <section className="mx-auto max-w-5xl">
         <div className="relative rounded-3xl bg-white p-8 pr-24 shadow-[0_22px_60px_rgba(72,54,132,0.14)]">
           <Link

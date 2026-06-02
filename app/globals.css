@@ -119,6 +119,11 @@ html[data-speakflow-font-size="large"] {
   --app-font-scale: 1.08;
 }
 
+html {
+  background: var(--app-bg);
+  color: var(--text-primary);
+}
+
 body {
   background: var(--app-bg);
   color: var(--text-primary);
@@ -132,6 +137,19 @@ body::after {
   background: var(--app-brightness-overlay);
   pointer-events: none;
   mix-blend-mode: multiply;
+}
+
+.sf-route-loading {
+  min-height: 100dvh;
+  width: 100%;
+  background: var(--app-bg-gradient);
+  color: var(--text-primary);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  background: var(--app-bg);
+  mix-blend-mode: normal;
 }
 
 @theme inline {

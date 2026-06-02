@@ -7636,7 +7636,7 @@ function SpeakEnglishClient() {
                 </div>
               </div>
 
-              <div className="absolute inset-0 z-[300] overflow-hidden bg-[linear-gradient(180deg,#f8fbff_0%,#eef7ff_48%,#f8fbff_100%)] text-[#07113f]">
+              <div className="absolute inset-0 z-[300] overflow-hidden bg-[image:var(--app-bg-gradient)] text-[var(--text-primary)]">
                 <div className="pointer-events-none absolute inset-0">
                   <span className="absolute left-[-18%] top-[24%] h-[32rem] w-[32rem] rounded-full border border-[#cfe0ff]/42" />
                   <span className="absolute left-[14%] top-[28%] h-[22rem] w-[22rem] rounded-full border border-[#dbe8ff]/48" />
@@ -11392,8 +11392,8 @@ function SpeakEnglishClient() {
         ) : null}
 
         {pendingExpression ? (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#171129]/72 p-4 backdrop-blur-[10px]">
-            <div className="w-full max-w-[390px] rounded-[30px] border border-white/80 bg-[#f8f5ff] p-6 text-[#201833] shadow-[0_28px_80px_rgba(28,18,62,0.42)]">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--overlay-bg)] p-4 backdrop-blur-[10px]">
+            <div className="w-full max-w-[390px] rounded-[30px] border border-[var(--border-color)] bg-[var(--card-bg-solid)] p-6 text-[var(--text-primary)] shadow-[0_28px_80px_var(--shadow-color)]">
               <h2 className="text-[1.6rem] font-extrabold">
                 {pendingExpression.meaning}
               </h2>

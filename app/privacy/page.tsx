@@ -217,7 +217,7 @@ export default function PrivacyPage() {
   const copy = privacyContent[language];
 
   return (
-    <main className="responsive-page-shell min-h-[100dvh] bg-[linear-gradient(180deg,#d9d1ff_0%,#eeeaff_48%,#f8f6ff_100%)] px-5 py-6 font-[var(--font-sora)] text-[#201833]">
+    <main className="responsive-page-shell min-h-[100dvh] bg-[image:var(--app-bg-gradient)] px-5 py-6 font-[var(--font-sora)] text-[var(--text-primary)]">
       <div className="mx-auto w-full max-w-3xl pb-16">
         <Link
           href="/account"

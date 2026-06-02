@@ -184,7 +184,7 @@ export default function NotificationsPage() {
   }
 
   return (
-    <main className="responsive-page-shell min-h-[100dvh] bg-[linear-gradient(180deg,#cfc3ff_0%,#eeeaff_48%,#f8f6ff_100%)] px-4 py-5 font-[var(--font-sora)] text-[#201833]">
+    <main className="responsive-page-shell min-h-[100dvh] bg-[image:var(--app-bg-gradient)] px-4 py-5 font-[var(--font-sora)] text-[var(--text-primary)]">
       <div className="mx-auto flex min-h-[calc(100dvh-2.5rem)] w-full max-w-[520px] flex-col rounded-[34px] border border-white/60 bg-[#f2edff]/72 px-5 pb-8 pt-5 shadow-[0_30px_80px_rgba(84,72,146,0.18)]">
         <header className="grid grid-cols-[3rem_1fr_3rem] items-center gap-3">
           <Link
