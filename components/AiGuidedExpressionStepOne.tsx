@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import GuestAiPracticeProgress from "@/components/GuestAiPracticeProgress";
 import HomeMenuIcon from "@/components/HomeMenuIcon";
-import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import type { AiGuidedProgressSnapshot } from "@/lib/aiGuidedExpressionProgress";
 import { FREE_PRACTICE_DAILY_LIMIT } from "@/lib/freePracticeLimit";
 
@@ -248,9 +247,6 @@ export default function AiGuidedExpressionStepOne({
                 className="sf-ai-guided-step-one-brand"
                 aria-label="SpeakFlow AI Voice Practice"
               >
-                <span aria-hidden="true" className="sf-ai-guided-step-one-logo">
-                  <SpeakFlowBrandMark className="sf-ai-guided-step-one-logo-mark" />
-                </span>
                 <span className="sf-ai-guided-step-one-brand-copy">
                   <span className="sf-ai-guided-step-one-brand-title">
                     SpeakFlow

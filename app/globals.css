@@ -2183,29 +2183,12 @@ body {
 
 .sf-ai-guided-step-one-brand {
   display: inline-grid;
-  grid-template-columns: clamp(38px, 10.4vw, 46px) minmax(0, max-content);
+  grid-template-columns: minmax(0, max-content);
   justify-content: center;
   align-items: center;
-  gap: clamp(10px, 2.8vw, 14px);
+  gap: 0;
   min-width: 0;
   white-space: nowrap;
-}
-
-.sf-ai-guided-step-one-logo {
-  display: grid;
-  width: 100%;
-  aspect-ratio: 1;
-  place-items: center;
-  border-radius: clamp(13px, 3.5vw, 17px);
-  background:
-    url("/brand/speakflow-app-icon.png") center / 78% auto no-repeat,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.72));
-  color: #60a6ff;
-  box-shadow: 0 14px 30px rgba(82, 128, 196, 0.11);
-}
-
-.sf-ai-guided-step-one-logo svg {
-  display: none;
 }
 
 .sf-ai-guided-step-one-brand-copy {
@@ -18063,26 +18046,11 @@ body .sf-ai-guided-step-one-menu.is-home .sf-home-menu-icon svg {
 
 body .sf-ai-guided-step-one-brand {
   display: inline-grid !important;
-  grid-template-columns: clamp(3.4rem, 13.5vw, 4.25rem) minmax(0, max-content) !important;
+  grid-template-columns: minmax(0, max-content) !important;
   justify-self: center !important;
   align-items: center !important;
-  gap: clamp(0.68rem, 2.6vw, 0.9rem) !important;
+  gap: 0 !important;
   min-width: 0 !important;
-}
-
-body .sf-ai-guided-step-one-logo {
-  display: grid !important;
-  width: clamp(3.4rem, 13.5vw, 4.25rem) !important;
-  height: clamp(3.4rem, 13.5vw, 4.25rem) !important;
-  place-items: center !important;
-  border-radius: clamp(1rem, 4.4vw, 1.34rem) !important;
-  background: rgba(255, 255, 255, 0.94) !important;
-  box-shadow: 0 1.1rem 2.2rem rgba(84, 121, 204, 0.13) !important;
-}
-
-body .sf-ai-guided-step-one-logo-mark {
-  width: 78% !important;
-  height: 78% !important;
 }
 
 body .sf-ai-guided-step-one-brand-title {
@@ -18500,13 +18468,8 @@ body .sf-ai-guided-trial-note svg {
   }
 
   body .sf-ai-guided-step-one-brand {
-    grid-template-columns: 2.95rem minmax(0, max-content) !important;
-    gap: 0.55rem !important;
-  }
-
-  body .sf-ai-guided-step-one-logo {
-    width: 2.95rem !important;
-    height: 2.95rem !important;
+    grid-template-columns: minmax(0, max-content) !important;
+    gap: 0 !important;
   }
 
   body .sf-ai-guided-step-one-brand-title {
