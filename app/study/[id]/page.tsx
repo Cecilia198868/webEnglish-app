@@ -23,6 +23,7 @@ import {
 import { educationSceneSectionMenus } from "@/data/educationSceneSectionMenus";
 import { financeGovernmentSections } from "@/data/financeGovernmentSections";
 import { healthSceneSectionMenus } from "@/data/healthSceneSectionMenus";
+import { housingSceneSectionMenus } from "@/data/housingSceneSectionMenus";
 import { getPrebuiltClassicExpressionSet } from "@/data/prebuiltClassicExpressions";
 import { restaurantSceneSectionMenus } from "@/data/restaurantSceneSectionMenus";
 import { serviceSceneSectionMenus } from "@/data/serviceSceneSectionMenus";
@@ -114,6 +115,7 @@ function isClassicSceneLessonId(lessonId: string) {
     lessonId.startsWith("tax_") ||
     lessonId.startsWith("transport_") ||
     lessonId.startsWith("education_") ||
+    lessonId.startsWith("housing_") ||
     lessonId.startsWith("shopping_")
   );
 }
@@ -176,6 +178,12 @@ function getClassicEducationSectionForLesson(lessonId: string) {
   );
 }
 
+function getClassicHousingSectionForLesson(lessonId: string) {
+  return Object.values(housingSceneSectionMenus).find((section) =>
+    section.lessons.some((item) => item.id === lessonId)
+  );
+}
+
 function getClassicSectionLessonSequence(lessonId: string) {
   const financeSection = getClassicFinanceSectionForLesson(lessonId);
   const shoppingSection = getClassicShoppingSectionForLesson(lessonId);
@@ -184,6 +192,7 @@ function getClassicSectionLessonSequence(lessonId: string) {
   const healthSection = getClassicHealthSectionForLesson(lessonId);
   const transportationSection = getClassicTransportationSectionForLesson(lessonId);
   const educationSection = getClassicEducationSectionForLesson(lessonId);
+  const housingSection = getClassicHousingSectionForLesson(lessonId);
   const section =
     financeSection ||
     shoppingSection ||
@@ -191,7 +200,8 @@ function getClassicSectionLessonSequence(lessonId: string) {
     serviceSection ||
     healthSection ||
     transportationSection ||
-    educationSection;
+    educationSection ||
+    housingSection;
 
   if (!section) return null;
 
@@ -220,6 +230,7 @@ function getClassicStudyNavigation(lessonId: string) {
   const healthSection = getClassicHealthSectionForLesson(lessonId);
   const transportationSection = getClassicTransportationSectionForLesson(lessonId);
   const educationSection = getClassicEducationSectionForLesson(lessonId);
+  const housingSection = getClassicHousingSectionForLesson(lessonId);
 
   if (financeSection) {
     return {
@@ -273,6 +284,14 @@ function getClassicStudyNavigation(lessonId: string) {
     return {
       categoryHref: `/classic-scenes/education-work-social/${educationSection.id}`,
       categoryLabel: educationSection.title,
+      courseMenuHref: "/classic-scenes",
+    };
+  }
+
+  if (housingSection) {
+    return {
+      categoryHref: `/classic-scenes/housing-home/${housingSection.id}`,
+      categoryLabel: housingSection.title,
       courseMenuHref: "/classic-scenes",
     };
   }

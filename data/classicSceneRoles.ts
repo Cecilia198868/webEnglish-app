@@ -85,6 +85,11 @@ const educationHrRoleConfig: ClassicSceneRoleConfig = {
   roleLabel: "招聘人员",
 };
 
+const housingSupportRoleConfig: ClassicSceneRoleConfig = {
+  roleIcon: "front-desk",
+  roleLabel: "住房客服",
+};
+
 export const classicLessonRoleConfigs: Record<string, ClassicSceneRoleConfig> = {
   bank_open_new_account_zh: bankStaffRoleConfig,
   bank_deposit_withdrawal_zh: bankStaffRoleConfig,
@@ -140,6 +145,10 @@ const classicLessonRolePrefixConfigs: Array<{
   {
     prefix: "education_",
     roleConfig: educationHrRoleConfig,
+  },
+  {
+    prefix: "housing_",
+    roleConfig: housingSupportRoleConfig,
   },
 ];
 

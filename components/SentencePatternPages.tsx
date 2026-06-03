@@ -288,7 +288,7 @@ export function SentencePatternLevelMenuPage({
 
   return (
     <main className={styles.page} style={getToneStyle(level.tone)}>
-      <section className={styles.phone}>
+      <section className={`${styles.phone} ${styles.levelPhone}`}>
         <header className={styles.levelHeader}>
           <Link href="/sentence-patterns" className={styles.roundBack} aria-label="返回一级菜单">
             <svg viewBox="0 0 24 24" aria-hidden="true">

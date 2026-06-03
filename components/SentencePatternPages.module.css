@@ -23,12 +23,30 @@
   padding-inline: 10px;
 }
 
+.levelPhone {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 132px);
+}
+
 .overviewHeader,
 .levelHeader {
   display: grid;
   grid-template-columns: 58px minmax(0, 1fr);
   align-items: start;
   gap: 12px;
+}
+
+.levelHeader {
+  position: relative;
+  display: block;
+  min-height: 118px;
+}
+
+.levelHeader .roundBack {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 46px;
+  height: 46px;
 }
 
 .overviewHeader h1,
@@ -281,14 +299,19 @@
 
 .levelHeading {
   display: grid;
+  grid-template-columns: auto minmax(0, max-content);
+  align-items: center;
+  justify-content: center;
+  column-gap: 9px;
+  row-gap: 6px;
   justify-items: center;
   min-width: 0;
-  padding-right: 54px;
+  padding-top: 4px;
 }
 
 .levelHeading > svg {
-  width: 44px;
-  height: 44px;
+  width: 30px;
+  height: 30px;
   fill: none;
   stroke: var(--pattern-accent);
   stroke-linecap: round;
@@ -296,11 +319,25 @@
   stroke-width: 4;
 }
 
+.levelHeading h1 {
+  margin: 0;
+  font-size: clamp(1.55rem, 5.6vw, 2rem);
+  line-height: 1.05;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.levelHeading p {
+  grid-column: 1 / -1;
+  max-width: 350px;
+  font-size: clamp(0.92rem, 3.6vw, 1rem);
+}
+
 .statsBar {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.34fr);
   align-items: center;
-  margin: 24px 0 18px;
+  margin: 15px 0 14px;
   border-radius: 14px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), var(--pattern-soft));
   box-shadow: 0 16px 32px rgba(84, 102, 155, 0.1);
@@ -311,11 +348,12 @@
   min-height: 52px;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 6px;
   color: #3f496d;
-  font-size: 0.9rem;
+  font-size: clamp(0.72rem, 2.65vw, 0.9rem);
   font-weight: 820;
   text-align: center;
+  white-space: nowrap;
 }
 
 .statsBar span + span {
@@ -417,6 +455,52 @@
 .adviceCard {
   grid-template-columns: 56px minmax(0, 1fr) 24px;
   color: #10163b;
+}
+
+.levelPhone .adviceCard {
+  position: fixed;
+  z-index: 20;
+  grid-template-columns: 48px minmax(0, 1fr) 20px;
+  gap: 12px;
+  right: auto;
+  bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  box-sizing: border-box;
+  width: min(calc(100% - 36px), 394px);
+  margin-top: 0;
+  border: 1px solid rgba(226, 232, 246, 0.88);
+  border-radius: 18px;
+  padding: 14px 16px;
+  box-shadow: 0 16px 34px rgba(84, 102, 155, 0.13);
+  transform: translateX(-50%);
+}
+
+.adviceCard > span {
+  grid-row: 1 / span 2;
+}
+
+.adviceCard strong {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.adviceCard p {
+  grid-column: 2;
+  min-width: 0;
+  overflow-wrap: break-word;
+  writing-mode: horizontal-tb;
+}
+
+.levelPhone .adviceCard p {
+  font-size: clamp(0.88rem, 3.2vw, 0.96rem);
+  line-height: 1.5;
+}
+
+.adviceCard > svg {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: center;
+  justify-self: end;
 }
 
 .adviceCard strong,

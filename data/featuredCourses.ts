@@ -10,6 +10,7 @@ import {
 } from "@/data/classicSceneRoles";
 import { educationSceneCourseDefinitions } from "@/data/educationSceneCourses";
 import { healthSceneCourseDefinitions } from "@/data/healthSceneCourses";
+import { housingSceneCourseDefinitions } from "@/data/housingSceneCourses";
 import { restaurantSceneCourseDefinitions } from "@/data/restaurantSceneCourses";
 import { serviceSceneCourseDefinitions } from "@/data/serviceSceneCourses";
 import { shoppingSceneCourseDefinitions } from "@/data/shoppingSceneCourses";
@@ -1790,6 +1791,16 @@ const educationFeaturedLessonRecords: FeaturedLessonRecord[] =
     )
   );
 
+const housingFeaturedLessonRecords: FeaturedLessonRecord[] =
+  housingSceneCourseDefinitions.map((lesson) =>
+    createTrainingLesson(
+      lesson.id,
+      lesson.title,
+      lesson.items,
+      lesson.roleConfig
+    )
+  );
+
 export const featuredLessonRecords: FeaturedLessonRecord[] = [
   ...governmentFeaturedLessonRecords,
   ...driverLicenseFeaturedLessonRecords,
@@ -1800,6 +1811,7 @@ export const featuredLessonRecords: FeaturedLessonRecord[] = [
   ...taxGovernmentFeaturedLessonRecords,
   ...transportationFeaturedLessonRecords,
   ...educationFeaturedLessonRecords,
+  ...housingFeaturedLessonRecords,
   createTrainingLesson("bank_deposit_withdrawal_zh", "存款和取款", [
     { zh: "我想往我的账户里存一些钱。", en: "I'd like to deposit some money into my account." },
     { zh: "我想存 500 美元现金和这张支票。", en: "I want to deposit $500 in cash and this check." },
