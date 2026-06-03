@@ -336,10 +336,22 @@
 .sectionTitle {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) 28px;
+  width: 100%;
   align-items: center;
   gap: 12px;
   min-height: 64px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
   padding: 0 14px;
+  text-align: left;
+}
+
+.sectionTitle:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--pattern-accent) 36%, transparent);
+  outline-offset: -3px;
 }
 
 .sectionTitle > span,

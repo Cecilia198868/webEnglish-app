@@ -2420,7 +2420,7 @@ export const sentencePatternLevels: SentencePatternLevel[] = [
     stats: ["100 个句型", "2000 个例句", "提升表达深度"],
     subtitle: "表达观点和需求更自然，适合有基础的学习者",
     suggestion:
-      "每天选 10 个模板，替换成更复杂的真实生活内容，大声练习并尝试连成段落。",
+      "每天选 10 个模板，替换成更复杂的真实生活内容（如工作冲突、人生选择、情感深度交流），大声练习并尝试连成段落。这些句型能显著提升口语的自然度和专业感，适合中高级学习者日常使用。",
     tone: "purple",
     totalPatterns: 100,
     sections: intermediateSectionsWithPracticeCourses,
@@ -2438,7 +2438,7 @@ export const sentencePatternLevels: SentencePatternLevel[] = [
     stats: ["100 个句型", "2000 个例句", "接近母语表达"],
     subtitle: "让英语更自然、更像母语者，适合中高级学习者",
     suggestion:
-      "每天精选 5-10 个模板，用生活中最复杂的情境进行替换练习，大声朗读并扩展成完整段落。",
+      "每天精选 5-10 个模板，用生活中最复杂的情境进行替换练习，大声朗读并扩展成完整段落，让你的表达更自然、更精准、更有深度。",
     tone: "orange",
     totalPatterns: 100,
     sections: advancedSectionsWithPracticeCourses,

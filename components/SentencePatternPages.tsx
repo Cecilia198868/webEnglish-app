@@ -274,6 +274,18 @@ export function SentencePatternLevelMenuPage({
 }: {
   level: SentencePatternLevel;
 }) {
+  const [openSection, setOpenSection] = useState<{
+    levelId: string;
+    sectionId: string | null;
+  }>(() => ({
+    levelId: level.id,
+    sectionId: level.sections[0]?.id ?? null,
+  }));
+  const openSectionId =
+    openSection.levelId === level.id
+      ? openSection.sectionId
+      : level.sections[0]?.id ?? null;
+
   return (
     <main className={styles.page} style={getToneStyle(level.tone)}>
       <section className={styles.phone}>
@@ -306,27 +318,40 @@ export function SentencePatternLevelMenuPage({
         </div>
 
         <div className={styles.sectionList}>
-          {level.sections.map((section, index) => {
-            const visiblePatterns = index === 0 ? section.patterns.slice(0, 5) : [];
-            const hiddenCount = Math.max(section.patterns.length - visiblePatterns.length, 0);
+          {level.sections.map((section) => {
+            const isOpen = openSectionId === section.id;
 
             return (
               <section
                 className={styles.patternSection}
-                data-open={index === 0}
+                data-open={isOpen}
                 key={section.id}
               >
-                <div className={styles.sectionTitle}>
+                <button
+                  aria-controls={`sentence-pattern-section-${section.id}`}
+                  aria-expanded={isOpen}
+                  className={styles.sectionTitle}
+                  onClick={() =>
+                    setOpenSection({
+                      levelId: level.id,
+                      sectionId: isOpen ? null : section.id,
+                    })
+                  }
+                  type="button"
+                >
                   <span>{section.range}</span>
                   <strong>
                     {section.title}
                     <small>（{section.englishTitle}）</small>
                   </strong>
-                  <ChevronIcon direction={index === 0 ? "up" : "down"} />
-                </div>
-                {visiblePatterns.length > 0 ? (
-                  <div className={styles.patternRows}>
-                    {visiblePatterns.map((pattern) => (
+                  <ChevronIcon direction={isOpen ? "up" : "down"} />
+                </button>
+                {isOpen ? (
+                  <div
+                    className={styles.patternRows}
+                    id={`sentence-pattern-section-${section.id}`}
+                  >
+                    {section.patterns.map((pattern) => (
                       <Link
                         className={styles.patternRow}
                         href={`/sentence-patterns/${level.id}/${pattern.id}`}
@@ -337,16 +362,6 @@ export function SentencePatternLevelMenuPage({
                         <ChevronIcon />
                       </Link>
                     ))}
-                    {hiddenCount > 0 ? (
-                      <Link
-                        className={styles.patternRow}
-                        href={`/sentence-patterns/${level.id}/${visiblePatterns.length + 1}`}
-                      >
-                        <span>...</span>
-                        <strong>还有 {hiddenCount} 个句型</strong>
-                        <ChevronIcon />
-                      </Link>
-                    ) : null}
                   </div>
                 ) : null}
               </section>
