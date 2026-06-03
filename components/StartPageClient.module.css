@@ -629,6 +629,14 @@
   stroke-width: 3.2;
 }
 
+.practiceIcon > span {
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: 1.42rem;
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
 .practiceCopy {
   display: grid;
   min-width: 0;
@@ -1310,6 +1318,14 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 3.2;
+}
+
+.starterPracticeIcon > span {
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: 1.42rem;
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1;
 }
 
 .starterPracticeCopy {

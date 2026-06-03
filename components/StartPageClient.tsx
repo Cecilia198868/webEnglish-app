@@ -45,7 +45,7 @@ type StoredLastStudy = {
 };
 
 type PracticeCardTone = "violet" | "cyan" | "pink";
-type PracticeCardIcon = "mic" | "bank" | "star";
+type PracticeCardIcon = "hundred" | "mic" | "bank" | "star";
 
 const LAST_STUDY_PROGRESS_KEY = "lastStudyProgress";
 const LESSONS_STORAGE_KEY = "english-app-lessons";
@@ -73,6 +73,13 @@ const subscriberPracticeCards: Array<{
   title: string;
   tone: PracticeCardTone;
 }> = [
+  {
+    href: "/sentence-patterns",
+    icon: "hundred",
+    subtitle: "掌握常用句型，20个例句强化练习",
+    title: "100个口语句型",
+    tone: "violet",
+  },
   {
     href: "/free-study/step-1",
     icon: "mic",
@@ -103,6 +110,13 @@ const starterPracticeCards: Array<{
   title: string;
   tone: PracticeCardTone;
 }> = [
+  {
+    href: "/sentence-patterns",
+    icon: "hundred",
+    subtitle: "掌握常用句型，20个例句强化练习",
+    title: "100 个口语常用句型",
+    tone: "violet",
+  },
   {
     href: "/free-study/step-1",
     icon: "mic",
@@ -284,6 +298,10 @@ function SparkleIcon() {
 }
 
 function PracticeIcon({ type }: { type: PracticeCardIcon }) {
+  if (type === "hundred") {
+    return <span aria-hidden="true">100</span>;
+  }
+
   if (type === "bank") {
     return (
       <svg aria-hidden="true" focusable="false" viewBox="0 0 48 48">
