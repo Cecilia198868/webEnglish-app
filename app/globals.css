@@ -1,43 +1,73 @@
 @import "tailwindcss";
 
 :root {
-  --background: #090110;
-  --foreground: #fff8ff;
-  --app-bg: #f7f9ff;
-  --card-bg: rgba(255, 255, 255, 0.94);
-  --text-primary: #10163b;
-  --text-secondary: #66708f;
-  --border-color: rgba(218, 226, 246, 0.86);
-  --button-bg: #ffffff;
-  --button-text: #10163b;
-  --shadow-color: rgba(91, 120, 186, 0.14);
-  --input-bg: rgba(255, 255, 255, 0.92);
-  --input-text: #10163b;
-  --chip-bg: rgba(239, 236, 255, 0.92);
-  --chip-text: #684cff;
-  --icon-color: #6257d9;
-  --app-bg-gradient:
+  color-scheme: light;
+  --sf-bg-primary: #f7f9ff;
+  --sf-bg-secondary: #f5f4ff;
+  --sf-card-bg: rgba(255, 255, 255, 0.94);
+  --sf-card-bg-solid: #ffffff;
+  --sf-card-bg-soft: rgba(255, 255, 255, 0.86);
+  --sf-text-primary: #10163b;
+  --sf-text-secondary: #66708f;
+  --sf-border-color: rgba(218, 226, 246, 0.86);
+  --sf-shadow-color: rgba(91, 120, 186, 0.14);
+  --sf-input-bg: rgba(255, 255, 255, 0.92);
+  --sf-input-text: #10163b;
+  --sf-button-bg: #ffffff;
+  --sf-button-text: #10163b;
+  --sf-chip-bg: rgba(239, 236, 255, 0.92);
+  --sf-chip-text: #684cff;
+  --sf-icon-color: #6257d9;
+  --sf-accent-primary: #6d55ff;
+  --sf-accent-primary-soft: rgba(109, 85, 255, 0.12);
+  --sf-accent-blue: #3f72ff;
+  --sf-accent-green: #20a76b;
+  --sf-accent-cyan: #22b8c7;
+  --sf-accent-pink: #eb4f8b;
+  --sf-progress-track: rgba(203, 211, 237, 0.72);
+  --sf-progress-fill: linear-gradient(90deg, #7d5cff, #436cff);
+  --sf-hint-bg: rgba(246, 248, 255, 0.9);
+  --sf-fixed-bar-bg: rgba(255, 255, 255, 0.9);
+  --sf-theme-inset: rgba(255, 255, 255, 0.96);
+  --sf-overlay-bg: rgba(12, 15, 28, 0.74);
+  --sf-surface-raised: rgba(255, 255, 255, 0.96);
+  --sf-surface-muted: rgba(244, 247, 255, 0.92);
+  --sf-bg-gradient:
     radial-gradient(circle at 12% 0%, rgba(207, 235, 255, 0.72), transparent 32%),
     radial-gradient(circle at 88% 16%, rgba(224, 215, 255, 0.68), transparent 34%),
     linear-gradient(180deg, #f7fbff 0%, #f5f4ff 52%, #ffffff 100%);
-  --card-bg-solid: #ffffff;
-  --card-bg-soft: rgba(255, 255, 255, 0.86);
-  --surface-raised: rgba(255, 255, 255, 0.96);
-  --surface-muted: rgba(244, 247, 255, 0.92);
-  --overlay-bg: rgba(12, 15, 28, 0.74);
-  --accent-primary: #6d55ff;
-  --accent-primary-soft: rgba(109, 85, 255, 0.12);
-  --accent-blue: #3f72ff;
-  --accent-green: #20a76b;
-  --accent-cyan: #22b8c7;
-  --accent-pink: #eb4f8b;
-  --progress-track: rgba(203, 211, 237, 0.72);
-  --progress-fill: linear-gradient(90deg, #7d5cff, #436cff);
-  --hint-bg: rgba(246, 248, 255, 0.9);
-  --fixed-bar-bg: rgba(255, 255, 255, 0.9);
-  --theme-inset: rgba(255, 255, 255, 0.96);
-  --app-brightness-overlay: transparent;
-  --app-brightness-saturate: 1;
+  --background: var(--sf-bg-primary);
+  --foreground: var(--sf-text-primary);
+  --app-bg: var(--sf-bg-primary);
+  --card-bg: var(--sf-card-bg);
+  --text-primary: var(--sf-text-primary);
+  --text-secondary: var(--sf-text-secondary);
+  --border-color: var(--sf-border-color);
+  --button-bg: var(--sf-button-bg);
+  --button-text: var(--sf-button-text);
+  --shadow-color: var(--sf-shadow-color);
+  --input-bg: var(--sf-input-bg);
+  --input-text: var(--sf-input-text);
+  --chip-bg: var(--sf-chip-bg);
+  --chip-text: var(--sf-chip-text);
+  --icon-color: var(--sf-icon-color);
+  --app-bg-gradient: var(--sf-bg-gradient);
+  --card-bg-solid: var(--sf-card-bg-solid);
+  --card-bg-soft: var(--sf-card-bg-soft);
+  --surface-raised: var(--sf-surface-raised);
+  --surface-muted: var(--sf-surface-muted);
+  --overlay-bg: var(--sf-overlay-bg);
+  --accent-primary: var(--sf-accent-primary);
+  --accent-primary-soft: var(--sf-accent-primary-soft);
+  --accent-blue: var(--sf-accent-blue);
+  --accent-green: var(--sf-accent-green);
+  --accent-cyan: var(--sf-accent-cyan);
+  --accent-pink: var(--sf-accent-pink);
+  --progress-track: var(--sf-progress-track);
+  --progress-fill: var(--sf-progress-fill);
+  --hint-bg: var(--sf-hint-bg);
+  --fixed-bar-bg: var(--sf-fixed-bar-bg);
+  --theme-inset: var(--sf-theme-inset);
   --sf-font-zh: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
   --sf-text-title: #1f1b3d;
   --sf-text-body: #302b63;
@@ -55,55 +85,153 @@
 
 html[data-app-theme="dark"] {
   color-scheme: dark;
-  --background: #050816;
-  --foreground: #f5f7ff;
-  --app-bg: #07101f;
-  --card-bg: rgba(18, 27, 45, 0.94);
-  --text-primary: #f4f7ff;
-  --text-secondary: #aeb8d4;
-  --border-color: rgba(136, 153, 196, 0.28);
-  --button-bg: rgba(30, 42, 68, 0.94);
-  --button-text: #f4f7ff;
-  --shadow-color: rgba(0, 0, 0, 0.48);
-  --input-bg: rgba(10, 18, 32, 0.92);
-  --input-text: #f4f7ff;
-  --chip-bg: rgba(115, 96, 255, 0.18);
-  --chip-text: #d7d1ff;
-  --icon-color: #b9c3ff;
-  --app-bg-gradient:
+  --sf-bg-primary: #07101f;
+  --sf-bg-secondary: #0d1626;
+  --sf-card-bg: rgba(18, 27, 45, 0.94);
+  --sf-card-bg-solid: #111a2b;
+  --sf-card-bg-soft: rgba(18, 27, 45, 0.82);
+  --sf-text-primary: #f4f7ff;
+  --sf-text-secondary: #aeb8d4;
+  --sf-border-color: rgba(136, 153, 196, 0.28);
+  --sf-shadow-color: rgba(0, 0, 0, 0.48);
+  --sf-input-bg: rgba(10, 18, 32, 0.92);
+  --sf-input-text: #f4f7ff;
+  --sf-button-bg: rgba(30, 42, 68, 0.94);
+  --sf-button-text: #f4f7ff;
+  --sf-chip-bg: rgba(115, 96, 255, 0.18);
+  --sf-chip-text: #d7d1ff;
+  --sf-icon-color: #b9c3ff;
+  --sf-accent-primary: #9d8cff;
+  --sf-accent-primary-soft: rgba(157, 140, 255, 0.18);
+  --sf-accent-blue: #85a7ff;
+  --sf-accent-green: #65d7a2;
+  --sf-accent-cyan: #62d7e5;
+  --sf-accent-pink: #ff7aac;
+  --sf-progress-track: rgba(126, 143, 184, 0.22);
+  --sf-progress-fill: linear-gradient(90deg, #a996ff, #78a1ff);
+  --sf-hint-bg: rgba(17, 27, 46, 0.92);
+  --sf-fixed-bar-bg: rgba(13, 22, 38, 0.92);
+  --sf-theme-inset: rgba(255, 255, 255, 0.08);
+  --sf-overlay-bg: rgba(2, 6, 15, 0.78);
+  --sf-surface-raised: rgba(22, 32, 52, 0.96);
+  --sf-surface-muted: rgba(13, 22, 38, 0.92);
+  --sf-bg-gradient:
     radial-gradient(circle at 12% 0%, rgba(75, 106, 180, 0.24), transparent 32%),
     radial-gradient(circle at 88% 16%, rgba(107, 82, 194, 0.2), transparent 36%),
     linear-gradient(180deg, #081322 0%, #07101f 54%, #050a16 100%);
-  --card-bg-solid: #111a2b;
-  --card-bg-soft: rgba(18, 27, 45, 0.82);
-  --surface-raised: rgba(22, 32, 52, 0.96);
-  --surface-muted: rgba(13, 22, 38, 0.92);
-  --overlay-bg: rgba(2, 6, 15, 0.78);
-  --accent-primary: #9d8cff;
-  --accent-primary-soft: rgba(157, 140, 255, 0.18);
-  --accent-blue: #85a7ff;
-  --accent-green: #65d7a2;
-  --accent-cyan: #62d7e5;
-  --accent-pink: #ff7aac;
-  --progress-track: rgba(126, 143, 184, 0.22);
-  --progress-fill: linear-gradient(90deg, #a996ff, #78a1ff);
-  --hint-bg: rgba(17, 27, 46, 0.92);
-  --fixed-bar-bg: rgba(13, 22, 38, 0.92);
-  --theme-inset: rgba(255, 255, 255, 0.08);
+  --background: var(--sf-bg-primary);
+  --foreground: var(--sf-text-primary);
+  --app-bg: var(--sf-bg-primary);
+  --card-bg: var(--sf-card-bg);
+  --text-primary: var(--sf-text-primary);
+  --text-secondary: var(--sf-text-secondary);
+  --border-color: var(--sf-border-color);
+  --button-bg: var(--sf-button-bg);
+  --button-text: var(--sf-button-text);
+  --shadow-color: var(--sf-shadow-color);
+  --input-bg: var(--sf-input-bg);
+  --input-text: var(--sf-input-text);
+  --chip-bg: var(--sf-chip-bg);
+  --chip-text: var(--sf-chip-text);
+  --icon-color: var(--sf-icon-color);
+  --app-bg-gradient: var(--sf-bg-gradient);
+  --card-bg-solid: var(--sf-card-bg-solid);
+  --card-bg-soft: var(--sf-card-bg-soft);
+  --surface-raised: var(--sf-surface-raised);
+  --surface-muted: var(--sf-surface-muted);
+  --overlay-bg: var(--sf-overlay-bg);
+  --accent-primary: var(--sf-accent-primary);
+  --accent-primary-soft: var(--sf-accent-primary-soft);
+  --accent-blue: var(--sf-accent-blue);
+  --accent-green: var(--sf-accent-green);
+  --accent-cyan: var(--sf-accent-cyan);
+  --accent-pink: var(--sf-accent-pink);
+  --progress-track: var(--sf-progress-track);
+  --progress-fill: var(--sf-progress-fill);
+  --hint-bg: var(--sf-hint-bg);
+  --fixed-bar-bg: var(--sf-fixed-bar-bg);
+  --theme-inset: var(--sf-theme-inset);
+  --sf-text-title: #f4f7ff;
+  --sf-text-body: #dce4f8;
+  --sf-text-muted: #aeb8d4;
+  --sf-text-button: #f4f7ff;
 }
 
-html[data-app-brightness="dim"] {
-  --app-brightness-overlay: rgba(2, 6, 14, 0.16);
-  --app-brightness-saturate: 0.94;
-}
-
-html[data-app-brightness="bright"] {
-  --app-brightness-overlay: rgba(255, 255, 255, 0.06);
-  --app-brightness-saturate: 1.08;
-}
-
-html[data-app-theme="dark"][data-app-brightness="bright"] {
-  --app-brightness-overlay: rgba(255, 255, 255, 0.035);
+@media (prefers-color-scheme: dark) {
+  html[data-app-theme="system"],
+  html[data-speakflow-theme="system"] {
+    color-scheme: dark;
+    --sf-bg-primary: #07101f;
+    --sf-bg-secondary: #0d1626;
+    --sf-card-bg: rgba(18, 27, 45, 0.94);
+    --sf-card-bg-solid: #111a2b;
+    --sf-card-bg-soft: rgba(18, 27, 45, 0.82);
+    --sf-text-primary: #f4f7ff;
+    --sf-text-secondary: #aeb8d4;
+    --sf-border-color: rgba(136, 153, 196, 0.28);
+    --sf-shadow-color: rgba(0, 0, 0, 0.48);
+    --sf-input-bg: rgba(10, 18, 32, 0.92);
+    --sf-input-text: #f4f7ff;
+    --sf-button-bg: rgba(30, 42, 68, 0.94);
+    --sf-button-text: #f4f7ff;
+    --sf-chip-bg: rgba(115, 96, 255, 0.18);
+    --sf-chip-text: #d7d1ff;
+    --sf-icon-color: #b9c3ff;
+    --sf-accent-primary: #9d8cff;
+    --sf-accent-primary-soft: rgba(157, 140, 255, 0.18);
+    --sf-accent-blue: #85a7ff;
+    --sf-accent-green: #65d7a2;
+    --sf-accent-cyan: #62d7e5;
+    --sf-accent-pink: #ff7aac;
+    --sf-progress-track: rgba(126, 143, 184, 0.22);
+    --sf-progress-fill: linear-gradient(90deg, #a996ff, #78a1ff);
+    --sf-hint-bg: rgba(17, 27, 46, 0.92);
+    --sf-fixed-bar-bg: rgba(13, 22, 38, 0.92);
+    --sf-theme-inset: rgba(255, 255, 255, 0.08);
+    --sf-overlay-bg: rgba(2, 6, 15, 0.78);
+    --sf-surface-raised: rgba(22, 32, 52, 0.96);
+    --sf-surface-muted: rgba(13, 22, 38, 0.92);
+    --sf-bg-gradient:
+      radial-gradient(circle at 12% 0%, rgba(75, 106, 180, 0.24), transparent 32%),
+      radial-gradient(circle at 88% 16%, rgba(107, 82, 194, 0.2), transparent 36%),
+      linear-gradient(180deg, #081322 0%, #07101f 54%, #050a16 100%);
+    --background: var(--sf-bg-primary);
+    --foreground: var(--sf-text-primary);
+    --app-bg: var(--sf-bg-primary);
+    --card-bg: var(--sf-card-bg);
+    --text-primary: var(--sf-text-primary);
+    --text-secondary: var(--sf-text-secondary);
+    --border-color: var(--sf-border-color);
+    --button-bg: var(--sf-button-bg);
+    --button-text: var(--sf-button-text);
+    --shadow-color: var(--sf-shadow-color);
+    --input-bg: var(--sf-input-bg);
+    --input-text: var(--sf-input-text);
+    --chip-bg: var(--sf-chip-bg);
+    --chip-text: var(--sf-chip-text);
+    --icon-color: var(--sf-icon-color);
+    --app-bg-gradient: var(--sf-bg-gradient);
+    --card-bg-solid: var(--sf-card-bg-solid);
+    --card-bg-soft: var(--sf-card-bg-soft);
+    --surface-raised: var(--sf-surface-raised);
+    --surface-muted: var(--sf-surface-muted);
+    --overlay-bg: var(--sf-overlay-bg);
+    --accent-primary: var(--sf-accent-primary);
+    --accent-primary-soft: var(--sf-accent-primary-soft);
+    --accent-blue: var(--sf-accent-blue);
+    --accent-green: var(--sf-accent-green);
+    --accent-cyan: var(--sf-accent-cyan);
+    --accent-pink: var(--sf-accent-pink);
+    --progress-track: var(--sf-progress-track);
+    --progress-fill: var(--sf-progress-fill);
+    --hint-bg: var(--sf-hint-bg);
+    --fixed-bar-bg: var(--sf-fixed-bar-bg);
+    --theme-inset: var(--sf-theme-inset);
+    --sf-text-title: #f4f7ff;
+    --sf-text-body: #dce4f8;
+    --sf-text-muted: #aeb8d4;
+    --sf-text-button: #f4f7ff;
+  }
 }
 
 html[data-speakflow-font-size="small"] {
@@ -127,16 +255,6 @@ html {
 body {
   background: var(--app-bg);
   color: var(--text-primary);
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 2147483647;
-  background: var(--app-brightness-overlay);
-  pointer-events: none;
-  mix-blend-mode: multiply;
 }
 
 .sf-route-loading {
@@ -13305,14 +13423,12 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
   align-items: center;
   justify-content: center;
   min-height: 3.5rem;
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.7);
+  border-radius: 0;
+  background: transparent;
   color: #302b63 !important;
   font-size: 0.96rem;
   font-weight: 650 !important;
-  box-shadow:
-    0 10px 22px rgba(77, 117, 180, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+  box-shadow: none;
   transition: transform 140ms ease;
 }
 
@@ -16096,11 +16212,12 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 .sf-ai-guided-step-five-follow,
 .sf-ai-guided-step-five-slow {
   min-height: 2.86rem !important;
-  border-radius: 0.86rem !important;
-  background: rgba(255, 255, 255, 0.62) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
   color: #302b63 !important;
   font-size: 0.78rem !important;
   font-weight: 650 !important;
+  box-shadow: none !important;
   text-shadow: none !important;
 }
 
@@ -18609,7 +18726,6 @@ html[data-app-theme] body :where(
 ) {
   background: var(--app-bg-gradient) !important;
   color: var(--text-primary) !important;
-  filter: saturate(var(--app-brightness-saturate, 1));
 }
 
 html[data-app-theme] body :where(
@@ -18752,13 +18868,28 @@ html[data-app-theme] body :where(
   .sf-vocabulary-next-button,
   .sf-vocabulary-bottom-mic,
   .sf-expression-library-bottom-bar button,
-  .sf-free-study-page-five-follow,
-  .sf-free-study-page-five-mic,
-  .sf-free-study-page-five-slow
+  .sf-free-study-page-five-mic
 ) {
   background: var(--progress-fill) !important;
   color: #ffffff !important;
   box-shadow: 0 16px 34px color-mix(in srgb, var(--accent-primary) 30%, transparent) !important;
+}
+
+html[data-app-theme] body :where(
+  .sf-free-study-page-five-follow,
+  .sf-free-study-page-five-slow,
+  .sf-ai-guided-step-five-follow,
+  .sf-ai-guided-step-five-slow
+) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.sf-free-study-page-five-follow svg,
+.sf-free-study-page-five-slow svg,
+.sf-ai-guided-step-five-follow svg,
+.sf-ai-guided-step-five-slow svg {
+  display: none !important;
 }
 
 html[data-app-theme] body :where(
@@ -18806,4 +18937,131 @@ html[data-app-theme] body :where(svg, .sf-home-menu-icon) {
 
 html[data-app-theme="dark"] body :where(img) {
   filter: saturate(0.94) brightness(0.92);
+}
+
+html[data-app-theme="dark"] {
+  --background: var(--sf-bg-primary);
+  --foreground: var(--sf-text-primary);
+  --sf-ink: var(--text-primary);
+  --sf-muted: var(--text-secondary);
+  --sf-border: var(--border-color);
+  --sf-glass: rgba(18, 27, 45, 0.72);
+  --sf-glass-strong: rgba(24, 35, 58, 0.82);
+}
+
+html[data-app-theme="dark"],
+html[data-app-theme="dark"] body {
+  background: var(--app-bg-gradient) !important;
+  color: var(--text-primary) !important;
+}
+
+html[data-app-theme="dark"] :where(.sf-brand-page, .sf-home-page, .responsive-page-shell),
+html[data-app-theme="dark"] .responsive-page-shell > .absolute.inset-0 {
+  background: var(--app-bg-gradient) !important;
+  color: var(--text-primary) !important;
+}
+
+html[data-app-theme="dark"] :where(
+  .sf-brand-glass,
+  .sf-language-card,
+  .responsive-page-shell .app-glass-card,
+  .responsive-page-shell .glass-panel,
+  .responsive-page-shell .app-panel,
+  .responsive-page-shell .neon-card,
+  .responsive-page-shell .dark-input,
+  .responsive-page-shell .app-field
+) {
+  border-color: var(--border-color) !important;
+  background: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+  box-shadow:
+    0 18px 42px var(--shadow-color),
+    inset 0 1px 0 var(--theme-inset) !important;
+}
+
+html[data-app-theme="dark"] :where(.sf-brand-button:not(.sf-brand-primary), .responsive-page-shell .neon-button, .responsive-page-shell .neon-action) {
+  border-color: var(--border-color) !important;
+  background: var(--button-bg) !important;
+  color: var(--button-text) !important;
+  box-shadow:
+    0 16px 34px var(--shadow-color),
+    inset 0 1px 0 var(--theme-inset) !important;
+}
+
+html[data-app-theme="dark"] :where(.sf-brand-input),
+html[data-app-theme="dark"] .responsive-page-shell :where(input, textarea, select) {
+  border-color: var(--border-color) !important;
+  background: var(--input-bg) !important;
+  color: var(--input-text) !important;
+}
+
+html[data-app-theme="dark"] :where(.sf-brand-page, .responsive-page-shell) :where([class*="subtitle"], [class*="caption"], [class*="description"], [class*="helper"], [class*="hint"], [class*="meta"], [class*="note"], [class*="secondary"], [class*="subtext"]) {
+  color: var(--text-secondary) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-app-theme="system"],
+  html[data-speakflow-theme="system"] {
+    --background: var(--sf-bg-primary);
+    --foreground: var(--sf-text-primary);
+    --sf-ink: var(--text-primary);
+    --sf-muted: var(--text-secondary);
+    --sf-border: var(--border-color);
+    --sf-glass: rgba(18, 27, 45, 0.72);
+    --sf-glass-strong: rgba(24, 35, 58, 0.82);
+  }
+
+  html[data-app-theme="system"],
+  html[data-app-theme="system"] body {
+    background: var(--app-bg-gradient) !important;
+    color: var(--text-primary) !important;
+  }
+
+  html[data-app-theme="system"] :where(.sf-brand-page, .sf-home-page, .responsive-page-shell),
+  html[data-app-theme="system"] .responsive-page-shell > .absolute.inset-0 {
+    background: var(--app-bg-gradient) !important;
+    color: var(--text-primary) !important;
+  }
+
+  html[data-app-theme="system"] :where(
+    .sf-brand-glass,
+    .sf-language-card,
+    .responsive-page-shell .app-glass-card,
+    .responsive-page-shell .glass-panel,
+    .responsive-page-shell .app-panel,
+    .responsive-page-shell .neon-card,
+    .responsive-page-shell .dark-input,
+    .responsive-page-shell .app-field
+  ) {
+    border-color: var(--border-color) !important;
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    box-shadow:
+      0 18px 42px var(--shadow-color),
+      inset 0 1px 0 var(--theme-inset) !important;
+  }
+
+  html[data-app-theme="system"] :where(.sf-brand-button:not(.sf-brand-primary), .responsive-page-shell .neon-button, .responsive-page-shell .neon-action) {
+    border-color: var(--border-color) !important;
+    background: var(--button-bg) !important;
+    color: var(--button-text) !important;
+    box-shadow:
+      0 16px 34px var(--shadow-color),
+      inset 0 1px 0 var(--theme-inset) !important;
+  }
+
+  html[data-app-theme="system"] :where(.sf-brand-input),
+  html[data-app-theme="system"] .responsive-page-shell :where(input, textarea, select) {
+    border-color: var(--border-color) !important;
+    background: var(--input-bg) !important;
+    color: var(--input-text) !important;
+  }
+
+  html[data-app-theme="system"] :where(.sf-brand-page, .responsive-page-shell) :where([class*="subtitle"], [class*="caption"], [class*="description"], [class*="helper"], [class*="hint"], [class*="meta"], [class*="note"], [class*="secondary"], [class*="subtext"]) {
+    color: var(--text-secondary) !important;
+  }
+
+  html[data-app-theme="system"] body :where(img) {
+    filter: saturate(0.94) brightness(0.92);
+  }
 }

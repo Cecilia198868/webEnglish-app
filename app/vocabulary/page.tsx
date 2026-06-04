@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ExpressionLearningLimitModal from "@/components/ExpressionLearningLimitModal";
 import HomeMenuIcon from "@/components/HomeMenuIcon";
+import InteractiveExpressionText from "@/components/InteractiveExpressionText";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import {
   FREE_EXPRESSION_LEARNING_LIMIT,
@@ -709,33 +710,8 @@ function ExampleIllustration() {
   );
 }
 
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function HighlightedExample({
-  expression,
-  sentence,
-}: {
-  expression: string;
-  sentence: string;
-}) {
-  const target = expression.trim();
-  if (!target) return <>{sentence}</>;
-
-  const parts = sentence.split(new RegExp(`(${escapeRegExp(target)})`, "gi"));
-
-  return (
-    <>
-      {parts.map((part, index) =>
-        part.toLowerCase() === target.toLowerCase() ? (
-          <strong key={`${part}-${index}`}>{part}</strong>
-        ) : (
-          <span key={`${part}-${index}`}>{part}</span>
-        )
-      )}
-    </>
-  );
+function HighlightedExample({ sentence }: { sentence: string }) {
+  return <InteractiveExpressionText sourceSentence={sentence} text={sentence} />;
 }
 
 function getVocabularyCreatedTime(word: VocabularyWord) {
@@ -1833,10 +1809,7 @@ export default function VocabularyPage() {
                   <div className="sf-vocabulary-example-line">
                     <h2>
                       {displayedExampleText ? (
-                        <HighlightedExample
-                          expression={displayedExpressionText}
-                          sentence={displayedExampleText}
-                        />
+                        <HighlightedExample sentence={displayedExampleText} />
                       ) : (
                         "这个表达还没有例句。"
                       )}

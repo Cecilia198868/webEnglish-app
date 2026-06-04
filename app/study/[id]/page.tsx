@@ -50,6 +50,7 @@ import {
   recordFreePracticeCompletion,
 } from "@/lib/freePracticeLimit";
 import { createLoginUrl, subscriptionCallbackUrl } from "@/lib/loginRedirect";
+import ClassicStudyLoadingShell from "./ClassicStudyLoadingShell";
 import styles from "./ClassicStudyPage.module.css";
 
 type Lesson = {
@@ -103,6 +104,14 @@ const DB_VERSION = 1;
 const AUDIO_STORE_NAME = "audios";
 const LAST_STUDY_PROGRESS_KEY = "lastStudyProgress";
 const GUEST_CLASSIC_PREVIEW_LESSON_ID = "bank_open_new_account_zh";
+const GUEST_FULL_CLASSIC_LESSON_IDS = new Set([
+  GUEST_CLASSIC_PREVIEW_LESSON_ID,
+  "tax_federal_state_income_tax_basics_zh",
+  "tax_apply_itin_newcomer_zh",
+  "tax_first_tax_return_documents_zh",
+  "tax_w2_1099_income_difference_zh",
+  "tax_form_1040_filing_zh",
+]);
 const GUEST_CLASSIC_SENTENCE_LIMIT = 5;
 function isClassicSceneLessonId(lessonId: string) {
   return (
@@ -129,11 +138,15 @@ function limitPairsForAccountAccess(
     return pairs;
   }
 
-  if (lessonId !== GUEST_CLASSIC_PREVIEW_LESSON_ID) {
+  if (!GUEST_FULL_CLASSIC_LESSON_IDS.has(lessonId)) {
     return [];
   }
 
-  return pairs.slice(0, GUEST_CLASSIC_SENTENCE_LIMIT);
+  if (lessonId === GUEST_CLASSIC_PREVIEW_LESSON_ID) {
+    return pairs.slice(0, GUEST_CLASSIC_SENTENCE_LIMIT);
+  }
+
+  return pairs;
 }
 
 function getClassicFinanceSectionForLesson(lessonId: string) {
@@ -1557,6 +1570,7 @@ export default function StudyPage() {
   const currentPair = useMemo(() => {
     return pairs[currentIndex] || { chinese: "", english: "" };
   }, [pairs, currentIndex]);
+  const isCurrentClassicSceneLesson = isClassicSceneLessonId(lessonId);
   const prebuiltClassicExpressionSet = useMemo(
     () => getPrebuiltClassicExpressionSet(lessonId, currentIndex),
     [currentIndex, lessonId]
@@ -1602,7 +1616,7 @@ export default function StudyPage() {
     setSelectedExpressionIndex(0);
     setIsLoadingExpressionVariants(false);
 
-    if (prebuiltVariants.length) {
+    if (prebuiltVariants.length || isCurrentClassicSceneLesson) {
       return () => {
         cancelled = true;
       };
@@ -1657,6 +1671,7 @@ export default function StudyPage() {
   }, [
     currentPair.chinese,
     currentPair.english,
+    isCurrentClassicSceneLesson,
     isListening,
     prebuiltClassicExpressionSet,
     spokenEnglish,
@@ -2037,7 +2052,7 @@ export default function StudyPage() {
     const prebuiltHighlights =
       prebuiltClassicExpressionSet?.highlights?.[selectedExpression.key] || [];
 
-    if (prebuiltClassicExpressionSet) {
+    if (prebuiltClassicExpressionSet || isCurrentClassicSceneLesson) {
       setHighlightedExpressions(
         prebuiltHighlights.length
           ? prebuiltHighlights
@@ -2080,6 +2095,7 @@ export default function StudyPage() {
       cancelled = true;
     };
   }, [
+    isCurrentClassicSceneLesson,
     isLoadingExpressionVariants,
     prebuiltClassicExpressionSet,
     selectedExpression.key,
@@ -2189,6 +2205,10 @@ export default function StudyPage() {
     stopAutoPlay();
     window.localStorage.setItem("currentLessonTitle", targetLesson.title);
     router.replace(`/study/${targetLesson.id}`);
+  }
+
+  if (isClassicSceneLessonId(lessonId) && !hasLoadedLesson) {
+    return <ClassicStudyLoadingShell />;
   }
 
   if (showStudyVoiceOnlyPrompt) {

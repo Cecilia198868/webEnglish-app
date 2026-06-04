@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import HomeMenuIcon from "@/components/HomeMenuIcon";
+import InteractiveExpressionText from "@/components/InteractiveExpressionText";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import type {
   SentencePatternLevel,
@@ -497,7 +498,12 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
         <section className={styles.studyCard}>
           <div className={styles.studyTitleRow}>
             <span className={styles.practicePill}>{practiceId} / {practiceCount}</span>
-            <h1>{pattern?.text || practice.targetEnglish}</h1>
+            <h1>
+              <InteractiveExpressionText
+                sourceSentence={practice.targetEnglish}
+                text={pattern?.text || practice.targetEnglish}
+              />
+            </h1>
             <Link
               href={`/sentence-patterns/${level.id}/${patternId}?practice=${nextPractice}`}
               aria-label="下一句"
@@ -637,7 +643,12 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
         <section className={styles.resultIntro}>
           <div className={styles.studyTitleRow}>
             <span className={styles.practicePill}>{practiceId} / {practiceCount}</span>
-            <h1>{pattern?.text || practice.targetEnglish}</h1>
+            <h1>
+              <InteractiveExpressionText
+                sourceSentence={practice.targetEnglish}
+                text={pattern?.text || practice.targetEnglish}
+              />
+            </h1>
             <Link
               href={`/sentence-patterns/${level.id}/${patternId}?practice=${nextPractice}`}
               aria-label="下一句"
@@ -660,7 +671,12 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
               <StatIcon type="mic" />
               你的表达
             </span>
-            <p>{userExpression}</p>
+            <p>
+              <InteractiveExpressionText
+                sourceSentence={practice.chinese}
+                text={userExpression}
+              />
+            </p>
             <button type="button" onClick={() => speak(userExpression)} aria-label="播放你的表达">
               <StatIcon type="mic" />
             </button>
@@ -678,7 +694,12 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
               </span>
               <div>
                 <strong>{variant.label}</strong>
-                <p>{variant.text}</p>
+                <p>
+                  <InteractiveExpressionText
+                    sourceSentence={practice.chinese}
+                    text={variant.text}
+                  />
+                </p>
               </div>
               <button type="button" onClick={() => speak(variant.text)} aria-label={`播放${variant.label}`}>
                 <StatIcon type="mic" />

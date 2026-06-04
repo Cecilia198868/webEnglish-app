@@ -248,6 +248,157 @@
   line-height: 1;
 }
 
+.classicLoadingMain {
+  display: grid;
+  gap: 13px;
+  padding: 0 18px 20px;
+}
+
+.classicLoadingCard,
+.classicLoadingPrompt {
+  border: 1px solid var(--border-color, rgba(126, 159, 102, 0.18));
+  border-radius: 24px;
+  background: var(--card-bg, rgba(255, 255, 255, 0.9));
+  box-shadow:
+    0 13px 30px var(--shadow-color, rgba(58, 82, 45, 0.08)),
+    inset 0 1px 0 var(--theme-inset, rgba(255, 255, 255, 0.95));
+}
+
+.classicLoadingCard {
+  padding: 17px 17px 16px;
+}
+
+.classicLoadingPill {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(226, 239, 218, 0.88);
+  padding: 0 12px;
+  color: #2f7d43;
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.classicLoadingTitle {
+  margin: 10px 0 0;
+  color: var(--text-primary, #193e21);
+  font-size: clamp(1.04rem, 4.8vw, 1.26rem);
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.classicLoadingText {
+  margin: 8px 0 0;
+  color: var(--text-secondary, #587154);
+  font-size: clamp(0.88rem, 3.7vw, 1rem);
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.classicLoadingLines {
+  display: grid;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.classicLoadingLines span {
+  display: block;
+  height: 11px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(126, 159, 102, 0.15),
+    rgba(126, 159, 102, 0.28),
+    rgba(126, 159, 102, 0.15)
+  );
+  animation: classicLoadingPulse 1.1s ease-in-out infinite alternate;
+}
+
+.classicLoadingLines .classicLoadingLineShort {
+  width: 68%;
+}
+
+.classicLoadingPrompt {
+  position: relative;
+  display: grid;
+  min-height: 126px;
+  align-items: center;
+  padding: 22px 44px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 82%, rgba(126, 159, 102, 0.16), transparent 32%),
+    var(--card-bg, rgba(255, 255, 255, 0.92));
+}
+
+.classicLoadingPrompt p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: var(--text-primary, #1d3f24);
+  font-size: clamp(1.08rem, 5vw, 1.32rem);
+  font-weight: 900;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.classicLoadingQuote {
+  position: absolute;
+  color: rgba(126, 159, 102, 0.28);
+  font-size: 3.1rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.classicLoadingQuote:first-child {
+  left: 18px;
+  top: 14px;
+}
+
+.classicLoadingQuote:last-child {
+  right: 18px;
+  bottom: 8px;
+}
+
+.classicLoadingMicRow {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.classicLoadingMic {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #5fb36d, #2f8a4b);
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(63, 122, 73, 0.24);
+}
+
+.classicLoadingMic svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.8;
+}
+
+@keyframes classicLoadingPulse {
+  from {
+    opacity: 0.62;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .dialogCard {
   position: relative;
   min-height: 244px;
@@ -3728,4 +3879,1296 @@
 :global(html[data-app-theme="dark"]) .cornerStar {
   opacity: 0.68;
   filter: brightness(0.82) saturate(0.82);
+}
+
+/* Compact first-step study view to match the mobile design reference. */
+.classicPhone.studyPhone:not(.resultPhone) {
+  width: min(100%, 430px);
+  min-height: 100dvh;
+  padding: calc(8px + env(safe-area-inset-top)) 10px 10px;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(255, 255, 255, 0.92), transparent 34%),
+    radial-gradient(circle at 11% 24%, rgba(235, 244, 226, 0.54), transparent 28%),
+    radial-gradient(circle at 96% 70%, rgba(225, 238, 214, 0.44), transparent 28%),
+    linear-gradient(180deg, #fffdf7 0%, #fffdf8 50%, #fbf7ed 100%);
+  color: #173f1f;
+  box-shadow: none;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .studyTopbar {
+  grid-template-columns: 54px minmax(0, 1fr) 66px;
+  min-height: 52px;
+  gap: 6px;
+  align-items: start;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .homeIconBox {
+  width: 44px;
+  min-height: 44px;
+  gap: 2px;
+  padding: 5px 4px 4px;
+  border-color: rgba(35, 70, 32, 0.08);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #13261d;
+  box-shadow:
+    0 8px 18px rgba(58, 82, 45, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .homeIconBox :global(.sf-home-menu-icon) {
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 1.18rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .homeShortcutText {
+  color: #294733;
+  font-size: 0.54rem;
+  font-weight: 850;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .brand {
+  gap: 6px;
+  padding-top: 1px;
+  color: #174521;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .brandIcon {
+  width: 25px;
+  height: 25px;
+  color: #3f7a49;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .brandTitle {
+  color: #153b20;
+  font-size: clamp(0.98rem, 4.5vw, 1.16rem);
+  line-height: 0.98;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .brandSubtitle {
+  margin-top: 3px;
+  color: #51784d;
+  font-size: clamp(0.38rem, 1.7vw, 0.46rem);
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .switchCourseButton {
+  width: 62px;
+  min-height: 24px;
+  border-color: rgba(35, 70, 32, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  color: #7257ff;
+  padding: 0 6px;
+  font-size: 0.52rem;
+  box-shadow:
+    0 7px 14px rgba(58, 82, 45, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .studyTopicBar {
+  grid-template-columns: 60px minmax(0, 1fr);
+  column-gap: 9px;
+  margin: 5px 0 0;
+  min-height: 92px;
+  padding: 9px 10px 8px;
+  border: 1px solid rgba(126, 159, 102, 0.14);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 94% 8%, rgba(143, 169, 116, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 252, 0.96), rgba(241, 248, 232, 0.9));
+  box-shadow:
+    0 9px 22px rgba(58, 82, 45, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .studyTopicBar .topicIcon,
+.classicPhone.studyPhone:not(.resultPhone) .studyTopicBar .topicIcon svg {
+  width: 58px;
+  height: 58px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .studyTopicBar .topicIcon {
+  color: #6fa06d;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .studyTopicBar .topicCopy {
+  gap: 4px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .categoryPill {
+  min-height: 22px;
+  padding: 0 10px;
+  background: #edf4e7;
+  color: #6e51ff;
+  font-size: 0.68rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .studyPhone .topicTitleRow,
+.classicPhone.studyPhone:not(.resultPhone) .topicTitleRow {
+  grid-template-columns: 20px minmax(0, 1fr) 20px;
+  gap: 2px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .lessonArrowButton {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  background: transparent;
+  color: #214f2a;
+  box-shadow: none;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .lessonArrowButton svg {
+  width: 15px;
+  height: 15px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .studyTopicBar .topicTitle {
+  color: #143f1e;
+  font-size: clamp(1.18rem, 5.7vw, 1.46rem);
+  line-height: 1.08;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .studyTopicBar .topicProgress {
+  color: #536b4c;
+  font-size: 0.72rem;
+  font-weight: 760;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .progressRow {
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .progressTrack {
+  height: 4px;
+  background: #d9e6d4;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .progressTrack span {
+  background: linear-gradient(90deg, #7a68ff, #78a66e);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .progressPercent {
+  color: #2f7b37;
+  font-size: 0.62rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .dialogCard {
+  min-height: 232px;
+  margin: 9px 0 0;
+  padding: 14px 16px 12px;
+  border-color: rgba(126, 159, 102, 0.18);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 80% 77%, rgba(143, 169, 116, 0.15), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(255, 253, 248, 0.94));
+  box-shadow:
+    0 10px 25px rgba(58, 82, 45, 0.075),
+    inset 0 1px 0 rgba(255, 255, 255, 0.97);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .speakerLine {
+  gap: 10px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .speakerAvatar,
+.classicPhone.studyPhone:not(.resultPhone) .speakerAvatar svg {
+  width: 46px;
+  height: 46px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .speakerAvatar {
+  background: #f5efe2;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .roleBadge {
+  min-height: 32px;
+  padding: 0 16px;
+  background: #edf4e7;
+  color: #6e51ff;
+  font-size: 0.8rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .speechBubble {
+  min-height: 112px;
+  margin-top: 12px;
+  gap: 6px;
+  padding: 18px 26px 16px;
+  border-color: rgba(126, 159, 102, 0.44);
+  border-radius: 17px;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(226, 236, 213, 0.34), transparent 30%),
+    rgba(255, 254, 250, 0.96);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .speechBubble::after {
+  left: 24px;
+  bottom: -13px;
+  width: 21px;
+  height: 21px;
+  border-color: rgba(126, 159, 102, 0.44);
+  background: rgba(255, 254, 250, 0.96);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .quoteStart,
+.classicPhone.studyPhone:not(.resultPhone) .quoteEnd {
+  color: rgba(232, 149, 73, 0.62);
+  font-size: 2.55rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .quoteStart {
+  left: 22px;
+  top: 14px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .quoteEnd {
+  right: 21px;
+  bottom: 10px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .chinesePrompt {
+  color: #143f1e;
+  font-size: clamp(1.08rem, 5vw, 1.28rem);
+  line-height: 1.18;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .bubbleSubtitle {
+  color: rgba(32, 45, 30, 0.66);
+  font-size: 0.72rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .sceneIllustration {
+  right: 14px;
+  bottom: 9px;
+  width: 134px;
+  height: 53px;
+  opacity: 0.36;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .bankCounter {
+  right: 19px;
+  width: 88px;
+  height: 28px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .bankSign {
+  right: 51px;
+  bottom: 31px;
+  padding: 2px 7px;
+  font-size: 0.58rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .bankPlant {
+  width: 20px;
+  height: 43px;
+  border-bottom-width: 21px;
+  border-left-width: 7px;
+  border-right-width: 7px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .bankPlant::before {
+  left: -13px;
+  top: -5px;
+  width: 37px;
+  height: 25px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .bankChairOne,
+.classicPhone.studyPhone:not(.resultPhone) .bankChairTwo {
+  width: 22px;
+  height: 27px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .bankChairOne {
+  right: 105px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .bankChairTwo {
+  right: 68px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .promptHint {
+  margin-top: 10px;
+  color: #6e51ff;
+  font-size: 0.72rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .promptHint::before {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-width: 2px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .methodCard {
+  min-height: 72px;
+  margin: 8px 0 0;
+  padding: 8px 10px 9px;
+  border-color: rgba(126, 159, 102, 0.15);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 9px 20px rgba(58, 82, 45, 0.065),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .methodTitle {
+  color: #1f5a2a;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .methodTitle strong {
+  font-size: 0.78rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .methodSteps {
+  grid-template-columns: minmax(0, 1fr) 10px minmax(0, 1fr) 10px minmax(0, 1.16fr);
+  gap: 3px;
+  margin-top: 8px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .methodStep {
+  grid-template-columns: 28px minmax(0, 1fr);
+  column-gap: 4px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .methodIcon {
+  width: 27px;
+  height: 27px;
+  background: #edf5e8;
+  color: #5f8f5d;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .methodIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .stepNumber {
+  width: 15px;
+  height: 15px;
+  transform: translate(16px, -10px);
+  background: #5c8a50;
+  font-size: 0.52rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .stepCopy strong {
+  color: #143f1e;
+  font-size: 0.56rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .stepCopy small {
+  margin-top: 2px;
+  color: #486d45;
+  font-size: 0.45rem;
+  line-height: 1.12;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .methodArrow {
+  color: #d98f45;
+  font-size: 0.96rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .practiceControls {
+  grid-template-columns: minmax(0, 1fr) 76px minmax(0, 1fr);
+  gap: 12px;
+  margin: 17px 6px 0;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .sentenceButton {
+  min-height: 38px;
+  gap: 6px;
+  border-color: rgba(126, 159, 102, 0.2);
+  background: rgba(255, 255, 255, 0.88);
+  padding: 0 10px;
+  color: #2f6238;
+  box-shadow:
+    0 8px 18px rgba(58, 82, 45, 0.075),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .sentenceButton svg {
+  width: 17px;
+  height: 17px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .sentenceButton span {
+  color: #2f6238;
+  font-size: 0.72rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .micButton {
+  width: 76px;
+  height: 76px;
+  border-width: 6px;
+  background:
+    radial-gradient(circle at 34% 23%, rgba(255, 255, 255, 0.28), transparent 28%),
+    linear-gradient(145deg, #7fa978, #3f7a49);
+  color: #fffdf7;
+  box-shadow:
+    0 13px 26px rgba(47, 98, 56, 0.24),
+    inset 0 2px 0 rgba(255, 255, 255, 0.25);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .micButton svg {
+  width: 39px;
+  height: 39px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .micPulseOne {
+  inset: -11px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .micPulseTwo {
+  inset: -20px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .micHint {
+  min-height: 18px;
+  margin: 7px 18px 0;
+  color: #2f6238;
+  font-size: 0.68rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .tipCard {
+  grid-template-columns: 27px minmax(0, 1fr) 52px;
+  min-height: 66px;
+  margin: 8px 0 0;
+  padding: 8px 8px 8px 10px;
+  border-color: rgba(126, 159, 102, 0.22);
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 92% 50%, rgba(226, 236, 213, 0.52), transparent 30%),
+    rgba(255, 254, 249, 0.94);
+  box-shadow: 0 8px 18px rgba(58, 82, 45, 0.065);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .tipIcon {
+  width: 23px;
+  height: 23px;
+  background: #5f8f5d;
+  font-size: 0.76rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .tipCopy {
+  gap: 4px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .tipCopy strong {
+  color: #2f6238;
+  font-size: 0.84rem;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .tipCopy small {
+  color: #244521;
+  font-size: 0.58rem;
+  line-height: 1.25;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .tipArt {
+  width: 50px;
+  height: 42px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .tipArt::before {
+  width: 29px;
+  height: 39px;
+  border-width: 2px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .tipArt::after {
+  width: 26px;
+  height: 20px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .tipArt span {
+  left: 14px;
+  top: 13px;
+  width: 15px;
+  height: 18px;
+  background:
+    linear-gradient(#4f704a, #4f704a) 0 1px / 15px 2px no-repeat,
+    linear-gradient(#4f704a, #4f704a) 0 8px / 12px 2px no-repeat,
+    linear-gradient(#4f704a, #4f704a) 0 15px / 13px 2px no-repeat;
+}
+
+@media (max-height: 720px) and (max-width: 540px) {
+  .classicPhone.studyPhone:not(.resultPhone) {
+    padding-top: calc(6px + env(safe-area-inset-top));
+    padding-bottom: 8px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .studyTopicBar {
+    min-height: 82px;
+    padding-top: 7px;
+    padding-bottom: 6px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .studyTopicBar .topicIcon,
+  .classicPhone.studyPhone:not(.resultPhone) .studyTopicBar .topicIcon svg {
+    width: 51px;
+    height: 51px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .studyTopicBar {
+    grid-template-columns: 53px minmax(0, 1fr);
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .dialogCard {
+    min-height: 213px;
+    margin-top: 7px;
+    padding-top: 12px;
+    padding-bottom: 10px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .speakerAvatar,
+  .classicPhone.studyPhone:not(.resultPhone) .speakerAvatar svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .speechBubble {
+    min-height: 98px;
+    margin-top: 9px;
+    padding-top: 15px;
+    padding-bottom: 13px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .methodCard {
+    min-height: 65px;
+    margin-top: 6px;
+    padding-top: 6px;
+    padding-bottom: 7px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .practiceControls {
+    grid-template-columns: minmax(0, 1fr) 68px minmax(0, 1fr);
+    margin-top: 13px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .micButton {
+    width: 68px;
+    height: 68px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .micButton svg {
+    width: 35px;
+    height: 35px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .tipCard {
+    min-height: 58px;
+    margin-top: 6px;
+  }
+}
+
+@media (max-width: 374px) {
+  .classicPhone.studyPhone:not(.resultPhone) {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .studyTopbar {
+    grid-template-columns: 48px minmax(0, 1fr) 58px;
+    min-height: 49px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .homeIconBox {
+    width: 40px;
+    min-height: 40px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .switchCourseButton {
+    width: 58px;
+    font-size: 0.5rem;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .brandTitle {
+    font-size: 0.96rem;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .brandSubtitle {
+    font-size: 0.36rem;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .dialogCard {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .methodStep {
+    grid-template-columns: 25px minmax(0, 1fr);
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .methodIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .stepCopy strong {
+    font-size: 0.51rem;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .stepCopy small {
+    font-size: 0.42rem;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .practiceControls {
+    grid-template-columns: minmax(0, 1fr) 66px minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .classicPhone.studyPhone:not(.resultPhone) .micButton {
+    width: 66px;
+    height: 66px;
+  }
+}
+
+/* Compact result feedback page to match the reference mobile screen. */
+.classicPhone.resultPhone.studyPhone {
+  width: min(100%, 430px);
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  padding: calc(6px + env(safe-area-inset-top)) 10px calc(6px + env(safe-area-inset-bottom));
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 14% 10%, rgba(220, 235, 206, 0.52), transparent 24%),
+    radial-gradient(circle at 92% 74%, rgba(236, 228, 209, 0.36), transparent 30%),
+    linear-gradient(180deg, #f8fbf2 0%, #fffdf7 46%, #fffaf0 100%);
+  box-shadow: none;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopbar {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 68px;
+  gap: 4px;
+  min-height: 42px;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.classicPhone.resultPhone.studyPhone .homeShortcut {
+  justify-self: start;
+}
+
+.classicPhone.resultPhone.studyPhone .homeIconBox {
+  width: 38px;
+  min-height: 38px;
+  gap: 2px;
+  padding: 3px 2px 4px;
+  border-color: rgba(88, 125, 79, 0.13);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #244c2c;
+  box-shadow:
+    0 6px 14px rgba(58, 82, 45, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.classicPhone.resultPhone.studyPhone .homeIconBox :global(.sf-home-menu-icon) {
+  width: 1.02rem;
+  height: 1.02rem;
+  font-size: 1rem;
+}
+
+.classicPhone.resultPhone.studyPhone .homeShortcutText {
+  color: #486c45;
+  font-size: 0.46rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.classicPhone.resultPhone.studyPhone .brand {
+  gap: 4px;
+  justify-content: center;
+  padding-top: 0;
+}
+
+.classicPhone.resultPhone.studyPhone .brandIcon {
+  width: 19px;
+  height: 19px;
+  color: #568a58;
+}
+
+.classicPhone.resultPhone.studyPhone .brandTitle {
+  color: #122a16;
+  font-size: 0.86rem;
+  font-weight: 900;
+  line-height: 0.95;
+}
+
+.classicPhone.resultPhone.studyPhone .brandSubtitle {
+  margin-top: 2px;
+  color: #6f8668;
+  font-size: 0.28rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+.classicPhone.resultPhone.studyPhone .switchCourseButton {
+  width: 58px;
+  min-height: 22px;
+  justify-self: end;
+  border-color: rgba(117, 95, 221, 0.12);
+  border-radius: 999px;
+  background: rgba(248, 246, 255, 0.95);
+  color: #7358d8;
+  padding: 0 6px;
+  font-size: 0.5rem;
+  font-weight: 900;
+  box-shadow: none;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopicBar {
+  grid-template-columns: 58px minmax(0, 1fr);
+  column-gap: 9px;
+  min-height: 88px;
+  margin-top: 2px;
+  padding: 8px 8px 7px;
+  border: 1px solid rgba(126, 159, 102, 0.12);
+  border-radius: 0;
+  background: rgba(255, 255, 250, 0.84);
+  box-shadow:
+    0 8px 18px rgba(58, 82, 45, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon,
+.classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon svg {
+  width: 56px;
+  height: 56px;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon {
+  color: #6f9b6b;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopicBar .topicCopy {
+  gap: 3px;
+}
+
+.classicPhone.resultPhone.studyPhone .categoryPill {
+  min-height: 18px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #efe9ff;
+  color: #6f55e7;
+  font-size: 0.52rem;
+  font-weight: 900;
+  box-shadow: none;
+}
+
+.classicPhone.resultPhone.studyPhone .topicTitleRow {
+  grid-template-columns: 17px minmax(0, 1fr) 17px;
+  gap: 2px;
+}
+
+.classicPhone.resultPhone.studyPhone .lessonArrowButton {
+  width: 17px;
+  height: 17px;
+  border: 0;
+  background: transparent;
+  color: #91c2a3;
+  box-shadow: none;
+}
+
+.classicPhone.resultPhone.studyPhone .lessonArrowButton svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 3.4;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopicBar .topicTitle {
+  color: #163b1f;
+  font-size: clamp(1.12rem, 5vw, 1.34rem);
+  line-height: 1.08;
+  white-space: normal;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopicBar .topicProgress {
+  color: #354d30;
+  font-size: 0.66rem;
+  font-weight: 800;
+}
+
+.classicPhone.resultPhone.studyPhone .progressRow {
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.classicPhone.resultPhone.studyPhone .progressTrack {
+  height: 4px;
+  background: #dce9d6;
+}
+
+.classicPhone.resultPhone.studyPhone .progressTrack span {
+  background: linear-gradient(90deg, #7568ff, #4d89f7);
+}
+
+.classicPhone.resultPhone.studyPhone .progressPercent {
+  color: #2d7f35;
+  font-size: 0.52rem;
+  font-weight: 900;
+}
+
+.classicPhone.resultPhone.studyPhone .resultHint {
+  min-height: 17px;
+  margin: 5px 8px 5px;
+  justify-content: flex-start;
+  color: #66806a;
+  font-size: 0.52rem;
+  font-weight: 800 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .resultHintIcon {
+  width: 13px;
+  height: 13px;
+  font-size: 0.48rem;
+  color: #66936b;
+}
+
+.classicPhone.resultPhone.studyPhone .resultScrollArea {
+  min-height: 0;
+  flex: 1 1 auto;
+  padding-bottom: 5px;
+  overflow-y: auto;
+}
+
+.classicPhone.resultPhone.studyPhone .resultExpressionPanel {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionLabel {
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionIcon,
+.classicPhone.resultPhone.studyPhone .userExpressionIcon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionLabel strong {
+  min-height: 20px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #eef5e8;
+  color: #3b7a44;
+  font-size: 0.58rem;
+  font-weight: 900;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionLabel strong::after {
+  left: 7px;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionBubble {
+  grid-template-columns: minmax(0, 1fr) 30px;
+  min-height: 40px;
+  gap: 6px;
+  margin: 5px 2px 0 17px;
+  padding: 6px 7px 6px 12px;
+  border-color: rgba(126, 159, 102, 0.22);
+  border-radius: 12px;
+  background: rgba(255, 255, 252, 0.96);
+  box-shadow:
+    0 5px 13px rgba(58, 82, 45, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionBubble::after {
+  left: 12px;
+  bottom: -8px;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(126, 159, 102, 0.22);
+  background: rgba(255, 255, 252, 0.98);
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionText {
+  color: #263027;
+  font-size: 0.68rem;
+  font-weight: 700 !important;
+  line-height: 1.2;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionSpeaker {
+  width: 28px;
+  height: 28px;
+  border-color: rgba(126, 159, 102, 0.14);
+  color: #6d916c;
+  box-shadow: none;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionSpeaker svg {
+  width: 15px;
+  height: 15px;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionList {
+  gap: 5px;
+  margin-top: 11px;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCard {
+  grid-template-columns: minmax(0, 1fr) 31px;
+  min-height: 44px;
+  overflow: hidden;
+  border: 1px solid var(--tone-border);
+  border-radius: 10px;
+  background: rgba(255, 255, 252, 0.96);
+  box-shadow:
+    0 5px 12px rgba(58, 82, 45, 0.045),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured {
+  min-height: 66px;
+  border-color: rgba(111, 153, 103, 0.32);
+  background:
+    radial-gradient(circle at 86% 86%, rgba(223, 132, 80, 0.08), transparent 24%),
+    rgba(255, 255, 252, 0.98);
+}
+
+.classicPhone.resultPhone.studyPhone .expressionSelectArea,
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .expressionSelectArea {
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 7px;
+  min-height: 0;
+  padding: 6px 2px 6px 7px;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .expressionSelectArea {
+  grid-template-columns: 28px minmax(0, 1fr);
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.classicPhone.resultPhone.studyPhone .variantRibbon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--tone-soft);
+  color: var(--tone);
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantRibbon {
+  width: 25px;
+  height: 50px;
+  align-self: start;
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(180deg, #7ea374, #5f8d57);
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 50% 77%, 0 88%);
+  color: #ffffff;
+}
+
+.classicPhone.resultPhone.studyPhone .variantRibbon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantRibbon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.classicPhone.resultPhone.studyPhone .variantCopy {
+  gap: 3px;
+}
+
+.classicPhone.resultPhone.studyPhone .variantTitle,
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantTitle {
+  color: var(--tone);
+  font-size: 0.56rem;
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.classicPhone.resultPhone.studyPhone .variantText {
+  color: #1d251e;
+  font-size: 0.66rem;
+  font-weight: 780;
+  line-height: 1.12;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantText {
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.classicPhone.resultPhone.studyPhone .variantNote {
+  min-height: 16px;
+  border-radius: 6px;
+  background: #f4f1e8;
+  padding: 0 6px;
+  color: #667866;
+  font-size: 0.46rem;
+  font-weight: 760;
+}
+
+.classicPhone.resultPhone.studyPhone .variantSpeaker,
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantSpeaker {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--speaker, var(--tone));
+  box-shadow: none;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantSpeaker {
+  background: linear-gradient(145deg, #f0a879, #e27e45);
+  color: #ffffff;
+}
+
+.classicPhone.resultPhone.studyPhone .variantSpeaker svg {
+  width: 15px;
+  height: 15px;
+}
+
+.classicPhone.resultPhone.studyPhone .cornerStar {
+  display: none;
+}
+
+.classicPhone.resultPhone.studyPhone .followCard {
+  min-height: 73px;
+  margin: 4px 0 0;
+  padding: 6px 8px 5px;
+  border: 1px solid rgba(126, 159, 102, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 252, 0.94);
+  box-shadow:
+    0 -3px 12px rgba(58, 82, 45, 0.045),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.classicPhone.resultPhone.studyPhone .followTop {
+  display: none;
+}
+
+.classicPhone.resultPhone.studyPhone .followControls {
+  grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr);
+  gap: 9px;
+  margin-top: 0;
+  align-items: center;
+}
+
+.classicPhone.resultPhone.studyPhone .followControls .sentenceButton {
+  min-height: 34px;
+  border: 1px solid rgba(126, 159, 102, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 252, 0.96);
+  color: #3c7a43;
+  padding: 0 7px;
+  box-shadow: none;
+}
+
+.classicPhone.resultPhone.studyPhone .followControls .sentenceButton:last-child {
+  color: #3c7a43;
+}
+
+.classicPhone.resultPhone.studyPhone .followControls .sentenceButton span {
+  color: inherit;
+  font-size: 0.56rem;
+  font-weight: 900;
+}
+
+.classicPhone.resultPhone.studyPhone .followControls .sentenceButton svg {
+  width: 13px;
+  height: 13px;
+  stroke-width: 3.5;
+}
+
+.classicPhone.resultPhone.studyPhone .followMicButton {
+  width: 58px;
+  height: 58px;
+  border: 4px solid rgba(232, 215, 184, 0.86);
+  background:
+    radial-gradient(circle at 34% 23%, rgba(255, 255, 255, 0.28), transparent 28%),
+    linear-gradient(145deg, #7fa978, #3f7a49);
+  box-shadow:
+    0 8px 18px rgba(47, 98, 56, 0.18),
+    inset 0 2px 0 rgba(255, 255, 255, 0.24);
+}
+
+.classicPhone.resultPhone.studyPhone .followMicButton svg {
+  width: 29px;
+  height: 29px;
+}
+
+.classicPhone.resultPhone.studyPhone .followMicLabel {
+  margin-top: 3px;
+  color: #3b7a44;
+  font-size: 0.52rem;
+  font-weight: 900;
+}
+
+@media (min-width: 390px) {
+  .classicPhone.resultPhone.studyPhone {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .classicPhone.resultPhone.studyPhone .studyTopicBar {
+    min-height: 94px;
+  }
+
+  .classicPhone.resultPhone.studyPhone .resultHint {
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .classicPhone.resultPhone.studyPhone .expressionList {
+    gap: 6px;
+  }
+}
+
+@media (max-height: 720px) and (max-width: 540px) {
+  .classicPhone.resultPhone.studyPhone {
+    padding-top: calc(4px + env(safe-area-inset-top));
+  }
+
+  .classicPhone.resultPhone.studyPhone .studyTopicBar {
+    min-height: 82px;
+    padding-top: 6px;
+    padding-bottom: 5px;
+  }
+
+  .classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon,
+  .classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon svg {
+    width: 52px;
+    height: 52px;
+  }
+
+  .classicPhone.resultPhone.studyPhone .expressionCardFeatured {
+    min-height: 61px;
+  }
+
+  .classicPhone.resultPhone.studyPhone .expressionCard {
+    min-height: 41px;
+  }
+
+  .classicPhone.resultPhone.studyPhone .followCard {
+    min-height: 68px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .classicPhone.resultPhone.studyPhone .followMicButton {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+:global(html[data-app-theme="dark"]) :where(.classicShell, .classicPhone, .studyPhone, .resultPhone) {
+  background: var(--app-bg-gradient);
+  color: var(--text-primary);
+}
+
+:global(html[data-app-theme="dark"]) :where(
+  .classicTopbar,
+  .studyTopbar,
+  .menuButton,
+  .avatarButton,
+  .homeIconBox,
+  .switchCourseButton,
+  .topicBar,
+  .studyTopicBar,
+  .resultTopicBar,
+  .dialogCard,
+  .methodCard,
+  .tipCard,
+  .sentenceButton,
+  .lessonArrowButton,
+  .resultHint,
+  .userExpressionCard,
+  .userExpressionBubble,
+  .expressionCard,
+  .followCard,
+  .followReadButton,
+  .slowReadButton,
+  .followModal
+) {
+  border-color: var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  box-shadow:
+    0 16px 34px var(--shadow-color),
+    inset 0 1px 0 var(--theme-inset);
+}
+
+:global(html[data-app-theme="dark"]) :where(.chinesePrompt, .variantText, .userExpressionText) {
+  color: var(--text-primary);
+}
+
+:global(html[data-app-theme="dark"]) :where(.variantNote, .followMicLabel, .topicProgress) {
+  color: var(--text-secondary);
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(html[data-app-theme="system"]) :where(.classicShell, .classicPhone, .studyPhone, .resultPhone) {
+    background: var(--app-bg-gradient);
+    color: var(--text-primary);
+  }
+
+  :global(html[data-app-theme="system"]) :where(
+    .classicTopbar,
+    .studyTopbar,
+    .menuButton,
+    .avatarButton,
+    .homeIconBox,
+    .switchCourseButton,
+    .topicBar,
+    .studyTopicBar,
+    .resultTopicBar,
+    .dialogCard,
+    .methodCard,
+    .tipCard,
+    .sentenceButton,
+    .lessonArrowButton,
+    .resultHint,
+    .userExpressionCard,
+    .userExpressionBubble,
+    .expressionCard,
+    .followCard,
+    .followReadButton,
+    .slowReadButton,
+    .followModal
+  ) {
+    border-color: var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    box-shadow:
+      0 16px 34px var(--shadow-color),
+      inset 0 1px 0 var(--theme-inset);
+  }
+
+  :global(html[data-app-theme="system"]) :where(.chinesePrompt, .variantText, .userExpressionText) {
+    color: var(--text-primary);
+  }
+
+  :global(html[data-app-theme="system"]) :where(.variantNote, .followMicLabel, .topicProgress) {
+    color: var(--text-secondary);
+  }
 }

@@ -105,7 +105,7 @@ export default function HomePageClient() {
         <h2 className={styles.heroTitle}>
           把你想说的话，
           <br />
-          变成自然英语
+          变成<span className={styles.heroEmphasis}>自然英语</span>
         </h2>
         <p className={styles.heroCopy}>AI 帮你润色表达，练出地道口语</p>
 

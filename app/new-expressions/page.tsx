@@ -17,15 +17,13 @@ type SessionResponse = {
 const learnFeatures = [
   "精选高频表达",
   "场景化例句",
-  "地道发音跟读",
-  "帮助你自然表达",
+  "快速改善表达",
 ];
 
 const libraryFeatures = [
   "查看全部收藏内容",
   "继续学习中的表达",
   "复习和巩固掌握",
-  "分类管理更高效",
 ];
 
 function ArrowIcon() {

@@ -987,21 +987,57 @@
 
 :global(html[data-app-theme]) .pageShell,
 :global(html[data-app-theme]) .panel {
-  background: var(--app-bg-gradient);
-  color: var(--text-primary);
+  color: #113d1e;
   filter: saturate(var(--app-brightness-saturate, 1));
+}
+
+:global(html[data-app-theme]) .pageShell {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(250, 247, 237, 0.9), transparent 30%),
+    linear-gradient(180deg, #fffdf8 0%, #fffdf9 48%, #fffaf4 100%);
+}
+
+:global(html[data-app-theme]) .panel {
+  background:
+    radial-gradient(circle at 74% 8%, rgba(229, 236, 211, 0.3), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 252, 0.94), rgba(255, 253, 247, 0.98));
 }
 
 :global(html[data-app-theme]) .hero,
 :global(html[data-app-theme]) .sceneCard,
 :global(html[data-app-theme]) .arrowCircle,
 :global(html[data-app-theme]) .lockBadge {
-  border-color: var(--border-color);
-  background: var(--card-bg);
-  color: var(--text-primary);
+  color: #151515;
+}
+
+:global(html[data-app-theme]) .hero {
+  border-color: rgba(42, 86, 43, 0.11);
+  background:
+    radial-gradient(circle at 82% 38%, rgba(210, 222, 193, 0.5), transparent 34%),
+    radial-gradient(circle at 22% 90%, rgba(239, 242, 225, 0.64), transparent 30%),
+    linear-gradient(135deg, #fffef8 0%, #fbfaf0 48%, #edf4df 100%);
   box-shadow:
-    0 16px 34px var(--shadow-color),
-    inset 0 1px 0 var(--theme-inset);
+    0 14px 30px rgba(57, 79, 43, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+:global(html[data-app-theme]) .sceneCard {
+  border-color: rgba(65, 79, 42, 0.13);
+  background:
+    radial-gradient(circle at 96% 58%, rgba(238, 238, 223, 0.36), transparent 36%),
+    rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 15px 28px rgba(57, 54, 38, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+:global(html[data-app-theme]) .arrowCircle,
+:global(html[data-app-theme]) .lockBadge {
+  border-color: rgba(65, 79, 42, 0.13);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 10px 18px rgba(62, 63, 45, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
 }
 
 :global(html[data-app-theme]) .menuButton,
@@ -1011,25 +1047,35 @@
 :global(html[data-app-theme]) .brandText strong,
 :global(html[data-app-theme]) .heroText h1,
 :global(html[data-app-theme]) .cardCopy strong {
-  color: var(--text-primary);
+  color: #08210f;
 }
 
 :global(html[data-app-theme]) .brandText span,
-:global(html[data-app-theme]) .heroText p,
-:global(html[data-app-theme]) .cardCopy span,
+:global(html[data-app-theme]) .heroText p {
+  color: rgba(29, 45, 28, 0.76);
+}
+
+:global(html[data-app-theme]) .cardCopy span {
+  color: rgba(19, 19, 19, 0.68);
+}
+
 :global(html[data-app-theme]) .cardMeta {
-  color: var(--text-secondary);
+  color: #1e6331;
 }
 
 :global(html[data-app-theme]) .backLink,
 :global(html[data-app-theme]) .topBackLink,
 :global(html[data-app-theme]) .arrowCircle {
-  color: var(--accent-green);
+  color: #174f28;
 }
 
 :global(html[data-app-theme]) .iconTile {
-  background: var(--chip-bg);
-  color: var(--accent-green);
+  background: var(--icon-bg);
+  color: var(--card-accent);
+}
+
+:global(html[data-app-theme]) .lockBadge {
+  color: #31513a;
 }
 
 :global(html[data-app-theme="dark"]) .heroVisual,

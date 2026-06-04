@@ -4,9 +4,9 @@ export type HighlightedExpression = {
 };
 
 const FALLBACK_EXPRESSION_MEANINGS: Record<string, string> = {
-  "lush and verdant": "🌱 生机盎然",
-  "open a bank account": "🏦 开银行账户",
-  "bring along": "🎒 随身带上",
+  "bring along": "\ud83c\udf92 \u968f\u8eab\u5e26\u4e0a",
+  "lush and verdant": "\ud83c\udf3f \u751f\u673a\u76ce\u7136",
+  "open a bank account": "\ud83c\udfe6 \u5f00\u94f6\u884c\u8d26\u6237",
 };
 
 const FALLBACK_HIGHLIGHT_MEANING =
@@ -20,8 +20,100 @@ const FALLBACK_PHRASE_PATTERNS: RegExp[] = [
   /\b[A-Za-z]+s?\s+of\s+[A-Za-z]+s?\b/i,
 ];
 
+const FALLBACK_STOP_WORDS = new Set([
+  "a",
+  "an",
+  "and",
+  "are",
+  "as",
+  "at",
+  "be",
+  "but",
+  "by",
+  "can",
+  "could",
+  "did",
+  "do",
+  "does",
+  "for",
+  "from",
+  "had",
+  "has",
+  "have",
+  "he",
+  "her",
+  "his",
+  "i",
+  "if",
+  "in",
+  "is",
+  "it",
+  "me",
+  "my",
+  "of",
+  "on",
+  "or",
+  "our",
+  "she",
+  "that",
+  "the",
+  "their",
+  "this",
+  "to",
+  "was",
+  "we",
+  "were",
+  "what",
+  "when",
+  "where",
+  "which",
+  "who",
+  "why",
+  "with",
+  "would",
+  "you",
+  "your",
+]);
+
 export function normalizeExpressionPhrase(phrase: string) {
   return phrase.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function getFallbackPhraseCandidate(sentence: string) {
+  const words = Array.from(sentence.matchAll(/[A-Za-z]+(?:'[A-Za-z]+)?/g)).map(
+    (match) => match[0]
+  );
+  let bestCandidate = "";
+  let bestScore = -1;
+
+  for (let start = 0; start < words.length - 1; start += 1) {
+    for (let length = Math.min(4, words.length - start); length >= 2; length -= 1) {
+      const phraseWords = words.slice(start, start + length);
+      const normalizedWords = phraseWords.map((word) => word.toLowerCase());
+      const contentWords = normalizedWords.filter(
+        (word) => !FALLBACK_STOP_WORDS.has(word)
+      );
+
+      if (!contentWords.length) continue;
+      if (contentWords.length === 1 && contentWords[0].length < 5) continue;
+
+      const hasUsefulBridge = normalizedWords.some((word) =>
+        /^(about|after|before|for|from|in|of|on|to|with)$/.test(word)
+      );
+      const score =
+        contentWords.length * 12 +
+        contentWords.join("").length +
+        (hasUsefulBridge ? 5 : 0) -
+        start * 0.2;
+
+      if (score > bestScore) {
+        bestCandidate = phraseWords.join(" ");
+        bestScore = score;
+      }
+    }
+  }
+
+  return bestCandidate;
 }
 
 export function createFallbackHighlightedExpressions(sentence: string) {
@@ -64,6 +156,10 @@ export function createFallbackHighlightedExpressions(sentence: string) {
     }
   }
 
+  if (!expressions.length) {
+    addExpression(getFallbackPhraseCandidate(sentence));
+  }
+
   return expressions.slice(0, 3);
 }
 
@@ -93,7 +189,11 @@ export function splitSentenceByHighlightedExpressions(
         index: lowerSentence.indexOf(expression.phrase.toLowerCase(), cursor),
       }))
       .filter((item) => item.index >= cursor)
-      .sort((a, b) => a.index - b.index || b.expression.phrase.length - a.expression.phrase.length)[0];
+      .sort(
+        (a, b) =>
+          a.index - b.index ||
+          b.expression.phrase.length - a.expression.phrase.length
+      )[0];
 
     if (!match) {
       segments.push({ type: "text", value: sentence.slice(cursor) });

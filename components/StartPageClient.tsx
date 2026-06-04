@@ -118,18 +118,18 @@ const starterPracticeCards: Array<{
     tone: "violet",
   },
   {
+    href: "/classic-scenes",
+    icon: "bank",
+    subtitle: "旅行、职场、购物等场景口语练习",
+    title: "经典场景口语练习",
+    tone: "cyan",
+  },
+  {
     href: "/free-study/step-1",
     icon: "mic",
     subtitle: "想说什么就说什么，完全自由练习",
     title: "自由练习",
     tone: "violet",
-  },
-  {
-    href: "/classic-scenes",
-    icon: "bank",
-    subtitle: "旅行、职场、购物等场景口语练习",
-    title: "经典场景",
-    tone: "cyan",
   },
   {
     href: "/new-expressions",
@@ -538,7 +538,7 @@ export default function StartPageClient({
               </span>
               <span className={styles.starterBrandCopy}>
                 <strong>SpeakFlow</strong>
-                <small>AI 英语口语练习伙伴</small>
+                <small>AI 语音口语练习伙伴</small>
               </span>
             </Link>
             <span className={styles.starterTopSpacer} aria-hidden="true" />
@@ -573,14 +573,14 @@ export default function StartPageClient({
           >
             <div className={styles.starterRibbon}>
               <StarterStarIcon />
-              推荐体验
+              推荐你试
             </div>
             <div className={styles.starterRecommendedBody}>
               <div className={styles.starterRecommendedCopy}>
                 <h2 id="starter-recommended-title">
                   从 <span>AI 引导表达</span> 开始
                 </h2>
-                <p>AI 会一步一步引导你表达想法，轻松开口，自信说英语。</p>
+                <p>AI 会一步一步引导你表达想法，帮你把中文变成自然英语。</p>
               </div>
               <div className={styles.starterBubbleArt} aria-hidden="true">
                 <Image

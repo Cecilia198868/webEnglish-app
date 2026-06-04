@@ -1,6 +1,9 @@
 .page,
 .studyPage {
+  width: 100%;
+  max-width: 100vw;
   min-height: 100dvh;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at 85% 8%, rgba(130, 105, 255, 0.1), transparent 26%),
     radial-gradient(circle at 8% 42%, var(--pattern-glow, rgba(93, 130, 255, 0.12)), transparent 30%),
@@ -19,12 +22,21 @@
 }
 
 .studyPhone {
-  width: min(100%, 500px);
-  padding-inline: 10px;
+  width: min(100vw, 430px);
+  max-width: 430px;
+  overflow-x: hidden;
+  --pattern-accent: #7657ff;
+  --pattern-accent-dark: #6847ee;
+  --pattern-soft: #f1edff;
+  --pattern-soft-strong: #e6ddff;
+  --pattern-glow: rgba(118, 87, 255, 0.18);
+  padding: max(8px, calc(env(safe-area-inset-top, 0px) + 4px)) 8px
+    calc(env(safe-area-inset-bottom, 0px) + 14px);
 }
 
 .levelPhone {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 132px);
+  padding: max(12px, calc(env(safe-area-inset-top, 0px) + 8px)) 18px
+    calc(env(safe-area-inset-bottom, 0px) + 132px);
 }
 
 .overviewHeader,
@@ -37,16 +49,23 @@
 
 .levelHeader {
   position: relative;
-  display: block;
-  min-height: 118px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  min-height: auto;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.levelHeader::after {
+  content: "";
 }
 
 .levelHeader .roundBack {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 46px;
-  height: 46px;
+  position: static;
+  width: 42px;
+  height: 42px;
+  justify-self: start;
 }
 
 .overviewHeader h1,
@@ -302,16 +321,16 @@
   grid-template-columns: auto minmax(0, max-content);
   align-items: center;
   justify-content: center;
-  column-gap: 9px;
-  row-gap: 6px;
+  column-gap: 8px;
+  row-gap: 5px;
   justify-items: center;
   min-width: 0;
-  padding-top: 4px;
+  padding-top: 0;
 }
 
 .levelHeading > svg {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   fill: none;
   stroke: var(--pattern-accent);
   stroke-linecap: round;
@@ -321,7 +340,7 @@
 
 .levelHeading h1 {
   margin: 0;
-  font-size: clamp(1.55rem, 5.6vw, 2rem);
+  font-size: clamp(1.38rem, 5.75vw, 1.78rem);
   line-height: 1.05;
   text-align: left;
   white-space: nowrap;
@@ -330,14 +349,15 @@
 .levelHeading p {
   grid-column: 1 / -1;
   max-width: 350px;
-  font-size: clamp(0.92rem, 3.6vw, 1rem);
+  font-size: clamp(0.78rem, 3.1vw, 0.92rem);
+  line-height: 1.32;
 }
 
 .statsBar {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.34fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.55fr);
   align-items: center;
-  margin: 15px 0 14px;
+  margin: 0 0 14px;
   border-radius: 14px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), var(--pattern-soft));
   box-shadow: 0 16px 32px rgba(84, 102, 155, 0.1);
@@ -345,13 +365,15 @@
 
 .statsBar span {
   display: flex;
-  min-height: 52px;
+  min-width: 0;
+  min-height: 46px;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   color: #3f496d;
-  font-size: clamp(0.72rem, 2.65vw, 0.9rem);
+  font-size: clamp(0.62rem, 2.25vw, 0.78rem);
   font-weight: 820;
+  padding: 0 4px;
   text-align: center;
   white-space: nowrap;
 }
@@ -373,17 +395,17 @@
 
 .sectionTitle {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 28px;
+  grid-template-columns: auto minmax(0, 1fr) 24px;
   width: 100%;
   align-items: center;
-  gap: 12px;
-  min-height: 64px;
+  gap: 9px;
+  min-height: 54px;
   border: 0;
   background: transparent;
   color: inherit;
   cursor: pointer;
   font: inherit;
-  padding: 0 14px;
+  padding: 0 12px;
   text-align: left;
 }
 
@@ -396,14 +418,14 @@
 .patternRow > span,
 .practicePill {
   display: inline-flex;
-  min-width: 48px;
-  min-height: 34px;
+  min-width: 46px;
+  min-height: 30px;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
   background: var(--pattern-soft);
   color: var(--pattern-accent-dark);
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 900;
   padding: 0 9px;
 }
@@ -411,14 +433,14 @@
 .sectionTitle strong {
   min-width: 0;
   color: #10163b;
-  font-size: 1rem;
+  font-size: clamp(0.72rem, 2.65vw, 0.92rem);
   font-weight: 950;
   line-height: 1.25;
 }
 
 .sectionTitle small {
-  margin-left: 6px;
-  font-size: 0.9rem;
+  margin-left: 4px;
+  font-size: clamp(0.66rem, 2.2vw, 0.78rem);
   font-weight: 750;
 }
 
@@ -428,12 +450,12 @@
 
 .patternRow {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) 24px;
+  grid-template-columns: 46px minmax(0, 1fr) 22px;
   align-items: center;
-  gap: 12px;
-  min-height: 62px;
+  gap: 9px;
+  min-height: 50px;
   color: #10163b;
-  padding: 0 14px;
+  padding: 0 12px;
   text-decoration: none;
 }
 
@@ -442,7 +464,7 @@
 }
 
 .patternRow strong {
-  font-size: 0.98rem;
+  font-size: clamp(0.72rem, 2.65vw, 0.9rem);
   font-weight: 650;
   line-height: 1.3;
 }
@@ -514,38 +536,47 @@
 
 .brandHeader {
   position: sticky;
-  top: 0;
+  top: 6px;
   z-index: 5;
   display: grid;
-  grid-template-columns: 62px minmax(0, 1fr) 112px;
+  grid-template-columns: 42px minmax(0, 1fr) minmax(72px, auto);
   align-items: center;
-  min-height: 66px;
+  min-height: 54px;
   border: 1px solid rgba(226, 232, 246, 0.92);
-  border-radius: 0 0 18px 18px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 16px 38px rgba(84, 102, 155, 0.1);
-  padding: 7px 12px;
+  box-shadow: 0 12px 30px rgba(84, 102, 155, 0.09);
+  padding: 5px 7px;
+}
+
+.brandHeader .homeButton {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(247, 249, 255, 0.92);
+  box-shadow: none;
 }
 
 .brand {
   display: inline-grid;
-  grid-template-columns: 48px minmax(0, max-content);
+  grid-template-columns: 32px minmax(0, max-content);
   justify-self: center;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   color: #10163b;
   text-decoration: none;
 }
 
 .brandMark {
-  width: 48px !important;
-  height: 48px !important;
+  width: 32px !important;
+  height: 32px !important;
 }
 
 .brand strong {
   display: block;
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: clamp(1.35rem, 5.8vw, 2rem);
+  font-size: clamp(0.98rem, 4vw, 1.18rem);
   font-weight: 900;
   letter-spacing: 0;
   line-height: 0.94;
@@ -553,10 +584,10 @@
 
 .brand small {
   display: block;
-  margin-top: 6px;
+  margin-top: 3px;
   color: #696f90;
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: clamp(0.62rem, 2.5vw, 0.78rem);
+  font-size: clamp(0.43rem, 1.65vw, 0.52rem);
   font-weight: 800;
   letter-spacing: 0.18em;
   line-height: 1;
@@ -564,56 +595,75 @@
 
 .switchButton {
   display: inline-flex;
-  min-height: 42px;
+  justify-self: end;
+  min-width: 72px;
+  min-height: 34px;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: var(--pattern-soft);
-  color: var(--pattern-accent-dark);
+  background: #e9fbf2;
+  color: #21a36c;
+  font-size: 0.72rem;
   font-weight: 900;
+  padding: 0 10px;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .courseCrumb {
   display: grid;
-  grid-template-columns: 62px minmax(0, max-content) 20px;
-  justify-content: center;
+  grid-template-columns: 36px minmax(0, 1fr) 24px;
+  justify-content: stretch;
   align-items: center;
-  gap: 10px;
-  margin: 17px auto 12px;
+  gap: 9px;
+  margin: 12px 0 8px;
+  border: 1px solid rgba(228, 232, 247, 0.92);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
   color: #10163b;
+  box-shadow: 0 10px 24px rgba(84, 102, 155, 0.07);
+  padding: 9px 10px;
   text-decoration: none;
 }
 
 .courseCrumb > span {
   display: grid;
-  width: 56px;
-  height: 56px;
+  width: 32px;
+  height: 32px;
   place-items: center;
   border-radius: 999px;
-  background: var(--pattern-soft);
+  background: #eafaf4;
 }
 
 .courseCrumb > span svg {
-  width: 31px;
-  height: 31px;
+  width: 19px;
+  height: 19px;
   fill: none;
-  stroke: var(--pattern-accent);
+  stroke: #24bd80;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 4;
 }
 
 .courseCrumb strong {
-  font-size: 1.28rem;
+  min-width: 0;
+  font-size: 0.9rem;
   font-weight: 950;
 }
 
 .courseCrumb small {
-  grid-column: 2 / 4;
+  grid-column: 2;
   color: #57617f;
-  font-size: 0.9rem;
+  font-size: 0.68rem;
   font-weight: 650;
+  line-height: 1.2;
+}
+
+.courseCrumb > svg {
+  justify-self: end;
+  color: #10163b;
+  width: 1rem;
+  height: 1rem;
 }
 
 .studyCard,
@@ -623,6 +673,8 @@
 .bottomTip,
 .userExpression,
 .variantCard {
+  width: 100%;
+  max-width: 100%;
   border: 1px solid rgba(226, 232, 246, 0.9);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.95);
@@ -631,30 +683,45 @@
 
 .studyCard,
 .resultIntro {
-  padding: 20px 18px;
+  overflow: hidden;
+  border-color: rgba(224, 220, 249, 0.94);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 88% 92%, rgba(118, 87, 255, 0.08), transparent 30%),
+    rgba(255, 255, 255, 0.96);
+  padding: 13px 12px 0;
 }
 
 .studyTitleRow {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 42px;
+  grid-template-columns: auto minmax(0, 1fr) 28px;
   align-items: center;
-  gap: 14px;
+  gap: 9px;
+}
+
+.studyTitleRow .practicePill {
+  min-width: 52px;
+  min-height: 28px;
+  border-radius: 9px;
+  background: #eee9ff;
+  color: #7657ff;
+  font-size: 0.76rem;
 }
 
 .studyTitleRow h1 {
   margin: 0;
   color: #10163b;
-  font-size: clamp(1rem, 4.2vw, 1.28rem);
-  font-weight: 850;
-  line-height: 1.35;
+  font-size: clamp(0.78rem, 3.1vw, 0.94rem);
+  font-weight: 900;
+  line-height: 1.22;
 }
 
 .studyTitleRow a {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 28px;
+  height: 28px;
   place-items: center;
-  color: #d29a5b;
+  color: #e0a458;
   text-decoration: none;
 }
 
@@ -662,10 +729,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 10px;
+  margin-top: 11px;
   color: #56617f;
-  font-size: 0.88rem;
+  font-size: 0.68rem;
   font-weight: 700;
 }
 
@@ -674,11 +741,11 @@
 }
 
 .progressTrack {
-  height: 7px;
+  height: 5px;
   overflow: hidden;
   border-radius: 999px;
   background: #e5e5f4;
-  margin-top: 7px;
+  margin-top: 6px;
 }
 
 .progressTrack span {
@@ -690,15 +757,16 @@
 
 .promptCard {
   position: relative;
-  min-height: 220px;
+  min-height: 176px;
   overflow: hidden;
-  margin-top: 26px;
+  margin-top: 14px;
   border: 1px solid color-mix(in srgb, var(--pattern-accent) 28%, white);
-  border-radius: 24px;
+  border-radius: 18px;
   background:
-    radial-gradient(circle at 82% 88%, var(--pattern-glow), transparent 30%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.96), var(--pattern-soft));
-  padding: 56px 24px;
+    radial-gradient(circle at 92% 84%, rgba(118, 87, 255, 0.12), transparent 31%),
+    radial-gradient(circle at 8% 88%, rgba(36, 189, 128, 0.12), transparent 25%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), #f6f1ff);
+  padding: 43px 20px 44px;
 }
 
 .promptCard p {
@@ -707,8 +775,8 @@
   max-width: 320px;
   margin: 0 auto;
   color: #10163b;
-  font-size: clamp(1.55rem, 6.4vw, 2rem);
-  font-weight: 800;
+  font-size: clamp(1.14rem, 5vw, 1.55rem);
+  font-weight: 850;
   line-height: 1.35;
   text-align: center;
 }
@@ -716,8 +784,8 @@
 .quoteLeft,
 .quoteRight {
   position: absolute;
-  color: color-mix(in srgb, var(--pattern-accent) 45%, #f0a246);
-  font-size: 4rem;
+  color: rgba(118, 87, 255, 0.38);
+  font-size: 3.1rem;
   font-weight: 950;
   line-height: 1;
   opacity: 0.75;
@@ -725,11 +793,11 @@
 
 .quoteLeft {
   left: 22px;
-  top: 22px;
+  top: 20px;
 }
 
 .quoteRight {
-  right: 25px;
+  right: 28px;
   bottom: 22px;
 }
 
@@ -737,14 +805,16 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 42%;
-  height: 42%;
-  opacity: 0.22;
+  width: 48%;
+  height: 46%;
+  opacity: 0.26;
   background:
-    radial-gradient(circle at 75% 74%, var(--pattern-accent), transparent 9%),
-    linear-gradient(var(--pattern-accent), var(--pattern-accent)) 40% 65% / 42% 9% no-repeat,
-    linear-gradient(var(--pattern-accent), var(--pattern-accent)) 28% 77% / 9% 32% no-repeat,
-    linear-gradient(var(--pattern-accent), var(--pattern-accent)) 62% 77% / 9% 32% no-repeat;
+    radial-gradient(circle at 78% 72%, #7657ff, transparent 9%),
+    linear-gradient(#7657ff, #7657ff) 40% 65% / 42% 9% no-repeat,
+    linear-gradient(#7657ff, #7657ff) 28% 77% / 9% 32% no-repeat,
+    linear-gradient(#7657ff, #7657ff) 62% 77% / 9% 32% no-repeat,
+    radial-gradient(circle at 16% 70%, #24bd80 0 9%, transparent 10%),
+    linear-gradient(#24bd80, #24bd80) 12% 82% / 6% 28% no-repeat;
   border-radius: 35% 0 18px 0;
 }
 
@@ -752,20 +822,40 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 -18px -20px;
-  background: linear-gradient(90deg, var(--pattern-soft), rgba(255, 255, 255, 0.86));
-  color: var(--pattern-accent-dark);
-  font-size: 0.84rem;
+  margin: 0 -12px;
+  background: linear-gradient(90deg, #f4f0ff, rgba(255, 255, 255, 0.9));
+  color: #7657ff;
+  font-size: 0.62rem;
   font-weight: 750;
-  padding: 12px 22px;
+  line-height: 1.35;
+  padding: 8px 12px;
+}
+
+.loadingPromptCard {
+  min-height: 176px;
+  animation: sentencePatternLoading 1.15s ease-in-out infinite alternate;
+}
+
+.loadingRecordCard {
+  min-height: 176px;
+  pointer-events: none;
+}
+
+.loadingRecordCard .bigMic {
+  cursor: default;
+  opacity: 0.84;
+}
+
+.recordCard > p svg {
+  display: none;
 }
 
 .recordCard,
 .followCard {
   position: relative;
-  min-height: 182px;
-  margin-top: 14px;
-  padding: 22px 18px 20px;
+  min-height: 184px;
+  margin-top: 10px;
+  padding: 18px 14px 18px;
   text-align: center;
 }
 
@@ -774,33 +864,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   margin: 0;
   color: #10163b;
-  font-size: 1rem;
+  font-size: 0.82rem;
   font-weight: 850;
 }
 
 .recordCard small,
 .followCard small {
   display: block;
-  margin-top: 8px;
+  margin-top: 18px;
   color: #65708f;
+  font-size: 0.68rem;
   font-weight: 650;
 }
 
 .bigMic {
   display: grid;
-  width: 86px;
-  height: 86px;
+  width: 76px;
+  height: 76px;
   place-items: center;
-  margin: 22px auto 0;
-  border: 8px solid rgba(255, 255, 255, 0.92);
+  margin: 14px auto 0;
+  border: 9px solid rgba(255, 255, 255, 0.94);
   border-radius: 999px;
-  background: linear-gradient(135deg, #8a6bff, #6d4df4);
+  background: linear-gradient(135deg, #8a6bff, #6f4eff);
   color: #ffffff;
   cursor: pointer;
-  box-shadow: 0 18px 34px rgba(105, 78, 225, 0.26);
+  box-shadow:
+    0 16px 32px rgba(105, 78, 225, 0.28),
+    0 0 0 10px rgba(118, 87, 255, 0.11),
+    0 0 0 22px rgba(118, 87, 255, 0.055);
 }
 
 .bigMic[data-recording="true"] {
@@ -808,8 +901,8 @@
 }
 
 .bigMic svg {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -822,35 +915,36 @@
   position: absolute;
   bottom: 25px;
   display: inline-flex;
-  min-width: 96px;
-  min-height: 42px;
+  min-width: 80px;
+  min-height: 34px;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(222, 223, 244, 0.9);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.88);
-  color: var(--pattern-accent-dark);
+  color: #7657ff;
+  font-size: 0.76rem;
   font-weight: 850;
   text-decoration: none;
 }
 
 .prevButton {
-  left: 22px;
+  left: 18px;
 }
 
 .skipButton {
-  right: 22px;
+  right: 18px;
 }
 
 .bottomTip {
-  grid-template-columns: 44px minmax(0, 1fr);
-  margin-top: 14px;
-  padding: 16px 18px;
+  grid-template-columns: 38px minmax(0, 1fr);
+  margin-top: 10px;
+  padding: 13px 14px;
 }
 
 .bottomTip > span {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
 }
 
 .bottomTip p {
@@ -858,168 +952,288 @@
 }
 
 .resultIntro {
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .expressionStack {
-  margin-top: 13px;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .userExpression {
   position: relative;
-  min-height: 118px;
-  border-color: color-mix(in srgb, #8767ff 34%, white);
-  background: linear-gradient(135deg, #fbf9ff, #ffffff);
-  padding: 18px 84px 18px 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  column-gap: 12px;
+  min-height: 116px;
+  overflow: hidden;
+  border-color: rgba(132, 103, 255, 0.32);
+  background:
+    radial-gradient(circle at 92% 18%, rgba(118, 87, 255, 0.11), transparent 25%),
+    linear-gradient(135deg, #ffffff, #fbf9ff);
+  padding: 15px 16px 14px;
+  box-shadow: 0 12px 26px rgba(84, 102, 155, 0.07);
 }
 
 .expressionLabel {
   display: inline-flex;
+  grid-column: 1;
+  justify-self: start;
   align-items: center;
-  gap: 8px;
-  border-radius: 12px;
+  gap: 6px;
+  border-radius: 10px;
   background: #eee8ff;
-  color: #6d4df4;
+  color: #7657ff;
+  font-size: 0.72rem;
   font-weight: 900;
-  padding: 8px 13px;
+  padding: 7px 10px;
+}
+
+.expressionLabel svg {
+  width: 0.86rem;
+  height: 0.86rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
 }
 
 .userExpression p {
-  margin: 22px 0 0;
+  grid-column: 1;
+  margin: 16px 0 0;
   color: #10163b;
-  font-size: 1.18rem;
-  font-weight: 600;
-  line-height: 1.5;
+  font-size: 0.94rem;
+  font-weight: 850;
+  line-height: 1.42;
 }
 
-.userExpression button,
-.variantCard button {
-  position: absolute;
-  right: 22px;
-  top: 50%;
+.userExpression > button,
+.variantCard > button {
+  position: static;
   display: grid;
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   border: 1px solid rgba(229, 225, 252, 0.95);
   border-radius: 999px;
   background: #ffffff;
-  color: #7657ff;
+  color: #12183e;
   cursor: pointer;
-  transform: translateY(-50%);
-  box-shadow: 0 10px 22px rgba(105, 78, 225, 0.12);
+  box-shadow: 0 10px 22px rgba(105, 78, 225, 0.11);
 }
 
-.userExpression button svg,
-.variantCard button svg {
-  width: 26px;
-  height: 26px;
-  fill: currentColor;
-  stroke: none;
+.userExpression > button {
+  grid-column: 2;
+  grid-row: 1 / 4;
+  align-self: center;
+  justify-self: end;
+}
+
+.userExpression > button svg,
+.variantCard > button svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.8;
 }
 
 .userExpression small {
+  grid-column: 1;
   display: block;
-  margin-top: 18px;
+  margin-top: 12px;
   color: #7657ff;
-  font-weight: 760;
+  font-size: 0.64rem;
+  font-weight: 780;
 }
 
 .variantCard {
   position: relative;
   display: grid;
-  grid-template-columns: 58px minmax(0, 1fr);
+  grid-template-columns: 42px minmax(0, 1fr) 44px;
   align-items: center;
-  gap: 14px;
-  min-height: 82px;
-  padding: 15px 84px 15px 18px;
+  gap: 11px;
+  min-height: 76px;
+  overflow: hidden;
+  padding: 12px 14px;
+  box-shadow: 0 12px 26px rgba(84, 102, 155, 0.07);
+}
+
+.variantCard > div {
+  min-width: 0;
+}
+
+.variantCard > button {
+  justify-self: end;
 }
 
 .variantCard[data-tone="featured"] {
-  border-color: rgba(132, 103, 255, 0.55);
-  background: linear-gradient(135deg, #fff, #fbf8ff);
+  border-color: rgba(132, 103, 255, 0.5);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(118, 87, 255, 0.14), transparent 22%),
+    linear-gradient(135deg, #ffffff, #fbf8ff);
+  color: #7657ff;
+}
+
+.variantCard[data-tone="featured"]::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 17px;
+  height: 44px;
+  border-radius: 17px 0 12px 0;
+  background: linear-gradient(180deg, #8668ff, #7352ff);
+  content: "";
+}
+
+.variantCard[data-tone="featured"]::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 0 16px 0 15px;
+  background: linear-gradient(135deg, rgba(132, 103, 255, 0.9), rgba(132, 103, 255, 0.35));
+  color: #ffffff;
+  content: "\2605";
+  font-size: 0.78rem;
+  font-weight: 900;
 }
 
 .variantCard[data-tone="orange"] {
+  border-color: rgba(255, 193, 134, 0.58);
   background: #fff8f0;
   color: #f1791a;
 }
 
 .variantCard[data-tone="blue"] {
+  border-color: rgba(158, 207, 255, 0.62);
   background: #f4f9ff;
   color: #3889e7;
 }
 
 .variantCard[data-tone="green"] {
+  border-color: rgba(160, 220, 166, 0.62);
   background: #f6fbf4;
   color: #39a64e;
 }
 
 .variantIcon {
   display: grid;
-  width: 54px;
-  height: 54px;
+  width: 40px;
+  height: 40px;
   place-items: center;
   border-radius: 999px;
-  background: currentColor;
-  opacity: 0.18;
+  background: color-mix(in srgb, currentColor 15%, white);
+  color: currentColor;
 }
 
 .variantIcon svg {
-  width: 28px;
-  height: 28px;
+  width: 21px;
+  height: 21px;
   fill: none;
-  stroke: #ffffff;
-  stroke-width: 2.8;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.7;
 }
 
 .variantCard strong {
   color: currentColor;
-  font-size: 0.92rem;
+  font-size: 0.72rem;
   font-weight: 900;
 }
 
 .variantCard p {
-  margin: 8px 0 0;
+  margin: 5px 0 0;
   color: #10163b;
-  font-size: 1rem;
-  font-weight: 650;
-  line-height: 1.35;
+  font-size: 0.86rem;
+  font-weight: 850;
+  line-height: 1.28;
 }
 
 .followCard {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
+  min-height: 178px;
+  overflow: hidden;
+  border-color: rgba(224, 220, 249, 0.94);
+  background:
+    radial-gradient(circle at 18% 66%, rgba(118, 87, 255, 0.08), transparent 26%),
+    linear-gradient(135deg, #ffffff, #fbf9ff);
+  padding: 14px 16px 18px;
   text-align: left;
+  box-shadow: 0 12px 26px rgba(84, 102, 155, 0.07);
 }
 
 .followCard > div strong {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  border-radius: 10px;
+  background: #eee8ff;
+  color: #7657ff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  padding: 7px 10px;
+}
+
+.followCard > div strong svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.6;
+}
+
+.followCard > div p {
+  display: block;
+  justify-content: flex-start;
+  margin: 12px 0 0;
   color: #10163b;
-  font-size: 1rem;
-  font-weight: 950;
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.36;
+  text-align: left;
 }
 
 .followCard > button:not(.bigMic) {
-  min-height: 44px;
+  min-height: 32px;
   border: 1px solid rgba(222, 218, 248, 0.94);
-  border-radius: 12px;
+  border-radius: 10px;
   background: #f3efff;
   color: #7657ff;
+  font-size: 0.7rem;
   font-weight: 850;
-  padding: 0 16px;
+  padding: 0 12px;
 }
 
 .followCard .bigMic {
   grid-column: 1 / 3;
+  width: 70px;
+  height: 70px;
+  margin-top: 20px;
 }
 
 .followCard > small {
   grid-column: 1 / 3;
+  margin-top: 7px;
+  color: #7657ff;
+  font-size: 0.64rem;
   text-align: center;
+}
+
+.followCard .prevButton,
+.followCard .skipButton {
+  bottom: 35px;
 }
 
 @keyframes pulseMic {
@@ -1034,40 +1248,50 @@
   }
 }
 
+@keyframes sentencePatternLoading {
+  from {
+    opacity: 0.74;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 380px) {
   .brandHeader {
-    grid-template-columns: 52px minmax(0, 1fr) 96px;
-    padding-inline: 8px;
+    grid-template-columns: 40px minmax(0, 1fr) 78px;
+    padding-inline: 6px;
   }
 
   .brand {
-    grid-template-columns: 40px minmax(0, max-content);
-    gap: 7px;
+    grid-template-columns: 30px minmax(0, max-content);
+    gap: 5px;
   }
 
   .brandMark {
-    width: 40px !important;
-    height: 40px !important;
+    width: 30px !important;
+    height: 30px !important;
   }
 
   .brand strong {
-    font-size: 1.25rem;
+    font-size: 0.95rem;
   }
 
   .brand small {
-    font-size: 0.55rem;
+    font-size: 0.4rem;
   }
 
   .switchButton {
-    font-size: 0.82rem;
+    min-height: 32px;
+    font-size: 0.68rem;
   }
 
   .courseCrumb {
-    grid-template-columns: 52px minmax(0, max-content) 18px;
+    grid-template-columns: 34px minmax(0, 1fr) 22px;
   }
 
   .courseCrumb strong {
-    font-size: 1.08rem;
+    font-size: 0.86rem;
   }
 
   .statsBar span,
@@ -1078,5 +1302,189 @@
 
   .levelCard {
     min-height: 176px;
+  }
+}
+
+/* Sentence pattern overview: match the compact mobile reference screen. */
+.overviewHeader,
+.overviewHeader + .overviewMeta,
+.overviewHeader ~ .levelStack,
+.overviewHeader ~ .tipCard {
+  --overview-card-shadow: 0 14px 30px rgba(72, 95, 148, 0.08);
+}
+
+.phone:has(.overviewHeader) {
+  min-height: 100dvh;
+  padding: max(10px, calc(env(safe-area-inset-top, 0px) + 6px)) 14px
+    max(14px, calc(env(safe-area-inset-bottom, 0px) + 10px));
+}
+
+.overviewHeader {
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 6px;
+}
+
+.overviewHeader::after {
+  content: "";
+}
+
+.overviewHeader .roundBack {
+  width: 34px;
+  height: 34px;
+  justify-self: start;
+  border: 0;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 20px rgba(72, 95, 148, 0.08);
+}
+
+.overviewHeader .roundBack svg {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 3.1;
+}
+
+.overviewHeader h1 {
+  margin: 3px 0 4px;
+  font-size: 1.04rem;
+  line-height: 1.12;
+}
+
+.overviewHeader p {
+  font-size: 0.58rem;
+  font-weight: 650;
+  line-height: 1.18;
+}
+
+.overviewMeta {
+  gap: 5px;
+  margin: 10px auto 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(241, 247, 255, 0.9);
+  color: #5c6684;
+  font-size: 0.52rem;
+  font-weight: 720;
+}
+
+.overviewMeta svg {
+  width: 0.72rem;
+  height: 0.72rem;
+  color: #7d68f4;
+  stroke-width: 2.4;
+}
+
+.levelStack {
+  gap: 10px;
+}
+
+.overviewHeader ~ .levelStack .levelCard {
+  min-height: 148px;
+  border-radius: 18px;
+  box-shadow: var(--overview-card-shadow);
+  padding: 13px 13px 12px;
+}
+
+.overviewHeader ~ .levelStack .levelBadge {
+  border-radius: 8px;
+  font-size: 0.56rem;
+  padding: 5px 8px;
+}
+
+.overviewHeader ~ .levelStack .levelTitleRow {
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.overviewHeader ~ .levelStack .levelTitleRow svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 3.4;
+}
+
+.overviewHeader ~ .levelStack .levelTitleRow strong {
+  font-size: 0.94rem;
+  line-height: 1.08;
+}
+
+.overviewHeader ~ .levelStack .levelSubtitle {
+  width: min(58%, 176px);
+  margin-top: 7px;
+  font-size: 0.62rem;
+  font-weight: 650;
+  line-height: 1.42;
+}
+
+.overviewHeader ~ .levelStack .levelCount {
+  margin-top: 9px;
+  border-radius: 8px;
+  font-size: 0.56rem;
+  padding: 5px 9px;
+}
+
+.overviewHeader ~ .levelStack .levelArt {
+  top: 35px;
+  right: 7px;
+  width: 38%;
+  max-width: 132px;
+}
+
+.overviewHeader ~ .levelStack .cardChevron {
+  top: 15px;
+  right: 13px;
+}
+
+.overviewHeader ~ .levelStack .cardChevron svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  stroke-width: 3.4;
+}
+
+.overviewHeader ~ .tipCard {
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 9px;
+  margin-top: 12px;
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: var(--overview-card-shadow);
+}
+
+.overviewHeader ~ .tipCard .tipIcon {
+  width: 29px;
+  height: 29px;
+}
+
+.overviewHeader ~ .tipCard .tipIcon svg {
+  width: 0.86rem;
+  height: 0.86rem;
+}
+
+.overviewHeader ~ .tipCard p {
+  font-size: 0.56rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+@media (max-width: 380px) {
+  .phone:has(.overviewHeader) {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .overviewHeader ~ .levelStack .levelCard {
+    min-height: 140px;
+  }
+
+  .overviewHeader ~ .levelStack .levelTitleRow strong {
+    font-size: 0.86rem;
+  }
+
+  .overviewHeader ~ .levelStack .levelSubtitle {
+    width: min(57%, 155px);
+    font-size: 0.56rem;
+  }
+
+  .overviewHeader ~ .levelStack .levelCount {
+    font-size: 0.5rem;
   }
 }

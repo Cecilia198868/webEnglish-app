@@ -25,29 +25,37 @@ const sora = Sora({
 const displayPreferenceScript = `
 (() => {
   const themeKey = "speakflow-appearance-preference";
-  const brightnessKey = "speakflow-display-brightness";
   const fontSizeKey = "speakflow-font-size-preference";
-  const validThemes = new Set(["light", "dark"]);
-  const validBrightness = new Set(["dim", "standard", "bright"]);
+  const validThemes = new Set(["system", "light", "dark"]);
   const validFontSizes = new Set(["small", "standard", "large"]);
 
   try {
     const root = document.documentElement;
-    const theme = localStorage.getItem(themeKey);
-    const brightness = localStorage.getItem(brightnessKey);
     const fontSize = localStorage.getItem(fontSizeKey);
+    const systemQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-    root.dataset.appTheme = validThemes.has(theme) ? theme : "light";
-    root.dataset.speakflowTheme = root.dataset.appTheme;
-    root.dataset.appBrightness = validBrightness.has(brightness)
-      ? brightness
-      : "standard";
+    const resolveTheme = (preference) =>
+      preference === "system" ? (systemQuery.matches ? "dark" : "light") : preference;
+
+    const applyTheme = () => {
+      const theme = localStorage.getItem(themeKey);
+      const preference = validThemes.has(theme) ? theme : "system";
+      const resolvedTheme = resolveTheme(preference);
+
+      root.dataset.appTheme = resolvedTheme;
+      root.dataset.speakflowTheme = preference;
+      root.dataset.appThemePreference = preference;
+    };
+
+    applyTheme();
+    systemQuery.addEventListener?.("change", applyTheme);
     root.dataset.speakflowFontSize = validFontSizes.has(fontSize)
       ? fontSize
       : "standard";
   } catch {
-    document.documentElement.dataset.appTheme = "light";
-    document.documentElement.dataset.appBrightness = "standard";
+    document.documentElement.dataset.appTheme = "system";
+    document.documentElement.dataset.speakflowTheme = "system";
+    document.documentElement.dataset.appThemePreference = "system";
     document.documentElement.dataset.speakflowFontSize = "standard";
   }
 })();
@@ -115,10 +123,10 @@ export default async function RootLayout({
     <html
       lang={initialLanguage}
       suppressHydrationWarning
-      data-app-theme="light"
-      data-app-brightness="standard"
+      data-app-theme="system"
       data-speakflow-font-size="standard"
-      data-speakflow-theme="light"
+      data-speakflow-theme="system"
+      data-app-theme-preference="system"
       className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} h-full antialiased`}
     >
       <body

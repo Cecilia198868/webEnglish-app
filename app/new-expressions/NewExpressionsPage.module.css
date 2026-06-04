@@ -734,3 +734,392 @@
   opacity: 0.82;
   filter: brightness(0.86) saturate(0.88);
 }
+
+/* Compact mobile reference layout: keep the whole menu in one viewport. */
+.page {
+  background:
+    radial-gradient(circle at 70% 8%, rgba(232, 224, 255, 0.64), transparent 28%),
+    linear-gradient(180deg, #eff7ff 0%, #f5f3ff 48%, #f7fbff 100%);
+}
+
+.phone {
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  padding:
+    max(6px, calc(env(safe-area-inset-top, 0px) + 5px))
+    10px
+    max(8px, calc(env(safe-area-inset-bottom, 0px) + 6px));
+  background: transparent;
+}
+
+.header {
+  grid-template-columns: 50px minmax(0, 1fr) 50px;
+  min-height: 48px;
+  align-items: center;
+}
+
+.homeButton {
+  gap: 3px;
+  color: #1b2850;
+  font-size: 0.52rem;
+  font-weight: 800;
+}
+
+.homeIconBox {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 7px 15px rgba(64, 84, 128, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.homeIconBox :global(.sf-home-menu-icon svg) {
+  width: 17px;
+  height: 17px;
+  stroke-width: 3;
+}
+
+.brand {
+  gap: 5px;
+  padding-top: 0;
+}
+
+.brandLogo {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.brand strong {
+  font-size: 0.96rem;
+  line-height: 0.95;
+}
+
+.brand small {
+  margin-top: 2px;
+  font-size: 0.35rem;
+}
+
+.hero {
+  grid-template-columns: 42px minmax(0, 1fr);
+  column-gap: 10px;
+  min-height: 58px;
+  margin: 6px 0 8px;
+  padding: 0 7px;
+}
+
+.heroIcon,
+.heroIcon svg {
+  width: 38px;
+  height: 38px;
+}
+
+.hero h1 {
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.hero p {
+  margin-top: 6px;
+  font-size: 0.66rem;
+  font-weight: 640;
+  line-height: 1.18;
+}
+
+.cardList {
+  gap: 8px;
+}
+
+.actionCard {
+  min-height: 166px;
+  border-radius: 13px;
+  box-shadow:
+    0 8px 20px rgba(76, 98, 150, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+.cardIcon {
+  top: 15px;
+  left: 15px;
+  width: 42px;
+  height: 42px;
+  box-shadow: 0 9px 18px rgba(47, 94, 238, 0.2);
+}
+
+.libraryCard .cardIcon {
+  box-shadow: 0 9px 18px rgba(55, 184, 115, 0.2);
+}
+
+.cardIcon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.cardCopy {
+  max-width: 64%;
+  gap: 5px;
+  padding: 16px 0 0 68px;
+}
+
+.cardCopy strong {
+  font-size: 1.02rem;
+  line-height: 1.04;
+}
+
+.cardCopy span {
+  font-size: 0.58rem;
+  font-weight: 620;
+  line-height: 1.18;
+}
+
+.featureList {
+  width: 148px;
+  gap: 6px;
+  margin: 18px 0 0 16px;
+}
+
+.featureItem {
+  gap: 5px;
+  color: #263862;
+  font-size: 0.55rem;
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+.checkIcon {
+  width: 14px;
+  height: 14px;
+  box-shadow: none;
+}
+
+.checkIcon svg {
+  width: 10px;
+  height: 10px;
+}
+
+.cardButton {
+  left: 16px;
+  bottom: 12px;
+  min-width: 102px;
+  min-height: 30px;
+  gap: 8px;
+  border-radius: 7px;
+  font-size: 0.62rem;
+  font-weight: 900;
+  box-shadow: 0 8px 16px rgba(47, 94, 238, 0.18);
+}
+
+.greenButton {
+  min-width: 112px;
+  box-shadow: 0 8px 16px rgba(47, 182, 116, 0.17);
+}
+
+.cardButton svg {
+  width: 13px;
+  height: 13px;
+}
+
+.learnArt {
+  top: 48px;
+  right: -3px;
+  width: 126px;
+}
+
+.libraryArt {
+  top: 45px;
+  right: -4px;
+  width: 130px;
+}
+
+.sparkle {
+  width: 8px;
+  height: 8px;
+}
+
+.sparkle::before {
+  width: 2px;
+}
+
+.sparkle::after {
+  height: 2px;
+}
+
+.sparkleOne {
+  right: 42px;
+  top: 47px;
+}
+
+.sparkleTwo {
+  right: 92px;
+  top: 68px;
+}
+
+.sparkleThree {
+  right: 42px;
+  top: 44px;
+}
+
+.sparkleFour {
+  right: 96px;
+  top: 94px;
+}
+
+.tipCard {
+  grid-template-columns: 28px minmax(0, 1fr);
+  column-gap: 8px;
+  min-height: 48px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  box-shadow:
+    0 7px 16px rgba(75, 96, 150, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+.tipIcon,
+.tipIcon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.tipCard h2 {
+  font-size: 0.66rem;
+  line-height: 1;
+}
+
+.tipCard p {
+  margin-top: 4px;
+  font-size: 0.5rem;
+  font-weight: 640;
+  line-height: 1.22;
+}
+
+@media (min-width: 391px) {
+  .phone {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .actionCard {
+    min-height: 170px;
+  }
+
+  .learnArt {
+    width: 136px;
+  }
+
+  .libraryArt {
+    width: 140px;
+  }
+}
+
+@media (max-width: 350px) {
+  .phone {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .hero h1 {
+    font-size: 1.36rem;
+  }
+
+  .actionCard {
+    min-height: 158px;
+  }
+
+  .cardCopy {
+    max-width: 68%;
+    padding-left: 62px;
+  }
+
+  .cardCopy strong {
+    font-size: 0.92rem;
+  }
+
+  .featureList {
+    width: 136px;
+    margin-top: 15px;
+  }
+
+  .learnArt,
+  .libraryArt {
+    width: 112px;
+  }
+
+  .cardButton {
+    min-width: 96px;
+    font-size: 0.56rem;
+  }
+
+  .greenButton {
+    min-width: 104px;
+  }
+}
+
+@media (max-height: 620px) {
+  .header {
+    min-height: 42px;
+  }
+
+  .hero {
+    min-height: 48px;
+    margin-top: 3px;
+    margin-bottom: 6px;
+  }
+
+  .actionCard {
+    min-height: 148px;
+  }
+
+  .featureList {
+    gap: 4px;
+    margin-top: 12px;
+  }
+
+  .cardButton {
+    bottom: 9px;
+  }
+
+  .tipCard {
+    min-height: 42px;
+    margin-top: 6px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+}
+
+:global(html[data-app-theme="dark"]) .page {
+  background: var(--app-bg-gradient);
+  color: var(--text-primary);
+}
+
+:global(html[data-app-theme="dark"]) .homeIconBox,
+:global(html[data-app-theme="dark"]) .actionCard,
+:global(html[data-app-theme="dark"]) .tipCard {
+  border-color: var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  box-shadow:
+    0 16px 34px var(--shadow-color),
+    inset 0 1px 0 var(--theme-inset);
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(html[data-app-theme="system"]) .page {
+    background: var(--app-bg-gradient);
+    color: var(--text-primary);
+  }
+
+  :global(html[data-app-theme="system"]) .homeIconBox,
+  :global(html[data-app-theme="system"]) .actionCard,
+  :global(html[data-app-theme="system"]) .tipCard {
+    border-color: var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    box-shadow:
+      0 16px 34px var(--shadow-color),
+      inset 0 1px 0 var(--theme-inset);
+  }
+}

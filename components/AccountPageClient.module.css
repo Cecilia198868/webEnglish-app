@@ -825,8 +825,6 @@
 .settingsTitle p,
 .settingsTitle h1,
 .settingsSection h2,
-.brightnessHeader h2,
-.brightnessHeader strong,
 .settingsNote p {
   margin: 0;
 }
@@ -849,8 +847,7 @@
   gap: 12px;
 }
 
-.settingsSection h2,
-.brightnessHeader h2 {
+.settingsSection h2 {
   color: var(--text-primary);
   font-size: clamp(1.04rem, 4.5vw, 1.18rem);
   font-weight: 950;
@@ -864,7 +861,6 @@
 
 .themeChoice,
 .optionRow,
-.brightnessCard,
 .settingsNote {
   border: 1px solid var(--border-color);
   background: var(--card-bg);
@@ -907,6 +903,12 @@
   background:
     radial-gradient(circle at 80% 20%, rgba(125, 92, 255, 0.16), transparent 38%),
     linear-gradient(180deg, #ffffff, #eef3ff);
+}
+
+.themePreview[data-theme-preview="system"] {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.92), transparent 34%),
+    linear-gradient(135deg, #ffffff 0 48%, #111a2b 48% 100%);
 }
 
 .themePreview[data-theme-preview="dark"] {
@@ -991,64 +993,6 @@
   font-size: 1.46rem;
 }
 
-.brightnessHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.brightnessHeader strong {
-  color: var(--chip-text);
-  font-size: 0.95rem;
-  font-weight: 950;
-}
-
-.brightnessCard {
-  display: grid;
-  gap: 14px;
-  border-radius: 22px;
-  padding: 16px;
-}
-
-.brightnessPreview {
-  display: grid;
-  gap: 10px;
-  min-height: 74px;
-  border-radius: 18px;
-  background: var(--app-bg-gradient);
-  padding: 18px;
-}
-
-.brightnessPreview span {
-  display: block;
-  height: 12px;
-  border-radius: 999px;
-  background: var(--chip-bg);
-}
-
-.brightnessPreview span:first-child {
-  width: 46%;
-  background: var(--accent-primary);
-}
-
-.brightnessPreview span:last-child {
-  width: 76%;
-}
-
-.brightnessSlider {
-  width: 100%;
-  accent-color: var(--accent-primary);
-}
-
-.brightnessLabels {
-  display: flex;
-  justify-content: space-between;
-  color: var(--text-secondary);
-  font-size: 0.8rem;
-  font-weight: 850;
-}
-
 .settingsNote {
   display: grid;
   grid-template-columns: 40px minmax(0, 1fr);
@@ -1075,10 +1019,472 @@
   line-height: 1.42;
 }
 
+.panelStack {
+  display: grid;
+  gap: 14px;
+}
+
+.panelHero,
+.panelCard,
+.dangerCard,
+.notificationCard,
+.feedbackForm {
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  background: var(--card-bg);
+  box-shadow:
+    0 18px 42px var(--shadow-color),
+    inset 0 1px 0 var(--theme-inset);
+}
+
+.panelHero {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  padding: 18px;
+}
+
+.panelHeroIcon {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+}
+
+.panelHeroIcon svg {
+  width: 31px;
+  height: 31px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.7;
+}
+
+.panelHero h2,
+.panelHero p,
+.panelCard h3,
+.panelCard p,
+.dangerCard h3,
+.dangerCard p,
+.notificationCard h3,
+.notificationCard p,
+.notificationCard small,
+.feedbackForm label,
+.panelMessage {
+  margin: 0;
+}
+
+.panelHero h2,
+.panelCard h3,
+.dangerCard h3,
+.notificationCard h3 {
+  color: var(--text-primary);
+  font-size: clamp(1.12rem, 4.9vw, 1.36rem);
+  font-weight: 950;
+  line-height: 1.18;
+}
+
+.panelHero p,
+.panelCard p,
+.dangerCard p,
+.notificationCard p,
+.feedbackForm label {
+  color: var(--text-secondary);
+  font-size: 0.93rem;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+.panelCard,
+.dangerCard {
+  display: grid;
+  gap: 12px;
+  padding: 17px;
+}
+
+.dangerCard {
+  border-color: color-mix(in srgb, #ff5577 45%, var(--border-color));
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 85, 119, 0.09), transparent 34%),
+    var(--card-bg);
+}
+
+.dangerCard h3 {
+  color: #ff3f68;
+}
+
+.planGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.planCard {
+  display: grid;
+  gap: 10px;
+  min-height: 132px;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  padding: 17px;
+  text-align: left;
+  box-shadow:
+    0 18px 42px var(--shadow-color),
+    inset 0 1px 0 var(--theme-inset);
+}
+
+.planCard[data-featured="true"] {
+  border-color: color-mix(in srgb, var(--accent-primary) 54%, var(--border-color));
+  box-shadow:
+    0 18px 42px var(--shadow-color),
+    0 0 0 3px var(--accent-primary-soft),
+    inset 0 1px 0 var(--theme-inset);
+}
+
+.planTopLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.planTopLine strong {
+  color: var(--text-primary);
+  font-size: 1.04rem;
+  font-weight: 950;
+}
+
+.planTopLine em {
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 950;
+  padding: 6px 10px;
+}
+
+.planPrice {
+  color: var(--text-primary);
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: 2rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.planPrice small {
+  margin-left: 4px;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.planCard > span:last-child {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.42;
+}
+
+.checkList {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checkList li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  color: var(--text-primary);
+  font-size: 0.94rem;
+  font-weight: 850;
+}
+
+.checkList svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--chip-text);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.panelActions {
+  display: grid;
+  gap: 10px;
+}
+
+.primaryAction,
+.secondaryAction,
+.dangerAction {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 18px;
+  font-size: 1rem;
+  font-weight: 950;
+  text-decoration: none;
+}
+
+.primaryAction {
+  background: linear-gradient(135deg, #765cff 0%, #5d87ff 100%);
+  color: #ffffff;
+  box-shadow: 0 16px 32px rgba(118, 92, 255, 0.22);
+}
+
+.secondaryAction {
+  border: 1px solid var(--border-color);
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+.dangerAction {
+  background: #fff0f4;
+  color: #ff3f68;
+}
+
+.primaryAction:disabled,
+.secondaryAction:disabled,
+.dangerAction:disabled,
+.planCard:disabled {
+  cursor: progress;
+  opacity: 0.68;
+}
+
+.copyBox {
+  overflow-wrap: anywhere;
+  border-radius: 18px;
+  background: var(--chip-bg);
+  color: var(--text-primary);
+  padding: 13px;
+}
+
+.panelMessage {
+  border: 1px solid color-mix(in srgb, var(--chip-text) 28%, var(--border-color));
+  border-radius: 18px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  font-size: 0.9rem;
+  font-weight: 850;
+  line-height: 1.4;
+  padding: 12px 14px;
+}
+
+.panelMessage[data-status="error"] {
+  border-color: rgba(255, 63, 104, 0.32);
+  background: #fff0f4;
+  color: #d73357;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.statsGrid span {
+  display: grid;
+  gap: 5px;
+  min-height: 74px;
+  place-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-align: center;
+  box-shadow: 0 14px 28px var(--shadow-color);
+}
+
+.statsGrid strong {
+  color: var(--text-primary);
+  font-size: 1.4rem;
+  font-weight: 950;
+}
+
+.choiceRow {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 76px;
+  border: 1px solid var(--border-color);
+  border-radius: 21px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  padding: 13px 14px;
+  text-align: left;
+  box-shadow:
+    0 14px 34px var(--shadow-color),
+    inset 0 1px 0 var(--theme-inset);
+}
+
+.choiceRow[data-selected="true"] {
+  border-color: color-mix(in srgb, var(--accent-primary) 58%, var(--border-color));
+  box-shadow:
+    0 14px 34px var(--shadow-color),
+    0 0 0 3px var(--accent-primary-soft),
+    inset 0 1px 0 var(--theme-inset);
+}
+
+.choiceRow:disabled {
+  opacity: 0.62;
+}
+
+.choiceRow span:not(.choiceDot) {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.choiceRow strong {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 0.98rem;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.choiceRow small {
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.choiceRow em {
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 900;
+  padding: 6px 9px;
+}
+
+.choiceDot {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 2px solid color-mix(in srgb, var(--chip-text) 30%, var(--border-color));
+  border-radius: 999px;
+  color: #ffffff;
+  background: transparent;
+}
+
+.choiceRow[data-selected="true"] .choiceDot {
+  border-color: transparent;
+  background: linear-gradient(135deg, #765cff 0%, #5d87ff 100%);
+}
+
+.choiceDot svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.notificationStack {
+  display: grid;
+  gap: 12px;
+}
+
+.notificationCard {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+}
+
+.notificationCard > span {
+  width: fit-content;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  font-size: 0.72rem;
+  font-weight: 950;
+  padding: 6px 10px;
+}
+
+.notificationCard small {
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.feedbackForm {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.feedbackForm .panelHero {
+  margin: -16px -16px 0;
+  border-width: 0 0 1px;
+  border-radius: 24px 24px 0 0;
+  box-shadow: none;
+}
+
+.feedbackForm label {
+  display: grid;
+  gap: 8px;
+}
+
+.feedbackForm label span {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 950;
+}
+
+.feedbackForm input,
+.feedbackForm select,
+.feedbackForm textarea {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 17px;
+  background: var(--button-bg);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 800;
+  line-height: 1.45;
+  padding: 13px 14px;
+  outline: none;
+}
+
+.feedbackForm textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.feedbackForm input::placeholder,
+.feedbackForm textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+
 :global(html[data-app-theme]) .page {
   background: var(--app-bg-gradient);
   color: var(--text-primary);
-  filter: saturate(var(--app-brightness-saturate, 1));
 }
 
 :global(html[data-app-theme]) .profile,
