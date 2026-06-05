@@ -35,16 +35,10 @@ type AiGuidedExpressionStepFiveProps = {
 
 const COPY = {
   accountLabel: "打开账户界面",
-  back: "返回",
-  backAria: "回到第四页重新说英语",
   change: "换一句",
   changeAria: "换一句新的中文建议",
-  follow: "跟读练习",
-  followAria: "回到第四页跟读练习",
   loadingNext: "正在为你准备下一句...",
   menuLabel: "回到学习首页",
-  mode: "AI引导表达",
-  nextDescription: "AI 根据上下文和你的情绪，为你推荐的下一句中文",
   nextFallback: "那我们休息一下，过会儿再去散步吧。",
   nextTitle: "下一句，可以这样说",
   pageLabel: "AI引导表达结果页",
@@ -53,15 +47,10 @@ const COPY = {
   retry: "重新说",
   retryAria: "回到第四页重新录制英语",
   seeMore: "向下查看更多表达",
-  slow: "倍速",
-  slowAria: "以 0.5 倍速播放当前句子",
-  speakPrompt: "点击麦克风开始录音",
   useNext: "用这句练习",
   useNextAria: "用这句中文进入第四页练习",
   userExpression: "你的表达",
 } as const;
-
-const suggestionTags = ["根据上文", "情绪自然", "可继续表达"] as const;
 
 const expressionMeta = [
   {
@@ -207,47 +196,6 @@ function ChatGlyph() {
   );
 }
 
-function LinkGlyph() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-      <path
-        d="m10.2 13.8 3.6-3.6M8.8 10.6l-1.4 1.4a4 4 0 0 0 5.6 5.6l1.4-1.4M15.2 13.4l1.4-1.4A4 4 0 0 0 11 6.4L9.6 7.8"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="2.2"
-      />
-    </svg>
-  );
-}
-
-function HeartGlyph() {
-  return (
-    <svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 20.5c-.4-.3-1.5-1.1-3.3-2.6-3.1-2.6-4.7-4.8-4.7-7A4.2 4.2 0 0 1 8.2 6.7c1.5 0 2.7.7 3.8 2 1.1-1.3 2.3-2 3.8-2A4.2 4.2 0 0 1 20 10.9c0 2.2-1.6 4.4-4.7 7-1.8 1.5-2.9 2.3-3.3 2.6Z" />
-    </svg>
-  );
-}
-
-function MiniChatGlyph() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-      <path
-        d="M5.2 6.5h11.7a2.6 2.6 0 0 1 2.6 2.6v5.7a2.6 2.6 0 0 1-2.6 2.6H11l-4.1 3v-3H5.2a2.6 2.6 0 0 1-2.6-2.6V9.1a2.6 2.6 0 0 1 2.6-2.6Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2.2"
-      />
-      <path
-        d="M8 12h.1M11 12h.1M14 12h.1"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="2.4"
-      />
-    </svg>
-  );
-}
-
 function ChevronDownGlyph() {
   return (
     <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
@@ -297,8 +245,6 @@ export default function AiGuidedExpressionStepFive({
   isLoadingNextChinese = false,
   expressions,
   selectedExpressionIndex,
-  avatarSrc = "",
-  avatarAlt = "user",
   headerAddon,
   accountLabel = COPY.accountLabel,
   menuLabel = COPY.menuLabel,
@@ -307,11 +253,8 @@ export default function AiGuidedExpressionStepFive({
   onUseNextChinese,
   onChangeNextChinese,
   onAccountClick,
-  onAvatarError,
   onPlayExpression,
   onSelectExpression,
-  onFollowPractice,
-  onSlowPlayback,
   renderExpressionText: renderInteractiveExpressionText,
   renderUserExpressionText,
 }: AiGuidedExpressionStepFiveProps) {
@@ -323,6 +266,692 @@ export default function AiGuidedExpressionStepFive({
 
   return (
     <section className="sf-ai-guided-step-five" aria-label={COPY.pageLabel}>
+      <style>{`
+        .sf-ai-guided-step-five,
+        .sf-ai-guided-step-five * {
+          box-sizing: border-box;
+        }
+
+        .sf-ai-guided-step-five {
+          position: absolute;
+          inset: 0;
+          z-index: 90;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          color: #08143f;
+          background:
+            radial-gradient(circle at 18% 12%, rgba(222, 244, 255, 0.82), transparent 34%),
+            radial-gradient(circle at 82% 42%, rgba(235, 231, 255, 0.72), transparent 35%),
+            linear-gradient(180deg, #eef8ff 0%, #f8fbff 48%, #f3f8ff 100%);
+          font-family: var(--sf-font-zh, "PingFang SC", "Microsoft YaHei", sans-serif);
+        }
+
+        .sf-ai-guided-step-five-frame {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          min-height: 100%;
+          flex-direction: column;
+          overflow: hidden;
+          padding: calc(env(safe-area-inset-top, 0px) + 1.12rem) clamp(1.05rem, 4vw, 1.55rem)
+            calc(env(safe-area-inset-bottom, 0px) + 0.9rem);
+        }
+
+        .sf-ai-guided-step-five-header {
+          display: grid;
+          grid-template-columns: 3rem minmax(0, 1fr) 3rem;
+          align-items: center;
+          gap: 0.6rem;
+          min-height: 4.55rem;
+          flex: 0 0 auto;
+        }
+
+        .sf-ai-guided-step-five-menu,
+        .sf-ai-guided-step-five-help-button {
+          display: grid;
+          width: 3rem;
+          height: 3rem;
+          place-items: center;
+          border: 0;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.9);
+          color: #11162f;
+          box-shadow:
+            0 14px 28px rgba(67, 101, 176, 0.16),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95);
+          cursor: pointer;
+          transition: transform 160ms ease;
+        }
+
+        .sf-ai-guided-step-five-menu:active,
+        .sf-ai-guided-step-five-help-button:active,
+        .sf-ai-guided-step-five-retry:active,
+        .sf-ai-guided-step-five-use-next:active,
+        .sf-ai-guided-step-five-change:active,
+        .sf-ai-guided-step-five-play:active,
+        .sf-ai-guided-step-five-slow-button:active {
+          transform: scale(0.97);
+        }
+
+        .sf-ai-guided-step-five-menu:focus-visible,
+        .sf-ai-guided-step-five-help-button:focus-visible,
+        .sf-ai-guided-step-five-retry:focus-visible,
+        .sf-ai-guided-step-five-use-next:focus-visible,
+        .sf-ai-guided-step-five-change:focus-visible,
+        .sf-ai-guided-step-five-play:focus-visible,
+        .sf-ai-guided-step-five-slow-button:focus-visible {
+          outline: 3px solid rgba(61, 115, 255, 0.36);
+          outline-offset: 4px;
+        }
+
+        .sf-ai-guided-step-five-menu .sf-home-menu-icon,
+        .sf-ai-guided-step-five-menu .sf-home-menu-icon svg {
+          width: 1.95rem;
+          height: 1.95rem;
+        }
+
+        .sf-ai-guided-step-five-menu .sf-home-menu-icon svg {
+          fill: none;
+          stroke: currentColor;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          stroke-width: 2.8;
+        }
+
+        .sf-ai-guided-step-five-help-button {
+          justify-self: end;
+          font-size: 1.42rem;
+          font-weight: 950;
+          line-height: 1;
+        }
+
+        .sf-ai-guided-step-five-brand {
+          display: flex;
+          min-width: 0;
+          align-items: center;
+          justify-content: center;
+          gap: clamp(0.65rem, 2.4vw, 0.9rem);
+        }
+
+        .sf-ai-guided-step-five-logo {
+          display: grid;
+          width: 3.1rem;
+          height: 3.1rem;
+          flex: 0 0 auto;
+          place-items: center;
+          border-radius: 999px;
+        }
+
+        .sf-ai-guided-step-five-logo-mark {
+          width: 100%;
+          height: 100%;
+        }
+
+        .sf-ai-guided-step-five-brand-copy {
+          display: flex;
+          min-width: 0;
+          flex-direction: column;
+        }
+
+        .sf-ai-guided-step-five-brand-title {
+          color: #08133f;
+          font-size: 1.95rem;
+          font-weight: 950;
+          letter-spacing: 0;
+          line-height: 0.94;
+        }
+
+        .sf-ai-guided-step-five-brand-subtitle {
+          margin-top: 0.32rem;
+          color: #0f66ff !important;
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          line-height: 1;
+        }
+
+        .sf-ai-guided-step-five-scroll {
+          flex: 1 1 auto;
+          min-height: 0;
+          overflow-x: hidden;
+          overflow-y: auto;
+          padding: 1.1rem 0 1.25rem;
+          scrollbar-width: none;
+        }
+
+        .sf-ai-guided-step-five-scroll::-webkit-scrollbar {
+          width: 0;
+          height: 0;
+        }
+
+        .sf-ai-guided-step-five-user-card,
+        .sf-ai-guided-step-five-next-card,
+        .sf-ai-guided-step-five-record-card {
+          border: 1px solid rgba(206, 222, 252, 0.9);
+          background:
+            radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.98), transparent 35%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 252, 255, 0.88));
+          box-shadow:
+            0 20px 48px rgba(67, 101, 176, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.96);
+        }
+
+        .sf-ai-guided-step-five-user-card {
+          position: relative;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 0.75rem;
+          align-items: center;
+          border-radius: 1.25rem;
+          padding: 1.25rem 1.15rem 1.45rem;
+        }
+
+        .sf-ai-guided-step-five-card-heading {
+          grid-column: 1 / -1;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          color: #0568ff;
+          font-size: 1.02rem;
+          font-weight: 900;
+          line-height: 1.1;
+        }
+
+        .sf-ai-guided-step-five-mini-wave {
+          display: inline-grid;
+          width: 1.45rem;
+          height: 1.45rem;
+          place-items: center;
+          color: #0f66ff;
+        }
+
+        .sf-ai-guided-step-five-mini-wave svg {
+          width: 100%;
+          height: 100%;
+        }
+
+        .sf-ai-guided-step-five-user-text {
+          min-width: 0;
+          margin: 0;
+          color: #07113f;
+          font-size: clamp(3rem, 13vw, 5rem);
+          font-weight: 950;
+          letter-spacing: 0;
+          line-height: 0.98;
+          overflow-wrap: anywhere;
+        }
+
+        .sf-ai-guided-step-five-retry {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.45rem;
+          min-width: 6.4rem;
+          min-height: 3.2rem;
+          border: 0;
+          border-radius: 1rem;
+          background: rgba(255, 255, 255, 0.88);
+          color: #075fff;
+          font-size: 1rem;
+          font-weight: 850;
+          box-shadow:
+            0 14px 28px rgba(67, 101, 176, 0.14),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95);
+          cursor: pointer;
+        }
+
+        .sf-ai-guided-step-five-retry svg,
+        .sf-ai-guided-step-five-use-next svg,
+        .sf-ai-guided-step-five-change svg {
+          width: 1.25rem;
+          height: 1.25rem;
+          fill: none;
+          stroke: currentColor;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          stroke-width: 2.4;
+        }
+
+        .sf-ai-guided-step-five-next-card {
+          position: relative;
+          min-height: 13.6rem;
+          margin-top: 1rem;
+          border-radius: 1.25rem;
+          padding: 1.25rem 1.05rem 1.15rem;
+          overflow: hidden;
+        }
+
+        .sf-ai-guided-step-five-next-card h2 {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.55rem;
+          margin: 0;
+          color: #0d66ff;
+          font-size: 1.08rem;
+          font-weight: 900;
+          letter-spacing: 0;
+          line-height: 1.16;
+        }
+
+        .sf-ai-guided-step-five-next-card h2 svg {
+          width: 1.25rem;
+          height: 1.25rem;
+          color: #0d66ff;
+        }
+
+        .sf-ai-guided-step-five-next-text {
+          position: relative;
+          z-index: 1;
+          width: min(100%, 15rem);
+          margin: 1.15rem 0 0;
+          color: #07113f;
+          font-size: clamp(2rem, 9.2vw, 3.15rem);
+          font-weight: 950;
+          letter-spacing: 0;
+          line-height: 1.22;
+          overflow-wrap: anywhere;
+        }
+
+        .sf-ai-guided-step-five-next-robot {
+          position: absolute;
+          right: 1.1rem;
+          top: 3.5rem;
+          width: 5.55rem;
+          height: 5.55rem;
+          border-radius: 2rem;
+          background: linear-gradient(180deg, #ffffff 0%, #ecf5ff 70%, #9bc4ff 100%);
+          box-shadow:
+            0 16px 34px rgba(28, 95, 216, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.96);
+        }
+
+        .sf-ai-guided-step-five-next-robot::before {
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: -1.2rem;
+          width: 0.22rem;
+          height: 1.35rem;
+          border-radius: 999px;
+          background: linear-gradient(180deg, #2f75ff, #80b4ff);
+          transform: translateX(-50%);
+          box-shadow: 0 -0.25rem 0 0.18rem #2f75ff;
+        }
+
+        .sf-ai-guided-step-five-robot-face {
+          position: absolute;
+          inset: 0.85rem 0.75rem 1.35rem;
+          border-radius: 1.05rem;
+          background: #07113f;
+        }
+
+        .sf-ai-guided-step-five-robot-face::before,
+        .sf-ai-guided-step-five-robot-face::after {
+          content: "";
+          position: absolute;
+          top: 1.12rem;
+          width: 0.72rem;
+          height: 0.72rem;
+          border-radius: 999px;
+          background: #22d4e5;
+        }
+
+        .sf-ai-guided-step-five-robot-face::before {
+          left: 1.05rem;
+        }
+
+        .sf-ai-guided-step-five-robot-face::after {
+          right: 1.05rem;
+        }
+
+        .sf-ai-guided-step-five-robot-face span {
+          position: absolute;
+          left: 50%;
+          bottom: 0.76rem;
+          width: 1.2rem;
+          height: 0.54rem;
+          border-bottom: 0.18rem solid #24d4e5;
+          border-radius: 0 0 999px 999px;
+          transform: translateX(-50%);
+        }
+
+        .sf-ai-guided-step-five-next-actions {
+          display: grid;
+          grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+          gap: 0.8rem;
+          margin-top: 1.25rem;
+        }
+
+        .sf-ai-guided-step-five-use-next,
+        .sf-ai-guided-step-five-change {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.55rem;
+          min-height: 3.45rem;
+          border: 0;
+          border-radius: 1rem;
+          font-size: 1.04rem;
+          font-weight: 900;
+          cursor: pointer;
+        }
+
+        .sf-ai-guided-step-five-use-next {
+          background: linear-gradient(135deg, #35b8ff 0%, #155dff 100%);
+          color: #fff !important;
+          box-shadow: 0 16px 30px rgba(33, 103, 255, 0.22);
+        }
+
+        .sf-ai-guided-step-five-change {
+          background: rgba(255, 255, 255, 0.9);
+          color: #075fff;
+          box-shadow:
+            0 14px 28px rgba(67, 101, 176, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+
+        .sf-ai-guided-step-five-use-next:disabled,
+        .sf-ai-guided-step-five-change:disabled {
+          cursor: not-allowed;
+          opacity: 0.58;
+        }
+
+        .sf-ai-guided-step-five-records {
+          margin-top: 1.05rem;
+        }
+
+        .sf-ai-guided-step-five-records > h2 {
+          display: grid;
+          grid-template-columns: auto auto minmax(0, 1fr);
+          align-items: center;
+          gap: 0.58rem;
+          margin: 0 0 0.7rem;
+          color: #176cff;
+          font-size: 1.08rem;
+          font-weight: 900;
+          letter-spacing: 0;
+          line-height: 1.1;
+        }
+
+        .sf-ai-guided-step-five-records > h2::after {
+          content: "";
+          display: block;
+          height: 1px;
+          background: rgba(105, 135, 190, 0.28);
+        }
+
+        .sf-ai-guided-step-five-records > h2 svg {
+          width: 1.3rem;
+          height: 1.3rem;
+        }
+
+        .sf-ai-guided-step-five-record-list {
+          display: grid;
+          gap: 0.64rem;
+        }
+
+        .sf-ai-guided-step-five-record-card {
+          display: grid;
+          grid-template-columns: 3.6rem minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 0.7rem;
+          min-height: 5.7rem;
+          border-radius: 1rem;
+          padding: 0.9rem 0.72rem 0.9rem 0.85rem;
+          cursor: pointer;
+        }
+
+        .sf-ai-guided-step-five-record-card.is-selected {
+          border-color: rgba(50, 106, 255, 0.52);
+          box-shadow:
+            0 18px 38px rgba(43, 102, 255, 0.16),
+            inset 0 1px 0 rgba(255, 255, 255, 0.96);
+        }
+
+        .sf-ai-guided-step-five-record-icon {
+          display: grid;
+          width: 3.25rem;
+          height: 3.25rem;
+          place-items: center;
+          border-radius: 999px;
+          color: #fff;
+          background: linear-gradient(135deg, #4b83ff, #155dff);
+        }
+
+        .sf-ai-guided-step-five-record-icon.is-green {
+          background: linear-gradient(135deg, #b9f2c9, #08a136);
+        }
+
+        .sf-ai-guided-step-five-record-icon.is-blue {
+          background: linear-gradient(135deg, #cae9ff, #287dff);
+        }
+
+        .sf-ai-guided-step-five-record-icon.is-purple {
+          background: linear-gradient(135deg, #cebaff, #6f43e9);
+        }
+
+        .sf-ai-guided-step-five-record-icon svg {
+          width: 1.65rem;
+          height: 1.65rem;
+        }
+
+        .sf-ai-guided-step-five-bookmark {
+          position: relative;
+          display: grid;
+          width: 1.85rem;
+          height: 2.15rem;
+          place-items: center;
+          border-radius: 0.22rem 0.22rem 0.12rem 0.12rem;
+          background: currentColor;
+        }
+
+        .sf-ai-guided-step-five-bookmark::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: -0.02rem;
+          width: 0.9rem;
+          height: 0.9rem;
+          background: inherit;
+          transform: translateX(-50%) rotate(45deg);
+        }
+
+        .sf-ai-guided-step-five-bookmark span {
+          position: relative;
+          z-index: 1;
+          width: 0.8rem;
+          height: 0.8rem;
+          color: #fff;
+          background: currentColor;
+          clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+        }
+
+        .sf-ai-guided-step-five-record-copy {
+          min-width: 0;
+        }
+
+        .sf-ai-guided-step-five-record-badge {
+          display: inline-flex;
+          margin: 0 0 0.25rem;
+          border-radius: 999px;
+          background: rgba(47, 112, 255, 0.12);
+          color: #0f66ff;
+          padding: 0.12rem 0.52rem;
+          font-size: 0.72rem;
+          font-weight: 850;
+          line-height: 1.1;
+        }
+
+        .sf-ai-guided-step-five-record-badge.is-green {
+          background: rgba(36, 194, 80, 0.14);
+          color: #139d36;
+        }
+
+        .sf-ai-guided-step-five-record-badge.is-purple {
+          background: rgba(128, 82, 235, 0.14);
+          color: #7146de;
+        }
+
+        .sf-ai-guided-step-five-record-text {
+          margin: 0;
+          color: #07113f;
+          font-size: clamp(1.55rem, 6.4vw, 2.35rem);
+          font-weight: 900;
+          letter-spacing: 0;
+          line-height: 1.14;
+          overflow-wrap: anywhere;
+        }
+
+        .sf-ai-guided-step-five-emphasis {
+          color: inherit;
+        }
+
+        .sf-ai-guided-step-five-record-actions {
+          display: grid;
+          grid-template-columns: 2.78rem 3.12rem;
+          gap: 0.45rem;
+          align-items: center;
+        }
+
+        .sf-ai-guided-step-five-play,
+        .sf-ai-guided-step-five-slow-button {
+          display: grid;
+          height: 2.78rem;
+          place-items: center;
+          border: 0;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.94);
+          color: #075fff;
+          font-size: 0.98rem;
+          font-weight: 850;
+          box-shadow:
+            0 12px 24px rgba(67, 101, 176, 0.13),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95);
+          cursor: pointer;
+        }
+
+        .sf-ai-guided-step-five-play {
+          width: 2.78rem;
+        }
+
+        .sf-ai-guided-step-five-play svg {
+          width: 1.2rem;
+          height: 1.2rem;
+        }
+
+        .sf-ai-guided-step-five-slow-button {
+          width: 3.12rem;
+        }
+
+        .sf-ai-guided-step-five-more {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.35rem;
+          margin: 1rem 0 0;
+          color: #176cff;
+          font-size: 1rem;
+          font-weight: 780;
+        }
+
+        .sf-ai-guided-step-five-more svg {
+          width: 1.05rem;
+          height: 1.05rem;
+        }
+
+        @media (max-width: 480px) {
+          .sf-ai-guided-step-five-frame {
+            padding-inline: 0.95rem;
+          }
+
+          .sf-ai-guided-step-five-header {
+            grid-template-columns: 2.8rem minmax(0, 1fr) 2.8rem;
+          }
+
+          .sf-ai-guided-step-five-menu,
+          .sf-ai-guided-step-five-help-button {
+            width: 2.8rem;
+            height: 2.8rem;
+          }
+
+          .sf-ai-guided-step-five-logo {
+            width: 2.75rem;
+            height: 2.75rem;
+          }
+
+          .sf-ai-guided-step-five-brand-title {
+            font-size: 1.72rem;
+          }
+
+          .sf-ai-guided-step-five-brand-subtitle {
+            font-size: 0.66rem;
+          }
+
+          .sf-ai-guided-step-five-user-card {
+            padding: 1.05rem 0.92rem 1.2rem;
+          }
+
+          .sf-ai-guided-step-five-user-text {
+            font-size: clamp(2.65rem, 12vw, 4.2rem);
+          }
+
+          .sf-ai-guided-step-five-retry {
+            min-width: 5.7rem;
+            padding-inline: 0.65rem;
+          }
+
+          .sf-ai-guided-step-five-next-text {
+            width: min(100%, 13.3rem);
+            font-size: clamp(1.82rem, 8.6vw, 2.65rem);
+          }
+
+          .sf-ai-guided-step-five-next-robot {
+            right: 0.88rem;
+            width: 4.9rem;
+            height: 4.9rem;
+          }
+
+          .sf-ai-guided-step-five-use-next,
+          .sf-ai-guided-step-five-change {
+            font-size: 0.94rem;
+          }
+
+          .sf-ai-guided-step-five-record-card {
+            grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+            gap: 0.62rem;
+            padding-inline: 0.72rem 0.55rem;
+          }
+
+          .sf-ai-guided-step-five-record-icon {
+            width: 2.95rem;
+            height: 2.95rem;
+          }
+
+          .sf-ai-guided-step-five-record-text {
+            font-size: clamp(1.42rem, 5.7vw, 2rem);
+          }
+
+          .sf-ai-guided-step-five-record-actions {
+            grid-template-columns: 2.55rem 2.85rem;
+            gap: 0.35rem;
+          }
+
+          .sf-ai-guided-step-five-play,
+          .sf-ai-guided-step-five-slow-button {
+            height: 2.55rem;
+          }
+
+          .sf-ai-guided-step-five-play {
+            width: 2.55rem;
+          }
+
+          .sf-ai-guided-step-five-slow-button {
+            width: 2.85rem;
+          }
+        }
+      `}</style>
+
       <div className="sf-ai-guided-step-five-frame">
         <header className="sf-ai-guided-step-five-header">
           <button
@@ -353,17 +982,9 @@ export default function AiGuidedExpressionStepFive({
             type="button"
             aria-label={accountLabel}
             onClick={onAccountClick}
-            className="sf-ai-guided-step-five-avatar-button"
-            title={avatarAlt}
+            className="sf-ai-guided-step-five-help-button"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={avatarSrc || "/default-avatar.png"}
-              alt=""
-              className="sf-ai-guided-step-five-avatar-image"
-              onError={onAvatarError}
-              draggable={false}
-            />
+            ?
           </button>
         </header>
 
@@ -397,7 +1018,6 @@ export default function AiGuidedExpressionStepFive({
             <div className="sf-ai-guided-step-five-next-robot" aria-hidden="true">
               <span className="sf-ai-guided-step-five-robot-face">
                 <span />
-                <span />
               </span>
             </div>
             <h2>
@@ -407,17 +1027,6 @@ export default function AiGuidedExpressionStepFive({
             <p lang="zh-CN" className="sf-ai-guided-step-five-next-text">
               {isLoadingNextChinese ? COPY.loadingNext : displayNextChinese}
             </p>
-            <p className="sf-ai-guided-step-five-next-description">
-              {COPY.nextDescription}
-            </p>
-            <div className="sf-ai-guided-step-five-tags" aria-label="AI suggestion basis">
-              {suggestionTags.map((tag, index) => (
-                <span key={tag}>
-                  {index === 0 ? <LinkGlyph /> : index === 1 ? <HeartGlyph /> : <MiniChatGlyph />}
-                  {tag}
-                </span>
-              ))}
-            </div>
             <div className="sf-ai-guided-step-five-next-actions">
               <button
                 type="button"
@@ -449,7 +1058,9 @@ export default function AiGuidedExpressionStepFive({
             </h2>
             <div className="sf-ai-guided-step-five-record-list">
               {safeExpressions.map((text, index) => {
-                const meta = expressionMeta[index] || expressionMeta[expressionMeta.length - 1];
+                const meta =
+                  expressionMeta[index] ||
+                  expressionMeta[expressionMeta.length - 1];
                 const isSelected = selectedExpressionIndex === index;
 
                 return (
@@ -472,11 +1083,7 @@ export default function AiGuidedExpressionStepFive({
                       </p>
                       <p lang="en" className="sf-ai-guided-step-five-record-text">
                         {renderInteractiveExpressionText
-                          ? renderInteractiveExpressionText(
-                              text,
-                              index,
-                              meta.tone
-                            )
+                          ? renderInteractiveExpressionText(text, index, meta.tone)
                           : renderExpressionText(text, meta.tone)}
                       </p>
                     </div>
@@ -486,11 +1093,24 @@ export default function AiGuidedExpressionStepFive({
                         aria-label={`${COPY.playAria} ${index + 1}`}
                         onClick={(event) => {
                           event.stopPropagation();
+                          onSelectExpression(index);
                           onPlayExpression(index, 1);
                         }}
                         className="sf-ai-guided-step-five-play"
                       >
                         <PlayGlyph />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={`以 0.5 倍速播放第 ${index + 1} 条表达`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onSelectExpression(index);
+                          onPlayExpression(index, 0.5);
+                        }}
+                        className="sf-ai-guided-step-five-slow-button"
+                      >
+                        0.5x
                       </button>
                     </div>
                   </article>
@@ -503,42 +1123,6 @@ export default function AiGuidedExpressionStepFive({
             </p>
           </section>
         </main>
-
-        <nav className="sf-ai-guided-step-five-bottom-bar" aria-label="AI guided result actions">
-          <button
-            type="button"
-            aria-label={COPY.followAria}
-            onClick={onFollowPractice}
-            className="sf-ai-guided-step-five-follow"
-          >
-            <RefreshGlyph />
-            <span>{COPY.follow}</span>
-          </button>
-
-          <button
-            type="button"
-            aria-label={COPY.useNextAria}
-            onClick={onUseNextChinese}
-            disabled={isLoadingNextChinese}
-            className="sf-ai-guided-step-five-main-mic"
-          >
-            <MicGlyph />
-          </button>
-
-          <button
-            type="button"
-            aria-label={COPY.slowAria}
-            onClick={onSlowPlayback}
-            className="sf-ai-guided-step-five-slow"
-          >
-            <span>
-              <PlayGlyph />
-              0.5x
-            </span>
-            <span>{COPY.slow}</span>
-          </button>
-          <p>{COPY.speakPrompt}</p>
-        </nav>
       </div>
     </section>
   );

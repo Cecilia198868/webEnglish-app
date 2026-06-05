@@ -8,14 +8,13 @@ import { signOut } from "next-auth/react";
 import FreePracticeLimitModal from "@/components/FreePracticeLimitModal";
 import FreeStudyHeader from "@/components/FreeStudyHeader";
 import FreeStudyPageOne from "@/components/FreeStudyPageOne";
-import FreeStudyPageTwo from "@/components/FreeStudyPageTwo";
 import FreeStudyPageThree from "@/components/FreeStudyPageThree";
-import FreeStudyPageFour from "@/components/FreeStudyPageFour";
 import FreeStudyPageFiveTop from "@/components/FreeStudyPageFiveTop";
 import FreeStudyPageFiveBottomBar from "@/components/FreeStudyPageFiveBottomBar";
 import GuestAiPracticeProgress from "@/components/GuestAiPracticeProgress";
 import HomeMenuIcon from "@/components/HomeMenuIcon";
-import AiGuidedExpressionStepFour from "@/components/AiGuidedExpressionStepFour";
+import AiGuidedConfirmSpeakPage from "@/components/AiGuidedConfirmSpeakPage";
+import AiGuidedExpressionStepOne from "@/components/AiGuidedExpressionStepOne";
 import AiGuidedExpressionStepFive from "@/components/AiGuidedExpressionStepFive";
 import FreeUsageMeter from "@/components/FreeUsageMeter";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -3253,7 +3252,8 @@ function SpeakEnglishClient() {
     interfaceLanguageOptions[0];
   const proFeatureItems = accountCopy.proFeatures;
   const voiceMenuItemLabel = language === "en" ? "Voice" : "声音";
-  const isAiGuidedMode = trainingGroundMode === "guided";
+  const isAiGuidedRoute = pathname?.startsWith("/ai-guided-expression") ?? false;
+  const isAiGuidedMode = trainingGroundMode === "guided" || isAiGuidedRoute;
   const activeFreePracticeScope: FreePracticeScope = isAiGuidedMode
     ? "guided"
     : "free";
@@ -5162,26 +5162,46 @@ function SpeakEnglishClient() {
     void startRecognition("english");
   }
 
-  function confirmFreeStudyNativeSpeech() {
+  function confirmFreeStudyNativeSpeech(
+    options: { navigate?: boolean } = {}
+  ) {
     const confirmedSpeech = nativeSpeech.trim();
     if (!confirmedSpeech) return;
 
     saveFreeStudyRouteState("");
-    handledStepRouteRef.current = `/free-study/step-4:${confirmedSpeech}`;
-    router.push("/free-study/step-4");
+
+    if (options.navigate !== false) {
+      handledStepRouteRef.current = `/free-study/step-4:${confirmedSpeech}`;
+      router.push("/free-study/step-4");
+    }
+
     startFreeStudyStepFourEnglishRound(confirmedSpeech);
   }
 
-  function confirmAiGuidedNativeSpeech() {
+  function confirmFreeStudyNativeSpeechInline() {
+    confirmFreeStudyNativeSpeech({ navigate: false });
+  }
+
+  function confirmAiGuidedNativeSpeech(
+    options: { navigate?: boolean } = {}
+  ) {
     const confirmedSpeech = nativeSpeech.trim();
     if (!confirmedSpeech) return;
 
     aiGuidedFollowPracticePendingRef.current = false;
     recordAiGuidedBackendProgress({ step: "native" });
     saveFreeStudyRouteState("");
-    handledStepRouteRef.current = `/ai-guided-expression/step-4:${confirmedSpeech}`;
-    router.push("/ai-guided-expression/step-4");
+
+    if (options.navigate !== false) {
+      handledStepRouteRef.current = `/ai-guided-expression/step-4:${confirmedSpeech}`;
+      router.push("/ai-guided-expression/step-4");
+    }
+
     startAiGuidedStepFourEnglishRound(confirmedSpeech);
+  }
+
+  function confirmAiGuidedNativeSpeechInline() {
+    confirmAiGuidedNativeSpeech({ navigate: false });
   }
 
   function retryEnglishSpeech() {
@@ -6941,6 +6961,19 @@ function SpeakEnglishClient() {
           />
 
           {showGuidedReferenceLanding ? (
+            <div className="absolute inset-0 z-[90] overflow-hidden">
+              <AiGuidedExpressionStepOne
+                showGuestProgress={shouldShowGuestAiProgress}
+                recordingState="idle"
+                onHomeClick={openLoggedInHomePage}
+                onStartChineseRecording={startAiGuidedStepTwoNativeRound}
+              />
+            </div>
+          ) : null}
+
+          {false &&
+          showGuidedReferenceLanding &&
+          pathname !== "/ai-guided-expression/step-1" ? (
             <div className="sf-guided-practice-reference-landing absolute inset-0 z-[90] overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -6995,6 +7028,19 @@ function SpeakEnglishClient() {
           ) : null}
 
           {showGuidedReferenceListening ? (
+            <div className="absolute inset-0 z-[90] overflow-hidden">
+              <AiGuidedExpressionStepOne
+                showGuestProgress={shouldShowGuestAiProgress}
+                recordingState="recording"
+                onHomeClick={openLoggedInHomePage}
+                onStopChineseRecording={handlePrimaryPracticeAction}
+              />
+            </div>
+          ) : null}
+
+          {false &&
+          showGuidedReferenceListening &&
+          pathname !== "/ai-guided-expression/step-1" ? (
             <div className="sf-ai-guided-step-two absolute inset-0 z-[90] overflow-hidden">
               <div className="sf-ai-guided-step-two-frame">
                 <header className="sf-ai-guided-step-two-header">
@@ -7153,47 +7199,29 @@ function SpeakEnglishClient() {
             </div>
           ) : null}
 
-          {showGuidedReferenceConfirmation ? (
-            <FreeStudyPageThree
-              chineseText={nativeSpeech}
-              headerAddon={
-                shouldShowGuestAiProgress ? (
-                  <GuestAiPracticeProgress used={freePracticeUsageCount} />
-                ) : undefined
-              }
-              headingText="太棒了！ 你想表达的是："
-              menuLabel="回到学习首页"
-              variant="guided"
-              onMenuClick={openLoggedInHomePage}
-              accountLabel={accountCopy.openAccountMenu}
-              onAccountClick={openAccountPage}
-              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
-              avatarAlt={accountEmail || accountName || "user"}
-              onAvatarError={() => setAccountImageFailed(true)}
-              onEditChinese={updateNativeSpeechDraft}
-              onRetryChinese={retryNativeSpeech}
-              onStartEnglishPractice={confirmAiGuidedNativeSpeech}
-            />
-          ) : null}
-
-          {showGuidedReferenceEnglishListening ? (
-            <AiGuidedExpressionStepFour
-              isRecordingEnglish={isListening}
-              nativeSpeech={nativeSpeech}
-              headerAddon={
-                shouldShowGuestAiProgress ? (
-                  <GuestAiPracticeProgress used={freePracticeUsageCount} />
-                ) : undefined
-              }
-              menuLabel="回到学习首页"
-              onMenuClick={openLoggedInHomePage}
-              accountLabel={accountCopy.openAccountMenu}
-              onAccountClick={openAccountPage}
-              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
-              avatarAlt={accountEmail || accountName || "user"}
-              onAvatarError={() => setAccountImageFailed(true)}
-              onMicrophoneClick={handlePrimaryPracticeAction}
-            />
+          {showGuidedReferenceConfirmation ||
+          showGuidedReferenceEnglishListening ? (
+            <div className="absolute inset-0 z-[90] overflow-hidden">
+              <AiGuidedConfirmSpeakPage
+                chineseText={nativeSpeech}
+                viewState={
+                  showGuidedReferenceEnglishListening
+                    ? "recordingEnglish"
+                    : "confirmChinese"
+                }
+                headerAddon={
+                  shouldShowGuestAiProgress ? (
+                    <GuestAiPracticeProgress used={freePracticeUsageCount} />
+                  ) : undefined
+                }
+                menuLabel="回到学习首页"
+                onMenuClick={openLoggedInHomePage}
+                onEditChinese={updateNativeSpeechDraft}
+                onRetryChinese={retryNativeSpeech}
+                onStartEnglishRecording={confirmAiGuidedNativeSpeechInline}
+                onStopEnglishRecording={handlePrimaryPracticeAction}
+              />
+            </div>
           ) : null}
 
           {showGuidedReferenceResult ? (
@@ -8422,25 +8450,28 @@ function SpeakEnglishClient() {
               avatarAlt={accountEmail || accountName || "user"}
               onAvatarError={() => setAccountImageFailed(true)}
               onMicrophoneClick={handlePrimaryPracticeAction}
+              recordingState="idle"
             />
           ) : null}
 
           {showReferenceListening ? (
-            <FreeStudyPageTwo
-              menuLabel="回到学习首页"
+            <FreeStudyPageOne
+              menuIcon="home"
+              menuLabel="回到首页"
               onMenuClick={openLoggedInHomePage}
               accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openAccountPage}
               avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
               avatarAlt={accountEmail || accountName || "user"}
               onAvatarError={() => setAccountImageFailed(true)}
-              isRecordingChinese={isListening}
-              isTranscribingChinese={isRecognizingNativeSpeech}
               onMicrophoneClick={handlePrimaryPracticeAction}
+              recordingState="recording"
             />
           ) : null}
 
-          {showReferenceConfirmation ? (
+          {showReferenceConfirmation ||
+          showReferenceEnglishPrompt ||
+          showReferenceEnglishListening ? (
             <FreeStudyPageThree
               chineseText={nativeSpeech}
               menuLabel="回到学习首页"
@@ -8452,21 +8483,13 @@ function SpeakEnglishClient() {
               onAvatarError={() => setAccountImageFailed(true)}
               onEditChinese={updateNativeSpeechDraft}
               onRetryChinese={openFreeStudyStepTwoForNextChinese}
-              onStartEnglishPractice={confirmFreeStudyNativeSpeech}
-            />
-          ) : null}
-
-          {showReferenceEnglishPrompt || showReferenceEnglishListening ? (
-            <FreeStudyPageFour
-              isRecordingEnglish={isListening || showReferenceEnglishPrompt}
-              nativeSpeech={nativeSpeech}
-              menuLabel="回到学习首页"
-              onMenuClick={openLoggedInHomePage}
-              accountLabel={accountCopy.openAccountMenu}
-              onAccountClick={openAccountPage}
-              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
-              avatarAlt={accountEmail || accountName || "user"}
-              onAvatarError={() => setAccountImageFailed(true)}
+              onStartEnglishPractice={confirmFreeStudyNativeSpeechInline}
+              onStopEnglishRecording={handlePrimaryPracticeAction}
+              viewState={
+                showReferenceEnglishPrompt || showReferenceEnglishListening
+                  ? "recordingEnglish"
+                  : "confirmChinese"
+              }
             />
           ) : null}
 
@@ -8489,6 +8512,8 @@ function SpeakEnglishClient() {
                 renderExpressionText={(text) => renderReferenceResultText(text)}
                 renderUserExpressionText={(text) => renderReferenceResultText(text)}
               />
+              {false ? (
+                <>
               <div
                 className="pointer-events-none absolute z-[121] flex items-center gap-1.5 font-black leading-none text-[#755cff] drop-shadow-[0_4px_10px_rgba(117,92,255,0.16)]"
                 style={{
@@ -8684,10 +8709,12 @@ function SpeakEnglishClient() {
                   />
                 );
               })}
+                </>
+              ) : null}
             </div>
           ) : null}
 
-          {showReferenceResult ? (
+          {false && showReferenceResult ? (
             <FreeStudyPageFiveBottomBar
               onFollowPractice={() => readSelectedReferenceResult(1)}
               onNextChinese={openFreeStudyStepTwoForNextChinese}
