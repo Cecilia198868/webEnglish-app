@@ -84,7 +84,7 @@
 }
 
 html[data-app-theme="dark"] {
-  color-scheme: dark;
+  color-scheme: light;
   --sf-bg-primary: #07101f;
   --sf-bg-secondary: #0d1626;
   --sf-card-bg: rgba(18, 27, 45, 0.94);
@@ -157,10 +157,10 @@ html[data-app-theme="dark"] {
   --sf-text-button: #f4f7ff;
 }
 
-@media (prefers-color-scheme: dark) {
+@media not all and (prefers-color-scheme: dark) {
   html[data-app-theme="system"],
   html[data-speakflow-theme="system"] {
-    color-scheme: dark;
+    color-scheme: light;
     --sf-bg-primary: #07101f;
     --sf-bg-secondary: #0d1626;
     --sf-card-bg: rgba(18, 27, 45, 0.94);
@@ -15933,8 +15933,8 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 }
 
 .sf-ai-guided-step-five-user-card {
-  min-height: 5.32rem !important;
-  padding: 0.82rem 6.8rem 0.82rem 0.96rem !important;
+  min-height: 6.75rem !important;
+  padding: 1rem 6.85rem 1.08rem 1.04rem !important;
   border-radius: 1.18rem !important;
 }
 
@@ -15955,11 +15955,11 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-five-user-text {
   max-width: none !important;
-  margin-top: 0.5rem !important;
+  margin-top: 0.58rem !important;
   color: #1f1b3d !important;
-  font-size: 1.08rem !important;
-  font-weight: 650 !important;
-  line-height: 1.34 !important;
+  font-size: 1.46rem !important;
+  font-weight: 700 !important;
+  line-height: 1.36 !important;
   letter-spacing: 0 !important;
   text-shadow: none !important;
   word-break: normal !important;
@@ -16111,14 +16111,14 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-five-record-card {
   grid-template-columns: 2.75rem minmax(0, 1fr) 2.34rem !important;
-  gap: 0.56rem !important;
-  min-height: 3.82rem !important;
-  padding: 0.46rem 0.62rem !important;
+  gap: 0.62rem !important;
+  min-height: 5.72rem !important;
+  padding: 0.82rem 0.74rem !important;
   border-radius: 0.92rem !important;
 }
 
 .sf-ai-guided-step-five-record-card.is-selected {
-  min-height: 4.72rem !important;
+  min-height: 6.2rem !important;
   border-color: rgba(23, 103, 218, 0.64) !important;
 }
 
@@ -16146,18 +16146,18 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
 .sf-ai-guided-step-five-record-badge {
   color: #1767da !important;
-  font-size: 0.74rem !important;
+  font-size: 0.94rem !important;
   font-weight: 650 !important;
   line-height: 1.18 !important;
   text-shadow: none !important;
 }
 
 .sf-ai-guided-step-five-record-text {
-  margin-top: 0.18rem !important;
+  margin-top: 0.28rem !important;
   color: #1f1b3d !important;
-  font-size: 0.84rem !important;
-  font-weight: 550 !important;
-  line-height: 1.28 !important;
+  font-size: 1.28rem !important;
+  font-weight: 700 !important;
+  line-height: 1.36 !important;
   letter-spacing: 0 !important;
   text-shadow: none !important;
   word-break: normal !important;
@@ -16340,13 +16340,14 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
   }
 
   .sf-ai-guided-step-five-user-card {
-    min-height: 4.8rem !important;
-    padding: 0.7rem 5.9rem 0.7rem 0.82rem !important;
+    min-height: 6.18rem !important;
+    padding: 0.9rem 5.9rem 0.96rem 0.9rem !important;
   }
 
   .sf-ai-guided-step-five-user-text {
     margin-top: 0.42rem !important;
-    font-size: 0.96rem !important;
+    font-size: 1.3rem !important;
+    line-height: 1.34 !important;
   }
 
   .sf-ai-guided-step-five-retry {
@@ -16383,13 +16384,13 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
 
   .sf-ai-guided-step-five-record-card {
     grid-template-columns: 2.5rem minmax(0, 1fr) 2.12rem !important;
-    min-height: 3.5rem !important;
-    gap: 0.48rem !important;
-    padding: 0.4rem 0.54rem !important;
+    min-height: 5.15rem !important;
+    gap: 0.52rem !important;
+    padding: 0.62rem 0.58rem !important;
   }
 
   .sf-ai-guided-step-five-record-card.is-selected {
-    min-height: 4.42rem !important;
+    min-height: 5.72rem !important;
   }
 
   .sf-ai-guided-step-five-record-icon {
@@ -16398,8 +16399,8 @@ body :is(.responsive-page-shell, [class^="sf-"], [class*=" sf-"]) :is(h1, h2, h3
   }
 
   .sf-ai-guided-step-five-record-text {
-    font-size: 0.78rem !important;
-    line-height: 1.25 !important;
+    font-size: 1.18rem !important;
+    line-height: 1.34 !important;
   }
 
   .sf-ai-guided-step-five-play,
@@ -19020,7 +19021,7 @@ html[data-app-theme="dark"] :where(.sf-brand-page, .responsive-page-shell) :wher
   color: var(--text-secondary) !important;
 }
 
-@media (prefers-color-scheme: dark) {
+@media not all and (prefers-color-scheme: dark) {
   html[data-app-theme="system"],
   html[data-speakflow-theme="system"] {
     --background: var(--sf-bg-primary);
@@ -19085,4 +19086,94 @@ html[data-app-theme="dark"] :where(.sf-brand-page, .responsive-page-shell) :wher
   html[data-app-theme="system"] body :where(img) {
     filter: saturate(0.94) brightness(0.92);
   }
+}
+
+html[data-app-theme],
+html[data-speakflow-theme] {
+  color-scheme: light !important;
+  --sf-bg-primary: #f7f9ff !important;
+  --sf-bg-secondary: #f5f4ff !important;
+  --sf-card-bg: rgba(255, 255, 255, 0.94) !important;
+  --sf-card-bg-solid: #ffffff !important;
+  --sf-card-bg-soft: rgba(255, 255, 255, 0.86) !important;
+  --sf-text-primary: #10163b !important;
+  --sf-text-secondary: #66708f !important;
+  --sf-border-color: rgba(218, 226, 246, 0.86) !important;
+  --sf-shadow-color: rgba(91, 120, 186, 0.14) !important;
+  --sf-input-bg: rgba(255, 255, 255, 0.92) !important;
+  --sf-input-text: #10163b !important;
+  --sf-button-bg: #ffffff !important;
+  --sf-button-text: #10163b !important;
+  --sf-chip-bg: rgba(239, 236, 255, 0.92) !important;
+  --sf-chip-text: #684cff !important;
+  --sf-icon-color: #6257d9 !important;
+  --sf-accent-primary: #6d55ff !important;
+  --sf-accent-primary-soft: rgba(109, 85, 255, 0.12) !important;
+  --sf-accent-blue: #3f72ff !important;
+  --sf-accent-green: #20a76b !important;
+  --sf-accent-cyan: #22b8c7 !important;
+  --sf-accent-pink: #eb4f8b !important;
+  --sf-progress-track: rgba(203, 211, 237, 0.72) !important;
+  --sf-progress-fill: linear-gradient(90deg, #7d5cff, #436cff) !important;
+  --sf-hint-bg: rgba(246, 248, 255, 0.9) !important;
+  --sf-fixed-bar-bg: rgba(255, 255, 255, 0.9) !important;
+  --sf-theme-inset: rgba(255, 255, 255, 0.96) !important;
+  --sf-overlay-bg: rgba(12, 15, 28, 0.74) !important;
+  --sf-surface-raised: rgba(255, 255, 255, 0.96) !important;
+  --sf-surface-muted: rgba(244, 247, 255, 0.92) !important;
+  --sf-bg-gradient:
+    radial-gradient(circle at 12% 0%, rgba(207, 235, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 88% 16%, rgba(224, 215, 255, 0.68), transparent 34%),
+    linear-gradient(180deg, #f7fbff 0%, #f5f4ff 52%, #ffffff 100%) !important;
+  --background: var(--sf-bg-primary) !important;
+  --foreground: var(--sf-text-primary) !important;
+  --app-bg: var(--sf-bg-primary) !important;
+  --card-bg: var(--sf-card-bg) !important;
+  --text-primary: var(--sf-text-primary) !important;
+  --text-secondary: var(--sf-text-secondary) !important;
+  --border-color: var(--sf-border-color) !important;
+  --button-bg: var(--sf-button-bg) !important;
+  --button-text: var(--sf-button-text) !important;
+  --shadow-color: var(--sf-shadow-color) !important;
+  --input-bg: var(--sf-input-bg) !important;
+  --input-text: var(--sf-input-text) !important;
+  --chip-bg: var(--sf-chip-bg) !important;
+  --chip-text: var(--sf-chip-text) !important;
+  --icon-color: var(--sf-icon-color) !important;
+  --app-bg-gradient: var(--sf-bg-gradient) !important;
+  --card-bg-solid: var(--sf-card-bg-solid) !important;
+  --card-bg-soft: var(--sf-card-bg-soft) !important;
+  --surface-raised: var(--sf-surface-raised) !important;
+  --surface-muted: var(--sf-surface-muted) !important;
+  --overlay-bg: var(--sf-overlay-bg) !important;
+  --accent-primary: var(--sf-accent-primary) !important;
+  --accent-primary-soft: var(--sf-accent-primary-soft) !important;
+  --accent-blue: var(--sf-accent-blue) !important;
+  --accent-green: var(--sf-accent-green) !important;
+  --accent-cyan: var(--sf-accent-cyan) !important;
+  --accent-pink: var(--sf-accent-pink) !important;
+  --progress-track: var(--sf-progress-track) !important;
+  --progress-fill: var(--sf-progress-fill) !important;
+  --hint-bg: var(--sf-hint-bg) !important;
+  --fixed-bar-bg: var(--sf-fixed-bar-bg) !important;
+  --theme-inset: var(--sf-theme-inset) !important;
+  --sf-ink: var(--text-primary) !important;
+  --sf-muted: var(--text-secondary) !important;
+  --sf-border: var(--border-color) !important;
+  --sf-glass: rgba(255, 255, 255, 0.72) !important;
+  --sf-glass-strong: rgba(255, 255, 255, 0.86) !important;
+  --sf-text-title: #1f1b3d !important;
+  --sf-text-body: #302b63 !important;
+  --sf-text-muted: #6b668c !important;
+  --sf-text-button: #302b63 !important;
+}
+
+html[data-app-theme],
+html[data-app-theme] body {
+  background: var(--app-bg-gradient) !important;
+  color: var(--text-primary) !important;
+}
+
+html[data-app-theme] body :where(img) {
+  filter: none !important;
 }

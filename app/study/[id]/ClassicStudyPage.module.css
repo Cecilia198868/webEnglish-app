@@ -5345,7 +5345,7 @@
   color: var(--text-secondary);
 }
 
-@media (prefers-color-scheme: dark) {
+@media not all and (prefers-color-scheme: dark) {
   :global(html[data-app-theme="system"]) :where(.classicShell, .classicPhone, .studyPhone, .resultPhone) {
     background: var(--app-bg-gradient);
     color: var(--text-primary);

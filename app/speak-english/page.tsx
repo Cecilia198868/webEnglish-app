@@ -287,9 +287,10 @@ const accountAvatarStoragePrefix = "speakflow-account-avatar";
 const fontSizePreferenceStorageKey = "speakflow-font-size-preference";
 const freeStudyRouteStateStorageKey = "speakflow-free-study-route-state";
 const selectedVoiceStorageKey = "speakflow-selected-voice-uri";
-const speechSilenceDelayMs = 1000;
+const speechSilenceDelayMs = 2000;
 const englishSpeechSilenceDelayMs = 2000;
 const speechNoInputTimeoutMs = 12000;
+const speechRestartAfterEarlyEndMs = 120;
 const speechStopFallbackMs = 900;
 const speechMaxDurationMs = 45000;
 
@@ -344,6 +345,18 @@ function getSpeechSilenceDelay(stage: PracticeStage) {
   if (stage === "native") return speechSilenceDelayMs;
 
   return englishSpeechSilenceDelayMs;
+}
+
+function mergeSpeechTranscripts(base: string, update: string) {
+  const cleanBase = base.trim();
+  const cleanUpdate = update.trim();
+
+  if (!cleanBase) return cleanUpdate;
+  if (!cleanUpdate) return cleanBase;
+  if (cleanUpdate.startsWith(cleanBase)) return cleanUpdate;
+  if (cleanBase.endsWith(cleanUpdate)) return cleanBase;
+
+  return `${cleanBase} ${cleanUpdate}`;
 }
 
 function isFontSizePreference(value: string): value is FontSizePreference {
@@ -3066,9 +3079,13 @@ function SpeakEnglishClient() {
   const avatarFileInputRef = useRef<HTMLInputElement | null>(null);
   const isDrawingRef = useRef(false);
   const speechBufferRef = useRef("");
+  const speechRecognitionBaseTranscriptRef = useRef("");
+  const speechLastResultAtRef = useRef(0);
+  const speechStopRequestedRef = useRef(false);
   const shouldCommitSpeechRef = useRef(false);
   const speechSilenceTimerRef = useRef<number | null>(null);
   const speechNoInputTimerRef = useRef<number | null>(null);
+  const speechRestartTimerRef = useRef<number | null>(null);
   const speechStopFallbackTimerRef = useRef<number | null>(null);
   const speechMaxTimerRef = useRef<number | null>(null);
   const activeRecognitionStageRef = useRef<PracticeStage>(
@@ -3982,6 +3999,7 @@ function SpeakEnglishClient() {
       const timerRefs = [
         speechSilenceTimerRef,
         speechNoInputTimerRef,
+        speechRestartTimerRef,
         speechStopFallbackTimerRef,
         speechMaxTimerRef,
       ];
@@ -4002,6 +4020,9 @@ function SpeakEnglishClient() {
       recognitionRef.current = null;
       clearLifecycleSpeechTimers();
       speechBufferRef.current = "";
+      speechRecognitionBaseTranscriptRef.current = "";
+      speechLastResultAtRef.current = 0;
+      speechStopRequestedRef.current = false;
       setLiveTranscript("");
       setIsListening(false);
     }
@@ -4026,6 +4047,10 @@ function SpeakEnglishClient() {
       shouldCommitSpeechRef.current = false;
       clearLifecycleSpeechTimers();
       recognitionRef.current?.abort?.();
+      speechBufferRef.current = "";
+      speechRecognitionBaseTranscriptRef.current = "";
+      speechLastResultAtRef.current = 0;
+      speechStopRequestedRef.current = false;
       window.removeEventListener("pagehide", resetStaleRecognition);
       window.removeEventListener("pageshow", handlePageShow);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -4588,6 +4613,7 @@ function SpeakEnglishClient() {
   function clearAllSpeechTimers() {
     clearTimer(speechSilenceTimerRef);
     clearTimer(speechNoInputTimerRef);
+    clearTimer(speechRestartTimerRef);
     clearTimer(speechStopFallbackTimerRef);
     clearTimer(speechMaxTimerRef);
   }
@@ -5071,6 +5097,9 @@ function SpeakEnglishClient() {
 
     clearAllSpeechTimers();
     speechBufferRef.current = "";
+    speechRecognitionBaseTranscriptRef.current = "";
+    speechLastResultAtRef.current = 0;
+    speechStopRequestedRef.current = false;
     shouldCommitSpeechRef.current = false;
     recognitionRef.current = null;
     setLiveTranscript("");
@@ -5085,6 +5114,9 @@ function SpeakEnglishClient() {
     recognitionRef.current = null;
     clearAllSpeechTimers();
     speechBufferRef.current = "";
+    speechRecognitionBaseTranscriptRef.current = "";
+    speechLastResultAtRef.current = 0;
+    speechStopRequestedRef.current = false;
     setLiveTranscript("");
     setIsListening(false);
     setPrimingPracticeStage(null);
@@ -5292,6 +5324,9 @@ function SpeakEnglishClient() {
 
     clearAllSpeechTimers();
     speechBufferRef.current = "";
+    speechRecognitionBaseTranscriptRef.current = "";
+    speechLastResultAtRef.current = 0;
+    speechStopRequestedRef.current = false;
     shouldCommitSpeechRef.current = true;
     const isStartingFreeConversationAnswerRound =
       !forcedPracticeStage && isFreeConversationMode && hasEnglishAttempt;
@@ -5357,6 +5392,7 @@ function SpeakEnglishClient() {
     recognition.continuous = true;
     recognition.interimResults = true;
     const activeSpeechSilenceDelayMs = getSpeechSilenceDelay(nextPracticeStage);
+    const shouldProtectEarlySpeechEnd = nextPracticeStage === "native";
     setInputText("");
     setComposingPinyin("");
     setLiveTranscript("");
@@ -5368,32 +5404,112 @@ function SpeakEnglishClient() {
     }
 
     recognition.onresult = (event) => {
-      const transcript = Array.from(event.results)
+      const previousTranscript = speechBufferRef.current.trim();
+      const sessionTranscript = Array.from(event.results)
         .map((result) => result[0]?.transcript || "")
         .join("")
         .trim();
+      const transcript = mergeSpeechTranscripts(
+        speechRecognitionBaseTranscriptRef.current,
+        sessionTranscript
+      );
 
       setLiveTranscript(transcript);
       speechBufferRef.current = transcript;
       clearTimer(speechNoInputTimerRef);
-      clearSpeechSilenceTimer();
 
-      if (transcript) {
+      if (!transcript) {
+        clearSpeechSilenceTimer();
+        return;
+      }
+
+      if (sessionTranscript && transcript !== previousTranscript) {
+        speechLastResultAtRef.current = Date.now();
+        clearSpeechSilenceTimer();
         speechSilenceTimerRef.current = window.setTimeout(() => {
           stopRecognition();
         }, activeSpeechSilenceDelayMs);
       }
     };
 
-    recognition.onerror = () => {
+    recognition.onerror = (event) => {
+      const transcript = speechBufferRef.current.trim();
+      const errorName =
+        "error" in event && typeof event.error === "string" ? event.error : "";
+
+      if (shouldCommitSpeechRef.current && transcript) {
+        if (speechStopRequestedRef.current) {
+          finishRecognition(transcript);
+          return;
+        }
+
+        const elapsedSinceSpeech = speechLastResultAtRef.current
+          ? Date.now() - speechLastResultAtRef.current
+          : activeSpeechSilenceDelayMs;
+        const remainingSilenceMs = Math.max(
+          activeSpeechSilenceDelayMs - elapsedSinceSpeech,
+          0
+        );
+
+        if (shouldProtectEarlySpeechEnd && remainingSilenceMs > 0) {
+          speechRecognitionBaseTranscriptRef.current = transcript;
+          clearSpeechSilenceTimer();
+          speechSilenceTimerRef.current = window.setTimeout(() => {
+            stopRecognition();
+          }, remainingSilenceMs);
+          return;
+        }
+
+        finishRecognition(transcript);
+        return;
+      }
+
       cancelRecognition(
-        activeRecognitionStageRef.current === "native"
+        activeRecognitionStageRef.current === "native" && errorName !== "aborted"
           ? { message: "没有听到声音，请再试一次" }
           : undefined
       );
     };
 
     recognition.onend = () => {
+      const transcript = speechBufferRef.current.trim();
+      const elapsedSinceSpeech = speechLastResultAtRef.current
+        ? Date.now() - speechLastResultAtRef.current
+        : activeSpeechSilenceDelayMs;
+      const remainingSilenceMs = Math.max(
+        activeSpeechSilenceDelayMs - elapsedSinceSpeech,
+        0
+      );
+
+      if (
+        shouldCommitSpeechRef.current &&
+        transcript &&
+        shouldProtectEarlySpeechEnd &&
+        !speechStopRequestedRef.current &&
+        remainingSilenceMs > 0
+      ) {
+        speechRecognitionBaseTranscriptRef.current = transcript;
+        clearTimer(speechRestartTimerRef);
+        speechRestartTimerRef.current = window.setTimeout(() => {
+          if (
+            !shouldCommitSpeechRef.current ||
+            speechStopRequestedRef.current ||
+            recognitionRef.current !== recognition
+          ) {
+            return;
+          }
+
+          try {
+            recognition.start();
+          } catch {
+            speechStopFallbackTimerRef.current = window.setTimeout(() => {
+              finishRecognition(transcript);
+            }, remainingSilenceMs);
+          }
+        }, speechRestartAfterEarlyEndMs);
+        return;
+      }
+
       finishRecognition();
     };
 
@@ -5416,6 +5532,10 @@ function SpeakEnglishClient() {
     } catch {
       shouldCommitSpeechRef.current = false;
       clearAllSpeechTimers();
+      speechBufferRef.current = "";
+      speechRecognitionBaseTranscriptRef.current = "";
+      speechLastResultAtRef.current = 0;
+      speechStopRequestedRef.current = false;
       setIsListening(false);
       setPrimingPracticeStage(null);
       setMessage("Speech recognition could not start");
@@ -5425,7 +5545,9 @@ function SpeakEnglishClient() {
   function stopRecognition(options: { forceUiReset?: boolean } = {}) {
     clearSpeechSilenceTimer();
     clearTimer(speechNoInputTimerRef);
+    clearTimer(speechRestartTimerRef);
     clearTimer(speechStopFallbackTimerRef);
+    speechStopRequestedRef.current = true;
 
     if (activeRecognitionStageRef.current === "native") {
       setIsRecognizingNativeSpeech(true);

@@ -31,16 +31,18 @@ const displayPreferenceScript = `
     const root = document.documentElement;
     const fontSize = localStorage.getItem(fontSizeKey);
     localStorage.removeItem("speakflow-appearance-preference");
-    root.dataset.appTheme = "system";
-    root.dataset.speakflowTheme = "system";
-    root.dataset.appThemePreference = "system";
+    localStorage.removeItem("speakflow-theme-preference");
+    localStorage.removeItem("speakflow-color-scheme-preference");
+    root.dataset.appTheme = "light";
+    root.dataset.speakflowTheme = "light";
+    root.dataset.appThemePreference = "light";
     root.dataset.speakflowFontSize = validFontSizes.has(fontSize)
       ? fontSize
       : "standard";
   } catch {
-    document.documentElement.dataset.appTheme = "system";
-    document.documentElement.dataset.speakflowTheme = "system";
-    document.documentElement.dataset.appThemePreference = "system";
+    document.documentElement.dataset.appTheme = "light";
+    document.documentElement.dataset.speakflowTheme = "light";
+    document.documentElement.dataset.appThemePreference = "light";
     document.documentElement.dataset.speakflowFontSize = "standard";
   }
 })();
@@ -54,7 +56,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "SpeakFlow",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
   },
   formatDetection: {
     telephone: false,
@@ -108,10 +110,10 @@ export default async function RootLayout({
     <html
       lang={initialLanguage}
       suppressHydrationWarning
-      data-app-theme="system"
+      data-app-theme="light"
       data-speakflow-font-size="standard"
-      data-speakflow-theme="system"
-      data-app-theme-preference="system"
+      data-speakflow-theme="light"
+      data-app-theme-preference="light"
       className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} h-full antialiased`}
     >
       <body

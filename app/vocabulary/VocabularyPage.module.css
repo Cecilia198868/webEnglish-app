@@ -5603,7 +5603,7 @@
     inset 0 1px 0 var(--theme-inset) !important;
 }
 
-@media (prefers-color-scheme: dark) {
+@media not all and (prefers-color-scheme: dark) {
   :global(html[data-app-theme="system"]) :global(.sf-vocabulary-learning-page),
   :global(html[data-app-theme="system"]) :global(.sf-expression-library-page) {
     background: var(--app-bg-gradient) !important;
