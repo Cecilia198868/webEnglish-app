@@ -4,6 +4,7 @@ import styles from "./GuestMenuPage.module.css";
 
 type MenuTone = "home" | "login" | "pro" | "help" | "about";
 type MenuIconName = "home" | "login" | "star" | "help" | "info";
+export type GuestMenuPanel = "help" | "about";
 
 const guestMenuRows: Array<{
   description: string;
@@ -27,13 +28,6 @@ const guestMenuRows: Array<{
     tone: "login",
   },
   {
-    description: "解锁全部功能，畅享无限练习",
-    href: "/login?callbackUrl=%2Faccount%3Fpanel%3Dsubscription",
-    icon: "star",
-    label: "升级 Pro",
-    tone: "pro",
-  },
-  {
     description: "常见问题与使用指南",
     href: "/menu?panel=help",
     icon: "help",
@@ -48,6 +42,40 @@ const guestMenuRows: Array<{
     tone: "about",
   },
 ];
+
+const guestMenuPanels: Record<
+  GuestMenuPanel,
+  {
+    description: string;
+    icon: MenuIconName;
+    items: string[];
+    title: string;
+    tone: MenuTone;
+  }
+> = {
+  help: {
+    description: "这里整理了常见问题和使用提示，帮助你更顺畅地开始练习。",
+    icon: "help",
+    items: [
+      "点击首页可以回到学习首页，继续游客体验。",
+      "登录账号后，可以同步学习进度和表达收藏。",
+      "麦克风无法使用时，请检查浏览器或系统的录音权限。",
+    ],
+    title: "帮助",
+    tone: "help",
+  },
+  about: {
+    description: "SpeakFlow 专注帮你把真实想法变成自然、地道、能开口说出来的英语。",
+    icon: "info",
+    items: [
+      "用 AI 引导表达，把中文想法一步步变成自然英文。",
+      "通过 100 个口语句型和经典场景，反复练习高频表达。",
+      "把新表达收藏起来，持续复习，慢慢形成自己的表达库。",
+    ],
+    title: "关于 SpeakFlow",
+    tone: "about",
+  },
+};
 
 function MenuIcon({ name }: { name: MenuIconName }) {
   if (name === "home") {
@@ -100,7 +128,13 @@ function ChevronIcon() {
   );
 }
 
-export default function GuestMenuPage() {
+export default function GuestMenuPage({
+  activePanel = null,
+}: {
+  activePanel?: GuestMenuPanel | null;
+}) {
+  const panel = activePanel ? guestMenuPanels[activePanel] : null;
+
   return (
     <main className={styles.page}>
       <section className={styles.phone} aria-label="SpeakFlow 游客菜单">
@@ -135,22 +169,45 @@ export default function GuestMenuPage() {
           </span>
         </header>
 
-        <nav className={styles.menuList} aria-label="游客导航">
-          {guestMenuRows.map((row) => (
-            <Link key={row.label} href={row.href} className={styles.menuRow}>
-              <span className={styles.rowIcon} data-tone={row.tone}>
-                <MenuIcon name={row.icon} />
-              </span>
-              <span className={styles.rowCopy}>
-                <strong>{row.label}</strong>
-                <small>{row.description}</small>
-              </span>
-              <span className={styles.chevron}>
-                <ChevronIcon />
-              </span>
+        {panel ? (
+          <section className={styles.panel} aria-labelledby="guest-menu-panel-title">
+            <Link href="/menu" className={styles.panelBack} aria-label="返回游客菜单">
+              <ChevronIcon />
+              <span>返回</span>
             </Link>
-          ))}
-        </nav>
+            <div className={styles.panelHeader}>
+              <span className={styles.rowIcon} data-tone={panel.tone}>
+                <MenuIcon name={panel.icon} />
+              </span>
+              <div>
+                <h2 id="guest-menu-panel-title">{panel.title}</h2>
+                <p>{panel.description}</p>
+              </div>
+            </div>
+            <ul className={styles.panelList}>
+              {panel.items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+        ) : (
+          <nav className={styles.menuList} aria-label="游客导航">
+            {guestMenuRows.map((row) => (
+              <Link key={row.label} href={row.href} className={styles.menuRow}>
+                <span className={styles.rowIcon} data-tone={row.tone}>
+                  <MenuIcon name={row.icon} />
+                </span>
+                <span className={styles.rowCopy}>
+                  <strong>{row.label}</strong>
+                  <small>{row.description}</small>
+                </span>
+                <span className={styles.chevron}>
+                  <ChevronIcon />
+                </span>
+              </Link>
+            ))}
+          </nav>
+        )}
       </section>
     </main>
   );

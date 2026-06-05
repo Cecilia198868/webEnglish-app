@@ -3464,6 +3464,11 @@ function SpeakEnglishClient() {
     hasLoadedAccountSession &&
     (!accountEmail || hasCheckedAccountSubscription) &&
     !isLoadingAccountSubscription;
+  const shouldRenderFreePracticeLimitModal =
+    showFreePracticeLimitModal &&
+    !isAccountPro &&
+    (!accountEmail || hasCheckedAccountSubscription) &&
+    !isLoadingAccountSubscription;
   const shouldShowGuestAiProgress =
     isAiGuidedMode && hasLoadedAccountSession && !accountEmail;
   const accountSubscriptionLabel = isLoadingAccountSubscription
@@ -3842,6 +3847,20 @@ function SpeakEnglishClient() {
     void refreshAccountSubscription();
   }, [accountEmail, hasLoadedAccountSession, refreshAccountSubscription]);
 
+  useEffect(() => {
+    if (
+      isAccountPro ||
+      (accountEmail && (!hasCheckedAccountSubscription || isLoadingAccountSubscription))
+    ) {
+      setShowFreePracticeLimitModal(false);
+    }
+  }, [
+    accountEmail,
+    hasCheckedAccountSubscription,
+    isAccountPro,
+    isLoadingAccountSubscription,
+  ]);
+
   const loadReferralState = useCallback(async () => {
     setIsLoadingReferralState(true);
     setReferralNotice("");
@@ -4025,11 +4044,34 @@ function SpeakEnglishClient() {
 
   function showFreePracticeLimit() {
     refreshFreePracticeUsageCount();
+
+    if (isAccountPro) {
+      setShowFreePracticeLimitModal(false);
+      return;
+    }
+
+    if (accountEmail && (!hasCheckedAccountSubscription || isLoadingAccountSubscription)) {
+      void refreshAccountSubscription().then((nextSubscriptionStatus) => {
+        if (hasProAccess(nextSubscriptionStatus)) {
+          setShowFreePracticeLimitModal(false);
+          return;
+        }
+
+        setShowFreePracticeLimitModal(true);
+      });
+      return;
+    }
+
     setShowFreePracticeLimitModal(true);
   }
 
   function showFreePracticeLimitAfterCompletion() {
     refreshFreePracticeUsageCount();
+
+    if (isAccountPro) {
+      setShowFreePracticeLimitModal(false);
+      return;
+    }
 
     if (!accountEmail) {
       setShowFreePracticeLimitModal(true);
@@ -4044,6 +4086,18 @@ function SpeakEnglishClient() {
 
       setShowFreePracticeLimitModal(true);
     });
+  }
+
+  function recordFreePracticeCompletionForFreeAccount() {
+    const result = recordFreePracticeCompletion(
+      activeFreePracticeScope,
+      freePracticeRoundIdRef.current
+    );
+    setFreePracticeUsageCount(result.count);
+
+    if (result.didRecord && result.limitReached) {
+      showFreePracticeLimitAfterCompletion();
+    }
   }
 
   function openProFromFreePracticeLimit() {
@@ -4097,15 +4151,19 @@ function SpeakEnglishClient() {
   function markFreePracticeRoundCompleted() {
     if (hasProAccess(accountSubscriptionStatus)) return;
 
-    const result = recordFreePracticeCompletion(
-      activeFreePracticeScope,
-      freePracticeRoundIdRef.current
-    );
-    setFreePracticeUsageCount(result.count);
+    if (accountEmail && (!hasCheckedAccountSubscription || isLoadingAccountSubscription)) {
+      void refreshAccountSubscription().then((nextSubscriptionStatus) => {
+        if (hasProAccess(nextSubscriptionStatus)) {
+          setShowFreePracticeLimitModal(false);
+          return;
+        }
 
-    if (result.didRecord && result.limitReached) {
-      showFreePracticeLimitAfterCompletion();
+        recordFreePracticeCompletionForFreeAccount();
+      });
+      return;
     }
+
+    recordFreePracticeCompletionForFreeAccount();
   }
 
   function recordAiGuidedBackendProgress(payload: {
@@ -11383,7 +11441,7 @@ function SpeakEnglishClient() {
           ) : null}
         </section>
 
-        {showFreePracticeLimitModal ? (
+        {shouldRenderFreePracticeLimitModal ? (
           <FreePracticeLimitModal
             isSignedIn={Boolean(accountEmail)}
             onDismiss={() => setShowFreePracticeLimitModal(false)}

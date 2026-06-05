@@ -1784,9 +1784,6 @@ export default function VocabularyPage() {
                   </span>
                   <div className="sf-vocabulary-word-line">
                     <h2>{displayedExpressionText}</h2>
-                  </div>
-                  <div className="sf-vocabulary-expression-meta">
-                    <span>{displayedExpressionKindLabel}</span>
                     <button
                       type="button"
                       aria-label={`播放表达 ${displayedExpressionText}`}
@@ -1795,6 +1792,9 @@ export default function VocabularyPage() {
                     >
                       <SpeakerIcon />
                     </button>
+                  </div>
+                  <div className="sf-vocabulary-expression-meta">
+                    <span>{displayedExpressionKindLabel}</span>
                   </div>
                   <div className="sf-vocabulary-label">
                     <MeaningIcon />

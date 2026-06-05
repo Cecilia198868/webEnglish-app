@@ -1520,7 +1520,11 @@ body {
 }
 
 .sf-free-practice-limit-primary *,
-.sf-expression-learning-limit-primary * {
+.sf-expression-learning-limit-primary *,
+.sf-speak-page .sf-free-practice-limit-primary *,
+.sf-speak-page .sf-expression-learning-limit-primary *,
+.responsive-page-shell .sf-free-practice-limit-primary *,
+.responsive-page-shell .sf-expression-learning-limit-primary * {
   color: inherit !important;
   font-weight: inherit !important;
 }
