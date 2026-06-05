@@ -36,8 +36,11 @@
   left: 0;
   top: 0;
   display: grid;
-  width: 58px;
-  height: 58px;
+  width: 74px;
+  min-height: 58px;
+  grid-template-rows: auto auto;
+  place-content: center;
+  gap: 4px;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--section-accent) 16%, transparent);
   border-radius: 17px;
@@ -54,13 +57,20 @@
 }
 
 .backButton svg {
-  width: 31px;
-  height: 31px;
+  width: 24px;
+  height: 24px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 3.4;
+}
+
+.backButton span {
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1.08;
+  white-space: nowrap;
 }
 
 .title {
@@ -96,7 +106,7 @@
 
 .lessonRow {
   display: grid;
-  grid-template-columns: 98px 48px minmax(0, 1fr) 36px;
+  grid-template-columns: 98px minmax(0, 1fr) 36px;
   align-items: center;
   width: 100%;
   min-height: 142px;
@@ -149,24 +159,6 @@
   stroke-linejoin: round;
   stroke-width: 3;
   filter: drop-shadow(0 4px 4px color-mix(in srgb, currentColor 16%, transparent));
-}
-
-.numberBadge {
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.5), transparent 32%),
-    linear-gradient(135deg, color-mix(in srgb, var(--lesson-accent) 72%, #ffb74a), var(--lesson-accent));
-  color: #ffffff;
-  font-size: 1.05rem;
-  font-weight: 900;
-  line-height: 1;
-  box-shadow:
-    0 6px 13px color-mix(in srgb, var(--lesson-accent) 24%, transparent),
-    inset 0 -1px 0 rgba(62, 33, 16, 0.1);
 }
 
 .lessonText {
@@ -224,8 +216,18 @@
   }
 
   .backButton {
-    width: 52px;
-    height: 52px;
+    width: 66px;
+    min-height: 54px;
+    gap: 3px;
+  }
+
+  .backButton svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .backButton span {
+    font-size: 0.62rem;
   }
 
   .title {
@@ -238,7 +240,7 @@
   }
 
   .lessonRow {
-    grid-template-columns: 74px 38px minmax(0, 1fr) 28px;
+    grid-template-columns: 74px minmax(0, 1fr) 28px;
     min-height: 124px;
     padding-right: 18px;
     padding-left: 13px;
@@ -253,12 +255,6 @@
   .iconSvg {
     width: 39px;
     height: 39px;
-  }
-
-  .numberBadge {
-    width: 27px;
-    height: 27px;
-    font-size: 0.88rem;
   }
 
   .lessonText {
@@ -308,8 +304,7 @@
   color: var(--text-secondary);
 }
 
-:global(html[data-app-theme]) .iconTile,
-:global(html[data-app-theme]) .numberBadge {
+:global(html[data-app-theme]) .iconTile {
   background: var(--chip-bg);
   color: var(--chip-text);
 }

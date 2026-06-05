@@ -805,6 +805,9 @@
   box-shadow:
     0 14px 30px rgba(47, 98, 56, 0.24),
     inset 0 2px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .micButton svg {
@@ -825,6 +828,7 @@
     0 16px 34px rgba(47, 98, 56, 0.3),
     0 0 0 8px rgba(126, 159, 102, 0.14),
     inset 0 2px 0 rgba(255, 255, 255, 0.25);
+  animation: classicMicButtonBreath 1.35s ease-in-out infinite alternate;
 }
 
 .micPulseOne,
@@ -833,11 +837,54 @@
   inset: -15px;
   border: 1px dashed rgba(126, 159, 102, 0.42);
   border-radius: 999px;
+  opacity: 0.62;
+  pointer-events: none;
+  transform: scale(1);
 }
 
 .micPulseTwo {
   inset: -26px;
   opacity: 0.5;
+}
+
+.micButtonActive .micPulseOne {
+  animation: classicMicHalo 1.45s ease-out infinite;
+}
+
+.micButtonActive .micPulseTwo {
+  animation: classicMicHalo 1.45s ease-out 0.42s infinite;
+}
+
+@keyframes classicMicButtonBreath {
+  from {
+    box-shadow:
+      0 16px 34px rgba(47, 98, 56, 0.3),
+      0 0 0 7px rgba(126, 159, 102, 0.13),
+      inset 0 2px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  to {
+    box-shadow:
+      0 20px 40px rgba(47, 98, 56, 0.36),
+      0 0 0 13px rgba(126, 159, 102, 0.2),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes classicMicHalo {
+  0% {
+    opacity: 0.68;
+    transform: scale(0.92);
+  }
+
+  62% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.28);
+  }
 }
 
 .micHint {
@@ -1158,7 +1205,7 @@
   height: 30px;
 }
 
-.resultPhone .followMicLabel {
+.resultPhone .followSpeedButton {
   font-size: 0.62rem;
 }
 
@@ -1632,11 +1679,32 @@
   stroke-width: 7;
 }
 
-.followMicLabel {
-  color: #815235;
+.followSpeedButton {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #745eff;
+  padding: 0 9px;
   font-size: 0.76rem;
   font-weight: 900;
   line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 5px 12px rgba(116, 94, 255, 0.08);
+}
+
+.followSpeedButton svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
 }
 
 .followModalBackdrop {
@@ -2459,7 +2527,7 @@
   height: 44px;
 }
 
-.resultPhone .followMicLabel {
+.resultPhone .followSpeedButton {
   color: #2f6238;
   font-size: 0.82rem;
   font-weight: 650;
@@ -2763,7 +2831,7 @@
   height: 35px;
 }
 
-.resultPhone .followMicLabel {
+.resultPhone .followSpeedButton {
   font-size: 0.68rem;
 }
 
@@ -2995,6 +3063,48 @@
   gap: 7px;
 }
 
+.categorySwitchRow {
+  display: inline-grid;
+  grid-template-columns: 30px auto 30px;
+  align-items: center;
+  justify-content: start;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.categoryArrowButton {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid rgba(114, 87, 255, 0.18);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.95), transparent 42%),
+    rgba(255, 255, 255, 0.88);
+  color: #7257ff;
+  box-shadow:
+    0 8px 16px rgba(95, 78, 204, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.categoryArrowButton svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.4;
+}
+
+.categoryArrowButton:disabled {
+  cursor: default;
+  opacity: 0.34;
+  box-shadow: none;
+}
+
 .categoryPill {
   display: inline-flex;
   width: fit-content;
@@ -3025,9 +3135,9 @@
 
 .studyPhone .topicTitleRow {
   display: grid;
-  grid-template-columns: 26px minmax(0, 1fr) 26px;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   width: 100%;
   max-width: 100%;
 }
@@ -3038,31 +3148,33 @@
 
 .studyPhone .lessonArrowButton {
   display: grid;
-  width: 26px;
-  height: 26px;
+  width: 34px;
+  height: 34px;
   place-items: center;
-  border: 1px solid rgba(126, 159, 102, 0.22);
+  border: 1px solid rgba(221, 149, 59, 0.26);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.8);
-  color: #1b5a27;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.95), transparent 42%),
+    rgba(255, 255, 255, 0.9);
+  color: #d58a33;
   box-shadow:
-    0 7px 14px rgba(58, 82, 45, 0.08),
+    0 9px 18px rgba(170, 111, 43, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
 .studyPhone .lessonArrowButton svg {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 3.2;
+  stroke-width: 3.6;
 }
 
 .studyPhone .lessonArrowButton:disabled {
   cursor: default;
-  opacity: 0.28;
+  opacity: 0.38;
   box-shadow: none;
 }
 
@@ -3762,6 +3874,7 @@
 :global(html[data-app-theme]) .methodCard,
 :global(html[data-app-theme]) .tipCard,
 :global(html[data-app-theme]) .sentenceButton,
+:global(html[data-app-theme]) .categoryArrowButton,
 :global(html[data-app-theme]) .lessonArrowButton,
 :global(html[data-app-theme]) .resultHint,
 :global(html[data-app-theme]) .userExpressionCard,
@@ -3803,7 +3916,6 @@
 :global(html[data-app-theme]) .tipCopy small,
 :global(html[data-app-theme]) .variantNote,
 :global(html[data-app-theme]) .followReadButton small,
-:global(html[data-app-theme]) .followMicLabel,
 :global(html[data-app-theme]) .followModal p,
 :global(html[data-app-theme]) .loadingExpressions {
   color: var(--text-secondary);
@@ -3811,6 +3923,7 @@
 
 :global(html[data-app-theme]) .roleBadge,
 :global(html[data-app-theme]) .categoryPill,
+:global(html[data-app-theme]) .followSpeedButton,
 :global(html[data-app-theme]) .methodIcon,
 :global(html[data-app-theme]) .stepNumber,
 :global(html[data-app-theme]) .userExpressionLabel,
@@ -3859,6 +3972,7 @@
 :global(html[data-app-theme]) .homeShortcutText,
 :global(html[data-app-theme]) .switchCourseButton,
 :global(html[data-app-theme]) .sentenceButton,
+:global(html[data-app-theme]) .categoryArrowButton,
 :global(html[data-app-theme]) .lessonArrowButton,
 :global(html[data-app-theme]) .variantSpeaker,
 :global(html[data-app-theme]) .slowReadButton {
@@ -3906,10 +4020,12 @@
 }
 
 .classicPhone.studyPhone:not(.resultPhone) .homeIconBox {
-  width: 44px;
-  min-height: 44px;
-  gap: 2px;
-  padding: 5px 4px 4px;
+  width: 50px;
+  min-height: 50px;
+  grid-template-rows: auto auto;
+  place-content: center;
+  gap: 4px;
+  padding: 5px 4px 5px;
   border-color: rgba(35, 70, 32, 0.08);
   border-radius: 15px;
   background: rgba(255, 255, 255, 0.9);
@@ -3920,15 +4036,16 @@
 }
 
 .classicPhone.studyPhone:not(.resultPhone) .homeIconBox :global(.sf-home-menu-icon) {
-  width: 1.25rem;
-  height: 1.25rem;
-  font-size: 1.18rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  font-size: 1.06rem;
 }
 
 .classicPhone.studyPhone:not(.resultPhone) .homeShortcutText {
   color: #294733;
-  font-size: 0.54rem;
+  font-size: 0.48rem;
   font-weight: 850;
+  line-height: 1;
 }
 
 .classicPhone.studyPhone:not(.resultPhone) .brand {
@@ -4008,24 +4125,48 @@
   font-size: 0.68rem;
 }
 
+.classicPhone.studyPhone:not(.resultPhone) .categorySwitchRow {
+  grid-template-columns: 24px auto 24px;
+  gap: 4px;
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .categoryArrowButton {
+  width: 24px;
+  height: 24px;
+  border-color: rgba(114, 87, 255, 0.22);
+  background: rgba(255, 255, 255, 0.9);
+  color: #7257ff;
+  box-shadow:
+    0 6px 12px rgba(95, 78, 204, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+
+.classicPhone.studyPhone:not(.resultPhone) .categoryArrowButton svg {
+  width: 16px;
+  height: 16px;
+}
+
 .classicPhone.studyPhone:not(.resultPhone) .studyPhone .topicTitleRow,
 .classicPhone.studyPhone:not(.resultPhone) .topicTitleRow {
-  grid-template-columns: 20px minmax(0, 1fr) 20px;
-  gap: 2px;
+  grid-template-columns: 29px minmax(0, 1fr) 29px;
+  gap: 4px;
 }
 
 .classicPhone.studyPhone:not(.resultPhone) .lessonArrowButton {
-  width: 20px;
-  height: 20px;
-  border: 0;
-  background: transparent;
-  color: #214f2a;
-  box-shadow: none;
+  width: 29px;
+  height: 29px;
+  border: 1px solid rgba(221, 149, 59, 0.3);
+  background: rgba(255, 255, 255, 0.88);
+  color: #d58a33;
+  box-shadow:
+    0 7px 13px rgba(170, 111, 43, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
 }
 
 .classicPhone.studyPhone:not(.resultPhone) .lessonArrowButton svg {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
+  stroke-width: 3.8;
 }
 
 .classicPhone.studyPhone:not(.resultPhone) .studyTopicBar .topicTitle {
@@ -4547,10 +4688,10 @@
 
 .classicPhone.resultPhone.studyPhone .studyTopbar {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) 68px;
-  gap: 4px;
-  min-height: 42px;
-  align-items: center;
+  grid-template-columns: 54px minmax(0, 1fr) 66px;
+  gap: 6px;
+  min-height: 52px;
+  align-items: start;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -4563,92 +4704,98 @@
 }
 
 .classicPhone.resultPhone.studyPhone .homeIconBox {
-  width: 38px;
-  min-height: 38px;
-  gap: 2px;
-  padding: 3px 2px 4px;
-  border-color: rgba(88, 125, 79, 0.13);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.92);
-  color: #244c2c;
+  width: 50px;
+  min-height: 50px;
+  grid-template-rows: auto auto;
+  place-content: center;
+  gap: 4px;
+  padding: 5px 4px 5px;
+  border-color: rgba(35, 70, 32, 0.08);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #13261d;
   box-shadow:
-    0 6px 14px rgba(58, 82, 45, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    0 8px 18px rgba(58, 82, 45, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
 }
 
 .classicPhone.resultPhone.studyPhone .homeIconBox :global(.sf-home-menu-icon) {
-  width: 1.02rem;
-  height: 1.02rem;
-  font-size: 1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  font-size: 1.06rem;
 }
 
 .classicPhone.resultPhone.studyPhone .homeShortcutText {
-  color: #486c45;
-  font-size: 0.46rem;
-  font-weight: 800;
+  color: #294733;
+  font-size: 0.48rem;
+  font-weight: 850;
   line-height: 1;
 }
 
 .classicPhone.resultPhone.studyPhone .brand {
-  gap: 4px;
+  gap: 6px;
   justify-content: center;
-  padding-top: 0;
+  padding-top: 1px;
 }
 
 .classicPhone.resultPhone.studyPhone .brandIcon {
-  width: 19px;
-  height: 19px;
-  color: #568a58;
+  width: 25px;
+  height: 25px;
+  color: #3f7a49;
 }
 
 .classicPhone.resultPhone.studyPhone .brandTitle {
-  color: #122a16;
-  font-size: 0.86rem;
+  color: #153b20;
+  font-size: clamp(0.98rem, 4.5vw, 1.16rem);
   font-weight: 900;
-  line-height: 0.95;
+  line-height: 0.98;
 }
 
 .classicPhone.resultPhone.studyPhone .brandSubtitle {
-  margin-top: 2px;
-  color: #6f8668;
-  font-size: 0.28rem;
+  margin-top: 3px;
+  color: #51784d;
+  font-size: clamp(0.38rem, 1.7vw, 0.46rem);
   font-weight: 900;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.13em;
   line-height: 1;
 }
 
 .classicPhone.resultPhone.studyPhone .switchCourseButton {
-  width: 58px;
-  min-height: 22px;
+  width: 62px;
+  min-height: 24px;
   justify-self: end;
-  border-color: rgba(117, 95, 221, 0.12);
+  border-color: rgba(35, 70, 32, 0.08);
   border-radius: 999px;
-  background: rgba(248, 246, 255, 0.95);
-  color: #7358d8;
+  background: rgba(255, 255, 255, 0.9);
+  color: #7257ff;
   padding: 0 6px;
-  font-size: 0.5rem;
+  font-size: 0.52rem;
   font-weight: 900;
-  box-shadow: none;
+  box-shadow:
+    0 7px 14px rgba(58, 82, 45, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
 }
 
 .classicPhone.resultPhone.studyPhone .studyTopicBar {
-  grid-template-columns: 58px minmax(0, 1fr);
+  grid-template-columns: 60px minmax(0, 1fr);
   column-gap: 9px;
-  min-height: 88px;
-  margin-top: 2px;
-  padding: 8px 8px 7px;
-  border: 1px solid rgba(126, 159, 102, 0.12);
-  border-radius: 0;
-  background: rgba(255, 255, 250, 0.84);
+  min-height: 92px;
+  margin: 5px 0 0;
+  padding: 9px 10px 8px;
+  border: 1px solid rgba(126, 159, 102, 0.14);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 94% 8%, rgba(143, 169, 116, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 252, 0.96), rgba(241, 248, 232, 0.9));
   box-shadow:
-    0 8px 18px rgba(58, 82, 45, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    0 9px 22px rgba(58, 82, 45, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
 }
 
 .classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon,
 .classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon svg {
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
 }
 
 .classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon {
@@ -4656,51 +4803,74 @@
 }
 
 .classicPhone.resultPhone.studyPhone .studyTopicBar .topicCopy {
-  gap: 3px;
+  gap: 4px;
 }
 
 .classicPhone.resultPhone.studyPhone .categoryPill {
-  min-height: 18px;
-  padding: 0 8px;
+  min-height: 22px;
+  padding: 0 10px;
   border-radius: 999px;
-  background: #efe9ff;
-  color: #6f55e7;
-  font-size: 0.52rem;
+  background: #edf4e7;
+  color: #6e51ff;
+  font-size: 0.68rem;
   font-weight: 900;
-  box-shadow: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.classicPhone.resultPhone.studyPhone .categorySwitchRow {
+  grid-template-columns: 24px auto 24px;
+  gap: 4px;
+}
+
+.classicPhone.resultPhone.studyPhone .categoryArrowButton {
+  width: 24px;
+  height: 24px;
+  border-color: rgba(114, 87, 255, 0.22);
+  background: rgba(255, 255, 255, 0.9);
+  color: #7257ff;
+  box-shadow:
+    0 6px 12px rgba(95, 78, 204, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+
+.classicPhone.resultPhone.studyPhone .categoryArrowButton svg {
+  width: 16px;
+  height: 16px;
 }
 
 .classicPhone.resultPhone.studyPhone .topicTitleRow {
-  grid-template-columns: 17px minmax(0, 1fr) 17px;
-  gap: 2px;
+  grid-template-columns: 29px minmax(0, 1fr) 29px;
+  gap: 4px;
 }
 
 .classicPhone.resultPhone.studyPhone .lessonArrowButton {
-  width: 17px;
-  height: 17px;
-  border: 0;
-  background: transparent;
-  color: #91c2a3;
-  box-shadow: none;
+  width: 29px;
+  height: 29px;
+  border: 1px solid rgba(221, 149, 59, 0.3);
+  background: rgba(255, 255, 255, 0.88);
+  color: #d58a33;
+  box-shadow:
+    0 7px 13px rgba(170, 111, 43, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
 }
 
 .classicPhone.resultPhone.studyPhone .lessonArrowButton svg {
-  width: 15px;
-  height: 15px;
-  stroke-width: 3.4;
+  width: 20px;
+  height: 20px;
+  stroke-width: 3.8;
 }
 
 .classicPhone.resultPhone.studyPhone .studyTopicBar .topicTitle {
   color: #163b1f;
-  font-size: clamp(1.12rem, 5vw, 1.34rem);
+  font-size: clamp(1.18rem, 5.7vw, 1.46rem);
   line-height: 1.08;
   white-space: normal;
 }
 
 .classicPhone.resultPhone.studyPhone .studyTopicBar .topicProgress {
-  color: #354d30;
-  font-size: 0.66rem;
-  font-weight: 800;
+  color: #536b4c;
+  font-size: 0.72rem;
+  font-weight: 760;
 }
 
 .classicPhone.resultPhone.studyPhone .progressRow {
@@ -4952,14 +5122,14 @@
 }
 
 .classicPhone.resultPhone.studyPhone .followCard {
-  min-height: 73px;
+  min-height: 116px;
   margin: 4px 0 0;
-  padding: 6px 8px 5px;
+  padding: 13px 12px 10px;
   border: 1px solid rgba(126, 159, 102, 0.14);
-  border-radius: 18px;
+  border-radius: 24px;
   background: rgba(255, 255, 252, 0.94);
   box-shadow:
-    0 -3px 12px rgba(58, 82, 45, 0.045),
+    0 -5px 18px rgba(58, 82, 45, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
@@ -4968,20 +5138,22 @@
 }
 
 .classicPhone.resultPhone.studyPhone .followControls {
-  grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr);
-  gap: 9px;
+  grid-template-columns: minmax(0, 1fr) 88px minmax(0, 1fr);
+  gap: 11px;
   margin-top: 0;
   align-items: center;
 }
 
 .classicPhone.resultPhone.studyPhone .followControls .sentenceButton {
-  min-height: 34px;
+  min-height: 42px;
   border: 1px solid rgba(126, 159, 102, 0.16);
   border-radius: 999px;
   background: rgba(255, 255, 252, 0.96);
   color: #3c7a43;
-  padding: 0 7px;
-  box-shadow: none;
+  padding: 0 10px;
+  box-shadow:
+    0 6px 14px rgba(58, 82, 45, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
 .classicPhone.resultPhone.studyPhone .followControls .sentenceButton:last-child {
@@ -4990,38 +5162,57 @@
 
 .classicPhone.resultPhone.studyPhone .followControls .sentenceButton span {
   color: inherit;
-  font-size: 0.56rem;
+  font-size: 0.66rem;
   font-weight: 900;
 }
 
 .classicPhone.resultPhone.studyPhone .followControls .sentenceButton svg {
-  width: 13px;
-  height: 13px;
+  width: 16px;
+  height: 16px;
   stroke-width: 3.5;
 }
 
 .classicPhone.resultPhone.studyPhone .followMicButton {
-  width: 58px;
-  height: 58px;
-  border: 4px solid rgba(232, 215, 184, 0.86);
+  width: 76px;
+  height: 76px;
+  border: 6px solid rgba(232, 215, 184, 0.86);
   background:
     radial-gradient(circle at 34% 23%, rgba(255, 255, 255, 0.28), transparent 28%),
     linear-gradient(145deg, #7fa978, #3f7a49);
   box-shadow:
-    0 8px 18px rgba(47, 98, 56, 0.18),
+    0 11px 24px rgba(47, 98, 56, 0.2),
     inset 0 2px 0 rgba(255, 255, 255, 0.24);
 }
 
 .classicPhone.resultPhone.studyPhone .followMicButton svg {
-  width: 29px;
-  height: 29px;
+  width: 39px;
+  height: 39px;
 }
 
-.classicPhone.resultPhone.studyPhone .followMicLabel {
-  margin-top: 3px;
-  color: #3b7a44;
-  font-size: 0.52rem;
+.classicPhone.resultPhone.studyPhone .followMicButton .micPulseOne {
+  inset: -13px;
+}
+
+.classicPhone.resultPhone.studyPhone .followMicButton .micPulseTwo {
+  inset: -23px;
+}
+
+.classicPhone.resultPhone.studyPhone .followSpeedButton {
+  min-height: 25px;
+  margin-top: -3px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #7257ff;
+  padding: 0 10px;
+  font-size: 0.68rem;
   font-weight: 900;
+  box-shadow:
+    0 7px 15px rgba(95, 78, 204, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.classicPhone.resultPhone.studyPhone .followSpeedButton svg {
+  width: 14px;
+  height: 14px;
 }
 
 @media (min-width: 390px) {
@@ -5122,7 +5313,7 @@
   color: var(--text-primary);
 }
 
-:global(html[data-app-theme="dark"]) :where(.variantNote, .followMicLabel, .topicProgress) {
+:global(html[data-app-theme="dark"]) :where(.variantNote, .topicProgress) {
   color: var(--text-secondary);
 }
 
@@ -5168,7 +5359,7 @@
     color: var(--text-primary);
   }
 
-  :global(html[data-app-theme="system"]) :where(.variantNote, .followMicLabel, .topicProgress) {
+  :global(html[data-app-theme="system"]) :where(.variantNote, .topicProgress) {
     color: var(--text-secondary);
   }
 }

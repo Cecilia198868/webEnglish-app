@@ -9441,10 +9441,17 @@ html[data-speakflow-font-size="large"] {
 .sf-free-study-page-three-confirm {
   border: 0;
   background: linear-gradient(180deg, #8c63ff 0%, #623ff2 100%);
-  color: #ffffff;
+  color: #ffffff !important;
+  font-weight: 950 !important;
   box-shadow:
     0 16px 32px rgba(99, 65, 240, 0.25),
     0 1px 0 rgba(255, 255, 255, 0.38) inset;
+}
+
+.sf-free-study-page-three-confirm span,
+.sf-free-study-page-three-confirm svg {
+  color: #ffffff !important;
+  font-weight: 950 !important;
 }
 
 .sf-free-study-page-three-confirm:disabled {
@@ -18854,6 +18861,16 @@ html[data-app-theme] body :where(
   .sf-expression-library-search input
 ) {
   color: var(--input-text);
+}
+
+html[data-app-theme] body :where(.sf-free-study-page-three-confirm) {
+  color: #ffffff !important;
+  font-weight: 950 !important;
+}
+
+html[data-app-theme] body :where(.sf-free-study-page-three-confirm span) {
+  color: #ffffff !important;
+  font-weight: 950 !important;
 }
 
 html[data-app-theme] body :where(input, textarea, select, .sf-vocabulary-search-input) {

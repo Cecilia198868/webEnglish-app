@@ -3,7 +3,6 @@
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ExpressionLearningLimitModal from "@/components/ExpressionLearningLimitModal";
-import HomeMenuIcon from "@/components/HomeMenuIcon";
 import InteractiveExpressionText from "@/components/InteractiveExpressionText";
 import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import {
@@ -354,6 +353,14 @@ function ArrowLeftIcon() {
   );
 }
 
+function LibraryBackIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 32 32">
+      <path d="M19.8 7.5 11.3 16l8.5 8.5" />
+    </svg>
+  );
+}
+
 function ArrowRightIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 32 32">
@@ -492,6 +499,14 @@ function MicIcon() {
     <svg aria-hidden="true" viewBox="0 0 40 40">
       <rect width="12" height="22" x="14" y="5" rx="6" />
       <path d="M9 18a11 11 0 0 0 22 0M20 29v7M14 36h12" />
+    </svg>
+  );
+}
+
+function FollowPlayIcon() {
+  return (
+    <svg aria-hidden="true" className="sf-vocabulary-play-icon" viewBox="0 0 32 32">
+      <path d="M11.2 7.8v16.4c0 1.35 1.5 2.15 2.62 1.38l12.14-8.2c0.98-.66.98-2.1 0-2.76L13.82 6.42c-1.12-.77-2.62.03-2.62 1.38Z" />
     </svg>
   );
 }
@@ -1174,7 +1189,7 @@ export default function VocabularyPage() {
     setShowExpressionLibrary(false);
     setShowExpressionLimitModal(false);
     setShowLearningResultsModal(false);
-    navigateTo("/start");
+    navigateTo("/new-expressions");
   }
 
   function openProFromExpressionLimit() {
@@ -1366,11 +1381,11 @@ export default function VocabularyPage() {
           <header className="sf-expression-library-topbar">
             <button
               type="button"
-              aria-label="回到首页"
+              aria-label="返回新表达菜单"
               className="sf-expression-library-back"
               onClick={openHomeFromVocabulary}
             >
-              <HomeMenuIcon label={null} showHint={false} />
+              <LibraryBackIcon />
             </button>
 
             <div className="sf-expression-library-brand" aria-label="SpeakFlow AI Voice Practice">
@@ -1718,11 +1733,11 @@ export default function VocabularyPage() {
         <header className="sf-vocabulary-learning-header">
           <button
             type="button"
-            aria-label="回到首页"
-            className="sf-vocabulary-menu-button is-home"
+            aria-label="返回新表达菜单"
+            className="sf-vocabulary-menu-button is-back"
             onClick={openHomeFromVocabulary}
           >
-            <HomeMenuIcon label={null} showHint={false} />
+            <ArrowLeftIcon />
           </button>
 
           <div className="sf-vocabulary-brand" aria-label="SpeakFlow AI Voice Practice">
@@ -1733,19 +1748,18 @@ export default function VocabularyPage() {
             </span>
           </div>
 
-          <span className="sf-vocabulary-header-spacer" aria-hidden="true" />
+          <button
+            type="button"
+            className="sf-vocabulary-results-button sf-vocabulary-header-results-button"
+            onClick={() => setShowLearningResultsModal(true)}
+          >
+            <ChartStatIcon />
+            <span>学习成果</span>
+            <ArrowRightIcon />
+          </button>
         </header>
 
         <div className="sf-vocabulary-learning-scroll">
-          <button
-            type="button"
-            aria-label="回到首页"
-            className="sf-vocabulary-back-button"
-            onClick={openHomeFromVocabulary}
-          >
-            <HomeMenuIcon label={null} showHint={false} />
-          </button>
-
           <section className="sf-vocabulary-learning-title">
             <span className="sf-vocabulary-title-icon">
               <SparkleIcon />
@@ -1756,15 +1770,6 @@ export default function VocabularyPage() {
                 已掌握 <strong>{masteredExpressionCount}</strong> 个表达
               </p>
             </div>
-            <button
-              type="button"
-              className="sf-vocabulary-results-button"
-              onClick={() => setShowLearningResultsModal(true)}
-            >
-              <ChartStatIcon />
-              <span>学习成果</span>
-              <ArrowRightIcon />
-            </button>
           </section>
 
           {displayedExpression ? (
@@ -1934,8 +1939,21 @@ export default function VocabularyPage() {
               disabled={!speechText}
               onClick={() => shadowCurrentExpression(1)}
             >
-              <MicIcon />
+              <FollowPlayIcon />
               <span>跟读</span>
+            </button>
+
+            <button
+              type="button"
+              aria-label="0.5x 慢速播放"
+              className="sf-vocabulary-slow-action"
+              disabled={!speechText}
+              onClick={() =>
+                playCurrentExpressionText(speechText || displayedExpressionText, 0.5)
+              }
+            >
+              <strong>0.5x</strong>
+              <span>慢速</span>
             </button>
 
             <button
@@ -1953,22 +1971,10 @@ export default function VocabularyPage() {
           </nav>
 
           <p className="sf-vocabulary-tip">
+            <LightbulbIcon />
             点击麦克风开始跟读
             {!isAccountPro && remainingDailyFreeCount === 0 ? " 今日免费学习次数已用完。" : ""}
           </p>
-          <button
-            type="button"
-            aria-label="0.5 倍速播放"
-            className="sf-vocabulary-slow-action"
-            disabled={!speechText}
-            onClick={() =>
-              playCurrentExpressionText(speechText || displayedExpressionText, 0.5)
-            }
-          >
-            <span>速度:</span>
-            <strong>0.5x</strong>
-            <ChevronDownIcon />
-          </button>
         </footer>
 
         {showExpressionLibrary ? (

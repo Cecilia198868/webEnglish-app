@@ -573,14 +573,14 @@ export default function StartPageClient({
           >
             <div className={styles.starterRibbon}>
               <StarterStarIcon />
-              推荐你试
+              推荐体验
             </div>
             <div className={styles.starterRecommendedBody}>
               <div className={styles.starterRecommendedCopy}>
                 <h2 id="starter-recommended-title">
                   从 <span>AI 引导表达</span> 开始
                 </h2>
-                <p>AI 会一步一步引导你表达想法，帮你把中文变成自然英语。</p>
+                <p>AI 会一步一步引导你表达想法，轻松开口，自信说英语。</p>
               </div>
               <div className={styles.starterBubbleArt} aria-hidden="true">
                 <Image

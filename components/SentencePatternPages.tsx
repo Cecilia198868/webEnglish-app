@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import HomeMenuIcon from "@/components/HomeMenuIcon";
@@ -23,17 +24,26 @@ type StudyProps = {
 
 type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
 
+type SpeechRecognitionAlternativeLike = {
+  transcript?: string;
+};
+
+type SpeechRecognitionResultLike = {
+  0?: SpeechRecognitionAlternativeLike;
+};
+
+type SpeechRecognitionResultEventLike = Event & {
+  results: ArrayLike<SpeechRecognitionResultLike>;
+};
+
 type SpeechRecognitionInstance = {
+  abort?: () => void;
   continuous: boolean;
   interimResults: boolean;
   lang: string;
   onend: (() => void) | null;
-  onerror: (() => void) | null;
-  onresult:
-    | ((event: {
-        results: ArrayLike<ArrayLike<{ transcript: string }>>;
-      }) => void)
-    | null;
+  onerror: ((event: Event) => void) | null;
+  onresult: ((event: SpeechRecognitionResultEventLike) => void) | null;
   start: () => void;
   stop: () => void;
 };
@@ -50,6 +60,9 @@ type PatternToneStyle = CSSProperties & {
   "--pattern-soft-strong": string;
   "--pattern-glow": string;
 };
+
+const FINISH_AFTER_SILENCE_MS = 4200;
+const RESTART_AFTER_NO_SPEECH_MS = 240;
 
 function sessionKey(levelId: string, patternId: number, practiceId: number) {
   return `sentence-pattern:${levelId}:${patternId}:${practiceId}:transcript`;
@@ -118,17 +131,19 @@ function PatternIcon({
   );
 }
 
-function ChatBubbleArt() {
+function ChatBubbleArt({ levelId }: { levelId: SentencePatternLevel["id"] }) {
   return (
-    <svg viewBox="0 0 210 170" aria-hidden="true" className={styles.chatArt}>
-      <circle cx="102" cy="82" r="66" />
-      <path d="M56 63c0-27 23-47 57-47 33 0 56 20 56 47s-23 48-56 48c-5 0-10-.5-15-1.5L73 130v-27c-11-9-17-23-17-40Z" />
-      <circle cx="93" cy="64" r="7" />
-      <circle cx="116" cy="64" r="7" />
-      <circle cx="139" cy="64" r="7" />
-      <circle cx="154" cy="121" r="34" />
-      <path d="M141 119c8 5 17 5 26 0M154 105v27" />
-    </svg>
+    <Image
+      alt=""
+      aria-hidden="true"
+      className={styles.chatArt}
+      draggable={false}
+      height={275}
+      sizes="160px"
+      src={`/images/sentence-patterns/overview-${levelId}-art.png`}
+      unoptimized
+      width={298}
+    />
   );
 }
 
@@ -167,7 +182,19 @@ function ChevronIcon({ direction = "right" }: { direction?: "down" | "right" | "
   );
 }
 
-function StatIcon({ type }: { type: "book" | "chat" | "file" | "mic" | "star" }) {
+function StatIcon({
+  type,
+}: {
+  type: "book" | "bulb" | "chat" | "file" | "headphones" | "mic" | "star";
+}) {
+  if (type === "bulb") {
+    return (
+      <svg viewBox="0 0 28 28" aria-hidden="true">
+        <path d="M14 3.5a7.2 7.2 0 0 0-4.1 13.1c1 .7 1.7 1.8 1.7 3.1h4.8c0-1.3.7-2.4 1.7-3.1A7.2 7.2 0 0 0 14 3.5Z" />
+        <path d="M11 23h6M12 26h4M5.5 12H3M25 12h-2.5M8 5.8 6.3 4.1M20 5.8l1.7-1.7" />
+      </svg>
+    );
+  }
   if (type === "file") {
     return (
       <svg viewBox="0 0 28 28" aria-hidden="true">
@@ -195,6 +222,14 @@ function StatIcon({ type }: { type: "book" | "chat" | "file" | "mic" | "star" })
       <svg viewBox="0 0 28 28" aria-hidden="true">
         <rect x="10" y="4" width="8" height="13" rx="4" />
         <path d="M6 15c0 4.4 3.6 7 8 7s8-2.6 8-7M14 22v3M10 25h8" />
+      </svg>
+    );
+  }
+  if (type === "headphones") {
+    return (
+      <svg viewBox="0 0 28 28" aria-hidden="true">
+        <path d="M5 16v-3a9 9 0 0 1 18 0v3" />
+        <path d="M5 16a3 3 0 0 1 3-3h1v9H8a3 3 0 0 1-3-3v-3ZM23 16a3 3 0 0 0-3-3h-1v9h1a3 3 0 0 0 3-3v-3Z" />
       </svg>
     );
   }
@@ -250,7 +285,7 @@ export function SentencePatternOverviewPage({
                 {level.totalPatterns} 个句型 · {level.exampleCount} 个例句
               </span>
               <span className={styles.levelArt}>
-                <ChatBubbleArt />
+                <ChatBubbleArt levelId={level.id} />
               </span>
               <span className={styles.cardChevron}>
                 <ChevronIcon />
@@ -261,7 +296,7 @@ export function SentencePatternOverviewPage({
 
         <div className={styles.tipCard}>
           <span className={styles.tipIcon}>
-            <StatIcon type="star" />
+            <StatIcon type="bulb" />
           </span>
           <p>每个句型包含 20 个实用例句，跟读练习，加深记忆，建议按顺序学习，效果更佳！</p>
         </div>
@@ -369,15 +404,6 @@ export function SentencePatternLevelMenuPage({
             );
           })}
         </div>
-
-        <Link href={`/sentence-patterns/${level.id}/1`} className={styles.adviceCard}>
-          <span>
-            <StatIcon type="star" />
-          </span>
-          <strong>{level.id === "advanced" ? "顶级练习建议" : level.id === "intermediate" ? "进阶练习建议" : "学习建议"}</strong>
-          <p>{level.suggestion}</p>
-          <ChevronIcon />
-        </Link>
       </section>
     </main>
   );
@@ -427,11 +453,46 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   const { practice } = getPractice(level, patternId, practiceId);
   const [isRecording, setIsRecording] = useState(false);
   const transcriptRef = useRef("");
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const finishAfterSilenceTimerRef = useRef<number | null>(null);
+  const finishRecordingRef = useRef(false);
+  const restartOnEndRef = useRef(false);
   const progress = Math.round((practiceId / practiceCount) * 100);
   const nextPractice = practiceId >= practiceCount ? practiceId : practiceId + 1;
   const previousPractice = practiceId <= 1 ? practiceId : practiceId - 1;
+  const patterns = level.sections.flatMap((item) => item.patterns);
+  const currentPatternIndex = patterns.findIndex((item) => item.id === patternId);
+  const nextPattern = currentPatternIndex >= 0 ? patterns[currentPatternIndex + 1] : undefined;
+  const nextPatternHref = nextPattern
+    ? `/sentence-patterns/${level.id}/${nextPattern.id}`
+    : `/sentence-patterns/${level.id}/${patternId}`;
+
+  function clearFinishAfterSilenceTimer() {
+    if (finishAfterSilenceTimerRef.current === null) return;
+    window.clearTimeout(finishAfterSilenceTimerRef.current);
+    finishAfterSilenceTimerRef.current = null;
+  }
+
+  useEffect(() => {
+    return () => {
+      finishRecordingRef.current = true;
+      if (finishAfterSilenceTimerRef.current !== null) {
+        window.clearTimeout(finishAfterSilenceTimerRef.current);
+      }
+      try {
+        recognitionRef.current?.abort?.();
+      } catch {}
+      recognitionRef.current = null;
+    };
+  }, []);
 
   function finishRecording(transcript: string) {
+    if (finishRecordingRef.current) return;
+    finishRecordingRef.current = true;
+    clearFinishAfterSilenceTimer();
+    recognitionRef.current = null;
+    setIsRecording(false);
+
     const cleaned = transcript.trim() || practice.targetEnglish;
     try {
       window.sessionStorage.setItem(
@@ -446,20 +507,25 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
     if (isRecording) return;
     setIsRecording(true);
     transcriptRef.current = "";
+    finishRecordingRef.current = false;
+    restartOnEndRef.current = false;
 
     const speechWindow = window as SpeechWindow;
     const Recognition =
       speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
 
     if (!Recognition) {
-      window.setTimeout(() => finishRecording(practice.targetEnglish), 1200);
+      finishRecording(practice.targetEnglish);
       return;
     }
 
-    try {
+    const beginRecognition = () => {
+      if (finishRecordingRef.current) return;
+
       const recognition = new Recognition();
+      recognitionRef.current = recognition;
       recognition.lang = "en-US";
-      recognition.continuous = false;
+      recognition.continuous = true;
       recognition.interimResults = true;
       recognition.onresult = (event) => {
         const text = Array.from(event.results)
@@ -467,15 +533,55 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
           .join(" ")
           .trim();
         transcriptRef.current = text;
+        if (!text) return;
+
+        clearFinishAfterSilenceTimer();
+        finishAfterSilenceTimerRef.current = window.setTimeout(() => {
+          try {
+            recognition.stop();
+          } catch {}
+        }, FINISH_AFTER_SILENCE_MS);
       };
-      recognition.onerror = () => finishRecording(transcriptRef.current);
-      recognition.onend = () => finishRecording(transcriptRef.current);
-      recognition.start();
-      window.setTimeout(() => {
-        try {
-          recognition.stop();
-        } catch {}
-      }, 7000);
+
+      recognition.onerror = (event) => {
+        const errorName =
+          "error" in event && typeof event.error === "string" ? event.error : "";
+        if ((errorName === "no-speech" || errorName === "aborted") && !transcriptRef.current.trim()) {
+          restartOnEndRef.current = errorName === "no-speech";
+          return;
+        }
+        finishRecording(transcriptRef.current);
+      };
+
+      recognition.onend = () => {
+        recognitionRef.current = null;
+        clearFinishAfterSilenceTimer();
+
+        if (finishRecordingRef.current) return;
+        const transcript = transcriptRef.current.trim();
+        if (transcript) {
+          finishRecording(transcript);
+          return;
+        }
+
+        if (restartOnEndRef.current) {
+          restartOnEndRef.current = false;
+          window.setTimeout(beginRecognition, RESTART_AFTER_NO_SPEECH_MS);
+          return;
+        }
+
+        setIsRecording(false);
+      };
+
+      try {
+        recognition.start();
+      } catch {
+        finishRecording(transcriptRef.current);
+      }
+    };
+
+    try {
+      beginRecognition();
     } catch {
       finishRecording(practice.targetEnglish);
     }
@@ -505,8 +611,8 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
               />
             </h1>
             <Link
-              href={`/sentence-patterns/${level.id}/${patternId}?practice=${nextPractice}`}
-              aria-label="下一句"
+              href={nextPatternHref}
+              aria-label="下一句型"
             >
               <ChevronIcon />
             </Link>
@@ -536,9 +642,9 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
         <section className={styles.recordCard}>
           <p>
             <StatIcon type="mic" />
-            {isRecording ? "正在录音，请说出你的英文表达" : "点击麦克风，开始录制你的英文表达"}
+            {isRecording ? "正在录音，说完后会自动进入下一步" : "点击麦克风，开始录制你的英文表达"}
           </p>
-          <small>录音建议 5-15 秒</small>
+          <small>慢慢想，系统会在你说完后自动进入下一页</small>
           <button
             type="button"
             className={styles.bigMic}
@@ -585,6 +691,12 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
   const nextPractice = practiceId >= practiceCount ? practiceId : practiceId + 1;
   const previousPractice = practiceId <= 1 ? practiceId : practiceId - 1;
   const progress = Math.round((practiceId / practiceCount) * 100);
+  const patterns = level.sections.flatMap((item) => item.patterns);
+  const currentPatternIndex = patterns.findIndex((item) => item.id === patternId);
+  const nextPattern = currentPatternIndex >= 0 ? patterns[currentPatternIndex + 1] : undefined;
+  const nextPatternHref = nextPattern
+    ? `/sentence-patterns/${level.id}/${nextPattern.id}`
+    : `/sentence-patterns/${level.id}/${patternId}`;
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -650,8 +762,8 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
               />
             </h1>
             <Link
-              href={`/sentence-patterns/${level.id}/${patternId}?practice=${nextPractice}`}
-              aria-label="下一句"
+              href={nextPatternHref}
+              aria-label="下一句型"
             >
               <ChevronIcon />
             </Link>
@@ -709,14 +821,15 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
         </section>
 
         <section className={styles.followCard}>
-          <div>
-            <strong>
+          <div className={styles.followCopy}>
+            <span className={styles.followIcon}>
               <StatIcon type="book" />
-              跟读练习
-            </strong>
+            </span>
+            <strong>跟读练习</strong>
             <p>听标准发音，跟读练习更地道</p>
           </div>
           <button type="button" onClick={() => speak(practice.recommended)}>
+            <StatIcon type="headphones" />
             慢速朗读
           </button>
           <Link
@@ -741,14 +854,6 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
           </Link>
           <small>点击跟读</small>
         </section>
-
-        <div className={styles.bottomTip}>
-          <span>
-            <StatIcon type="star" />
-          </span>
-          <strong>学习小贴士</strong>
-          <p>多听多模仿，注意语音语调，表达会更自然！</p>
-        </div>
       </section>
     </main>
   );

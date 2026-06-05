@@ -273,7 +273,6 @@ function LessonRow({ lesson }: { lesson: ClassicSceneSectionLesson }) {
       <span className={styles.iconTile}>
         <ShoppingSceneIcon type={lesson.icon} />
       </span>
-      <span className={styles.numberBadge}>{lesson.number}</span>
       <span className={styles.lessonText}>
         <span className={styles.lessonTitle}>{lesson.title}</span>
         {lesson.description ? (
@@ -312,6 +311,7 @@ export default function ShoppingSceneSectionMenuPage({
             href={backHref}
           >
             <BackIcon />
+            <span>返回上一级</span>
           </Link>
           <h1 className={styles.title} id="shopping-section-title">
             {section.title}

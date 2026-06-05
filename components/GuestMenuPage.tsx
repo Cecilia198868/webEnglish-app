@@ -49,14 +49,6 @@ const guestMenuRows: Array<{
   },
 ];
 
-function CrownIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M4 18.5h16l1.2-10.2-5.2 3.8L12 4.5l-4 7.6-5.2-3.8L4 18.5Zm1 2.2h14v1.8H5v-1.8Z" />
-    </svg>
-  );
-}
-
 function MenuIcon({ name }: { name: MenuIconName }) {
   if (name === "home") {
     return (
@@ -126,14 +118,6 @@ export default function GuestMenuPage() {
                 />
               </span>
               <span className={styles.brandText}>SpeakFlow</span>
-            </Link>
-
-            <Link
-              href="/login?callbackUrl=%2Faccount%3Fpanel%3Dsubscription"
-              className={styles.proPill}
-            >
-              <CrownIcon />
-              <span>Pro</span>
             </Link>
           </div>
 

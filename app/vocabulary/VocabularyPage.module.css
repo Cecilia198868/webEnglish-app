@@ -2160,6 +2160,526 @@
   }
 }
 
+/* New expression learning header, matched to the supplied reference screen. */
+:global(.sf-vocabulary-learning-phone) {
+  padding-top: max(0.92rem, calc(env(safe-area-inset-top, 0px) + 0.78rem)) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at 14% 3%, rgba(229, 236, 255, 0.92), transparent 34%),
+    radial-gradient(circle at 79% 4%, rgba(234, 226, 255, 0.8), transparent 31%),
+    linear-gradient(180deg, #fbfbff 0%, #f8f9ff 50%, #f4f6ff 100%) !important;
+}
+
+:global(.sf-vocabulary-learning-phone::before) {
+  height: 8.72rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(221, 218, 255, 0.76) !important;
+  border-radius: 0 0 1.6rem 1.6rem !important;
+  background:
+    radial-gradient(circle at 22% 8%, rgba(229, 222, 255, 0.68), transparent 34%),
+    linear-gradient(180deg, rgba(250, 248, 255, 0.96), rgba(255, 255, 255, 0.82)) !important;
+  box-shadow:
+    0 16px 36px rgba(105, 91, 177, 0.08),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.88) !important;
+}
+
+:global(.sf-vocabulary-learning-header) {
+  grid-template-columns: 4.15rem minmax(0, 1fr) 7.32rem !important;
+  gap: 0.54rem !important;
+  min-height: 4.22rem !important;
+  padding: 0 0.48rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:global(.sf-vocabulary-menu-button.is-back) {
+  display: grid !important;
+  justify-self: start !important;
+  width: 3.72rem !important;
+  height: 3.72rem !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  color: #100b57 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow:
+    0 17px 34px rgba(95, 89, 162, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+:global(.sf-vocabulary-menu-button.is-back svg) {
+  width: 1.82rem !important;
+  height: 1.82rem !important;
+}
+
+:global(.sf-vocabulary-menu-button.is-back path) {
+  stroke: currentColor !important;
+  stroke-width: 4 !important;
+}
+
+:global(.sf-vocabulary-brand) {
+  gap: 0.66rem !important;
+  justify-content: center !important;
+}
+
+:global(.sf-vocabulary-brand-mark) {
+  width: 2.72rem !important;
+  height: 2.72rem !important;
+}
+
+:global(.sf-vocabulary-brand strong) {
+  color: #071642 !important;
+  font-size: 2.12rem !important;
+  line-height: 0.96 !important;
+}
+
+:global(.sf-vocabulary-brand small) {
+  margin-top: 0.32rem !important;
+  color: #7557f2 !important;
+  font-size: 0.74rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+}
+
+:global(.sf-vocabulary-header-results-button) {
+  justify-self: end !important;
+  min-height: 2.42rem !important;
+  gap: 0.34rem !important;
+  padding: 0 0.82rem !important;
+  border: 1px solid rgba(184, 169, 255, 0.64) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #0e1741 !important;
+  font-size: 0.78rem !important;
+  font-weight: 900 !important;
+  box-shadow: 0 10px 22px rgba(105, 87, 178, 0.08) !important;
+  white-space: nowrap !important;
+}
+
+:global(.sf-vocabulary-header-results-button svg) {
+  width: 0.96rem !important;
+  height: 0.96rem !important;
+}
+
+:global(.sf-vocabulary-header-results-button path) {
+  stroke: currentColor !important;
+}
+
+:global(.sf-vocabulary-learning-scroll) {
+  overflow-y: auto !important;
+  padding-top: 0.26rem !important;
+  padding-bottom: calc(8.9rem + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+:global(.sf-vocabulary-back-button) {
+  display: none !important;
+}
+
+:global(.sf-vocabulary-learning-title) {
+  display: grid !important;
+  grid-template-columns: auto max-content !important;
+  justify-content: center !important;
+  justify-items: center !important;
+  align-items: center !important;
+  gap: 0.68rem !important;
+  min-height: 4.44rem !important;
+  padding: 0.5rem 1rem 0.72rem !important;
+  text-align: center !important;
+}
+
+:global(.sf-vocabulary-title-icon) {
+  width: 2.02rem !important;
+  height: 2.02rem !important;
+}
+
+:global(.sf-vocabulary-title-icon svg) {
+  width: 2.02rem !important;
+  height: 2.02rem !important;
+  color: #7358ea !important;
+}
+
+:global(.sf-vocabulary-learning-title h1) {
+  color: #071642 !important;
+  font-size: 2.02rem !important;
+  font-weight: 900 !important;
+  line-height: 1.04 !important;
+}
+
+:global(.sf-vocabulary-learning-title p) {
+  grid-column: 1 / -1 !important;
+  margin: -0.04rem 0 0 !important;
+  color: #111a55 !important;
+  font-size: 1rem !important;
+  font-weight: 560 !important;
+  line-height: 1.18 !important;
+}
+
+:global(.sf-vocabulary-learning-title p strong) {
+  color: #7358ea !important;
+  font-size: 1.12em !important;
+  font-weight: 850 !important;
+}
+
+@media (max-width: 390px) {
+  :global(.sf-vocabulary-learning-header) {
+    grid-template-columns: 3.72rem minmax(0, 1fr) 6.72rem !important;
+    min-height: 3.95rem !important;
+    padding-inline: 0.34rem !important;
+  }
+
+  :global(.sf-vocabulary-menu-button.is-back) {
+    width: 3.36rem !important;
+    height: 3.36rem !important;
+  }
+
+  :global(.sf-vocabulary-menu-button.is-back svg) {
+    width: 1.64rem !important;
+    height: 1.64rem !important;
+  }
+
+  :global(.sf-vocabulary-brand) {
+    gap: 0.48rem !important;
+  }
+
+  :global(.sf-vocabulary-brand-mark) {
+    width: 2.28rem !important;
+    height: 2.28rem !important;
+  }
+
+  :global(.sf-vocabulary-brand strong) {
+    font-size: 1.72rem !important;
+  }
+
+  :global(.sf-vocabulary-brand small) {
+    font-size: 0.58rem !important;
+  }
+
+  :global(.sf-vocabulary-header-results-button) {
+    min-height: 2.08rem !important;
+    padding-inline: 0.62rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  :global(.sf-vocabulary-learning-title) {
+    min-height: 4.12rem !important;
+    gap: 0.56rem !important;
+  }
+
+  :global(.sf-vocabulary-title-icon),
+  :global(.sf-vocabulary-title-icon svg) {
+    width: 1.72rem !important;
+    height: 1.72rem !important;
+  }
+
+  :global(.sf-vocabulary-learning-title h1) {
+    font-size: 1.72rem !important;
+  }
+
+  :global(.sf-vocabulary-learning-title p) {
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Final override: expression library top-left button is a white circular back arrow. */
+:global(.sf-expression-library-back) {
+  display: grid !important;
+  justify-self: start !important;
+  width: 3.34rem !important;
+  height: 3.34rem !important;
+  place-items: center !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #100b57 !important;
+  box-shadow:
+    0 16px 32px rgba(95, 89, 162, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+:global(.sf-expression-library-back svg) {
+  width: 1.72rem !important;
+  height: 1.72rem !important;
+}
+
+:global(.sf-expression-library-back path) {
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 4 !important;
+}
+
+@media (max-width: 390px) {
+  :global(.sf-expression-library-back) {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+
+  :global(.sf-expression-library-back svg) {
+    width: 1.56rem !important;
+    height: 1.56rem !important;
+  }
+}
+
+/* Final override: expression library uses the same white circular back control as the reference. */
+:global(.sf-expression-library-back) {
+  display: grid !important;
+  justify-self: start !important;
+  width: 3.34rem !important;
+  height: 3.34rem !important;
+  place-items: center !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #100b57 !important;
+  box-shadow:
+    0 16px 32px rgba(95, 89, 162, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+:global(.sf-expression-library-back svg) {
+  width: 1.72rem !important;
+  height: 1.72rem !important;
+}
+
+:global(.sf-expression-library-back path) {
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 4 !important;
+}
+
+@media (max-width: 390px) {
+  :global(.sf-expression-library-back) {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+
+  :global(.sf-expression-library-back svg) {
+    width: 1.56rem !important;
+    height: 1.56rem !important;
+  }
+}
+
+/* Final override: match the supplied new-expression study bottom bar. */
+:global(.sf-vocabulary-learning-scroll) {
+  padding-bottom: calc(7.25rem + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+:global(.sf-vocabulary-fixed-footer) {
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  padding:
+    0.68rem
+    0.62rem
+    max(0.2rem, calc(env(safe-area-inset-bottom, 0px) + 0.16rem)) !important;
+  border-radius: 1.42rem 1.42rem 0 0 !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.98) 38%, #ffffff 100%) !important;
+  box-shadow:
+    0 -18px 38px rgba(94, 86, 158, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(18px) !important;
+}
+
+:global(.sf-vocabulary-learning-actions) {
+  display: grid !important;
+  grid-template-columns: minmax(4.2rem, 1fr) 4.42rem 4.85rem minmax(4.2rem, 1fr) !important;
+  min-height: 4.74rem !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  margin: 0 !important;
+  padding: 0.1rem 0.16rem 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:global(.sf-vocabulary-nav-action),
+:global(.sf-vocabulary-slow-action) {
+  min-width: 0 !important;
+  min-height: 2.84rem !important;
+  border: 1px solid rgba(226, 222, 251, 0.95) !important;
+  border-radius: 0.96rem !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #7355ee !important;
+  box-shadow:
+    0 12px 26px rgba(91, 78, 160, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+}
+
+:global(.sf-vocabulary-nav-action) {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.34rem !important;
+  padding: 0 0.56rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 820 !important;
+  line-height: 1 !important;
+}
+
+:global(.sf-vocabulary-nav-action svg) {
+  width: 1.18rem !important;
+  height: 1.18rem !important;
+}
+
+:global(.sf-vocabulary-nav-action path) {
+  stroke-width: 3.3 !important;
+}
+
+:global(.sf-vocabulary-follow-action) {
+  display: grid !important;
+  width: 4.64rem !important;
+  height: 4.64rem !important;
+  place-items: center !important;
+  align-content: center !important;
+  justify-self: center !important;
+  gap: 0.18rem !important;
+  margin-top: -0.78rem !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+  background:
+    radial-gradient(circle at 32% 18%, rgba(255, 255, 255, 0.34), transparent 28%),
+    linear-gradient(145deg, #9c75ff 0%, #6c48ed 54%, #5c35e4 100%) !important;
+  box-shadow:
+    0 18px 34px rgba(101, 66, 225, 0.28),
+    0 0 0 0.58rem rgba(124, 88, 239, 0.1) !important;
+}
+
+:global(.sf-vocabulary-follow-action svg) {
+  width: 1.58rem !important;
+  height: 1.58rem !important;
+  transform: none !important;
+}
+
+:global(.sf-vocabulary-follow-action .sf-vocabulary-play-icon path) {
+  fill: currentColor !important;
+  stroke: none !important;
+}
+
+:global(.sf-vocabulary-follow-action span) {
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: 0.74rem !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+}
+
+:global(.sf-vocabulary-slow-action) {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.08rem !important;
+  margin: 0 !important;
+  padding: 0.28rem 0.34rem !important;
+  line-height: 1 !important;
+}
+
+:global(.sf-vocabulary-slow-action strong),
+:global(.sf-vocabulary-slow-action span) {
+  color: #7355ee !important;
+  letter-spacing: 0 !important;
+}
+
+:global(.sf-vocabulary-slow-action strong) {
+  font-size: 0.98rem !important;
+  font-weight: 900 !important;
+}
+
+:global(.sf-vocabulary-slow-action span) {
+  font-size: 0.62rem !important;
+  font-weight: 760 !important;
+}
+
+:global(.sf-vocabulary-tip) {
+  display: flex !important;
+  width: min(100%, 20.8rem) !important;
+  min-height: 1.14rem !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.28rem !important;
+  margin: 0.14rem auto 0 !important;
+  padding: 0.1rem 0.58rem !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(246, 242, 255, 0.92) !important;
+  color: #7257ee !important;
+  box-shadow: none !important;
+  font-size: 0.56rem !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+:global(.sf-vocabulary-tip svg) {
+  width: 0.82rem !important;
+  height: 0.82rem !important;
+  color: #7355ee !important;
+}
+
+:global(.sf-vocabulary-tip path) {
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 2.2 !important;
+}
+
+@media (max-width: 390px) {
+  :global(.sf-vocabulary-fixed-footer) {
+    padding-inline: 0.42rem !important;
+  }
+
+  :global(.sf-vocabulary-learning-actions) {
+    grid-template-columns: minmax(3.82rem, 1fr) 4.18rem 4.42rem minmax(3.82rem, 1fr) !important;
+    gap: 0.36rem !important;
+  }
+
+  :global(.sf-vocabulary-nav-action) {
+    min-height: 2.62rem !important;
+    padding-inline: 0.38rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  :global(.sf-vocabulary-nav-action svg) {
+    width: 1.02rem !important;
+    height: 1.02rem !important;
+  }
+
+  :global(.sf-vocabulary-follow-action) {
+    width: 4.34rem !important;
+    height: 4.34rem !important;
+  }
+
+  :global(.sf-vocabulary-slow-action) {
+    min-height: 2.62rem !important;
+  }
+
+  :global(.sf-vocabulary-slow-action strong) {
+    font-size: 0.88rem !important;
+  }
+
+  :global(.sf-vocabulary-slow-action span) {
+    font-size: 0.58rem !important;
+  }
+
+  :global(.sf-vocabulary-tip) {
+    width: min(100%, 18.8rem) !important;
+    font-size: 0.5rem !important;
+  }
+}
+
 @media (max-height: 900px) {
   :global(.sf-vocabulary-learning-title) {
     padding-top: 0.54rem;
@@ -5107,5 +5627,483 @@
     box-shadow:
       0 14px 32px var(--shadow-color),
       inset 0 1px 0 var(--theme-inset) !important;
+  }
+}
+
+/* Final override: match the supplied new-expression study bottom bar. */
+:global(.sf-vocabulary-learning-phone) :global(.sf-vocabulary-learning-scroll) {
+  padding-bottom: calc(7.25rem + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+:global(.sf-vocabulary-fixed-footer) {
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  padding:
+    0.68rem
+    0.62rem
+    max(0.2rem, calc(env(safe-area-inset-bottom, 0px) + 0.16rem)) !important;
+  border-radius: 1.42rem 1.42rem 0 0 !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.98) 38%, #ffffff 100%) !important;
+  box-shadow:
+    0 -18px 38px rgba(94, 86, 158, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(18px) !important;
+}
+
+:global(.sf-vocabulary-learning-actions) {
+  display: grid !important;
+  grid-template-columns: minmax(4.2rem, 1fr) 4.42rem 4.85rem minmax(4.2rem, 1fr) !important;
+  min-height: 4.74rem !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  margin: 0 !important;
+  padding: 0.1rem 0.16rem 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:global(.sf-vocabulary-nav-action),
+:global(.sf-vocabulary-slow-action) {
+  min-width: 0 !important;
+  min-height: 2.84rem !important;
+  border: 1px solid rgba(226, 222, 251, 0.95) !important;
+  border-radius: 0.96rem !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #7355ee !important;
+  box-shadow:
+    0 12px 26px rgba(91, 78, 160, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+}
+
+:global(.sf-vocabulary-nav-action) {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.34rem !important;
+  padding: 0 0.56rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 820 !important;
+  line-height: 1 !important;
+}
+
+:global(.sf-vocabulary-nav-action svg) {
+  width: 1.18rem !important;
+  height: 1.18rem !important;
+}
+
+:global(.sf-vocabulary-nav-action path) {
+  stroke-width: 3.3 !important;
+}
+
+:global(.sf-vocabulary-follow-action) {
+  display: grid !important;
+  width: 4.64rem !important;
+  height: 4.64rem !important;
+  place-items: center !important;
+  align-content: center !important;
+  justify-self: center !important;
+  gap: 0.18rem !important;
+  margin-top: -0.78rem !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+  background:
+    radial-gradient(circle at 32% 18%, rgba(255, 255, 255, 0.34), transparent 28%),
+    linear-gradient(145deg, #9c75ff 0%, #6c48ed 54%, #5c35e4 100%) !important;
+  box-shadow:
+    0 18px 34px rgba(101, 66, 225, 0.28),
+    0 0 0 0.58rem rgba(124, 88, 239, 0.1) !important;
+}
+
+:global(.sf-vocabulary-follow-action svg) {
+  width: 1.58rem !important;
+  height: 1.58rem !important;
+  transform: none !important;
+}
+
+:global(.sf-vocabulary-follow-action .sf-vocabulary-play-icon path) {
+  fill: currentColor !important;
+  stroke: none !important;
+}
+
+:global(.sf-vocabulary-follow-action span) {
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: 0.74rem !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+}
+
+:global(.sf-vocabulary-slow-action) {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.08rem !important;
+  margin: 0 !important;
+  padding: 0.28rem 0.34rem !important;
+  line-height: 1 !important;
+}
+
+:global(.sf-vocabulary-slow-action strong),
+:global(.sf-vocabulary-slow-action span) {
+  color: #7355ee !important;
+  letter-spacing: 0 !important;
+}
+
+:global(.sf-vocabulary-slow-action strong) {
+  font-size: 0.98rem !important;
+  font-weight: 900 !important;
+}
+
+:global(.sf-vocabulary-slow-action span) {
+  font-size: 0.62rem !important;
+  font-weight: 760 !important;
+}
+
+:global(.sf-vocabulary-tip) {
+  display: flex !important;
+  width: min(100%, 20.8rem) !important;
+  min-height: 1.14rem !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.28rem !important;
+  margin: 0.14rem auto 0 !important;
+  padding: 0.1rem 0.58rem !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(246, 242, 255, 0.92) !important;
+  color: #7257ee !important;
+  box-shadow: none !important;
+  font-size: 0.56rem !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+:global(.sf-vocabulary-tip svg) {
+  width: 0.82rem !important;
+  height: 0.82rem !important;
+  color: #7355ee !important;
+}
+
+:global(.sf-vocabulary-tip path) {
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 2.2 !important;
+}
+
+@media (max-width: 390px) {
+  :global(.sf-vocabulary-fixed-footer) {
+    padding-inline: 0.42rem !important;
+  }
+
+  :global(.sf-vocabulary-learning-actions) {
+    grid-template-columns: minmax(3.82rem, 1fr) 4.18rem 4.42rem minmax(3.82rem, 1fr) !important;
+    gap: 0.36rem !important;
+  }
+
+  :global(.sf-vocabulary-nav-action) {
+    min-height: 2.62rem !important;
+    padding-inline: 0.38rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  :global(.sf-vocabulary-nav-action svg) {
+    width: 1.02rem !important;
+    height: 1.02rem !important;
+  }
+
+  :global(.sf-vocabulary-follow-action) {
+    width: 4.34rem !important;
+    height: 4.34rem !important;
+  }
+
+  :global(.sf-vocabulary-slow-action) {
+    min-height: 2.62rem !important;
+  }
+
+  :global(.sf-vocabulary-slow-action strong) {
+    font-size: 0.88rem !important;
+  }
+
+  :global(.sf-vocabulary-slow-action span) {
+    font-size: 0.58rem !important;
+  }
+
+  :global(.sf-vocabulary-tip) {
+    width: min(100%, 18.8rem) !important;
+    font-size: 0.5rem !important;
+  }
+}
+
+/* Final override: expression library top-left button is a white circular back arrow. */
+:global(.sf-expression-library-back) {
+  display: grid !important;
+  justify-self: start !important;
+  width: 3.34rem !important;
+  height: 3.34rem !important;
+  place-items: center !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #100b57 !important;
+  box-shadow:
+    0 16px 32px rgba(95, 89, 162, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+:global(.sf-expression-library-back svg) {
+  width: 1.72rem !important;
+  height: 1.72rem !important;
+}
+
+:global(.sf-expression-library-back path) {
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 4 !important;
+}
+
+@media (max-width: 390px) {
+  :global(.sf-expression-library-back) {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+
+  :global(.sf-expression-library-back svg) {
+    width: 1.56rem !important;
+    height: 1.56rem !important;
+  }
+}
+
+/* Final override: keep the new expression study header identical to the reference. */
+:global(.sf-vocabulary-learning-phone) {
+  padding-top: max(0.92rem, calc(env(safe-area-inset-top, 0px) + 0.78rem)) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at 14% 3%, rgba(229, 236, 255, 0.92), transparent 34%),
+    radial-gradient(circle at 79% 4%, rgba(234, 226, 255, 0.8), transparent 31%),
+    linear-gradient(180deg, #fbfbff 0%, #f8f9ff 50%, #f4f6ff 100%) !important;
+}
+
+:global(.sf-vocabulary-learning-phone::before) {
+  height: 8.72rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(221, 218, 255, 0.76) !important;
+  border-radius: 0 0 1.6rem 1.6rem !important;
+  background:
+    radial-gradient(circle at 22% 8%, rgba(229, 222, 255, 0.68), transparent 34%),
+    linear-gradient(180deg, rgba(250, 248, 255, 0.96), rgba(255, 255, 255, 0.82)) !important;
+  box-shadow:
+    0 16px 36px rgba(105, 91, 177, 0.08),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.88) !important;
+}
+
+:global(.sf-vocabulary-learning-header) {
+  grid-template-columns: 4.15rem minmax(0, 1fr) 7.32rem !important;
+  gap: 0.54rem !important;
+  min-height: 4.22rem !important;
+  padding: 0 0.48rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:global(.sf-vocabulary-menu-button.is-back) {
+  display: grid !important;
+  justify-self: start !important;
+  width: 3.72rem !important;
+  height: 3.72rem !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  color: #100b57 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow:
+    0 17px 34px rgba(95, 89, 162, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+:global(.sf-vocabulary-menu-button.is-back svg) {
+  width: 1.82rem !important;
+  height: 1.82rem !important;
+}
+
+:global(.sf-vocabulary-menu-button.is-back path) {
+  stroke: currentColor !important;
+  stroke-width: 4 !important;
+}
+
+:global(.sf-vocabulary-brand) {
+  gap: 0.66rem !important;
+  justify-content: center !important;
+}
+
+:global(.sf-vocabulary-brand-mark) {
+  width: 2.72rem !important;
+  height: 2.72rem !important;
+}
+
+:global(.sf-vocabulary-brand strong) {
+  color: #071642 !important;
+  font-size: 2.12rem !important;
+  line-height: 0.96 !important;
+}
+
+:global(.sf-vocabulary-brand small) {
+  margin-top: 0.32rem !important;
+  color: #7557f2 !important;
+  font-size: 0.74rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+}
+
+:global(.sf-vocabulary-header-results-button) {
+  justify-self: end !important;
+  min-height: 2.42rem !important;
+  gap: 0.34rem !important;
+  padding: 0 0.82rem !important;
+  border: 1px solid rgba(184, 169, 255, 0.64) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #0e1741 !important;
+  font-size: 0.78rem !important;
+  font-weight: 900 !important;
+  box-shadow: 0 10px 22px rgba(105, 87, 178, 0.08) !important;
+  white-space: nowrap !important;
+}
+
+:global(.sf-vocabulary-header-results-button svg) {
+  width: 0.96rem !important;
+  height: 0.96rem !important;
+}
+
+:global(.sf-vocabulary-header-results-button path) {
+  stroke: currentColor !important;
+}
+
+:global(.sf-vocabulary-learning-scroll) {
+  overflow-y: auto !important;
+  padding-top: 0.26rem !important;
+  padding-bottom: calc(8.9rem + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+:global(.sf-vocabulary-back-button) {
+  display: none !important;
+}
+
+:global(.sf-vocabulary-learning-title) {
+  display: grid !important;
+  grid-template-columns: auto max-content !important;
+  justify-content: center !important;
+  justify-items: center !important;
+  align-items: center !important;
+  gap: 0.68rem !important;
+  min-height: 4.44rem !important;
+  padding: 0.5rem 1rem 0.72rem !important;
+  text-align: center !important;
+}
+
+:global(.sf-vocabulary-title-icon) {
+  width: 2.02rem !important;
+  height: 2.02rem !important;
+}
+
+:global(.sf-vocabulary-title-icon svg) {
+  width: 2.02rem !important;
+  height: 2.02rem !important;
+  color: #7358ea !important;
+}
+
+:global(.sf-vocabulary-learning-title h1) {
+  color: #071642 !important;
+  font-size: 2.02rem !important;
+  font-weight: 900 !important;
+  line-height: 1.04 !important;
+}
+
+:global(.sf-vocabulary-learning-title p) {
+  grid-column: 1 / -1 !important;
+  margin: -0.04rem 0 0 !important;
+  color: #111a55 !important;
+  font-size: 1rem !important;
+  font-weight: 560 !important;
+  line-height: 1.18 !important;
+}
+
+:global(.sf-vocabulary-learning-title p strong) {
+  color: #7358ea !important;
+  font-size: 1.12em !important;
+  font-weight: 850 !important;
+}
+
+@media (max-width: 390px) {
+  :global(.sf-vocabulary-learning-header) {
+    grid-template-columns: 3.72rem minmax(0, 1fr) 6.72rem !important;
+    min-height: 3.95rem !important;
+    padding-inline: 0.34rem !important;
+  }
+
+  :global(.sf-vocabulary-menu-button.is-back) {
+    width: 3.36rem !important;
+    height: 3.36rem !important;
+  }
+
+  :global(.sf-vocabulary-menu-button.is-back svg) {
+    width: 1.64rem !important;
+    height: 1.64rem !important;
+  }
+
+  :global(.sf-vocabulary-brand) {
+    gap: 0.48rem !important;
+  }
+
+  :global(.sf-vocabulary-brand-mark) {
+    width: 2.28rem !important;
+    height: 2.28rem !important;
+  }
+
+  :global(.sf-vocabulary-brand strong) {
+    font-size: 1.72rem !important;
+  }
+
+  :global(.sf-vocabulary-brand small) {
+    font-size: 0.58rem !important;
+  }
+
+  :global(.sf-vocabulary-header-results-button) {
+    min-height: 2.08rem !important;
+    padding-inline: 0.62rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  :global(.sf-vocabulary-learning-title) {
+    min-height: 4.12rem !important;
+    gap: 0.56rem !important;
+  }
+
+  :global(.sf-vocabulary-title-icon),
+  :global(.sf-vocabulary-title-icon svg) {
+    width: 1.72rem !important;
+    height: 1.72rem !important;
+  }
+
+  :global(.sf-vocabulary-learning-title h1) {
+    font-size: 1.72rem !important;
+  }
+
+  :global(.sf-vocabulary-learning-title p) {
+    font-size: 0.9rem !important;
   }
 }

@@ -378,6 +378,7 @@ export default function BankFinanceTransactionsPage() {
             href={backToFinanceMenuHref}
           >
             <BackIcon />
+            <span>返回上一级</span>
           </Link>
           <h1 className={styles.title} id="bank-finance-title">
             银行与金融交易
@@ -402,7 +403,6 @@ export default function BankFinanceTransactionsPage() {
               <span className={styles.iconTile}>
                 <LessonIcon type={lesson.icon} />
               </span>
-              <span className={styles.numberBadge}>{lesson.number}</span>
               <span className={styles.lessonTitle}>{lesson.title}</span>
               <span className={styles.chevron}>
                 <ChevronIcon />

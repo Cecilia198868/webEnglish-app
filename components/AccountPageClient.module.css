@@ -853,13 +853,6 @@
   font-weight: 950;
 }
 
-.themeChoiceGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.themeChoice,
 .optionRow,
 .settingsNote {
   border: 1px solid var(--border-color);
@@ -869,20 +862,10 @@
     inset 0 1px 0 var(--theme-inset);
 }
 
-.themeChoice,
 .optionRow {
   text-align: left;
 }
 
-.themeChoice {
-  display: grid;
-  gap: 9px;
-  border-radius: 22px;
-  padding: 13px;
-  color: var(--text-primary);
-}
-
-.themeChoice[data-selected="true"],
 .optionRow[data-selected="true"] {
   border-color: color-mix(in srgb, var(--accent-primary) 58%, var(--border-color));
   box-shadow:
@@ -891,61 +874,12 @@
     inset 0 1px 0 var(--theme-inset);
 }
 
-.themePreview {
-  display: grid;
-  gap: 7px;
-  min-height: 88px;
-  border-radius: 17px;
-  padding: 14px;
-}
-
-.themePreview[data-theme-preview="light"] {
-  background:
-    radial-gradient(circle at 80% 20%, rgba(125, 92, 255, 0.16), transparent 38%),
-    linear-gradient(180deg, #ffffff, #eef3ff);
-}
-
-.themePreview[data-theme-preview="system"] {
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.92), transparent 34%),
-    linear-gradient(135deg, #ffffff 0 48%, #111a2b 48% 100%);
-}
-
-.themePreview[data-theme-preview="dark"] {
-  background:
-    radial-gradient(circle at 82% 18%, rgba(157, 140, 255, 0.22), transparent 40%),
-    linear-gradient(180deg, #0e1727, #070d19);
-}
-
-.themePreview i {
-  display: block;
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(118, 92, 255, 0.45);
-}
-
-.themePreview i:nth-child(1) {
-  width: 58%;
-}
-
-.themePreview i:nth-child(2) {
-  width: 88%;
-  background: rgba(126, 143, 184, 0.4);
-}
-
-.themePreview i:nth-child(3) {
-  width: 72%;
-  background: rgba(126, 143, 184, 0.28);
-}
-
-.themeChoice strong,
 .optionRow strong {
   color: var(--text-primary);
   font-size: 1.02rem;
   font-weight: 950;
 }
 
-.themeChoice small,
 .optionRow small {
   color: var(--text-secondary);
   font-size: 0.82rem;
@@ -1545,4 +1479,22 @@
   border-color: var(--border-color);
   background: var(--button-bg);
   color: var(--button-text);
+}
+
+.primaryAction,
+.primaryAction:disabled {
+  color: #ffffff !important;
+  font-weight: 950 !important;
+}
+
+.inviteCopyAction,
+.inviteCopyAction:disabled {
+  color: #ffffff !important;
+  font-weight: 950 !important;
+}
+
+.feedbackSubmitAction,
+.feedbackSubmitAction:disabled {
+  color: #ffffff !important;
+  font-weight: 950 !important;
 }

@@ -36,7 +36,7 @@
 
 .levelPhone {
   padding: max(12px, calc(env(safe-area-inset-top, 0px) + 8px)) 18px
-    calc(env(safe-area-inset-bottom, 0px) + 132px);
+    calc(env(safe-area-inset-bottom, 0px) + 18px);
 }
 
 .overviewHeader,
@@ -880,6 +880,8 @@
 }
 
 .bigMic {
+  position: relative;
+  isolation: isolate;
   display: grid;
   width: 76px;
   height: 76px;
@@ -896,11 +898,34 @@
     0 0 0 22px rgba(118, 87, 255, 0.055);
 }
 
+.bigMic::before,
+.bigMic::after {
+  position: absolute;
+  inset: -18px;
+  z-index: -1;
+  border-radius: inherit;
+  background: rgba(118, 87, 255, 0.16);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.72);
+}
+
 .bigMic[data-recording="true"] {
   animation: pulseMic 1s ease-in-out infinite;
 }
 
+.bigMic[data-recording="true"]::before {
+  animation: recordingHalo 1.45s ease-out infinite;
+}
+
+.bigMic[data-recording="true"]::after {
+  animation: recordingHalo 1.45s ease-out 0.55s infinite;
+}
+
 .bigMic svg {
+  position: relative;
+  z-index: 1;
   width: 34px;
   height: 34px;
   fill: none;
@@ -958,6 +983,10 @@
 .expressionStack {
   gap: 10px;
   margin-top: 10px;
+}
+
+.studyPhone:has(.followCard) {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 202px);
 }
 
 .userExpression {
@@ -1156,95 +1185,201 @@
 }
 
 .followCard {
+  position: fixed;
+  right: auto;
+  bottom: max(8px, env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  z-index: 40;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
-  min-height: 178px;
+  box-sizing: border-box;
+  width: min(calc(100vw - 22px), 394px);
+  min-height: 166px;
   overflow: hidden;
   border-color: rgba(224, 220, 249, 0.94);
+  border-radius: 18px;
   background:
-    radial-gradient(circle at 18% 66%, rgba(118, 87, 255, 0.08), transparent 26%),
-    linear-gradient(135deg, #ffffff, #fbf9ff);
-  padding: 14px 16px 18px;
+    radial-gradient(circle at 52% 72%, rgba(118, 87, 255, 0.14), transparent 31%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(250, 247, 255, 0.98));
+  padding: 15px 17px 13px;
   text-align: left;
-  box-shadow: 0 12px 26px rgba(84, 102, 155, 0.07);
+  box-shadow: 0 18px 38px rgba(75, 88, 145, 0.14);
+  transform: translateX(-50%);
 }
 
-.followCard > div strong {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.followCopy {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  column-gap: 10px;
+  row-gap: 3px;
+  min-width: 0;
+}
+
+.followIcon {
+  grid-row: 1 / span 2;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
   border-radius: 10px;
-  background: #eee8ff;
+  background: #f0ebff;
   color: #7657ff;
-  font-size: 0.72rem;
-  font-weight: 900;
-  line-height: 1;
-  padding: 7px 10px;
 }
 
-.followCard > div strong svg {
-  width: 0.9rem;
-  height: 0.9rem;
-  flex: 0 0 auto;
+.followIcon svg {
+  width: 1.3rem;
+  height: 1.3rem;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2.6;
+  stroke-width: 2.45;
 }
 
-.followCard > div p {
-  display: block;
-  justify-content: flex-start;
-  margin: 12px 0 0;
+.followCopy strong {
+  align-self: end;
   color: #10163b;
-  font-size: 0.9rem;
-  font-weight: 900;
-  line-height: 1.36;
-  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.followCopy p {
+  margin: 0;
+  color: #687293;
+  font-size: 0.64rem;
+  font-weight: 760;
+  line-height: 1.25;
 }
 
 .followCard > button:not(.bigMic) {
-  min-height: 32px;
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   border: 1px solid rgba(222, 218, 248, 0.94);
   border-radius: 10px;
-  background: #f3efff;
+  background: rgba(246, 241, 255, 0.94);
   color: #7657ff;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 850;
-  padding: 0 12px;
+  padding: 0 13px;
+  box-shadow: 0 8px 18px rgba(101, 85, 165, 0.08);
+}
+
+.followCard > button:not(.bigMic) svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
 }
 
 .followCard .bigMic {
-  grid-column: 1 / 3;
-  width: 70px;
-  height: 70px;
-  margin-top: 20px;
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  width: 72px;
+  height: 72px;
+  margin: 0;
+  border-width: 8px;
+  box-shadow:
+    0 16px 30px rgba(105, 78, 225, 0.28),
+    0 0 0 9px rgba(118, 87, 255, 0.11),
+    0 0 0 20px rgba(118, 87, 255, 0.055);
+  transform: translateX(-50%);
+}
+
+.followCard .bigMic::before,
+.followCard .bigMic::after {
+  opacity: 1;
+  transform: none;
+}
+
+.followCard .bigMic::before {
+  inset: -13px;
+  border: 1px solid rgba(118, 87, 255, 0.16);
+  background: transparent;
+}
+
+.followCard .bigMic::after {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  width: 142px;
+  height: 78px;
+  border-right: 1px solid rgba(118, 87, 255, 0.22);
+  border-left: 1px solid rgba(118, 87, 255, 0.22);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 0 50%, transparent 40%, rgba(118, 87, 255, 0.2) 41% 42%, transparent 43%),
+    radial-gradient(ellipse at 100% 50%, transparent 40%, rgba(118, 87, 255, 0.2) 41% 42%, transparent 43%);
+  transform: translate(-50%, -50%);
 }
 
 .followCard > small {
-  grid-column: 1 / 3;
-  margin-top: 7px;
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  margin-top: 0;
   color: #7657ff;
   font-size: 0.64rem;
+  font-weight: 800;
   text-align: center;
+  transform: translateX(-50%);
 }
 
 .followCard .prevButton,
 .followCard .skipButton {
-  bottom: 35px;
+  bottom: 49px;
+  min-width: 78px;
+  min-height: 33px;
+  border-color: rgba(222, 223, 244, 0.95);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 9px 18px rgba(75, 88, 145, 0.1);
+}
+
+.followCard .prevButton {
+  left: 20px;
+}
+
+.followCard .skipButton {
+  right: 20px;
 }
 
 @keyframes pulseMic {
   0%,
   100% {
     transform: scale(1);
-    box-shadow: 0 18px 34px rgba(105, 78, 225, 0.26);
+    box-shadow:
+      0 18px 34px rgba(105, 78, 225, 0.26),
+      0 0 0 10px rgba(118, 87, 255, 0.13),
+      0 0 0 22px rgba(118, 87, 255, 0.06);
   }
   50% {
     transform: scale(1.04);
-    box-shadow: 0 22px 42px rgba(105, 78, 225, 0.38);
+    box-shadow:
+      0 22px 42px rgba(105, 78, 225, 0.38),
+      0 0 0 14px rgba(118, 87, 255, 0.19),
+      0 0 0 30px rgba(118, 87, 255, 0.08);
+  }
+}
+
+@keyframes recordingHalo {
+  0% {
+    opacity: 0.58;
+    transform: scale(0.7);
+  }
+  72% {
+    opacity: 0.16;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
   }
 }
 
@@ -1305,186 +1440,276 @@
   }
 }
 
-/* Sentence pattern overview: match the compact mobile reference screen. */
+/* Sentence pattern overview: match the full-size mobile reference screen. */
 .overviewHeader,
 .overviewHeader + .overviewMeta,
 .overviewHeader ~ .levelStack,
 .overviewHeader ~ .tipCard {
-  --overview-card-shadow: 0 14px 30px rgba(72, 95, 148, 0.08);
+  --overview-card-shadow: 0 22px 48px rgba(77, 98, 154, 0.12);
+}
+
+.page:has(.overviewHeader) {
+  background:
+    radial-gradient(circle at 14% 5%, rgba(255, 255, 255, 0.92), transparent 25%),
+    radial-gradient(circle at 87% 31%, rgba(227, 221, 255, 0.46), transparent 36%),
+    linear-gradient(180deg, #fbfcff 0%, #f7f8ff 45%, #ffffff 100%);
 }
 
 .phone:has(.overviewHeader) {
   min-height: 100dvh;
-  padding: max(10px, calc(env(safe-area-inset-top, 0px) + 6px)) 14px
-    max(14px, calc(env(safe-area-inset-bottom, 0px) + 10px));
+  padding: max(48px, calc(env(safe-area-inset-top, 0px) + 24px)) 21px
+    max(34px, calc(env(safe-area-inset-bottom, 0px) + 28px));
 }
 
 .overviewHeader {
-  grid-template-columns: 42px minmax(0, 1fr) 42px;
-  align-items: center;
-  gap: 6px;
+  position: relative;
+  display: block;
+  min-height: 66px;
 }
 
 .overviewHeader::after {
-  content: "";
+  content: none;
 }
 
 .overviewHeader .roundBack {
-  width: 34px;
-  height: 34px;
-  justify-self: start;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 44px;
   border: 0;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 8px 20px rgba(72, 95, 148, 0.08);
+  background: rgba(255, 255, 255, 0.96);
+  color: #11183a;
+  box-shadow: 0 14px 30px rgba(72, 95, 148, 0.1);
 }
 
 .overviewHeader .roundBack svg {
-  width: 1rem;
-  height: 1rem;
-  stroke-width: 3.1;
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 3.25;
 }
 
 .overviewHeader h1 {
-  margin: 3px 0 4px;
-  font-size: 1.04rem;
-  line-height: 1.12;
+  margin: 6px 0 8px;
+  color: #10183d;
+  font-size: clamp(1.45rem, 5.8vw, 1.62rem);
+  font-weight: 950;
+  line-height: 1.08;
 }
 
 .overviewHeader p {
-  font-size: 0.58rem;
-  font-weight: 650;
-  line-height: 1.18;
+  color: #66708f;
+  font-size: 1rem;
+  font-weight: 780;
+  line-height: 1.35;
 }
 
 .overviewMeta {
-  gap: 5px;
-  margin: 10px auto 12px;
-  padding: 5px 10px;
+  gap: 9px;
+  margin: 0 auto 22px;
+  padding: 9px 18px 9px 12px;
   border-radius: 999px;
-  background: rgba(241, 247, 255, 0.9);
-  color: #5c6684;
-  font-size: 0.52rem;
-  font-weight: 720;
+  background: rgba(245, 247, 255, 0.92);
+  color: #4c5676;
+  font-size: 0.98rem;
+  font-weight: 760;
 }
 
 .overviewMeta svg {
-  width: 0.72rem;
-  height: 0.72rem;
-  color: #7d68f4;
-  stroke-width: 2.4;
+  box-sizing: content-box;
+  width: 1rem;
+  height: 1rem;
+  padding: 0.22rem;
+  border-radius: 0.45rem;
+  background: linear-gradient(135deg, #8e69ff, #7057f4);
+  color: #ffffff;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 2.2;
 }
 
 .levelStack {
-  gap: 10px;
+  gap: 16px;
 }
 
 .overviewHeader ~ .levelStack .levelCard {
-  min-height: 148px;
-  border-radius: 18px;
+  display: block;
+  height: 203px;
+  min-height: 203px;
+  border-radius: 28px;
+  border-color: rgba(235, 238, 249, 0.98);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.99), rgba(255, 255, 255, 0.96));
   box-shadow: var(--overview-card-shadow);
-  padding: 13px 13px 12px;
+  padding: 0;
 }
 
 .overviewHeader ~ .levelStack .levelBadge {
-  border-radius: 8px;
-  font-size: 0.56rem;
-  padding: 5px 8px;
+  position: absolute;
+  top: 22px;
+  left: 20px;
+  border-radius: 14px;
+  font-size: 0.94rem;
+  padding: 9px 12px;
 }
 
 .overviewHeader ~ .levelStack .levelTitleRow {
-  gap: 6px;
-  margin-top: 11px;
+  position: absolute;
+  top: 74px;
+  left: 22px;
+  gap: 10px;
+  margin-top: 0;
 }
 
 .overviewHeader ~ .levelStack .levelTitleRow svg {
-  width: 19px;
-  height: 19px;
-  stroke-width: 3.4;
+  width: 31px;
+  height: 31px;
+  stroke-width: 3.8;
 }
 
 .overviewHeader ~ .levelStack .levelTitleRow strong {
-  font-size: 0.94rem;
+  font-size: 1.42rem;
   line-height: 1.08;
 }
 
 .overviewHeader ~ .levelStack .levelSubtitle {
-  width: min(58%, 176px);
-  margin-top: 7px;
-  font-size: 0.62rem;
-  font-weight: 650;
-  line-height: 1.42;
+  position: absolute;
+  top: 116px;
+  left: 22px;
+  width: min(58%, 224px);
+  margin-top: 0;
+  color: #62708f;
+  font-size: 0.9rem;
+  font-weight: 760;
+  line-height: 1.35;
 }
 
 .overviewHeader ~ .levelStack .levelCount {
-  margin-top: 9px;
-  border-radius: 8px;
-  font-size: 0.56rem;
-  padding: 5px 9px;
+  position: absolute;
+  left: 20px;
+  bottom: 8px;
+  margin-top: 0;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  padding: 9px 14px;
 }
 
 .overviewHeader ~ .levelStack .levelArt {
-  top: 35px;
+  top: 58px;
   right: 7px;
-  width: 38%;
-  max-width: 132px;
+  width: 38.5%;
+  max-width: 158px;
+}
+
+.overviewHeader ~ .levelStack .chatArt {
+  width: 100%;
+  height: auto;
 }
 
 .overviewHeader ~ .levelStack .cardChevron {
-  top: 15px;
-  right: 13px;
+  top: 25px;
+  right: 24px;
+  color: #16244d;
 }
 
 .overviewHeader ~ .levelStack .cardChevron svg {
-  width: 0.9rem;
-  height: 0.9rem;
-  stroke-width: 3.4;
+  width: 1.35rem;
+  height: 1.35rem;
+  stroke-width: 3.5;
 }
 
 .overviewHeader ~ .tipCard {
-  grid-template-columns: 32px minmax(0, 1fr);
-  gap: 9px;
-  margin-top: 12px;
-  border-radius: 14px;
-  padding: 10px 12px;
-  box-shadow: var(--overview-card-shadow);
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  margin: 24px 6px 0;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(248, 247, 255, 0.98), rgba(239, 241, 255, 0.94));
+  box-shadow: 0 16px 34px rgba(95, 106, 166, 0.08);
+  padding: 17px 22px;
 }
 
 .overviewHeader ~ .tipCard .tipIcon {
-  width: 29px;
-  height: 29px;
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  color: #8068ff;
 }
 
 .overviewHeader ~ .tipCard .tipIcon svg {
-  width: 0.86rem;
-  height: 0.86rem;
+  width: 2rem;
+  height: 2rem;
+  stroke-width: 2.2;
 }
 
 .overviewHeader ~ .tipCard p {
-  font-size: 0.56rem;
-  font-weight: 650;
-  line-height: 1.5;
+  color: #4c5676;
+  font-size: 0.96rem;
+  font-weight: 760;
+  line-height: 1.65;
 }
 
 @media (max-width: 380px) {
   .phone:has(.overviewHeader) {
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-top: max(42px, calc(env(safe-area-inset-top, 0px) + 20px));
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .overviewHeader {
+    min-height: 60px;
+  }
+
+  .overviewHeader h1 {
+    font-size: 1.58rem;
+  }
+
+  .overviewHeader p {
+    font-size: 0.9rem;
+  }
+
+  .overviewMeta {
+    margin-bottom: 24px;
+    font-size: 0.85rem;
   }
 
   .overviewHeader ~ .levelStack .levelCard {
-    min-height: 140px;
+    height: 190px;
+    min-height: 190px;
+  }
+
+  .overviewHeader ~ .levelStack .levelBadge {
+    top: 19px;
+    left: 17px;
+  }
+
+  .overviewHeader ~ .levelStack .levelTitleRow {
+    top: 69px;
+    left: 19px;
   }
 
   .overviewHeader ~ .levelStack .levelTitleRow strong {
-    font-size: 0.86rem;
+    font-size: 1.22rem;
   }
 
   .overviewHeader ~ .levelStack .levelSubtitle {
-    width: min(57%, 155px);
-    font-size: 0.56rem;
+    top: 106px;
+    left: 19px;
+    width: min(57%, 186px);
+    font-size: 0.82rem;
   }
 
   .overviewHeader ~ .levelStack .levelCount {
-    font-size: 0.5rem;
+    left: 17px;
+    bottom: 8px;
+    font-size: 0.78rem;
+  }
+
+  .overviewHeader ~ .levelStack .levelArt {
+    top: 56px;
+    width: 39%;
+    max-width: 142px;
+  }
+
+  .overviewHeader ~ .tipCard p {
+    font-size: 0.86rem;
   }
 }

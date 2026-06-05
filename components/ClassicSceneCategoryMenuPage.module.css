@@ -532,9 +532,14 @@
   }
 
   .topBackLink {
+    width: 86px;
+    flex-direction: column;
+    justify-content: center;
     min-height: 44px;
-    gap: 7px;
-    font-size: 0.86rem;
+    gap: 4px;
+    font-size: 0.76rem;
+    line-height: 1.12;
+    text-align: center;
   }
 
   .topBackLink svg {
@@ -788,8 +793,9 @@
   }
 
   .topBackLink {
-    gap: 5px;
-    font-size: 0.78rem;
+    width: 72px;
+    gap: 3px;
+    font-size: 0.68rem;
   }
 
   .topBackLink svg {

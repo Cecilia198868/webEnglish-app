@@ -24,31 +24,16 @@ const sora = Sora({
 
 const displayPreferenceScript = `
 (() => {
-  const themeKey = "speakflow-appearance-preference";
   const fontSizeKey = "speakflow-font-size-preference";
-  const validThemes = new Set(["system", "light", "dark"]);
   const validFontSizes = new Set(["small", "standard", "large"]);
 
   try {
     const root = document.documentElement;
     const fontSize = localStorage.getItem(fontSizeKey);
-    const systemQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const resolveTheme = (preference) =>
-      preference === "system" ? (systemQuery.matches ? "dark" : "light") : preference;
-
-    const applyTheme = () => {
-      const theme = localStorage.getItem(themeKey);
-      const preference = validThemes.has(theme) ? theme : "system";
-      const resolvedTheme = resolveTheme(preference);
-
-      root.dataset.appTheme = resolvedTheme;
-      root.dataset.speakflowTheme = preference;
-      root.dataset.appThemePreference = preference;
-    };
-
-    applyTheme();
-    systemQuery.addEventListener?.("change", applyTheme);
+    localStorage.removeItem("speakflow-appearance-preference");
+    root.dataset.appTheme = "system";
+    root.dataset.speakflowTheme = "system";
+    root.dataset.appThemePreference = "system";
     root.dataset.speakflowFontSize = validFontSizes.has(fontSize)
       ? fontSize
       : "standard";

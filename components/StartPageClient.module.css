@@ -15,7 +15,7 @@
   width: min(100%, 430px);
   min-height: 100dvh;
   margin: 0 auto;
-  padding: max(16px, calc(env(safe-area-inset-top, 0px) + 10px)) 19px
+  padding: max(10px, calc(env(safe-area-inset-top, 0px) + 6px)) 19px
     calc(env(safe-area-inset-bottom, 0px) + 18px);
   overflow: hidden;
 }
@@ -167,7 +167,7 @@
 
 .proStatusCard {
   position: relative;
-  margin-top: 31px;
+  margin-top: 18px;
   border: 1px solid rgba(244, 225, 182, 0.92);
   border-radius: 24px;
   background:
@@ -176,20 +176,20 @@
   box-shadow:
     0 22px 48px rgba(123, 126, 179, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.96);
-  padding: 20px 18px 19px;
+  padding: 15px 14px 14px;
 }
 
 .proStatusHeader {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr) 48px;
+  grid-template-columns: 54px minmax(0, 1fr) 36px;
   align-items: center;
-  gap: 11px;
+  gap: 9px;
 }
 
 .proCrown {
   display: grid;
-  width: 58px;
-  height: 58px;
+  width: 50px;
+  height: 50px;
   place-items: center;
   border-radius: 999px;
   background: linear-gradient(135deg, #ffd26b, #efa22d);
@@ -200,8 +200,8 @@
 }
 
 .proCrown svg {
-  width: 31px;
-  height: 31px;
+  width: 27px;
+  height: 27px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -213,10 +213,10 @@
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
   color: #10163b;
-  font-size: 1.22rem;
+  font-size: 1.08rem;
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.16;
@@ -237,29 +237,29 @@
 .proSparkle {
   display: grid;
   justify-self: end;
-  width: 46px;
-  height: 46px;
+  width: 34px;
+  height: 34px;
   place-items: center;
   color: #ffc34e;
 }
 
 .proSparkle svg {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   fill: currentColor;
 }
 
 .proBenefitGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 21px;
+  margin-top: 12px;
 }
 
 .proBenefit {
   display: grid;
   min-width: 0;
-  gap: 8px;
-  padding: 0 8px;
+  gap: 4px;
+  padding: 0 5px;
   text-align: center;
 }
 
@@ -272,9 +272,9 @@
   min-width: 0;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 5px;
   color: #10163b;
-  font-size: 0.96rem;
+  font-size: 0.82rem;
   font-weight: 950;
   line-height: 1.16;
   white-space: nowrap;
@@ -283,14 +283,14 @@
 .proBenefit strong span {
   color: #b87600;
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: 1.42rem;
+  font-size: 1.16rem;
   font-weight: 900;
   line-height: 0.8;
 }
 
 .proBenefit small {
   color: rgba(21, 31, 68, 0.62);
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   font-weight: 750;
   line-height: 1.22;
   white-space: nowrap;
@@ -299,10 +299,10 @@
 .subscriberWelcome {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 138px;
+  grid-template-columns: minmax(0, 1fr) 104px;
   align-items: center;
-  min-height: 164px;
-  margin-top: 28px;
+  min-height: 116px;
+  margin-top: 14px;
 }
 
 .subscriberWelcomeCopy {
@@ -319,16 +319,16 @@
 
 .subscriberWelcomeCopy p {
   color: #10163b;
-  font-size: 1.44rem;
+  font-size: 1.16rem;
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.18;
 }
 
 .subscriberWelcomeCopy h2 {
-  margin-top: 9px;
+  margin-top: 5px;
   color: #10163b;
-  font-size: 2rem;
+  font-size: 1.55rem;
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.13;
@@ -337,15 +337,15 @@
 
 .subscriberWelcomeCopy small {
   display: block;
-  margin-top: 8px;
+  margin-top: 5px;
   color: rgba(21, 31, 68, 0.62);
-  font-size: 1rem;
+  font-size: 0.86rem;
   font-weight: 800;
   line-height: 1.28;
 }
 
 .subscriberStarBuddy {
-  width: 136px;
+  width: 102px;
   max-width: 31vw;
   justify-self: end;
   filter: drop-shadow(0 24px 28px rgba(92, 85, 225, 0.2));
@@ -354,9 +354,9 @@
 .subscriberRecommended {
   position: relative;
   z-index: 2;
-  margin-top: 9px;
-  border: 5px solid rgba(255, 255, 255, 0.98);
-  border-radius: 26px;
+  margin-top: 6px;
+  border: 4px solid rgba(255, 255, 255, 0.98);
+  border-radius: 24px;
   background:
     radial-gradient(circle at 78% 25%, rgba(135, 104, 255, 0.13), transparent 31%),
     linear-gradient(135deg, rgba(247, 242, 255, 0.98), rgba(255, 255, 255, 0.97));
@@ -367,38 +367,38 @@
 
 .subscriberRibbon {
   position: absolute;
-  top: -5px;
-  left: -5px;
+  top: -4px;
+  left: -4px;
   z-index: 3;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 50px;
-  border-radius: 18px 0 18px 0;
+  gap: 7px;
+  min-height: 42px;
+  border-radius: 17px 0 16px 0;
   background: linear-gradient(135deg, #7d5cff, #6c59ff);
   color: #ffffff;
-  font-size: 1.02rem;
+  font-size: 0.92rem;
   font-weight: 950;
-  padding: 0 20px;
+  padding: 0 16px;
   box-shadow: 0 16px 26px rgba(102, 85, 238, 0.28);
 }
 
 .subscriberRibbon svg {
-  width: 22px;
-  height: 22px;
+  width: 19px;
+  height: 19px;
   fill: currentColor;
 }
 
 .subscriberRecommendedBody {
   position: relative;
-  min-height: 241px;
-  padding: 69px 22px 20px;
+  min-height: 198px;
+  padding: 56px 18px 16px;
 }
 
 .subscriberRecommendedCopy {
   position: relative;
   z-index: 2;
-  width: min(100%, 260px);
+  width: min(100%, 226px);
 }
 
 .subscriberRecommendedCopy h2 {
@@ -406,7 +406,7 @@
   background: linear-gradient(90deg, #765cff, #3c7cff);
   background-clip: text;
   color: transparent;
-  font-size: 2.14rem;
+  font-size: 1.72rem;
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.06;
@@ -415,9 +415,9 @@
 
 .subscriberTitleUnderline {
   display: block;
-  width: 118px;
-  height: 8px;
-  margin: 8px 0 0 53px;
+  width: 100px;
+  height: 6px;
+  margin: 5px 0 0 42px;
   border-radius: 999px;
   background:
     linear-gradient(90deg, transparent 0 7%, #cabdff 7% 31%, #705dff 31% 67%, #cabdff 67% 100%);
@@ -426,10 +426,10 @@
 }
 
 .subscriberRecommendedCopy p {
-  width: min(100%, 232px);
-  margin: 25px 0 0;
+  width: min(100%, 210px);
+  margin: 14px 0 0;
   color: rgba(21, 31, 68, 0.66);
-  font-size: 0.96rem;
+  font-size: 0.86rem;
   font-weight: 800;
   line-height: 1.48;
 }
@@ -437,19 +437,19 @@
 .subscriberRobotArt {
   position: absolute;
   right: -16px;
-  bottom: 67px;
+  bottom: 54px;
   z-index: 1;
-  width: 178px;
-  height: 172px;
+  width: 145px;
+  height: 138px;
   pointer-events: none;
 }
 
 .subscriberRobotImage {
   position: absolute;
   right: -14px;
-  bottom: -56px;
+  bottom: -44px;
   display: block;
-  width: 194px;
+  width: 160px;
   height: auto;
   filter: drop-shadow(0 20px 28px rgba(91, 92, 218, 0.16));
 }
@@ -460,8 +460,8 @@
   left: 6px;
   z-index: 2;
   display: inline-flex;
-  width: 80px;
-  height: 48px;
+  width: 68px;
+  height: 40px;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -484,8 +484,8 @@
 }
 
 .subscriberSpeechBubble i {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
   background: #765cff;
 }
@@ -494,15 +494,15 @@
   position: relative;
   z-index: 2;
   display: flex;
-  min-height: 66px;
+  min-height: 54px;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  margin-top: 31px;
+  gap: 12px;
+  margin-top: 18px;
   border-radius: 999px;
   background: linear-gradient(135deg, #8b4cff, #4a5dff 70%, #5b47f3);
   color: #ffffff;
-  font-size: 1.36rem;
+  font-size: 1.08rem;
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.1;
@@ -522,17 +522,17 @@
 }
 
 .subscriberCtaIcon svg {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
 }
 
 .subscriberCtaChevron svg {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
 }
 
 .subscriberOther {
-  margin-top: 29px;
+  margin-top: 18px;
 }
 
 .sectionHeading {
@@ -886,9 +886,9 @@
   width: 100%;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 88% 15%, rgba(151, 136, 255, 0.18), transparent 27%),
-    radial-gradient(circle at 7% 40%, rgba(77, 139, 255, 0.1), transparent 31%),
-    linear-gradient(180deg, #f8fbff 0%, #f5f6ff 48%, #ffffff 100%);
+    radial-gradient(circle at 91% 19%, rgba(184, 163, 255, 0.42), transparent 32%),
+    radial-gradient(circle at 0% 0%, rgba(219, 240, 255, 0.88), transparent 36%),
+    linear-gradient(180deg, #f6fbff 0%, #f3f0ff 52%, #ffffff 100%);
   color: #10163b;
 }
 
@@ -898,19 +898,19 @@
   width: min(100%, 430px);
   min-height: 100dvh;
   margin: 0 auto;
-  padding: max(10px, calc(env(safe-area-inset-top, 0px) + 6px)) 18px
-    calc(env(safe-area-inset-bottom, 0px) + 18px);
+  padding: max(24px, calc(env(safe-area-inset-top, 0px) + 11px)) 16px
+    calc(env(safe-area-inset-bottom, 0px) + 22px);
   overflow: hidden;
 }
 
 .starterPhone::before {
   position: absolute;
-  top: 88px;
-  right: -96px;
-  width: 252px;
-  height: 252px;
+  top: 102px;
+  right: -118px;
+  width: 292px;
+  height: 292px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(126, 91, 255, 0.12), rgba(94, 139, 255, 0.06));
+  background: linear-gradient(135deg, rgba(132, 98, 255, 0.16), rgba(126, 154, 255, 0.06));
   content: "";
 }
 
@@ -918,15 +918,15 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: 42px max-content minmax(0, 1fr);
+  grid-template-columns: 46px max-content minmax(0, 1fr);
   align-items: center;
-  gap: clamp(10px, 3.4vw, 16px);
+  gap: 12px;
 }
 
 .starterMenuButton {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   place-items: center;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.92);
@@ -948,9 +948,9 @@
 
 .starterBrand {
   display: inline-grid;
-  grid-template-columns: 36px minmax(0, max-content);
+  grid-template-columns: 40px minmax(0, max-content);
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   min-width: 0;
   color: #10163b;
   text-decoration: none;
@@ -958,8 +958,8 @@
 
 .starterBrandIcon {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   place-items: center;
   overflow: hidden;
   border-radius: 13px;
@@ -982,7 +982,7 @@
 .starterBrandCopy strong {
   color: #10163b;
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: clamp(1.06rem, 4.8vw, 1.2rem);
+  font-size: clamp(1.42rem, 6.1vw, 1.64rem);
   font-weight: 900;
   letter-spacing: 0;
   line-height: 0.95;
@@ -992,7 +992,7 @@
 .starterBrandCopy small {
   color: #6d5cff;
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: clamp(0.43rem, 2vw, 0.5rem);
+  font-size: clamp(0.5rem, 2.2vw, 0.62rem);
   font-weight: 800;
   letter-spacing: 0;
   line-height: 1;
@@ -1006,24 +1006,24 @@
 .starterHero {
   position: relative;
   z-index: 1;
-  min-height: 172px;
-  margin-top: 24px;
+  min-height: 184px;
+  margin-top: 28px;
 }
 
 .starterHeroCopy {
   position: relative;
   z-index: 2;
-  width: min(100%, 248px);
+  width: min(100%, 252px);
   min-width: 0;
 }
 
 .starterHeroCopy h1 {
   margin: 0;
   color: #10163b;
-  font-size: clamp(1.56rem, 6.9vw, 1.9rem);
+  font-size: clamp(1.92rem, 8.2vw, 2.18rem);
   font-weight: 950;
   letter-spacing: 0;
-  line-height: 1.16;
+  line-height: 1.12;
   overflow-wrap: normal;
 }
 
@@ -1037,11 +1037,11 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 12px;
+  margin-top: 22px;
   color: rgba(21, 31, 68, 0.68);
-  font-size: clamp(0.66rem, 2.8vw, 0.76rem);
-  font-weight: 800;
+  font-size: clamp(0.72rem, 3.08vw, 0.82rem);
+  font-weight: 860;
   line-height: 1.2;
 }
 
@@ -1061,8 +1061,8 @@
 
 .starterBenefitRow svg,
 .starterTrust svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -1073,11 +1073,11 @@
 
 .starterRobot {
   position: absolute;
-  right: -10px;
-  top: -10px;
+  right: 36px;
+  top: -18px;
   z-index: 1;
   display: block;
-  width: min(36vw, 142px);
+  width: min(28vw, 112px);
   height: auto;
   filter: drop-shadow(0 24px 34px rgba(91, 92, 218, 0.16));
   pointer-events: none;
@@ -1088,13 +1088,13 @@
   z-index: 2;
   margin-top: 0;
   border: 4px solid rgba(255, 255, 255, 0.96);
-  border-radius: 22px;
+  border-radius: 26px;
   background:
-    radial-gradient(circle at 78% 24%, rgba(135, 104, 255, 0.14), transparent 31%),
-    linear-gradient(135deg, rgba(247, 242, 255, 0.98), rgba(255, 255, 255, 0.97));
+    radial-gradient(circle at 82% 28%, rgba(128, 96, 255, 0.14), transparent 31%),
+    linear-gradient(135deg, rgba(250, 247, 255, 0.96), rgba(255, 255, 255, 0.96));
   box-shadow:
-    0 22px 48px rgba(91, 92, 218, 0.14),
-    inset 0 0 0 1px rgba(185, 191, 255, 0.3);
+    0 22px 52px rgba(91, 92, 218, 0.14),
+    inset 0 0 0 1px rgba(190, 194, 255, 0.34);
 }
 
 .starterRibbon {
@@ -1103,27 +1103,27 @@
   left: -4px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  min-height: 36px;
-  border-radius: 16px 0 14px 0;
-  background: linear-gradient(135deg, #7d5cff, #6c59ff);
+  gap: 8px;
+  min-height: 42px;
+  border-radius: 20px 0 18px 0;
+  background: linear-gradient(135deg, #8350ff 0%, #5f47f5 100%);
   color: #ffffff;
-  font-size: clamp(0.76rem, 3vw, 0.86rem);
-  font-weight: 900;
-  padding: 0 15px;
+  font-size: clamp(0.84rem, 3.45vw, 0.96rem);
+  font-weight: 950;
+  padding: 0 20px;
   box-shadow: 0 16px 26px rgba(102, 85, 238, 0.28);
 }
 
 .starterRibbon svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   fill: currentColor;
 }
 
 .starterRecommendedBody {
   position: relative;
-  min-height: 176px;
-  padding: 54px 15px 15px;
+  min-height: 204px;
+  padding: 64px 22px 20px;
 }
 
 .starterRecommendedCopy {
@@ -1135,7 +1135,7 @@
 .starterRecommendedCopy h2 {
   margin: 0;
   color: #10163b;
-  font-size: clamp(1.06rem, 4.4vw, 1.26rem);
+  font-size: clamp(1.26rem, 5.4vw, 1.46rem);
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.16;
@@ -1150,21 +1150,21 @@
 }
 
 .starterRecommendedCopy p {
-  width: min(100%, 212px);
-  margin: 8px 0 0;
+  width: min(100%, 232px);
+  margin: 12px 0 0;
   color: rgba(21, 31, 68, 0.68);
-  font-size: clamp(0.64rem, 2.55vw, 0.72rem);
-  font-weight: 700;
-  line-height: 1.45;
+  font-size: clamp(0.72rem, 2.9vw, 0.82rem);
+  font-weight: 760;
+  line-height: 1.42;
 }
 
 .starterBubbleArt {
   position: absolute;
-  top: 52px;
-  right: 6px;
+  top: 64px;
+  right: 28px;
   display: grid;
-  width: 98px;
-  height: 88px;
+  width: 116px;
+  height: 104px;
   place-items: center;
   pointer-events: none;
 }
@@ -1179,15 +1179,15 @@
   position: relative;
   z-index: 2;
   display: flex;
-  min-height: 42px;
+  min-height: 54px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 14px;
+  margin-top: 24px;
   border-radius: 999px;
   background: linear-gradient(135deg, #8b4cff, #2f64ff);
   color: #ffffff;
-  font-size: clamp(0.78rem, 3.25vw, 0.9rem);
+  font-size: clamp(0.9rem, 3.75vw, 1.04rem);
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.1;
@@ -1198,8 +1198,8 @@
 }
 
 .starterCtaIcon svg {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -1208,8 +1208,8 @@
 }
 
 .starterCtaChevron svg {
-  width: 19px;
-  height: 19px;
+  width: 24px;
+  height: 24px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -1220,7 +1220,7 @@
 .starterMore {
   position: relative;
   z-index: 2;
-  margin-top: 14px;
+  margin-top: 22px;
 }
 
 .starterSectionHeading {
@@ -1229,15 +1229,15 @@
   align-items: end;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 9px;
-  padding-left: 11px;
+  margin-bottom: 14px;
+  padding-left: 14px;
 }
 
 .starterSectionHeading::before {
   position: absolute;
   left: 0;
-  width: 3px;
-  height: 16px;
+  width: 4px;
+  height: 20px;
   border-radius: 999px;
   background: linear-gradient(180deg, #765cff, #8b64ff);
   content: "";
@@ -1246,7 +1246,7 @@
 .starterSectionHeading h2 {
   margin: 0;
   color: #10163b;
-  font-size: clamp(0.84rem, 3.65vw, 1rem);
+  font-size: clamp(1rem, 4.2vw, 1.16rem);
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.18;
@@ -1254,28 +1254,28 @@
 
 .starterSectionHeading span {
   color: rgba(21, 31, 68, 0.54);
-  font-size: clamp(0.52rem, 2.4vw, 0.64rem);
-  font-weight: 800;
+  font-size: clamp(0.72rem, 2.9vw, 0.82rem);
+  font-weight: 850;
   line-height: 1.2;
   white-space: nowrap;
 }
 
 .starterPracticeStack {
   display: grid;
-  gap: 8px;
+  gap: 12px;
 }
 
 .starterPracticeCard {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) 20px;
+  grid-template-columns: 52px minmax(0, 1fr) 24px;
   align-items: center;
-  gap: 10px;
-  min-height: 64px;
+  gap: 12px;
+  min-height: 74px;
   border: 1px solid rgba(226, 235, 252, 0.94);
-  border-radius: 16px;
+  border-radius: 22px;
   background: rgba(255, 255, 255, 0.94);
   color: #10163b;
-  padding: 9px 10px;
+  padding: 10px 12px;
   text-decoration: none;
   box-shadow:
     0 18px 38px rgba(95, 122, 184, 0.11),
@@ -1299,10 +1299,10 @@
 
 .starterPracticeIcon {
   display: grid;
-  width: 46px;
-  height: 46px;
+  width: 52px;
+  height: 52px;
   place-items: center;
-  border-radius: 14px;
+  border-radius: 18px;
   background: linear-gradient(135deg, var(--starter-accent), var(--starter-accent-2));
   color: #ffffff;
   box-shadow:
@@ -1311,8 +1311,8 @@
 }
 
 .starterPracticeIcon svg {
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -1322,7 +1322,7 @@
 
 .starterPracticeIcon > span {
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: 1rem;
+  font-size: 1.18rem;
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1;
@@ -1336,7 +1336,7 @@
 
 .starterPracticeCopy strong {
   color: #10163b;
-  font-size: clamp(0.78rem, 3.25vw, 0.9rem);
+  font-size: clamp(0.96rem, 3.9vw, 1.08rem);
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.18;
@@ -1346,8 +1346,8 @@
 .starterPracticeCopy small {
   overflow: hidden;
   color: rgba(21, 31, 68, 0.58);
-  font-size: clamp(0.54rem, 2.4vw, 0.64rem);
-  font-weight: 700;
+  font-size: clamp(0.68rem, 2.75vw, 0.78rem);
+  font-weight: 760;
   line-height: 1.28;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1360,8 +1360,8 @@
 }
 
 .starterPracticeChevron svg {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -1372,10 +1372,10 @@
 .starterTrust {
   justify-content: center;
   width: 100%;
-  margin-top: 14px;
+  margin-top: 22px;
   color: rgba(21, 31, 68, 0.58);
-  font-size: clamp(0.56rem, 2.5vw, 0.68rem);
-  font-weight: 800;
+  font-size: clamp(0.72rem, 2.9vw, 0.82rem);
+  font-weight: 850;
   line-height: 1.3;
   text-align: center;
 }
@@ -1429,104 +1429,117 @@
   }
 
   .proStatusCard {
-    padding: 18px 13px 17px;
+    margin-top: 16px;
+    padding: 13px 11px 12px;
   }
 
   .proStatusHeader {
-    grid-template-columns: 56px minmax(0, 1fr) 38px;
-    gap: 9px;
+    grid-template-columns: 48px minmax(0, 1fr) 30px;
+    gap: 8px;
   }
 
   .proCrown {
-    width: 52px;
-    height: 52px;
+    width: 46px;
+    height: 46px;
   }
 
   .proStatusHeader h1 {
-    font-size: 1.02rem;
-    gap: 7px;
+    font-size: 0.92rem;
+    gap: 6px;
   }
 
   .proSparkle {
-    width: 38px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
   }
 
   .proSparkle svg {
-    width: 34px;
-    height: 34px;
+    width: 27px;
+    height: 27px;
+  }
+
+  .proBenefitGrid {
+    margin-top: 10px;
   }
 
   .proBenefit {
-    padding: 0 5px;
+    gap: 3px;
+    padding: 0 3px;
   }
 
   .proBenefit strong {
-    gap: 5px;
-    font-size: 0.82rem;
+    gap: 4px;
+    font-size: 0.74rem;
   }
 
   .proBenefit strong span {
-    font-size: 1.18rem;
+    font-size: 1.02rem;
   }
 
   .proBenefit small {
-    font-size: 0.68rem;
+    font-size: 0.6rem;
   }
 
   .subscriberWelcome {
-    grid-template-columns: minmax(0, 1fr) 112px;
-    min-height: 148px;
+    grid-template-columns: minmax(0, 1fr) 96px;
+    min-height: 108px;
+    margin-top: 12px;
   }
 
   .subscriberWelcomeCopy p {
-    font-size: 1.22rem;
+    font-size: 1.05rem;
   }
 
   .subscriberWelcomeCopy h2 {
-    font-size: 1.62rem;
+    font-size: 1.42rem;
   }
 
   .subscriberWelcomeCopy small {
-    font-size: 0.88rem;
+    font-size: 0.78rem;
   }
 
   .subscriberStarBuddy {
-    width: 112px;
+    width: 96px;
   }
 
   .subscriberRecommendedBody {
-    min-height: 232px;
-    padding: 66px 17px 18px;
+    min-height: 184px;
+    padding: 52px 14px 14px;
   }
 
   .subscriberRecommendedCopy h2 {
-    font-size: 1.76rem;
+    font-size: 1.48rem;
   }
 
   .subscriberRecommendedCopy p {
-    width: 205px;
-    font-size: 0.86rem;
+    width: 184px;
+    font-size: 0.76rem;
   }
 
   .subscriberRobotArt {
-    right: -22px;
-    width: 154px;
+    right: -20px;
+    bottom: 48px;
+    width: 134px;
   }
 
   .subscriberRobotImage {
-    width: 168px;
+    width: 148px;
   }
 
   .subscriberSpeechBubble {
-    width: 70px;
-    height: 42px;
+    width: 62px;
+    height: 36px;
   }
 
   .subscriberPrimaryCta {
-    min-height: 60px;
-    gap: 12px;
-    font-size: 1.14rem;
+    min-height: 50px;
+    gap: 10px;
+    margin-top: 16px;
+    font-size: 0.96rem;
+  }
+
+  .subscriberOther {
+    margin-top: 16px;
   }
 
   .practiceCard {
@@ -1571,66 +1584,66 @@
   }
 
   .starterTopBar {
-    grid-template-columns: 40px max-content minmax(0, 1fr);
-    gap: 9px;
+    grid-template-columns: 44px max-content minmax(0, 1fr);
+    gap: 10px;
   }
 
   .starterMenuButton {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
 
   .starterBrandIcon {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
   }
 
   .starterBrand {
-    grid-template-columns: 34px minmax(0, max-content);
-    gap: 5px;
+    grid-template-columns: 38px minmax(0, max-content);
+    gap: 6px;
   }
 
   .starterBrandCopy strong {
-    font-size: 1rem;
+    font-size: 1.32rem;
   }
 
   .starterBrandCopy small {
-    font-size: 0.4rem;
+    font-size: 0.48rem;
   }
 
   .starterHero {
-    min-height: 164px;
-    margin-top: 20px;
+    min-height: 176px;
+    margin-top: 24px;
   }
 
   .starterHeroCopy {
-    width: min(100%, 230px);
+    width: min(100%, 236px);
   }
 
   .starterHeroCopy h1 {
-    font-size: 1.48rem;
+    font-size: 1.78rem;
   }
 
   .starterBenefitRow {
-    gap: 6px;
-    font-size: 0.6rem;
+    gap: 8px;
+    font-size: 0.66rem;
   }
 
   .starterRobot {
-    right: -10px;
-    width: 128px;
+    right: 20px;
+    width: 98px;
   }
 
   .starterRecommendedBody {
-    min-height: 168px;
-    padding: 50px 12px 13px;
+    min-height: 194px;
+    padding: 60px 18px 18px;
   }
 
   .starterBubbleArt {
-    top: 51px;
-    right: 4px;
-    width: 88px;
-    height: 78px;
+    top: 64px;
+    right: 18px;
+    width: 102px;
+    height: 92px;
   }
 
   .starterRecommendedCopy {
@@ -1638,38 +1651,38 @@
   }
 
   .starterRecommendedCopy h2 {
-    font-size: 1rem;
+    font-size: 1.16rem;
   }
 
   .starterRecommendedCopy p {
-    width: min(100%, 190px);
-    font-size: 0.6rem;
+    width: min(100%, 210px);
+    font-size: 0.66rem;
   }
 
   .starterPrimaryCta {
-    min-height: 40px;
-    gap: 7px;
-    font-size: 0.74rem;
+    min-height: 50px;
+    gap: 10px;
+    font-size: 0.84rem;
   }
 
   .starterPracticeCard {
-    grid-template-columns: 42px minmax(0, 1fr) 18px;
-    gap: 8px;
-    min-height: 58px;
-    padding: 8px;
+    grid-template-columns: 48px minmax(0, 1fr) 22px;
+    gap: 10px;
+    min-height: 68px;
+    padding: 9px 10px;
   }
 
   .starterPracticeIcon {
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
   }
 
   .starterPracticeCopy strong {
-    font-size: 0.74rem;
+    font-size: 0.88rem;
   }
 
   .starterPracticeCopy small {
-    font-size: 0.5rem;
+    font-size: 0.62rem;
   }
 }
 
@@ -1747,12 +1760,20 @@
   color: var(--text-secondary);
 }
 
-:global(html[data-app-theme]) .subscriberPrimaryCta,
 :global(html[data-app-theme]) .starterPrimaryCta,
 :global(html[data-app-theme]) .resumeButton {
   background: var(--button-bg);
   color: var(--button-text);
   box-shadow: 0 16px 30px color-mix(in srgb, var(--shadow-color) 72%, transparent);
+}
+
+:global(html[data-app-theme]) .subscriberPrimaryCta {
+  background: linear-gradient(135deg, #8b4cff, #4a5dff 70%, #5b47f3);
+  color: #ffffff;
+  font-weight: 950;
+  box-shadow:
+    0 16px 30px rgba(74, 91, 255, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 :global(html[data-app-theme]) .progressTrack {
@@ -1777,9 +1798,9 @@
 
 :global(html[data-app-theme]) .starterPage {
   background:
-    radial-gradient(circle at 87% 12%, rgba(203, 190, 255, 0.5), transparent 34%),
-    radial-gradient(circle at 12% 8%, rgba(221, 239, 255, 0.78), transparent 32%),
-    linear-gradient(180deg, #f7fbff 0%, #f5f2ff 50%, #ffffff 100%);
+    radial-gradient(circle at 91% 19%, rgba(184, 163, 255, 0.42), transparent 32%),
+    radial-gradient(circle at 0% 0%, rgba(219, 240, 255, 0.88), transparent 36%),
+    linear-gradient(180deg, #f6fbff 0%, #f3f0ff 52%, #ffffff 100%);
 }
 
 :global(html[data-app-theme]) .starterMenuButton,
@@ -1795,11 +1816,11 @@
 :global(html[data-app-theme]) .starterRecommended {
   border-color: rgba(255, 255, 255, 0.96);
   background:
-    radial-gradient(circle at 78% 24%, rgba(135, 104, 255, 0.14), transparent 31%),
-    linear-gradient(135deg, rgba(247, 242, 255, 0.98), rgba(255, 255, 255, 0.97));
+    radial-gradient(circle at 82% 28%, rgba(128, 96, 255, 0.14), transparent 31%),
+    linear-gradient(135deg, rgba(250, 247, 255, 0.96), rgba(255, 255, 255, 0.96));
   box-shadow:
-    0 20px 44px rgba(91, 92, 218, 0.14),
-    inset 0 0 0 1px rgba(185, 191, 255, 0.3);
+    0 22px 52px rgba(91, 92, 218, 0.14),
+    inset 0 0 0 1px rgba(190, 194, 255, 0.34);
 }
 
 :global(html[data-app-theme]) .starterRibbon,

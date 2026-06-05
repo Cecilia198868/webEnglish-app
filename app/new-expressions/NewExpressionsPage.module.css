@@ -735,11 +735,12 @@
   filter: brightness(0.86) saturate(0.88);
 }
 
-/* Compact mobile reference layout: keep the whole menu in one viewport. */
+/* Mobile reference layout matched to the supplied standard image. */
 .page {
   background:
-    radial-gradient(circle at 70% 8%, rgba(232, 224, 255, 0.64), transparent 28%),
-    linear-gradient(180deg, #eff7ff 0%, #f5f3ff 48%, #f7fbff 100%);
+    radial-gradient(circle at 12% 2%, rgba(220, 239, 255, 0.88), transparent 34%),
+    radial-gradient(circle at 72% 9%, rgba(232, 226, 255, 0.76), transparent 32%),
+    linear-gradient(180deg, #f8fcff 0%, #f7f8ff 54%, #f9fbff 100%);
 }
 
 .phone {
@@ -747,195 +748,224 @@
   min-height: 100dvh;
   overflow: hidden;
   padding:
-    max(6px, calc(env(safe-area-inset-top, 0px) + 5px))
-    10px
-    max(8px, calc(env(safe-area-inset-bottom, 0px) + 6px));
+    max(12px, calc(env(safe-area-inset-top, 0px) + 10px))
+    14px
+    max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
   background: transparent;
 }
 
 .header {
-  grid-template-columns: 50px minmax(0, 1fr) 50px;
-  min-height: 48px;
-  align-items: center;
+  grid-template-columns: 74px minmax(0, 1fr) 74px;
+  min-height: 78px;
+  align-items: start;
 }
 
 .homeButton {
-  gap: 3px;
-  color: #1b2850;
-  font-size: 0.52rem;
-  font-weight: 800;
+  gap: 8px;
+  color: #24305c;
+  font-size: 0.9rem;
+  font-weight: 650;
 }
 
 .homeIconBox {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.94);
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
   box-shadow:
-    0 7px 15px rgba(64, 84, 128, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+    0 12px 26px rgba(64, 84, 128, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
 }
 
 .homeIconBox :global(.sf-home-menu-icon svg) {
-  width: 17px;
-  height: 17px;
+  width: 27px;
+  height: 27px;
   stroke-width: 3;
 }
 
 .brand {
-  gap: 5px;
-  padding-top: 0;
+  gap: 9px;
+  padding-top: 2px;
 }
 
 .brandLogo {
-  width: 22px !important;
-  height: 22px !important;
+  width: 44px !important;
+  height: 44px !important;
 }
 
 .brand strong {
-  font-size: 0.96rem;
-  line-height: 0.95;
+  font-size: 1.9rem;
+  line-height: 0.96;
 }
 
 .brand small {
-  margin-top: 2px;
-  font-size: 0.35rem;
+  margin-top: 5px;
+  font-size: 0.74rem;
 }
 
 .hero {
-  grid-template-columns: 42px minmax(0, 1fr);
-  column-gap: 10px;
-  min-height: 58px;
-  margin: 6px 0 8px;
-  padding: 0 7px;
+  grid-template-columns: 52px minmax(0, 1fr);
+  column-gap: 14px;
+  min-height: 77px;
+  margin: 18px 0 20px;
+  padding: 0 12px;
 }
 
 .heroIcon,
 .heroIcon svg {
-  width: 38px;
-  height: 38px;
+  width: 50px;
+  height: 50px;
 }
 
 .hero h1 {
-  font-size: 1.55rem;
+  font-size: 2.12rem;
   line-height: 1;
 }
 
 .hero p {
-  margin-top: 6px;
-  font-size: 0.66rem;
-  font-weight: 640;
-  line-height: 1.18;
+  margin-top: 10px;
+  color: #4d5d8b;
+  font-size: 0.98rem;
+  font-weight: 560;
+  line-height: 1.2;
 }
 
 .cardList {
-  gap: 8px;
+  gap: 10px;
 }
 
 .actionCard {
-  min-height: 166px;
-  border-radius: 13px;
+  min-height: 215px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 72% 50%, rgba(238, 244, 255, 0.86), transparent 38%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.99), rgba(248, 251, 255, 0.98));
   box-shadow:
-    0 8px 20px rgba(76, 98, 150, 0.07),
+    0 12px 28px rgba(76, 98, 150, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.98);
 }
 
+.libraryCard {
+  background:
+    radial-gradient(circle at 73% 52%, rgba(233, 255, 246, 0.92), transparent 38%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.99), rgba(246, 255, 251, 0.98));
+}
+
 .cardIcon {
-  top: 15px;
-  left: 15px;
-  width: 42px;
-  height: 42px;
-  box-shadow: 0 9px 18px rgba(47, 94, 238, 0.2);
+  top: 18px;
+  left: 18px;
+  width: 44px;
+  height: 44px;
+  box-shadow: 0 10px 22px rgba(47, 94, 238, 0.22);
 }
 
 .libraryCard .cardIcon {
-  box-shadow: 0 9px 18px rgba(55, 184, 115, 0.2);
+  box-shadow: 0 10px 22px rgba(55, 184, 115, 0.2);
 }
 
 .cardIcon svg {
-  width: 21px;
-  height: 21px;
+  width: 23px;
+  height: 23px;
 }
 
 .cardCopy {
-  max-width: 64%;
-  gap: 5px;
-  padding: 16px 0 0 68px;
+  position: absolute;
+  left: 68px;
+  top: 26px;
+  max-width: 54%;
+  gap: 8px;
+  padding: 0;
 }
 
 .cardCopy strong {
-  font-size: 1.02rem;
+  color: #071642;
+  font-size: 1.45rem;
   line-height: 1.04;
 }
 
 .cardCopy span {
-  font-size: 0.58rem;
-  font-weight: 620;
-  line-height: 1.18;
+  color: #4d5d8c;
+  font-size: 0.84rem;
+  font-weight: 560;
+  line-height: 1.22;
 }
 
 .featureList {
-  width: 148px;
-  gap: 6px;
-  margin: 18px 0 0 16px;
+  position: absolute;
+  left: 20px;
+  top: 82px;
+  width: 175px;
+  gap: 8px;
+  margin: 0;
 }
 
 .featureItem {
-  gap: 5px;
-  color: #263862;
-  font-size: 0.55rem;
-  font-weight: 700;
-  line-height: 1.08;
+  gap: 8px;
+  color: #30406f;
+  font-size: 0.83rem;
+  font-weight: 560;
+  line-height: 1.12;
 }
 
 .checkIcon {
-  width: 14px;
-  height: 14px;
-  box-shadow: none;
+  width: 18px;
+  height: 18px;
+  box-shadow: 0 6px 12px rgba(47, 94, 238, 0.16);
 }
 
 .checkIcon svg {
-  width: 10px;
-  height: 10px;
-}
-
-.cardButton {
-  left: 16px;
-  bottom: 12px;
-  min-width: 102px;
-  min-height: 30px;
-  gap: 8px;
-  border-radius: 7px;
-  font-size: 0.62rem;
-  font-weight: 900;
-  box-shadow: 0 8px 16px rgba(47, 94, 238, 0.18);
-}
-
-.greenButton {
-  min-width: 112px;
-  box-shadow: 0 8px 16px rgba(47, 182, 116, 0.17);
-}
-
-.cardButton svg {
   width: 13px;
   height: 13px;
 }
 
+.cardButton {
+  left: 20px;
+  bottom: 18px;
+  min-width: 154px;
+  min-height: 36px;
+  gap: 13px;
+  border-radius: 10px;
+  color: #ffffff !important;
+  font-size: 0.96rem;
+  font-weight: 850;
+  box-shadow: 0 12px 24px rgba(47, 94, 238, 0.22);
+}
+
+.cardButton span,
+.cardButton svg {
+  color: #ffffff !important;
+}
+
+.cardButton.blueButton {
+  background: linear-gradient(135deg, #4d7cff 0%, #2558f0 100%) !important;
+}
+
+.cardButton.greenButton {
+  min-width: 172px;
+  background: linear-gradient(135deg, #61cf93 0%, #2fb66f 100%) !important;
+  box-shadow: 0 12px 24px rgba(47, 182, 116, 0.2);
+}
+
+.cardButton svg {
+  width: 16px;
+  height: 16px;
+}
+
 .learnArt {
   top: 48px;
-  right: -3px;
-  width: 126px;
+  right: 0;
+  width: 166px;
 }
 
 .libraryArt {
-  top: 45px;
-  right: -4px;
-  width: 130px;
+  top: 48px;
+  right: -2px;
+  width: 170px;
 }
 
 .sparkle {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
 }
 
 .sparkle::before {
@@ -947,179 +977,263 @@
 }
 
 .sparkleOne {
-  right: 42px;
-  top: 47px;
+  right: 48px;
+  top: 50px;
 }
 
 .sparkleTwo {
-  right: 92px;
-  top: 68px;
+  right: 142px;
+  top: 92px;
 }
 
 .sparkleThree {
-  right: 42px;
-  top: 44px;
+  right: 54px;
+  top: 58px;
 }
 
 .sparkleFour {
-  right: 96px;
-  top: 94px;
+  right: 146px;
+  top: 132px;
 }
 
 .tipCard {
-  grid-template-columns: 28px minmax(0, 1fr);
-  column-gap: 8px;
-  min-height: 48px;
-  margin-top: 8px;
-  padding: 8px 12px;
-  border-radius: 9px;
+  grid-template-columns: 38px minmax(0, 1fr);
+  column-gap: 12px;
+  min-height: 39px;
+  margin-top: 14px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 255, 0.95));
   box-shadow:
-    0 7px 16px rgba(75, 96, 150, 0.05),
+    0 9px 20px rgba(75, 96, 150, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.98);
 }
 
 .tipIcon,
 .tipIcon svg {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
 }
 
 .tipCard h2 {
-  font-size: 0.66rem;
+  color: #4776ff;
+  font-size: 0.9rem;
   line-height: 1;
 }
 
 .tipCard p {
-  margin-top: 4px;
-  font-size: 0.5rem;
-  font-weight: 640;
+  margin-top: 5px;
+  color: #334274;
+  font-size: 0.76rem;
+  font-weight: 560;
   line-height: 1.22;
 }
 
-@media (min-width: 391px) {
+@media (max-width: 390px) {
   .phone {
     padding-right: 12px;
     padding-left: 12px;
   }
 
-  .actionCard {
-    min-height: 170px;
+  .header {
+    grid-template-columns: 66px minmax(0, 1fr) 42px;
+    min-height: 70px;
   }
 
-  .learnArt {
-    width: 136px;
+  .homeIconBox {
+    width: 44px;
+    height: 44px;
   }
 
-  .libraryArt {
-    width: 140px;
+  .homeButton {
+    gap: 6px;
+    font-size: 0.78rem;
   }
-}
 
-@media (max-width: 350px) {
-  .phone {
-    padding-right: 8px;
-    padding-left: 8px;
+  .brandLogo {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .brand strong {
+    font-size: 1.58rem;
+  }
+
+  .brand small {
+    font-size: 0.61rem;
+  }
+
+  .hero {
+    grid-template-columns: 48px minmax(0, 1fr);
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  .heroIcon,
+  .heroIcon svg {
+    width: 46px;
+    height: 46px;
   }
 
   .hero h1 {
-    font-size: 1.36rem;
+    font-size: 1.92rem;
+  }
+
+  .hero p {
+    font-size: 0.88rem;
   }
 
   .actionCard {
-    min-height: 158px;
+    min-height: 205px;
   }
 
-  .cardCopy {
-    max-width: 68%;
-    padding-left: 62px;
+  .learnArt {
+    right: -8px;
+    width: 152px;
+  }
+
+  .libraryArt {
+    right: -10px;
+    width: 156px;
   }
 
   .cardCopy strong {
-    font-size: 0.92rem;
+    font-size: 1.3rem;
+  }
+
+  .cardCopy span,
+  .featureItem {
+    font-size: 0.76rem;
+  }
+
+  .cardButton {
+    min-width: 142px;
+    font-size: 0.86rem;
+  }
+
+  .cardButton.greenButton {
+    min-width: 158px;
+  }
+}
+
+@media (max-width: 350px), (max-height: 680px) {
+  .header {
+    min-height: 62px;
+  }
+
+  .hero {
+    min-height: 64px;
+    margin-top: 10px;
+    margin-bottom: 12px;
+  }
+
+  .actionCard {
+    min-height: 190px;
+  }
+
+  .cardCopy {
+    left: 62px;
+    top: 22px;
   }
 
   .featureList {
-    width: 136px;
-    margin-top: 15px;
+    top: 76px;
+    width: 158px;
+    gap: 6px;
+  }
+
+  .featureItem {
+    font-size: 0.68rem;
   }
 
   .learnArt,
   .libraryArt {
-    width: 112px;
+    width: 138px;
   }
 
   .cardButton {
-    min-width: 96px;
-    font-size: 0.56rem;
+    bottom: 14px;
+    min-height: 32px;
+    min-width: 128px;
+    font-size: 0.76rem;
   }
 
-  .greenButton {
-    min-width: 104px;
-  }
-}
-
-@media (max-height: 620px) {
-  .header {
-    min-height: 42px;
-  }
-
-  .hero {
-    min-height: 48px;
-    margin-top: 3px;
-    margin-bottom: 6px;
-  }
-
-  .actionCard {
-    min-height: 148px;
-  }
-
-  .featureList {
-    gap: 4px;
-    margin-top: 12px;
-  }
-
-  .cardButton {
-    bottom: 9px;
+  .cardButton.greenButton {
+    min-width: 144px;
   }
 
   .tipCard {
-    min-height: 42px;
-    margin-top: 6px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    margin-top: 10px;
+    padding-block: 8px;
   }
 }
 
-:global(html[data-app-theme="dark"]) .page {
-  background: var(--app-bg-gradient);
-  color: var(--text-primary);
+:global(html[data-app-theme]) .page,
+:global(html[data-app-theme]) .phone {
+  background:
+    radial-gradient(circle at 12% 2%, rgba(220, 239, 255, 0.88), transparent 34%),
+    radial-gradient(circle at 72% 9%, rgba(232, 226, 255, 0.76), transparent 32%),
+    linear-gradient(180deg, #f8fcff 0%, #f7f8ff 54%, #f9fbff 100%) !important;
+  color: #071642 !important;
 }
 
-:global(html[data-app-theme="dark"]) .homeIconBox,
-:global(html[data-app-theme="dark"]) .actionCard,
-:global(html[data-app-theme="dark"]) .tipCard {
-  border-color: var(--border-color);
-  background: var(--card-bg);
-  color: var(--text-primary);
-  box-shadow:
-    0 16px 34px var(--shadow-color),
-    inset 0 1px 0 var(--theme-inset);
+:global(html[data-app-theme]) .homeIconBox,
+:global(html[data-app-theme]) .actionCard,
+:global(html[data-app-theme]) .tipCard {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.99), rgba(248, 251, 255, 0.98)) !important;
+  color: #071642 !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :global(html[data-app-theme="system"]) .page {
-    background: var(--app-bg-gradient);
-    color: var(--text-primary);
-  }
+:global(html[data-app-theme]) .learnCard {
+  background:
+    radial-gradient(circle at 72% 50%, rgba(238, 244, 255, 0.86), transparent 38%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.99), rgba(248, 251, 255, 0.98)) !important;
+}
 
-  :global(html[data-app-theme="system"]) .homeIconBox,
-  :global(html[data-app-theme="system"]) .actionCard,
-  :global(html[data-app-theme="system"]) .tipCard {
-    border-color: var(--border-color);
-    background: var(--card-bg);
-    color: var(--text-primary);
-    box-shadow:
-      0 16px 34px var(--shadow-color),
-      inset 0 1px 0 var(--theme-inset);
-  }
+:global(html[data-app-theme]) .libraryCard {
+  background:
+    radial-gradient(circle at 73% 52%, rgba(233, 255, 246, 0.92), transparent 38%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.99), rgba(246, 255, 251, 0.98)) !important;
+}
+
+:global(html[data-app-theme]) .homeButton,
+:global(html[data-app-theme]) .brand strong,
+:global(html[data-app-theme]) .hero h1,
+:global(html[data-app-theme]) .cardCopy strong {
+  color: #071642 !important;
+}
+
+:global(html[data-app-theme]) .hero p,
+:global(html[data-app-theme]) .cardCopy span,
+:global(html[data-app-theme]) .featureItem,
+:global(html[data-app-theme]) .tipCard p {
+  color: #4d5d8c !important;
+}
+
+:global(html[data-app-theme]) .brand small,
+:global(html[data-app-theme]) .tipCard h2 {
+  color: #8059f5 !important;
+}
+
+:global(html[data-app-theme]) .cardButton.blueButton {
+  background: linear-gradient(135deg, #4d7cff 0%, #2558f0 100%) !important;
+}
+
+:global(html[data-app-theme]) .cardButton.greenButton {
+  background: linear-gradient(135deg, #61cf93 0%, #2fb66f 100%) !important;
+}
+
+:global(html[data-app-theme]) .cardButton,
+:global(html[data-app-theme]) .cardButton svg {
+  color: #ffffff !important;
+}
+
+:global(html[data-app-theme]) .checkIcon {
+  background: linear-gradient(135deg, #5f8dff 0%, #315cef 100%) !important;
+  color: #ffffff !important;
+}
+
+:global(html[data-app-theme]) .libraryCard .checkIcon {
+  background: linear-gradient(135deg, #61cd91 0%, #3bb976 100%) !important;
 }

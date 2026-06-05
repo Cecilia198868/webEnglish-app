@@ -29,7 +29,6 @@ type AccountSubscriptionResponse = {
 type AccountPanelId =
   | "aboutSpeakFlow"
   | "accountManagement"
-  | "displaySettings"
   | "helpCenter"
   | "interfaceLanguage"
   | "manageSubscription"
@@ -37,6 +36,7 @@ type AccountPanelId =
   | "referrals"
   | "reportIssue"
   | "subscription"
+  | "textSize"
   | "voice";
 
 type ReferralAccountState = {
@@ -98,35 +98,11 @@ type RowProps = {
 };
 
 type ProFeatureIconName = "bookmark" | "cloud" | "graduation" | "infinity";
-type DisplayTheme = "system" | "light" | "dark";
 type DisplayFontSize = "small" | "standard" | "large";
 
 const accountAvatarStoragePrefix = "speakflow-account-avatar";
 const accountPageUrl = (panel: string) => `/account?panel=${panel}`;
-const appearancePreferenceStorageKey = "speakflow-appearance-preference";
 const fontSizePreferenceStorageKey = "speakflow-font-size-preference";
-
-const displayThemeOptions: Array<{
-  description: string;
-  label: string;
-  value: DisplayTheme;
-}> = [
-  {
-    description: "跟随手机或电脑的系统设置",
-    label: "跟随系统",
-    value: "system",
-  },
-  {
-    description: "清爽明亮，适合白天使用",
-    label: "浅色屏幕",
-    value: "light",
-  },
-  {
-    description: "降低眩光，适合夜间练习",
-    label: "深色屏幕",
-    value: "dark",
-  },
-];
 
 const displayFontSizeOptions: Array<{
   description: string;
@@ -153,7 +129,6 @@ const displayFontSizeOptions: Array<{
 const accountPanelTitles: Record<AccountPanelId, { eyebrow: string; title: string }> = {
   aboutSpeakFlow: { eyebrow: "关于", title: "关于 SpeakFlow" },
   accountManagement: { eyebrow: "账户", title: "账号管理" },
-  displaySettings: { eyebrow: "学习体验", title: "显示设置" },
   helpCenter: { eyebrow: "帮助", title: "帮助中心" },
   interfaceLanguage: { eyebrow: "学习体验", title: "界面语言" },
   manageSubscription: { eyebrow: "订阅", title: "管理订阅" },
@@ -161,6 +136,7 @@ const accountPanelTitles: Record<AccountPanelId, { eyebrow: string; title: strin
   referrals: { eyebrow: "会员奖励", title: "邀请好友" },
   reportIssue: { eyebrow: "帮助", title: "联系与反馈" },
   subscription: { eyebrow: "会员", title: "SpeakFlow Pro" },
+  textSize: { eyebrow: "学习体验", title: "文字大小" },
   voice: { eyebrow: "学习体验", title: "声音" },
 };
 
@@ -233,22 +209,12 @@ const helpSections = [
 
 const selectedVoiceStorageKey = "speakflow-selected-voice-uri";
 
-function isDisplayTheme(value: string | null): value is DisplayTheme {
-  return value === "system" || value === "light" || value === "dark";
-}
-
-function resolveDisplayThemePreference(value: DisplayTheme): "light" | "dark" {
-  if (value !== "system") return value;
-
-  if (typeof window === "undefined") return "light";
-
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-}
-
 function isDisplayFontSize(value: string | null): value is DisplayFontSize {
   return value === "small" || value === "standard" || value === "large";
+}
+
+function isTextSizePanel(value: string) {
+  return value === "textSize" || value === "displaySettings";
 }
 
 function isAccountPanelId(value: string): value is AccountPanelId {
@@ -681,7 +647,6 @@ export default function AccountPageClient({
     useState<AccountSubscriptionResponse | null | undefined>(undefined);
   const [isProSuccessDismissed, setIsProSuccessDismissed] = useState(false);
   const [activePanel, setActivePanel] = useState(initialPanel);
-  const [displayTheme, setDisplayTheme] = useState<DisplayTheme>("system");
   const [displayFontSize, setDisplayFontSize] =
     useState<DisplayFontSize>("standard");
   const [displayPreferencesLoaded, setDisplayPreferencesLoaded] =
@@ -739,12 +704,7 @@ export default function AccountPageClient({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const savedTheme = window.localStorage.getItem(appearancePreferenceStorageKey);
     const savedFontSize = window.localStorage.getItem(fontSizePreferenceStorageKey);
-
-    if (isDisplayTheme(savedTheme)) {
-      setDisplayTheme(savedTheme);
-    }
 
     if (isDisplayFontSize(savedFontSize)) {
       setDisplayFontSize(savedFontSize);
@@ -756,36 +716,9 @@ export default function AccountPageClient({
   useEffect(() => {
     if (typeof window === "undefined" || !displayPreferencesLoaded) return;
 
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const applyTheme = () => {
-      document.documentElement.dataset.appTheme =
-        resolveDisplayThemePreference(displayTheme);
-      document.documentElement.dataset.speakflowTheme = displayTheme;
-      document.documentElement.dataset.appThemePreference = displayTheme;
-    };
-
-    applyTheme();
-    window.localStorage.setItem(appearancePreferenceStorageKey, displayTheme);
-
-    if (displayTheme !== "system") return;
-
-    media.addEventListener("change", applyTheme);
-
-    return () => {
-      media.removeEventListener("change", applyTheme);
-    };
-  }, [displayPreferencesLoaded, displayTheme]);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !displayPreferencesLoaded) return;
-
     document.documentElement.dataset.speakflowFontSize = displayFontSize;
     window.localStorage.setItem(fontSizePreferenceStorageKey, displayFontSize);
   }, [displayFontSize, displayPreferencesLoaded]);
-
-  function updateDisplayTheme(value: DisplayTheme) {
-    setDisplayTheme(value);
-  }
 
   function updateDisplayFontSize(value: DisplayFontSize) {
     setDisplayFontSize(value);
@@ -1099,10 +1032,10 @@ export default function AccountPageClient({
     }
   }
 
-  if (activePanel === "displaySettings") {
+  if (isTextSizePanel(activePanel)) {
     return (
       <main className={styles.page}>
-        <section className={`${styles.phone} ${styles.settingsPhone}`} aria-label="显示设置">
+        <section className={`${styles.phone} ${styles.settingsPhone}`} aria-label="文字大小">
           <header className={styles.settingsHeader}>
             <button
               type="button"
@@ -1114,39 +1047,12 @@ export default function AccountPageClient({
             </button>
             <div className={styles.settingsTitle}>
               <p>学习体验</p>
-              <h1>显示设置</h1>
+              <h1>文字大小</h1>
             </div>
           </header>
 
-          <section className={styles.settingsSection} aria-labelledby="display-theme-title">
-            <h2 id="display-theme-title">屏幕模式</h2>
-            <div className={styles.themeChoiceGrid}>
-              {displayThemeOptions.map((option) => (
-                <button
-                  type="button"
-                  key={option.value}
-                  className={styles.themeChoice}
-                  data-selected={displayTheme === option.value}
-                  onClick={() => updateDisplayTheme(option.value)}
-                >
-                  <span
-                    className={styles.themePreview}
-                    data-theme-preview={option.value}
-                    aria-hidden="true"
-                  >
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                  <strong>{option.label}</strong>
-                  <small>{option.description}</small>
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <section className={styles.settingsSection} aria-labelledby="display-font-title">
-            <h2 id="display-font-title">文字大小</h2>
+          <section className={styles.settingsSection} aria-labelledby="text-size-title">
+            <h2 id="text-size-title">选择文字大小</h2>
             <div className={styles.optionStack}>
               {displayFontSizeOptions.map((option) => (
                 <button
@@ -1169,9 +1075,9 @@ export default function AccountPageClient({
           </section>
 
           <section className={styles.settingsNote}>
-            <MenuIcon name="display" />
+            <MenuIcon name="text" />
             <p>
-              设置会保存在这台设备上，并同步影响首页、学习页、表达库、账户页和弹窗。
+              这个选择会保存在这台设备上，并同步影响首页、学习页、表达库、账户页和弹窗。
             </p>
           </section>
         </section>
@@ -1180,7 +1086,7 @@ export default function AccountPageClient({
   }
 
   const secondaryPanel =
-    isAccountPanelId(activePanel) && activePanel !== "displaySettings"
+    isAccountPanelId(activePanel) && !isTextSizePanel(activePanel)
       ? activePanel
       : null;
 
@@ -1299,7 +1205,7 @@ export default function AccountPageClient({
                   <p className={styles.copyBox}>{referralState.inviteLink}</p>
                   <button
                     type="button"
-                    className={styles.primaryAction}
+                    className={`${styles.primaryAction} ${styles.inviteCopyAction}`}
                     onClick={() => void copyReferralInviteLink()}
                   >
                     复制邀请链接
@@ -1580,7 +1486,7 @@ export default function AccountPageClient({
 
           <button
             type="submit"
-            className={styles.primaryAction}
+            className={`${styles.primaryAction} ${styles.feedbackSubmitAction}`}
             disabled={feedbackStatus === "submitting"}
           >
             {feedbackStatus === "submitting" ? "正在发送..." : "发送反馈"}
@@ -1714,9 +1620,9 @@ export default function AccountPageClient({
         <Section title="学习体验">
           <Row href={accountPageUrl("voice")} icon="headphones" label="声音" />
           <Row
-            href={accountPageUrl("displaySettings")}
-            icon="display"
-            label="显示设置"
+            href={accountPageUrl("textSize")}
+            icon="text"
+            label="文字大小"
           />
           <Row
             href={accountPageUrl("interfaceLanguage")}

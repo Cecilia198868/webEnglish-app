@@ -193,7 +193,6 @@ function LessonCard({
       <span className={styles.iconTile}>
         <LessonIcon type={lesson.icon} />
       </span>
-      <span className={styles.numberBadge}>{lesson.number}</span>
       <span className={styles.lessonTitle}>{lesson.title}</span>
       {isLocked ? (
         <span className={styles.lockBadge}>
@@ -257,6 +256,7 @@ export default function FinanceGovernmentSectionMenuPage({
             href={backToFinanceMenuHref}
           >
             <BackIcon />
+            <span>返回上一级</span>
           </Link>
           <h1 className={styles.title} id="finance-section-title">
             {section.title}

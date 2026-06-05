@@ -113,6 +113,7 @@ const GUEST_FULL_CLASSIC_LESSON_IDS = new Set([
   "tax_form_1040_filing_zh",
 ]);
 const GUEST_CLASSIC_SENTENCE_LIMIT = 5;
+const CLASSIC_RECORDING_SILENCE_DELAY_MS = 4800;
 function isClassicSceneLessonId(lessonId: string) {
   return (
     lessonId.startsWith("bank_") ||
@@ -235,84 +236,122 @@ function getClassicSectionLessonSequence(lessonId: string) {
   );
 }
 
+type ClassicStudySectionSummary = {
+  id: string;
+  lessons: ReadonlyArray<{
+    id?: string;
+    title: string;
+  }>;
+  title: string;
+};
+
+type ClassicStudyCategoryTarget = {
+  categoryLabel: string;
+  id: string;
+  title: string;
+};
+
+function getFirstStudyLessonTarget(
+  section: ClassicStudySectionSummary
+): ClassicStudyCategoryTarget | null {
+  const firstLesson = section.lessons.find(
+    (item) => typeof item.id === "string" && item.id.length > 0
+  );
+
+  if (!firstLesson?.id) {
+    return null;
+  }
+
+  return {
+    categoryLabel: section.title,
+    id: firstLesson.id,
+    title: firstLesson.title,
+  };
+}
+
+function createClassicStudyNavigationForSections(
+  lessonId: string,
+  baseHref: string,
+  sections: ClassicStudySectionSummary[]
+) {
+  const currentIndex = sections.findIndex((section) =>
+    section.lessons.some((item) => item.id === lessonId)
+  );
+
+  if (currentIndex < 0) {
+    return null;
+  }
+
+  const currentSection = sections[currentIndex];
+
+  return {
+    categoryHref: `${baseHref}/${currentSection.id}`,
+    categoryLabel: currentSection.title,
+    courseMenuHref: "/classic-scenes",
+    nextCategoryLesson:
+      currentIndex < sections.length - 1
+        ? getFirstStudyLessonTarget(sections[currentIndex + 1])
+        : null,
+    previousCategoryLesson:
+      currentIndex > 0
+        ? getFirstStudyLessonTarget(sections[currentIndex - 1])
+        : null,
+  };
+}
+
 function getClassicStudyNavigation(lessonId: string) {
-  const financeSection = getClassicFinanceSectionForLesson(lessonId);
-  const shoppingSection = getClassicShoppingSectionForLesson(lessonId);
-  const restaurantSection = getClassicRestaurantSectionForLesson(lessonId);
-  const serviceSection = getClassicServiceSectionForLesson(lessonId);
-  const healthSection = getClassicHealthSectionForLesson(lessonId);
-  const transportationSection = getClassicTransportationSectionForLesson(lessonId);
-  const educationSection = getClassicEducationSectionForLesson(lessonId);
-  const housingSection = getClassicHousingSectionForLesson(lessonId);
+  const navigation =
+    createClassicStudyNavigationForSections(
+      lessonId,
+      "/classic-scenes/finance-government",
+      Object.values(financeGovernmentSections)
+    ) ||
+    createClassicStudyNavigationForSections(
+      lessonId,
+      "/classic-scenes/shopping-consumption",
+      Object.values(shoppingSceneSectionMenus)
+    ) ||
+    createClassicStudyNavigationForSections(
+      lessonId,
+      "/classic-scenes/restaurant-takeout",
+      Object.values(restaurantSceneSectionMenus)
+    ) ||
+    createClassicStudyNavigationForSections(
+      lessonId,
+      "/classic-scenes/service-repair",
+      Object.values(serviceSceneSectionMenus)
+    ) ||
+    createClassicStudyNavigationForSections(
+      lessonId,
+      "/classic-scenes/health-medical",
+      Object.values(healthSceneSectionMenus)
+    ) ||
+    createClassicStudyNavigationForSections(
+      lessonId,
+      "/classic-scenes/transportation-travel",
+      Object.values(transportationSceneSectionMenus)
+    ) ||
+    createClassicStudyNavigationForSections(
+      lessonId,
+      "/classic-scenes/education-work-social",
+      Object.values(educationSceneSectionMenus)
+    ) ||
+    createClassicStudyNavigationForSections(
+      lessonId,
+      "/classic-scenes/housing-home",
+      Object.values(housingSceneSectionMenus)
+    );
 
-  if (financeSection) {
-    return {
-      categoryHref: `/classic-scenes/finance-government/${financeSection.id}`,
-      categoryLabel: financeSection.title,
-      courseMenuHref: "/classic-scenes",
-    };
-  }
-
-  if (shoppingSection) {
-    return {
-      categoryHref: `/classic-scenes/shopping-consumption/${shoppingSection.id}`,
-      categoryLabel: shoppingSection.title,
-      courseMenuHref: "/classic-scenes",
-    };
-  }
-
-  if (restaurantSection) {
-    return {
-      categoryHref: `/classic-scenes/restaurant-takeout/${restaurantSection.id}`,
-      categoryLabel: restaurantSection.title,
-      courseMenuHref: "/classic-scenes",
-    };
-  }
-
-  if (serviceSection) {
-    return {
-      categoryHref: `/classic-scenes/service-repair/${serviceSection.id}`,
-      categoryLabel: serviceSection.title,
-      courseMenuHref: "/classic-scenes",
-    };
-  }
-
-  if (healthSection) {
-    return {
-      categoryHref: `/classic-scenes/health-medical/${healthSection.id}`,
-      categoryLabel: healthSection.title,
-      courseMenuHref: "/classic-scenes",
-    };
-  }
-
-  if (transportationSection) {
-    return {
-      categoryHref: `/classic-scenes/transportation-travel/${transportationSection.id}`,
-      categoryLabel: transportationSection.title,
-      courseMenuHref: "/classic-scenes",
-    };
-  }
-
-  if (educationSection) {
-    return {
-      categoryHref: `/classic-scenes/education-work-social/${educationSection.id}`,
-      categoryLabel: educationSection.title,
-      courseMenuHref: "/classic-scenes",
-    };
-  }
-
-  if (housingSection) {
-    return {
-      categoryHref: `/classic-scenes/housing-home/${housingSection.id}`,
-      categoryLabel: housingSection.title,
-      courseMenuHref: "/classic-scenes",
-    };
+  if (navigation) {
+    return navigation;
   }
 
   return {
     categoryHref: "/classic-scenes",
     categoryLabel: "经典场景口语练习",
     courseMenuHref: "/classic-scenes",
+    nextCategoryLesson: null,
+    previousCategoryLesson: null,
   };
 }
 const expressionVariantLabels: Array<{
@@ -546,6 +585,14 @@ function ArrowRightIcon() {
   return (
     <svg aria-hidden="true" focusable="false" viewBox="0 0 32 32">
       <path d="m13 8 8 8-8 8M4 16h16" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+      <path d="m7 9 5 5 5-5" />
     </svg>
   );
 }
@@ -790,6 +837,7 @@ export default function StudyPage() {
   const [isClipPlaying, setIsClipPlaying] = useState(false);
   const [isSequencePlaying, setIsSequencePlaying] = useState(false);
   const [sourcePlaybackRate, setSourcePlaybackRate] = useState(1);
+  const [followReadRate, setFollowReadRate] = useState(0.5);
 
   const [prepSeconds, setPrepSeconds] = useState(2);
   const [gapSeconds, setGapSeconds] = useState(1);
@@ -1181,6 +1229,14 @@ export default function StudyPage() {
   ) {
     setSelectedExpressionIndex(variantIndex);
     speakEnglish(variant.text, rate);
+  }
+
+  function cycleFollowReadRate() {
+    setFollowReadRate((currentRate) => {
+      if (currentRate < 0.75) return 0.75;
+      if (currentRate < 1) return 1;
+      return 0.5;
+    });
   }
 
   function moveToSentence(index: number) {
@@ -1896,7 +1952,7 @@ export default function StudyPage() {
     speechBufferRef.current = "";
     setLiveTranscript("");
     setShowEnglish(false);
-    setMessage("");
+    setMessage("正在听，请慢慢说完整");
     const practiceIndex = currentIndex;
 
     const recognition = new RecognitionConstructor();
@@ -1912,12 +1968,16 @@ export default function StudyPage() {
         .filter(Boolean);
       const transcript = transcripts.join(" ").trim();
 
+      if (!transcript) {
+        return;
+      }
+
       setLiveTranscript(transcript);
       speechBufferRef.current = transcript;
       clearSpeechSilenceTimer();
       speechSilenceTimerRef.current = window.setTimeout(() => {
         stopEnglishRecognition();
-      }, 1300);
+      }, CLASSIC_RECORDING_SILENCE_DELAY_MS);
     };
 
     recognition.onerror = () => {
@@ -1933,6 +1993,8 @@ export default function StudyPage() {
       if (finalTranscript) {
         setSpokenEnglish(finalTranscript);
         markCurrentSentenceCompleted(practiceIndex);
+      } else {
+        setMessage("没有听清，请再试一次");
       }
       setLiveTranscript("");
       setIsListening(false);
@@ -1993,14 +2055,11 @@ export default function StudyPage() {
   const lessonSequenceIndex = lessonSequence.findIndex(
     (record) => record.id === lessonId
   );
-  const disableGuestClassicNeighborLessons =
-    accountAccessKind === "guest" && isClassicSceneLessonId(lessonId);
   const previousLesson =
-    !disableGuestClassicNeighborLessons && lessonSequenceIndex > 0
+    lessonSequenceIndex > 0
       ? lessonSequence[lessonSequenceIndex - 1]
       : null;
   const nextLesson =
-    !disableGuestClassicNeighborLessons &&
     lessonSequenceIndex >= 0 &&
     lessonSequenceIndex < lessonSequence.length - 1
       ? lessonSequence[lessonSequenceIndex + 1]
@@ -2259,13 +2318,51 @@ export default function StudyPage() {
             </span>
 
             <div className={styles.topicCopy}>
-              <button
-                type="button"
-                className={styles.categoryPill}
-                onClick={() => router.push(classicStudyNavigation.categoryHref)}
-              >
-                {classicStudyNavigation.categoryLabel}
-              </button>
+              <div className={styles.categorySwitchRow}>
+                <button
+                  type="button"
+                  className={styles.categoryArrowButton}
+                  onClick={() => {
+                    if (classicStudyNavigation.previousCategoryLesson) {
+                      openNeighborLesson(
+                        classicStudyNavigation.previousCategoryLesson
+                      );
+                    }
+                  }}
+                  disabled={!classicStudyNavigation.previousCategoryLesson}
+                  aria-label={
+                    classicStudyNavigation.previousCategoryLesson
+                      ? `上一个二级菜单：${classicStudyNavigation.previousCategoryLesson.categoryLabel}`
+                      : "已经是第一个二级菜单"
+                  }
+                >
+                  <ArrowLeftIcon />
+                </button>
+                <button
+                  type="button"
+                  className={styles.categoryPill}
+                  onClick={() => router.push(classicStudyNavigation.categoryHref)}
+                >
+                  {classicStudyNavigation.categoryLabel}
+                </button>
+                <button
+                  type="button"
+                  className={styles.categoryArrowButton}
+                  onClick={() => {
+                    if (classicStudyNavigation.nextCategoryLesson) {
+                      openNeighborLesson(classicStudyNavigation.nextCategoryLesson);
+                    }
+                  }}
+                  disabled={!classicStudyNavigation.nextCategoryLesson}
+                  aria-label={
+                    classicStudyNavigation.nextCategoryLesson
+                      ? `下一个二级菜单：${classicStudyNavigation.nextCategoryLesson.categoryLabel}`
+                      : "已经是最后一个二级菜单"
+                  }
+                >
+                  <ArrowRightIcon />
+                </button>
+              </div>
               <div className={styles.topicTitleRow}>
                 <button
                   type="button"
@@ -2438,7 +2535,7 @@ export default function StudyPage() {
 
           <p className={styles.micHint}>
             {isListening
-              ? "再次点击麦克风结束录音"
+              ? "正在录音，系统会等你说完后进入下一页"
               : message || "点击麦克风开始练习"}
           </p>
 
@@ -2517,13 +2614,51 @@ export default function StudyPage() {
             </span>
 
             <div className={styles.topicCopy}>
-              <button
-                type="button"
-                className={styles.categoryPill}
-                onClick={() => router.push(classicStudyNavigation.categoryHref)}
-              >
-                {classicStudyNavigation.categoryLabel}
-              </button>
+              <div className={styles.categorySwitchRow}>
+                <button
+                  type="button"
+                  className={styles.categoryArrowButton}
+                  onClick={() => {
+                    if (classicStudyNavigation.previousCategoryLesson) {
+                      openNeighborLesson(
+                        classicStudyNavigation.previousCategoryLesson
+                      );
+                    }
+                  }}
+                  disabled={!classicStudyNavigation.previousCategoryLesson}
+                  aria-label={
+                    classicStudyNavigation.previousCategoryLesson
+                      ? `上一个二级菜单：${classicStudyNavigation.previousCategoryLesson.categoryLabel}`
+                      : "已经是第一个二级菜单"
+                  }
+                >
+                  <ArrowLeftIcon />
+                </button>
+                <button
+                  type="button"
+                  className={styles.categoryPill}
+                  onClick={() => router.push(classicStudyNavigation.categoryHref)}
+                >
+                  {classicStudyNavigation.categoryLabel}
+                </button>
+                <button
+                  type="button"
+                  className={styles.categoryArrowButton}
+                  onClick={() => {
+                    if (classicStudyNavigation.nextCategoryLesson) {
+                      openNeighborLesson(classicStudyNavigation.nextCategoryLesson);
+                    }
+                  }}
+                  disabled={!classicStudyNavigation.nextCategoryLesson}
+                  aria-label={
+                    classicStudyNavigation.nextCategoryLesson
+                      ? `下一个二级菜单：${classicStudyNavigation.nextCategoryLesson.categoryLabel}`
+                      : "已经是最后一个二级菜单"
+                  }
+                >
+                  <ArrowRightIcon />
+                </button>
+              </div>
               <div className={styles.topicTitleRow}>
                 <button
                   type="button"
@@ -2694,7 +2829,7 @@ export default function StudyPage() {
               <button
                 type="button"
                 className={styles.slowReadButton}
-                onClick={() => speakEnglish(selectedReadText, 0.5)}
+                onClick={() => speakEnglish(selectedReadText, followReadRate)}
                 aria-label="播放指定句子的慢速朗读"
               >
                 <HeadphonesIcon />
@@ -2725,7 +2860,15 @@ export default function StudyPage() {
                   <span className={styles.micPulseTwo} />
                   <BigMicIcon />
                 </button>
-                <span className={styles.followMicLabel}>跟读录音</span>
+                <button
+                  type="button"
+                  className={styles.followSpeedButton}
+                  onClick={cycleFollowReadRate}
+                  aria-label={`切换跟读速度，当前 ${followReadRate}x`}
+                >
+                  <span>速度：{followReadRate}x</span>
+                  <ChevronDownIcon />
+                </button>
               </div>
 
               <button
