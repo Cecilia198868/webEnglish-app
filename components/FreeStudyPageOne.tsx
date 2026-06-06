@@ -207,17 +207,17 @@ export default function FreeStudyPageOne({
           position: relative;
           min-height: 100%;
           isolation: isolate;
-          padding: calc(env(safe-area-inset-top, 0px) + 1.45rem) clamp(1.35rem, 5vw, 1.85rem)
-            calc(env(safe-area-inset-bottom, 0px) + 1.55rem);
+          padding: calc(env(safe-area-inset-top, 0px) + 1.18rem) clamp(1.15rem, 4.8vw, 1.65rem)
+            calc(env(safe-area-inset-bottom, 0px) + 1.28rem);
         }
 
         .sf-free-start-frame::before {
           content: "";
           position: absolute;
           left: 50%;
-          top: 13.5%;
+          top: 11.2%;
           z-index: -1;
-          width: min(45rem, 118vw);
+          width: min(39rem, 112vw);
           aspect-ratio: 1;
           transform: translateX(-50%);
           border-radius: 50%;
@@ -230,9 +230,9 @@ export default function FreeStudyPageOne({
 
         .sf-free-start-header {
           display: grid;
-          grid-template-columns: 3.55rem minmax(0, 1fr) 3.55rem;
+          grid-template-columns: 3.25rem minmax(0, 1fr) 3.25rem;
           align-items: center;
-          gap: .72rem;
+          gap: .55rem;
         }
 
         .sf-free-start-home,
@@ -250,8 +250,8 @@ export default function FreeStudyPageOne({
 
         .sf-free-start-home,
         .sf-free-start-help {
-          width: 3.55rem;
-          height: 3.55rem;
+          width: 3.25rem;
+          height: 3.25rem;
         }
 
         .sf-free-start-help {
@@ -263,8 +263,8 @@ export default function FreeStudyPageOne({
 
         .sf-free-start-home .sf-home-menu-icon,
         .sf-free-start-home .sf-home-menu-icon svg {
-          width: 2.12rem;
-          height: 2.12rem;
+          width: 1.92rem;
+          height: 1.92rem;
           color: currentColor;
         }
 
@@ -272,23 +272,23 @@ export default function FreeStudyPageOne({
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: .78rem;
+          gap: .58rem;
           min-width: 0;
         }
 
         .sf-free-start-logo {
           display: grid;
-          width: 3.65rem;
-          height: 3.65rem;
+          width: 3.1rem;
+          height: 3.1rem;
           place-items: center;
-          border-radius: 1.1rem;
+          border-radius: .92rem;
           background: rgba(255,255,255,.94);
           box-shadow: 0 18px 30px rgba(119,76,205,.14);
         }
 
         .sf-free-start-logo svg {
-          width: 2.6rem;
-          height: 2.6rem;
+          width: 2.26rem;
+          height: 2.26rem;
         }
 
         .sf-free-start-brand-copy {
@@ -299,24 +299,26 @@ export default function FreeStudyPageOne({
 
         .sf-free-start-brand-title {
           color: #0b1244;
-          font-size: clamp(2rem, 8.5vw, 2.85rem);
+          font-size: clamp(1.72rem, 7vw, 2.32rem);
           font-weight: 950;
-          line-height: .92;
+          line-height: .94;
           letter-spacing: 0;
+          white-space: nowrap;
         }
 
         .sf-free-start-brand-subtitle {
-          margin-top: .45rem;
+          margin-top: .32rem;
           color: #8a59ef;
-          font-size: clamp(.72rem, 3vw, .98rem);
+          font-size: clamp(.58rem, 2.55vw, .78rem);
           font-weight: 850;
           line-height: 1;
-          letter-spacing: .08em;
+          letter-spacing: .075em;
+          white-space: nowrap;
         }
 
         .sf-free-start-hero {
           position: relative;
-          margin-top: clamp(4rem, 11dvh, 6.2rem);
+          margin-top: clamp(2.6rem, 6.8dvh, 4.1rem);
           text-align: center;
         }
 
@@ -345,7 +347,7 @@ export default function FreeStudyPageOne({
           background: linear-gradient(94deg, #101342 0%, #101342 33%, #7b52dc 71%, #925af0 100%);
           -webkit-background-clip: text;
           background-clip: text;
-          font-size: clamp(4.08rem, 17vw, 5.95rem);
+          font-size: clamp(3.18rem, 13.6vw, 4.55rem);
           font-weight: 950;
           letter-spacing: 0;
           line-height: .97;
@@ -353,15 +355,15 @@ export default function FreeStudyPageOne({
         }
 
         .sf-free-start-page.is-recording .sf-free-start-title {
-          font-size: clamp(3.18rem, 13.4vw, 4.86rem);
+          font-size: clamp(2.45rem, 10vw, 3.42rem);
         }
 
         .sf-free-start-subtitle {
-          margin: 1.05rem 0 0;
+          margin: .86rem 0 0;
           color: rgba(37,39,83,.62);
-          font-size: clamp(1.28rem, 5.4vw, 1.9rem);
+          font-size: clamp(1.04rem, 4.5vw, 1.52rem);
           font-weight: 700;
-          line-height: 1.45;
+          line-height: 1.38;
         }
 
         .sf-free-start-subtitle span {
@@ -372,16 +374,16 @@ export default function FreeStudyPageOne({
           display: none;
           align-items: center;
           justify-content: center;
-          gap: .5rem;
-          margin-top: 1.2rem;
+          gap: .42rem;
+          margin-top: .9rem;
           color: #8353ef;
-          font-size: 1.12rem;
+          font-size: 1rem;
           font-weight: 900;
         }
 
         .sf-free-start-recording-pill svg {
-          width: 1.6rem;
-          height: 1.6rem;
+          width: 1.35rem;
+          height: 1.35rem;
           stroke: currentColor;
           stroke-width: 3.8;
           stroke-linecap: round;
@@ -395,14 +397,14 @@ export default function FreeStudyPageOne({
           position: relative;
           display: grid;
           place-items: center;
-          margin-top: clamp(2.3rem, 5.6dvh, 3.55rem);
+          margin-top: clamp(1.65rem, 3.8dvh, 2.55rem);
         }
 
         .sf-free-start-mic-area::before,
         .sf-free-start-mic-area::after {
           content: "";
           position: absolute;
-          width: min(24rem, 86vw);
+          width: min(21rem, 76vw);
           aspect-ratio: 1;
           border-radius: 50%;
           border: 1px solid rgba(255,255,255,.74);
@@ -410,7 +412,7 @@ export default function FreeStudyPageOne({
         }
 
         .sf-free-start-mic-area::after {
-          width: min(20rem, 72vw);
+          width: min(17.6rem, 64vw);
           opacity: .7;
         }
 
@@ -418,7 +420,7 @@ export default function FreeStudyPageOne({
           position: relative;
           z-index: 2;
           display: grid;
-          width: clamp(13.6rem, 58vw, 17.2rem);
+          width: clamp(10.95rem, 47vw, 13.25rem);
           aspect-ratio: 1;
           place-items: center;
           border: 4px solid rgba(255,255,255,.92);
@@ -426,18 +428,18 @@ export default function FreeStudyPageOne({
           background: linear-gradient(135deg, #f0a3ff 0%, #ac64f2 48%, #7556f4 100%);
           color: white;
           box-shadow:
-            0 22px 42px rgba(126,82,234,.24),
-            0 0 0 1.3rem rgba(255,255,255,.14),
-            0 0 0 2.65rem rgba(255,255,255,.09);
+            0 20px 38px rgba(126,82,234,.22),
+            0 0 0 1.05rem rgba(255,255,255,.14),
+            0 0 0 2.15rem rgba(255,255,255,.09);
           cursor: pointer;
         }
 
         .sf-free-start-page.is-recording .sf-free-start-mic {
           box-shadow:
-            0 25px 46px rgba(126,82,234,.26),
-            0 0 0 1.25rem rgba(255,255,255,.18),
-            0 0 0 2.55rem rgba(160,94,244,.12),
-            0 0 0 4.1rem rgba(255,255,255,.08);
+            0 23px 42px rgba(126,82,234,.26),
+            0 0 0 1.05rem rgba(255,255,255,.18),
+            0 0 0 2.05rem rgba(160,94,244,.12),
+            0 0 0 3.25rem rgba(255,255,255,.08);
         }
 
         .sf-free-start-mic svg {
@@ -449,13 +451,22 @@ export default function FreeStudyPageOne({
           stroke-linecap: round;
         }
 
+        .sf-free-start-mic svg path,
+        .sf-free-start-mic svg rect {
+          fill: none;
+          stroke: #fff;
+          stroke-width: 3.7;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
         .sf-free-start-wave-bars {
           position: absolute;
           left: 50%;
           top: 50%;
           z-index: 1;
           display: none;
-          width: min(32rem, 108vw);
+          width: min(29rem, 104vw);
           transform: translate(-50%, -50%);
           justify-content: space-between;
           pointer-events: none;
@@ -473,7 +484,7 @@ export default function FreeStudyPageOne({
         }
 
         .sf-free-start-wave-group span {
-          width: .42rem;
+          width: .36rem;
           border-radius: 999px;
           background: linear-gradient(180deg, #ad7cff, #7b55eb);
           animation: sf-free-start-wave 1s ease-in-out infinite alternate;
@@ -528,14 +539,14 @@ export default function FreeStudyPageOne({
           justify-content: center;
           gap: .78rem;
           width: min(100%, 22.2rem);
-          min-height: 3.22rem;
-          margin: clamp(2.05rem, 4.6dvh, 3.2rem) auto 0;
+          min-height: 3.02rem;
+          margin: clamp(1.45rem, 3.3dvh, 2.15rem) auto 0;
           border: 1px solid rgba(255,255,255,.76);
           border-radius: 999px;
           background: rgba(255,255,255,.42);
           color: rgba(39,42,91,.68);
           box-shadow: 0 12px 26px rgba(114,82,180,.08), inset 0 1px 0 rgba(255,255,255,.86);
-          font-size: clamp(1rem, 4.2vw, 1.28rem);
+          font-size: clamp(.94rem, 3.85vw, 1.16rem);
           font-weight: 750;
           letter-spacing: 0;
           cursor: pointer;
@@ -573,7 +584,7 @@ export default function FreeStudyPageOne({
           gap: .55rem;
           margin: 1.05rem 0 0;
           color: rgba(58,58,101,.72);
-          font-size: clamp(.95rem, 4vw, 1.25rem);
+          font-size: clamp(.9rem, 3.7vw, 1.12rem);
           font-weight: 650;
         }
 
@@ -592,7 +603,7 @@ export default function FreeStudyPageOne({
 
         .sf-free-start-help-card,
         .sf-free-start-small-tip {
-          margin-top: 2rem;
+          margin-top: 1.45rem;
           border: 1px solid rgba(159,121,230,.12);
           border-radius: 1.55rem;
           background: rgba(255,255,255,.72);
@@ -600,7 +611,7 @@ export default function FreeStudyPageOne({
         }
 
         .sf-free-start-help-card {
-          padding: 1.28rem 1rem 1.35rem;
+          padding: 1.06rem .94rem 1.12rem;
         }
 
         .sf-free-start-help-card h2,
@@ -630,9 +641,9 @@ export default function FreeStudyPageOne({
           position: relative;
           display: grid;
           justify-items: center;
-          gap: .55rem;
+          gap: .42rem;
           color: #20234f;
-          font-size: .92rem;
+          font-size: .86rem;
           font-weight: 700;
           text-align: center;
         }
@@ -649,7 +660,8 @@ export default function FreeStudyPageOne({
         .sf-free-start-flow-icon {
           display: grid;
           width: 3.45rem;
-          height: 3.45rem;
+          height: 3.1rem;
+          width: 3.1rem;
           place-items: center;
           border-radius: 50%;
           background: rgba(238,230,255,.86);
@@ -657,8 +669,8 @@ export default function FreeStudyPageOne({
         }
 
         .sf-free-start-flow-icon svg {
-          width: 2.05rem;
-          height: 2.05rem;
+          width: 1.84rem;
+          height: 1.84rem;
           fill: none;
           stroke: currentColor;
           stroke-width: 3.2;
@@ -670,7 +682,7 @@ export default function FreeStudyPageOne({
           display: none;
           align-items: center;
           gap: 1rem;
-          padding: 1.25rem 1.35rem;
+          padding: 1.1rem 1.2rem;
         }
 
         .sf-free-start-page.is-recording .sf-free-start-help-card {
@@ -896,9 +908,9 @@ export default function FreeStudyPageOne({
           border: 0;
           border-radius: 999px;
           background: linear-gradient(90deg, #b174ff, #7a52ee);
-          color: white;
+          color: #ffffff !important;
           font-size: 1.22rem;
-          font-weight: 950;
+          font-weight: 950 !important;
           box-shadow: 0 14px 30px rgba(128,82,236,.28), inset 0 1px 0 rgba(255,255,255,.45);
           cursor: pointer;
         }

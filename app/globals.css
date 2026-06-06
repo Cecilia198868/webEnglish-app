@@ -19177,3 +19177,880 @@ html[data-app-theme] body {
 html[data-app-theme] body :where(img) {
   filter: none !important;
 }
+
+/* Unified learning header scale. Content may differ by course, but the
+   container, side controls, brand mark, and brand typography stay consistent. */
+:root {
+  --sf-learning-header-height: 4.75rem;
+  --sf-learning-header-side: 3.25rem;
+  --sf-learning-header-logo: 2.4rem;
+  --sf-learning-header-title: clamp(1.28rem, 5vw, 1.55rem);
+  --sf-learning-header-subtitle: clamp(0.48rem, 1.7vw, 0.62rem);
+  --sf-learning-header-gap: 0.62rem;
+}
+
+body :where(
+  .sf-free-study-header-card,
+  .sf-free-start-header,
+  .sf-free-study-page-two-header,
+  .sf-free-confirm-header,
+  .sf-free-study-page-four-header,
+  .sf-free-result-header,
+  .sf-ai-guide-start-header,
+  .sf-ai-confirm-speak-header,
+  .sf-ai-guided-step-one-header,
+  .sf-ai-guided-step-two-header,
+  .sf-ai-guided-step-four-header,
+  .sf-ai-guided-step-five-header
+) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: var(--sf-learning-header-height) !important;
+  min-height: var(--sf-learning-header-height) !important;
+  max-height: var(--sf-learning-header-height) !important;
+  display: grid !important;
+  grid-template-columns:
+    var(--sf-learning-header-side)
+    minmax(0, 1fr)
+    var(--sf-learning-header-side) !important;
+  align-items: center !important;
+  gap: var(--sf-learning-header-gap) !important;
+  padding: 0 0.65rem !important;
+}
+
+body :where(.sf-free-study-page-two-header) {
+  left: clamp(0.85rem, 3.4vw, 1.15rem) !important;
+  right: clamp(0.85rem, 3.4vw, 1.15rem) !important;
+  top: calc(env(safe-area-inset-top, 0px) + 0.85rem) !important;
+  width: auto !important;
+}
+
+body :where(.sf-ai-guided-step-four-header) {
+  left: 1rem !important;
+  right: 1rem !important;
+  top: calc(env(safe-area-inset-top, 0px) + 0.85rem) !important;
+  width: auto !important;
+}
+
+body :where(
+  .sf-free-study-header-menu-button,
+  .sf-free-study-header-avatar-button,
+  .sf-free-start-home,
+  .sf-free-start-help,
+  .sf-free-study-page-two-menu,
+  .sf-free-study-page-two-avatar-button,
+  .sf-free-confirm-home,
+  .sf-free-confirm-help,
+  .sf-free-study-page-four-menu,
+  .sf-free-study-page-four-avatar-button,
+  .sf-free-result-home,
+  .sf-free-result-help,
+  .sf-ai-guide-start-home-button,
+  .sf-ai-guide-start-help-button,
+  .sf-ai-confirm-speak-home,
+  .sf-ai-confirm-speak-help,
+  .sf-ai-guided-step-one-menu,
+  .sf-ai-guided-step-one-avatar-button,
+  .sf-ai-guided-step-two-menu,
+  .sf-ai-guided-step-two-avatar-button,
+  .sf-ai-guided-step-four-menu,
+  .sf-ai-guided-step-four-avatar-button,
+  .sf-ai-guided-step-five-menu,
+  .sf-ai-guided-step-five-avatar-button,
+  .sf-ai-guided-step-five-help-button
+) {
+  width: var(--sf-learning-header-side) !important;
+  min-width: var(--sf-learning-header-side) !important;
+  height: var(--sf-learning-header-side) !important;
+  min-height: var(--sf-learning-header-side) !important;
+  aspect-ratio: 1 !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  font-size: 1.45rem !important;
+  line-height: 1 !important;
+}
+
+body :where(.sf-free-study-header-menu-button) {
+  left: 0.65rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+body :where(.sf-free-study-header-avatar-button) {
+  right: 0.65rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+body :where(
+  .sf-free-study-header-menu-button svg,
+  .sf-free-study-header-avatar-button svg,
+  .sf-free-start-home svg,
+  .sf-free-start-help svg,
+  .sf-free-study-page-two-menu svg,
+  .sf-free-study-page-two-avatar-button svg,
+  .sf-free-confirm-home svg,
+  .sf-free-confirm-help svg,
+  .sf-free-study-page-four-menu svg,
+  .sf-free-study-page-four-avatar-button svg,
+  .sf-free-result-home svg,
+  .sf-free-result-help svg,
+  .sf-ai-guide-start-home-button svg,
+  .sf-ai-guide-start-help-button svg,
+  .sf-ai-confirm-speak-home svg,
+  .sf-ai-confirm-speak-help svg,
+  .sf-ai-guided-step-one-menu svg,
+  .sf-ai-guided-step-one-avatar-button svg,
+  .sf-ai-guided-step-two-menu svg,
+  .sf-ai-guided-step-two-avatar-button svg,
+  .sf-ai-guided-step-four-menu svg,
+  .sf-ai-guided-step-four-avatar-button svg,
+  .sf-ai-guided-step-five-menu svg,
+  .sf-ai-guided-step-five-avatar-button svg,
+  .sf-ai-guided-step-five-help-button svg
+) {
+  width: 1.55rem !important;
+  height: 1.55rem !important;
+}
+
+body :where(
+  .sf-free-study-header-logo,
+  .sf-free-start-logo,
+  .sf-free-study-page-two-logo,
+  .sf-free-confirm-logo,
+  .sf-free-study-page-four-logo,
+  .sf-free-result-logo,
+  .sf-ai-guide-start-logo,
+  .sf-ai-confirm-speak-logo,
+  .sf-ai-guided-step-one-logo,
+  .sf-ai-guided-step-two-logo,
+  .sf-ai-guided-step-four-logo,
+  .sf-ai-guided-step-five-logo
+) {
+  width: var(--sf-learning-header-logo) !important;
+  min-width: var(--sf-learning-header-logo) !important;
+  height: var(--sf-learning-header-logo) !important;
+}
+
+body :where(
+  .sf-free-study-header-logo svg,
+  .sf-free-study-header-logo img,
+  .sf-free-start-logo svg,
+  .sf-free-start-logo img,
+  .sf-free-study-page-two-logo svg,
+  .sf-free-study-page-two-logo img,
+  .sf-free-confirm-logo svg,
+  .sf-free-confirm-logo img,
+  .sf-free-study-page-four-logo svg,
+  .sf-free-study-page-four-logo img,
+  .sf-free-result-logo svg,
+  .sf-free-result-logo img,
+  .sf-ai-guide-start-logo svg,
+  .sf-ai-guide-start-logo img,
+  .sf-ai-confirm-speak-logo svg,
+  .sf-ai-confirm-speak-logo img,
+  .sf-ai-guided-step-one-logo svg,
+  .sf-ai-guided-step-one-logo img,
+  .sf-ai-guided-step-two-logo svg,
+  .sf-ai-guided-step-two-logo img,
+  .sf-ai-guided-step-four-logo svg,
+  .sf-ai-guided-step-four-logo img,
+  .sf-ai-guided-step-five-logo svg,
+  .sf-ai-guided-step-five-logo img
+) {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+body :where(
+  .sf-free-study-header-brand,
+  .sf-free-start-brand,
+  .sf-free-study-page-two-brand,
+  .sf-free-confirm-brand,
+  .sf-free-study-page-four-brand,
+  .sf-free-result-brand,
+  .sf-ai-guide-start-brand,
+  .sf-ai-confirm-speak-brand,
+  .sf-ai-guided-step-one-brand,
+  .sf-ai-guided-step-two-brand,
+  .sf-ai-guided-step-four-brand,
+  .sf-ai-guided-step-five-brand
+) {
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.55rem !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+}
+
+body :where(.sf-free-study-header-brand) {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+body :where(
+  .sf-free-study-header-title,
+  .sf-free-start-brand-title,
+  .sf-free-study-page-two-brand-title,
+  .sf-free-confirm-brand-title,
+  .sf-free-study-page-four-brand-title,
+  .sf-free-result-brand-title,
+  .sf-ai-guide-start-brand-title,
+  .sf-ai-confirm-speak-brand-title,
+  .sf-ai-guided-step-one-brand-title,
+  .sf-ai-guided-step-two-brand-title,
+  .sf-ai-guided-step-four-brand-title,
+  .sf-ai-guided-step-five-brand-title
+) {
+  font-size: var(--sf-learning-header-title) !important;
+  line-height: 0.96 !important;
+  letter-spacing: 0 !important;
+}
+
+body :where(
+  .sf-free-study-header-subtitle,
+  .sf-free-start-brand-subtitle,
+  .sf-free-study-page-two-brand-subtitle,
+  .sf-free-confirm-brand-subtitle,
+  .sf-free-study-page-four-brand-subtitle,
+  .sf-free-result-brand-subtitle,
+  .sf-ai-guide-start-brand-subtitle,
+  .sf-ai-confirm-speak-brand-subtitle,
+  .sf-ai-guided-step-one-brand-subtitle,
+  .sf-ai-guided-step-two-brand-subtitle,
+  .sf-ai-guided-step-four-brand-subtitle,
+  .sf-ai-guided-step-five-brand-subtitle
+) {
+  margin-top: 0.22rem !important;
+  font-size: var(--sf-learning-header-subtitle) !important;
+  line-height: 1 !important;
+  letter-spacing: 0.16em !important;
+}
+
+/* AI guided expression final result page. This block comes after the shared
+   learning-header normalization so the result screen keeps the reference
+   layout without affecting the earlier recording/confirm pages. */
+body .sf-speak-page:has(.sf-ai-guided-step-five) {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(225, 244, 255, 0.86), transparent 34%),
+    radial-gradient(circle at 92% 8%, rgba(226, 236, 255, 0.8), transparent 30%),
+    linear-gradient(180deg, #edf8ff 0%, #f8fcff 48%, #eaf4ff 100%) !important;
+}
+
+body .sf-speak-page:has(.sf-ai-guided-step-five) > div {
+  width: 100vw !important;
+  max-width: none !important;
+  min-height: 100dvh !important;
+  padding: 0 !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+}
+
+body .sf-speak-page:has(.sf-ai-guided-step-five) .sf-speak-phone,
+body .sf-speak-phone-guided-reference-result {
+  width: min(100vw, 430px) !important;
+  max-width: 430px !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+body .sf-speak-page:has(.sf-ai-guided-step-five) .sf-speak-phone::before,
+body .sf-speak-page:has(.sf-ai-guided-step-five) .sf-speak-phone::after,
+body .sf-speak-page:has(.sf-ai-guided-step-five) .sf-speak-phone > .pointer-events-none,
+body .sf-speak-phone-guided-reference-result::before,
+body .sf-speak-phone-guided-reference-result::after,
+body .sf-speak-phone-guided-reference-result > .pointer-events-none {
+  display: none !important;
+}
+
+body .sf-ai-guided-step-five {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 95 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  color: #07113f !important;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.92), transparent 34%),
+    radial-gradient(circle at 86% 38%, rgba(215, 237, 255, 0.64), transparent 35%),
+    linear-gradient(180deg, #edf8ff 0%, #f8fcff 44%, #eaf4ff 100%) !important;
+  font-family: PingFang SC, Microsoft YaHei, Noto Sans SC, sans-serif !important;
+}
+
+body .sf-ai-guided-step-five,
+body .sf-ai-guided-step-five * {
+  box-sizing: border-box !important;
+}
+
+body .sf-ai-guided-step-five-frame {
+  position: relative !important;
+  display: flex !important;
+  width: min(100%, 430px) !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-width: 430px !important;
+  margin: 0 auto !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + clamp(0.72rem, 2.4dvh, 1rem))
+    clamp(0.92rem, 4.4vw, 1.1rem)
+    calc(env(safe-area-inset-bottom, 0px) + 0.8rem) !important;
+  background: transparent !important;
+}
+
+body .sf-ai-guided-step-five-frame::before {
+  display: none !important;
+}
+
+body .sf-ai-guided-step-five-header {
+  position: relative !important;
+  inset: auto !important;
+  z-index: 3 !important;
+  flex: 0 0 auto !important;
+  margin: 0 0 clamp(0.72rem, 2.8dvh, 1rem) !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body .sf-ai-guided-step-five-menu,
+body .sf-ai-guided-step-five-help-button {
+  border: 0 !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #07113f !important;
+  box-shadow:
+    0 14px 28px rgba(67, 101, 176, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+}
+
+body .sf-ai-guided-step-five-help-button {
+  justify-self: end !important;
+  font-weight: 950 !important;
+}
+
+body .sf-ai-guided-step-five-logo {
+  border-radius: 999px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body .sf-ai-guided-step-five-brand-title {
+  color: #07113f !important;
+  font-weight: 1000 !important;
+  text-shadow: none !important;
+  white-space: nowrap !important;
+}
+
+body .sf-ai-guided-step-five-brand-subtitle {
+  color: #0d66ff !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+  white-space: nowrap !important;
+}
+
+body .sf-ai-guided-step-five-scroll {
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  display: block !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  width: 100% !important;
+  padding: 0 0 1.1rem !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-width: none !important;
+}
+
+body .sf-ai-guided-step-five-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+
+body .sf-ai-guided-step-five-user-card,
+body .sf-ai-guided-step-five-next-card,
+body .sf-ai-guided-step-five-record-card {
+  border: 1px solid rgba(204, 222, 251, 0.88) !important;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(255, 255, 255, 0.98), transparent 35%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 252, 255, 0.9)) !important;
+  box-shadow:
+    0 18px 42px rgba(67, 101, 176, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+}
+
+body .sf-ai-guided-step-five-user-card {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: clamp(0.7rem, 3vw, 0.9rem) !important;
+  min-height: clamp(9.8rem, 24dvh, 12.2rem) !important;
+  margin: 0 !important;
+  padding:
+    clamp(1.05rem, 4.2vw, 1.35rem)
+    clamp(0.95rem, 4.4vw, 1.25rem)
+    clamp(1.18rem, 4.8vw, 1.5rem) !important;
+  border-radius: clamp(1.05rem, 5vw, 1.38rem) !important;
+}
+
+body .sf-ai-guided-step-five-card-heading {
+  grid-column: 1 / -1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.56rem !important;
+  margin: 0 !important;
+  color: #0866ff !important;
+  font-size: clamp(0.9rem, 3.9vw, 1.06rem) !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  text-shadow: none !important;
+}
+
+body .sf-ai-guided-step-five-mini-wave {
+  display: inline-grid !important;
+  width: 1.42rem !important;
+  height: 1.42rem !important;
+  place-items: center !important;
+  color: #0d66ff !important;
+}
+
+body .sf-ai-guided-step-five-user-text {
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  color: #07113f !important;
+  font-size: clamp(2.65rem, 12vw, 4.6rem) !important;
+  font-weight: 950 !important;
+  letter-spacing: 0 !important;
+  line-height: 0.98 !important;
+  text-shadow: none !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+body .sf-ai-guided-step-five-user-text :where(button, span),
+body .sf-ai-guided-step-five-record-text :where(button, span),
+body .sf-ai-guided-step-five-emphasis {
+  display: inline !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: inherit !important;
+  padding: 0 !important;
+  font: inherit !important;
+  line-height: inherit !important;
+  text-decoration: none !important;
+}
+
+body .sf-ai-guided-step-five-retry {
+  position: static !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-self: end !important;
+  justify-content: center !important;
+  gap: 0.48rem !important;
+  min-width: clamp(5.9rem, 25vw, 7rem) !important;
+  min-height: clamp(2.7rem, 11.5vw, 3.15rem) !important;
+  padding: 0 0.9rem !important;
+  border: 0 !important;
+  border-radius: 1rem !important;
+  background: rgba(255, 255, 255, 0.93) !important;
+  color: #0866ff !important;
+  font-size: clamp(0.84rem, 3.7vw, 1rem) !important;
+  font-weight: 850 !important;
+  box-shadow:
+    0 14px 28px rgba(67, 101, 176, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  text-shadow: none !important;
+}
+
+body .sf-ai-guided-step-five-retry svg {
+  width: 1.24rem !important;
+  height: 1.24rem !important;
+}
+
+body .sf-ai-guided-step-five-next-card {
+  position: relative !important;
+  min-height: clamp(13.2rem, 31dvh, 15.5rem) !important;
+  margin-top: clamp(0.9rem, 3.3dvh, 1.08rem) !important;
+  overflow: hidden !important;
+  padding:
+    clamp(1.05rem, 4.2vw, 1.35rem)
+    clamp(1rem, 4.5vw, 1.28rem)
+    clamp(1rem, 4vw, 1.18rem) !important;
+  border-radius: clamp(1.05rem, 5vw, 1.38rem) !important;
+}
+
+body .sf-ai-guided-step-five-next-card h2 {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.55rem !important;
+  margin: 0 !important;
+  padding-right: clamp(5.6rem, 28vw, 7rem) !important;
+  color: #0d66ff !important;
+  font-size: clamp(0.95rem, 4.2vw, 1.1rem) !important;
+  font-weight: 900 !important;
+  line-height: 1.16 !important;
+  text-shadow: none !important;
+}
+
+body .sf-ai-guided-step-five-next-card h2 svg {
+  width: 1.28rem !important;
+  height: 1.28rem !important;
+}
+
+body .sf-ai-guided-step-five-next-text {
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(68%, 15.4rem) !important;
+  max-width: min(68%, 15.4rem) !important;
+  margin: clamp(1.05rem, 4.2vw, 1.32rem) 0 0 !important;
+  color: #07113f !important;
+  font-size: clamp(1.95rem, 8.9vw, 3rem) !important;
+  font-weight: 950 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.22 !important;
+  text-shadow: none !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+body .sf-ai-guided-step-five-next-robot {
+  position: absolute !important;
+  top: clamp(3rem, 11vw, 3.7rem) !important;
+  right: clamp(0.72rem, 4vw, 1.1rem) !important;
+  display: block !important;
+  width: clamp(5rem, 25vw, 6.55rem) !important;
+  height: clamp(5rem, 25vw, 6.55rem) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  filter: drop-shadow(0 1rem 1.4rem rgba(46, 103, 211, 0.18)) !important;
+}
+
+body .sf-ai-guided-step-five-next-robot img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+body .sf-ai-guided-step-five-next-actions {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) !important;
+  gap: clamp(0.64rem, 3vw, 0.84rem) !important;
+  margin-top: clamp(1.18rem, 4.8vw, 1.48rem) !important;
+}
+
+body .sf-ai-guided-step-five-use-next,
+body .sf-ai-guided-step-five-change {
+  display: inline-flex !important;
+  min-height: clamp(2.85rem, 12.5vw, 3.55rem) !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.55rem !important;
+  border: 0 !important;
+  border-radius: 1rem !important;
+  font-size: clamp(0.9rem, 4vw, 1.05rem) !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+}
+
+body .sf-ai-guided-step-five-use-next {
+  background: linear-gradient(135deg, #39b9ff 0%, #1561ff 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 16px 30px rgba(33, 103, 255, 0.24) !important;
+}
+
+body .sf-ai-guided-step-five-change {
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #0866ff !important;
+  box-shadow:
+    0 14px 28px rgba(67, 101, 176, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+body .sf-ai-guided-step-five-use-next svg,
+body .sf-ai-guided-step-five-change svg {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+
+body .sf-ai-guided-step-five-records {
+  margin-top: clamp(1rem, 3.6dvh, 1.22rem) !important;
+}
+
+body .sf-ai-guided-step-five-records > h2 {
+  display: grid !important;
+  grid-template-columns: auto auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 0.58rem !important;
+  margin: 0 0 0.72rem !important;
+  color: #176cff !important;
+  font-size: clamp(0.98rem, 4.2vw, 1.12rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.1 !important;
+  text-shadow: none !important;
+}
+
+body .sf-ai-guided-step-five-records > h2::after {
+  content: "" !important;
+  display: block !important;
+  height: 1px !important;
+  background: rgba(105, 135, 190, 0.28) !important;
+}
+
+body .sf-ai-guided-step-five-records > h2 svg {
+  width: 1.28rem !important;
+  height: 1.28rem !important;
+}
+
+body .sf-ai-guided-step-five-record-list {
+  display: grid !important;
+  gap: clamp(0.58rem, 2.5vw, 0.72rem) !important;
+}
+
+body .sf-ai-guided-step-five-record-card {
+  display: grid !important;
+  grid-template-columns: clamp(3.15rem, 14vw, 3.7rem) minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: clamp(0.58rem, 2.7vw, 0.78rem) !important;
+  min-height: clamp(5.45rem, 20vw, 6.28rem) !important;
+  padding:
+    clamp(0.72rem, 3.2vw, 0.94rem)
+    clamp(0.56rem, 2.8vw, 0.76rem)
+    clamp(0.72rem, 3.2vw, 0.94rem)
+    clamp(0.7rem, 3.4vw, 0.92rem) !important;
+  border-radius: clamp(0.9rem, 4vw, 1.08rem) !important;
+  cursor: pointer !important;
+}
+
+body .sf-ai-guided-step-five-record-card.is-selected {
+  min-height: clamp(5.45rem, 20vw, 6.28rem) !important;
+  border-color: rgba(50, 106, 255, 0.52) !important;
+  box-shadow:
+    0 18px 38px rgba(43, 102, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
+}
+
+body .sf-ai-guided-step-five-record-icon {
+  display: grid !important;
+  width: clamp(2.8rem, 12.6vw, 3.35rem) !important;
+  height: clamp(2.8rem, 12.6vw, 3.35rem) !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #4b83ff, #155dff) !important;
+}
+
+body .sf-ai-guided-step-five-record-icon.is-green {
+  background: linear-gradient(135deg, #b9f2c9, #08a136) !important;
+}
+
+body .sf-ai-guided-step-five-record-icon.is-blue {
+  background: linear-gradient(135deg, #cae9ff, #287dff) !important;
+}
+
+body .sf-ai-guided-step-five-record-icon.is-purple {
+  background: linear-gradient(135deg, #cebaff, #6f43e9) !important;
+}
+
+body .sf-ai-guided-step-five-record-icon svg {
+  width: 1.62rem !important;
+  height: 1.62rem !important;
+}
+
+body .sf-ai-guided-step-five-bookmark {
+  position: relative !important;
+  display: grid !important;
+  width: 1.85rem !important;
+  height: 2.15rem !important;
+  place-items: center !important;
+  border-radius: 0.22rem 0.22rem 0.12rem 0.12rem !important;
+  background: currentColor !important;
+}
+
+body .sf-ai-guided-step-five-bookmark span {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 1 !important;
+  width: 0.8rem !important;
+  height: 0.8rem !important;
+}
+
+body .sf-ai-guided-step-five-record-copy {
+  min-width: 0 !important;
+}
+
+body .sf-ai-guided-step-five-record-badge {
+  display: inline-flex !important;
+  margin: 0 0 0.25rem !important;
+  border-radius: 999px !important;
+  background: rgba(47, 112, 255, 0.12) !important;
+  color: #0f66ff !important;
+  padding: 0.12rem 0.52rem !important;
+  font-size: 0.74rem !important;
+  font-weight: 850 !important;
+  line-height: 1.1 !important;
+  text-shadow: none !important;
+}
+
+body .sf-ai-guided-step-five-record-badge.is-green {
+  background: rgba(36, 194, 80, 0.14) !important;
+  color: #139d36 !important;
+}
+
+body .sf-ai-guided-step-five-record-badge.is-purple {
+  background: rgba(128, 82, 235, 0.14) !important;
+  color: #7146de !important;
+}
+
+body .sf-ai-guided-step-five-record-text {
+  margin: 0 !important;
+  color: #07113f !important;
+  font-size: clamp(1.18rem, 5.35vw, 1.82rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.14 !important;
+  text-shadow: none !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+body .sf-ai-guided-step-five-record-actions {
+  display: grid !important;
+  grid-template-columns: clamp(2.24rem, 10vw, 2.7rem) clamp(2.52rem, 11.2vw, 3rem) !important;
+  align-items: center !important;
+  justify-content: end !important;
+  gap: clamp(0.32rem, 1.6vw, 0.45rem) !important;
+}
+
+body .sf-ai-guided-step-five-play,
+body .sf-ai-guided-step-five-slow-button {
+  display: grid !important;
+  height: clamp(2.24rem, 10vw, 2.7rem) !important;
+  place-items: center !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #075fff !important;
+  font-size: clamp(0.74rem, 3.5vw, 0.94rem) !important;
+  font-weight: 850 !important;
+  box-shadow:
+    0 12px 24px rgba(67, 101, 176, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+body .sf-ai-guided-step-five-play {
+  width: clamp(2.24rem, 10vw, 2.7rem) !important;
+}
+
+body .sf-ai-guided-step-five-slow-button {
+  width: clamp(2.52rem, 11.2vw, 3rem) !important;
+}
+
+body .sf-ai-guided-step-five-play svg {
+  width: 1.2rem !important;
+  height: 1.2rem !important;
+}
+
+body .sf-ai-guided-step-five-more {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  margin: 1rem 0 0 !important;
+  color: #176cff !important;
+  font-size: 1rem !important;
+  font-weight: 780 !important;
+  line-height: 1.3 !important;
+  text-shadow: none !important;
+}
+
+body .sf-ai-guided-step-five-more svg {
+  width: 1.05rem !important;
+  height: 1.05rem !important;
+}
+
+@media (max-height: 740px) {
+  body .sf-ai-guided-step-five-frame {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 0.58rem) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.62rem) !important;
+  }
+
+  body .sf-ai-guided-step-five-header {
+    margin-bottom: 0.62rem !important;
+  }
+
+  body .sf-ai-guided-step-five-user-card {
+    min-height: 8.45rem !important;
+    padding-top: 0.92rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  body .sf-ai-guided-step-five-user-text {
+    font-size: clamp(2.25rem, 10.6vw, 3.65rem) !important;
+  }
+
+  body .sf-ai-guided-step-five-next-card {
+    min-height: 11.8rem !important;
+    margin-top: 0.72rem !important;
+    padding-top: 0.92rem !important;
+  }
+
+  body .sf-ai-guided-step-five-next-text {
+    font-size: clamp(1.64rem, 7.6vw, 2.45rem) !important;
+  }
+
+  body .sf-ai-guided-step-five-next-actions {
+    margin-top: 1rem !important;
+  }
+
+  body .sf-ai-guided-step-five-record-card {
+    min-height: 4.78rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  body .sf-ai-guided-step-five-frame {
+    padding-inline: 0.76rem !important;
+  }
+
+  body .sf-ai-guided-step-five-user-card {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  body .sf-ai-guided-step-five-retry {
+    justify-self: start !important;
+  }
+
+  body .sf-ai-guided-step-five-next-text {
+    width: min(70%, 13rem) !important;
+    max-width: min(70%, 13rem) !important;
+    font-size: clamp(1.66rem, 8.1vw, 2.38rem) !important;
+  }
+
+  body .sf-ai-guided-step-five-record-card {
+    grid-template-columns: 2.8rem minmax(0, 1fr) auto !important;
+    gap: 0.52rem !important;
+  }
+
+  body .sf-ai-guided-step-five-record-actions {
+    grid-template-columns: 2.25rem 2.55rem !important;
+  }
+}

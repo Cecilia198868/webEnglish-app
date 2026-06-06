@@ -1194,9 +1194,9 @@
   border: 0;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--pattern-accent, #7657ff), var(--pattern-accent-dark, #6042e8));
-  color: #ffffff;
+  color: #ffffff !important;
   font-size: 1.04rem;
-  font-weight: 950;
+  font-weight: 950 !important;
   box-shadow: 0 14px 26px rgba(106, 78, 225, 0.24);
 }
 
@@ -1444,9 +1444,9 @@
   border: 0;
   border-radius: 999px;
   background: linear-gradient(135deg, #7959f2 0%, #6e58e9 100%);
-  color: #ffffff;
+  color: #ffffff !important;
   font-size: clamp(1.2rem, 2.4vw, 1.48rem);
-  font-weight: 950;
+  font-weight: 950 !important;
   box-shadow:
     0 16px 28px rgba(106, 78, 225, 0.24),
     inset 0 1px 0 rgba(255, 255, 255, 0.28);
@@ -2464,5 +2464,1050 @@
 
   .overviewHeader ~ .tipCard p {
     font-size: 0.86rem;
+  }
+}
+
+/* Keep every sentence-pattern learning header on the shared app scale. */
+.brandHeader {
+  grid-template-columns: 3.25rem minmax(0, 1fr) 3.25rem;
+  min-height: 4.75rem;
+  height: 4.75rem;
+  align-items: center;
+  gap: 0.62rem;
+  padding: 0 0.65rem;
+  border-radius: 1.2rem;
+}
+
+.brandHeader .homeButton,
+.brandHeader .helpButton {
+  width: 3.25rem;
+  min-width: 3.25rem;
+  height: 3.25rem;
+  min-height: 3.25rem;
+  border-radius: 999px;
+  padding: 0;
+  font-size: 1.45rem;
+}
+
+.brandHeader .homeButton svg,
+.brandHeader .helpButton svg,
+.brandHeader .backArrowButton svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.brandHeader .switchButton:not(.helpButton) {
+  min-height: 3.25rem;
+  border-radius: 999px;
+  padding: 0 0.72rem;
+  font-size: 0.74rem;
+}
+
+.brand {
+  grid-template-columns: 2.4rem minmax(0, max-content);
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.brandMark {
+  width: 2.4rem !important;
+  height: 2.4rem !important;
+}
+
+.brand strong {
+  font-size: clamp(1.28rem, 5vw, 1.55rem);
+  line-height: 0.96;
+  letter-spacing: 0;
+}
+
+.brand small {
+  margin-top: 0.22rem;
+  font-size: clamp(0.48rem, 1.7vw, 0.62rem);
+  letter-spacing: 0.16em;
+  line-height: 1;
+}
+
+/* Sentence pattern study page one: match the new reference layout. */
+.studyPage:has(.studyCard) {
+  background:
+    radial-gradient(circle at 14% 6%, rgba(255, 255, 255, 0.92), transparent 28%),
+    radial-gradient(circle at 90% 25%, rgba(235, 229, 255, 0.58), transparent 36%),
+    linear-gradient(180deg, #fbfcff 0%, #f7f8ff 46%, #ffffff 100%);
+}
+
+.studyPhone:has(.studyCard) {
+  min-height: 100dvh;
+  padding:
+    max(14px, calc(env(safe-area-inset-top, 0px) + 10px))
+    clamp(10px, 3.7vw, 18px)
+    max(18px, calc(env(safe-area-inset-bottom, 0px) + 16px));
+}
+
+.studyPhone:has(.studyCard) .brandHeader {
+  position: relative;
+  top: auto;
+  margin: 0 0 clamp(12px, 2.8dvh, 18px);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 14% 10%, rgba(255, 255, 255, 0.98), transparent 32%),
+    rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 14px 34px rgba(84, 102, 155, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.studyPhone:has(.studyCard) .courseCrumb {
+  width: fit-content;
+  max-width: 100%;
+  grid-template-columns: 58px minmax(0, auto) 24px;
+  column-gap: 13px;
+  row-gap: 4px;
+  justify-content: center;
+  margin: 0 auto clamp(14px, 3dvh, 20px);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.studyPhone:has(.studyCard) .courseCrumb > span {
+  grid-row: 1 / span 2;
+  width: 58px;
+  height: 58px;
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.9), transparent 34%),
+    #e9fbf5;
+  box-shadow: 0 12px 26px rgba(30, 154, 111, 0.08);
+}
+
+.studyPhone:has(.studyCard) .courseCrumb > span svg {
+  width: 30px;
+  height: 30px;
+  stroke: #20b883;
+  stroke-width: 3.7;
+}
+
+.studyPhone:has(.studyCard) .courseCrumb strong {
+  align-self: end;
+  color: #10163b;
+  font-size: clamp(1.12rem, 4.7vw, 1.38rem);
+  font-weight: 950;
+  line-height: 1.12;
+  white-space: nowrap;
+}
+
+.studyPhone:has(.studyCard) .courseCrumb small {
+  grid-column: 2 / 4;
+  color: #5e6687;
+  font-size: clamp(0.84rem, 3.25vw, 1rem);
+  font-weight: 650;
+  line-height: 1.22;
+}
+
+.studyPhone:has(.studyCard) .courseCrumb > svg {
+  align-self: end;
+  width: 1.18rem;
+  height: 1.18rem;
+  color: #10163b;
+}
+
+.studyPhone:has(.studyCard) .studyCard {
+  overflow: hidden;
+  border-color: rgba(222, 218, 248, 0.96);
+  border-radius: clamp(21px, 5vw, 28px);
+  background:
+    radial-gradient(circle at 92% 72%, rgba(118, 87, 255, 0.08), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.99), rgba(255, 255, 255, 0.94));
+  box-shadow:
+    0 20px 44px rgba(84, 102, 155, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+  padding: clamp(18px, 4.5vw, 24px) clamp(17px, 4.7vw, 24px) 0;
+}
+
+.studyPhone:has(.studyCard) .studyTitleRow {
+  grid-template-columns: auto minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: clamp(12px, 3.4vw, 18px);
+}
+
+.studyPhone:has(.studyCard) .studyTitleRow .practicePill {
+  min-width: clamp(74px, 19vw, 92px);
+  min-height: clamp(38px, 10vw, 46px);
+  border-radius: 16px;
+  background: #efe9ff;
+  color: #7657ff;
+  font-size: clamp(1.02rem, 4.6vw, 1.3rem);
+  font-weight: 900;
+}
+
+.studyPhone:has(.studyCard) .studyTitleRow h1 {
+  color: #10163b;
+  font-size: clamp(1.18rem, 5vw, 1.62rem);
+  font-weight: 930;
+  line-height: 1.22;
+  overflow-wrap: anywhere;
+}
+
+.studyPhone:has(.studyCard) .studyTitleRow h1 :where(button, span) {
+  font: inherit;
+  line-height: inherit;
+}
+
+.studyPhone:has(.studyCard) .studyTitleRow a {
+  width: 44px;
+  height: 44px;
+  color: #dfa252;
+}
+
+.studyPhone:has(.studyCard) .studyTitleRow a svg {
+  width: 2.05rem;
+  height: 2.05rem;
+  stroke-width: 3.35;
+}
+
+.studyPhone:has(.studyCard) .progressRow {
+  margin-top: clamp(14px, 3.3vw, 18px);
+  color: #56617f;
+  font-size: clamp(0.84rem, 3.25vw, 0.98rem);
+  font-weight: 760;
+}
+
+.studyPhone:has(.studyCard) .progressRow strong {
+  color: #7657ff;
+  font-weight: 850;
+}
+
+.studyPhone:has(.studyCard) .progressTrack {
+  height: 7px;
+  margin-top: 7px;
+  background: #e4e4f5;
+}
+
+.studyPhone:has(.studyCard) .promptCard {
+  min-height: clamp(174px, 39vw, 220px);
+  overflow: visible;
+  margin-top: clamp(18px, 4vw, 24px);
+  border-color: rgba(196, 181, 255, 0.72);
+  border-radius: clamp(22px, 5vw, 28px);
+  background:
+    radial-gradient(circle at 93% 75%, rgba(118, 87, 255, 0.16), transparent 31%),
+    radial-gradient(circle at 9% 85%, rgba(35, 189, 128, 0.14), transparent 25%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.99), #f7f2ff);
+  box-shadow:
+    0 16px 32px rgba(118, 87, 255, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  padding: clamp(44px, 10vw, 58px) clamp(24px, 6vw, 42px) clamp(48px, 11vw, 64px);
+}
+
+.studyPhone:has(.studyCard) .promptCard::after {
+  position: absolute;
+  bottom: -19px;
+  left: clamp(72px, 21vw, 104px);
+  width: 38px;
+  height: 38px;
+  border-right: 1px solid rgba(196, 181, 255, 0.72);
+  border-bottom: 1px solid rgba(196, 181, 255, 0.72);
+  background: linear-gradient(135deg, transparent 0 49%, #f7f2ff 50% 100%);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.studyPhone:has(.studyCard) .promptCard p {
+  max-width: 88%;
+  color: #10163b;
+  font-size: clamp(1.48rem, 6.15vw, 2.08rem);
+  font-weight: 850;
+  line-height: 1.32;
+  text-align: center;
+}
+
+.studyPhone:has(.studyCard) .quoteLeft,
+.studyPhone:has(.studyCard) .quoteRight {
+  color: rgba(118, 87, 255, 0.34);
+  font-size: clamp(3rem, 11vw, 4.2rem);
+}
+
+.studyPhone:has(.studyCard) .quoteLeft {
+  left: clamp(24px, 7vw, 46px);
+  top: clamp(18px, 5vw, 32px);
+}
+
+.studyPhone:has(.studyCard) .quoteRight {
+  right: clamp(28px, 8vw, 52px);
+  bottom: clamp(26px, 7vw, 42px);
+}
+
+.studyPhone:has(.studyCard) .roomArt {
+  right: -8px;
+  bottom: 0;
+  width: 42%;
+  height: 52%;
+  opacity: 0.28;
+  background:
+    radial-gradient(circle at 78% 70%, #7657ff 0 12%, transparent 13%),
+    radial-gradient(ellipse at 70% 70%, rgba(118, 87, 255, 0.58) 0 22%, transparent 23%),
+    linear-gradient(#7657ff, #7657ff) 77% 74% / 7% 44% no-repeat,
+    linear-gradient(#7657ff, #7657ff) 47% 73% / 38% 9% no-repeat,
+    radial-gradient(ellipse at 18% 83%, #7657ff 0 10%, transparent 11%),
+    linear-gradient(135deg, transparent 36%, #7657ff 37% 42%, transparent 43%) 6% 78% / 36% 38% no-repeat,
+    linear-gradient(45deg, transparent 36%, #7657ff 37% 42%, transparent 43%) 0 78% / 36% 38% no-repeat,
+    radial-gradient(circle at 40% 74%, #24bd80 0 9%, transparent 10%);
+  border-radius: 42% 0 28px 0;
+}
+
+.studyPhone:has(.studyCard) .promptTip {
+  gap: 8px;
+  margin: 0 calc(clamp(17px, 4.7vw, 24px) * -1);
+  background: linear-gradient(90deg, rgba(246, 242, 255, 0.96), rgba(255, 255, 255, 0.92));
+  color: #7657ff;
+  font-size: clamp(0.78rem, 3vw, 0.92rem);
+  font-weight: 780;
+  line-height: 1.32;
+  padding: 12px clamp(18px, 5vw, 28px);
+}
+
+.studyPhone:has(.studyCard) .promptTip svg {
+  width: 1.3rem;
+  height: 1.3rem;
+  color: #7657ff;
+}
+
+.studyPhone:has(.studyCard) .recordCard {
+  min-height: clamp(162px, 39vw, 205px);
+  margin-top: clamp(12px, 3dvh, 18px);
+  border-radius: clamp(21px, 5vw, 28px);
+  background:
+    radial-gradient(circle at 50% 78%, rgba(118, 87, 255, 0.14), transparent 35%),
+    rgba(255, 255, 255, 0.96);
+  padding: clamp(20px, 4.5vw, 26px) clamp(18px, 5vw, 28px) clamp(22px, 5vw, 28px);
+}
+
+.studyPhone:has(.studyCard) .recordCard > p {
+  gap: 9px;
+  color: #10163b;
+  font-size: clamp(1.02rem, 4.2vw, 1.25rem);
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.studyPhone:has(.studyCard) .recordCard > p svg {
+  display: block;
+  width: 1.16rem;
+  height: 1.16rem;
+  color: #7657ff;
+}
+
+.studyPhone:has(.studyCard) .recordCard small {
+  margin-top: clamp(12px, 3vw, 16px);
+  color: #69718f;
+  font-size: clamp(0.82rem, 3.25vw, 0.96rem);
+  font-weight: 680;
+}
+
+.studyPhone:has(.studyCard) .bigMic {
+  width: clamp(82px, 21vw, 96px);
+  height: clamp(82px, 21vw, 96px);
+  margin-top: clamp(16px, 3.8vw, 22px);
+  border-width: 9px;
+  box-shadow:
+    0 18px 34px rgba(105, 78, 225, 0.28),
+    0 0 0 13px rgba(118, 87, 255, 0.13),
+    0 0 0 30px rgba(118, 87, 255, 0.065);
+}
+
+.studyPhone:has(.studyCard) .bigMic::before,
+.studyPhone:has(.studyCard) .bigMic::after {
+  opacity: 1;
+  transform: none;
+}
+
+.studyPhone:has(.studyCard) .bigMic::before {
+  inset: -20px;
+  border: 1px solid rgba(118, 87, 255, 0.16);
+  background: transparent;
+}
+
+.studyPhone:has(.studyCard) .bigMic::after {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  width: clamp(160px, 45vw, 210px);
+  height: clamp(78px, 22vw, 104px);
+  border-right: 1px solid rgba(118, 87, 255, 0.22);
+  border-left: 1px solid rgba(118, 87, 255, 0.22);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 0 50%, transparent 40%, rgba(118, 87, 255, 0.2) 41% 42%, transparent 43%),
+    radial-gradient(ellipse at 100% 50%, transparent 40%, rgba(118, 87, 255, 0.2) 41% 42%, transparent 43%);
+  transform: translate(-50%, -50%);
+}
+
+.studyPhone:has(.studyCard) .bigMic svg {
+  width: clamp(36px, 9.5vw, 44px);
+  height: clamp(36px, 9.5vw, 44px);
+}
+
+.studyPhone:has(.studyCard) .prevButton,
+.studyPhone:has(.studyCard) .skipButton {
+  bottom: clamp(30px, 7.5vw, 42px);
+  min-width: clamp(88px, 24vw, 112px);
+  min-height: clamp(38px, 10vw, 48px);
+  border-color: rgba(222, 223, 244, 0.96);
+  background: rgba(255, 255, 255, 0.96);
+  color: #7657ff;
+  font-size: clamp(0.9rem, 3.55vw, 1.05rem);
+  font-weight: 900;
+  box-shadow: 0 12px 22px rgba(75, 88, 145, 0.1);
+}
+
+.studyPhone:has(.studyCard) .prevButton {
+  left: clamp(22px, 6vw, 34px);
+}
+
+.studyPhone:has(.studyCard) .skipButton {
+  right: clamp(22px, 6vw, 34px);
+}
+
+.studyPhone:has(.studyCard) .bottomTip {
+  position: relative;
+  grid-template-columns: 44px minmax(0, 1fr) clamp(70px, 22vw, 98px);
+  align-items: center;
+  gap: 14px;
+  min-height: clamp(88px, 23vw, 112px);
+  overflow: hidden;
+  margin-top: clamp(12px, 3dvh, 18px);
+  border-radius: clamp(18px, 4.5vw, 24px);
+  background:
+    radial-gradient(circle at 88% 48%, rgba(118, 87, 255, 0.12), transparent 28%),
+    rgba(255, 255, 255, 0.96);
+  padding: 16px clamp(16px, 4vw, 22px);
+}
+
+.studyPhone:has(.studyCard) .bottomTip::after {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  justify-self: end;
+  width: clamp(66px, 20vw, 92px);
+  height: clamp(58px, 17vw, 78px);
+  opacity: 0.78;
+  background:
+    linear-gradient(135deg, #ffffff 0 55%, #eee9ff 56% 100%) 28% 20% / 72% 80% no-repeat,
+    linear-gradient(#7657ff, #7657ff) 55% 38% / 30% 5% no-repeat,
+    linear-gradient(#7657ff, #7657ff) 55% 52% / 30% 5% no-repeat,
+    radial-gradient(circle at 75% 82%, #ffbc67 0 12%, transparent 13%),
+    linear-gradient(135deg, transparent 42%, #7657ff 43% 57%, transparent 58%) 80% 62% / 34% 34% no-repeat;
+  border-radius: 18px;
+  content: "";
+}
+
+.studyPhone:has(.studyCard) .bottomTip > span {
+  width: 40px;
+  height: 40px;
+}
+
+.studyPhone:has(.studyCard) .bottomTip strong {
+  margin-bottom: 7px;
+  font-size: clamp(1.02rem, 4vw, 1.18rem);
+}
+
+.studyPhone:has(.studyCard) .bottomTip p {
+  grid-column: 2;
+  color: #4d5878;
+  font-size: clamp(0.85rem, 3.25vw, 0.98rem);
+  font-weight: 720;
+  line-height: 1.5;
+}
+
+.studyBottomProgress {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(10px, 3vw, 16px);
+  margin: clamp(14px, 3dvh, 18px) clamp(8px, 2.5vw, 14px) 0;
+  color: #4d5878;
+  font-size: clamp(0.84rem, 3.1vw, 0.98rem);
+  font-weight: 720;
+}
+
+.studyBottomTrack {
+  position: relative;
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dcd8f5;
+}
+
+.studyBottomTrack::before {
+  position: absolute;
+  top: 50%;
+  left: 18%;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #bcaeff;
+  box-shadow:
+    82px 0 0 #bcaeff,
+    164px 0 0 #bcaeff,
+    246px 0 0 #bcaeff;
+  content: "";
+  transform: translateY(-50%);
+}
+
+.studyBottomTrack i {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7657ff, #9c86ff);
+}
+
+.studyBottomRemaining {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.studyBottomRemaining svg {
+  width: 1.45rem;
+  height: 1.45rem;
+  color: #7657ff;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.7;
+}
+
+@media (max-width: 380px), (max-height: 780px) {
+  .studyPhone:has(.studyCard) {
+    padding-inline: 10px;
+  }
+
+  .studyPhone:has(.studyCard) .courseCrumb {
+    margin-bottom: 12px;
+  }
+
+  .studyPhone:has(.studyCard) .courseCrumb > span {
+    width: 48px;
+    height: 48px;
+  }
+
+  .studyPhone:has(.studyCard) .studyCard {
+    padding: 16px 14px 0;
+  }
+
+  .studyPhone:has(.studyCard) .studyTitleRow {
+    grid-template-columns: auto minmax(0, 1fr) 38px;
+    gap: 10px;
+  }
+
+  .studyPhone:has(.studyCard) .studyTitleRow .practicePill {
+    min-width: 62px;
+    min-height: 36px;
+    font-size: 1rem;
+  }
+
+  .studyPhone:has(.studyCard) .studyTitleRow h1 {
+    font-size: clamp(1.05rem, 4.7vw, 1.34rem);
+  }
+
+  .studyPhone:has(.studyCard) .promptCard {
+    min-height: 150px;
+    margin-top: 14px;
+    padding: 36px 18px 42px;
+  }
+
+  .studyPhone:has(.studyCard) .promptCard p {
+    font-size: clamp(1.28rem, 5.8vw, 1.7rem);
+  }
+
+  .studyPhone:has(.studyCard) .recordCard {
+    min-height: 150px;
+    padding-top: 16px;
+  }
+
+  .studyPhone:has(.studyCard) .bigMic {
+    width: 76px;
+    height: 76px;
+    margin-top: 13px;
+  }
+
+  .studyPhone:has(.studyCard) .prevButton,
+  .studyPhone:has(.studyCard) .skipButton {
+    min-width: 82px;
+    min-height: 36px;
+    bottom: 28px;
+  }
+
+  .studyPhone:has(.studyCard) .bottomTip {
+    grid-template-columns: 38px minmax(0, 1fr);
+    min-height: auto;
+  }
+
+  .studyPhone:has(.studyCard) .bottomTip::after {
+    display: none;
+  }
+
+  .studyBottomProgress {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .studyBottomRemaining {
+    grid-column: 2;
+    justify-self: end;
+  }
+}
+
+/* Sentence pattern result page: match the compact recommendation reference. */
+.studyPage:has(.resultIntro) {
+  background:
+    radial-gradient(circle at 8% 46%, rgba(72, 207, 183, 0.16), transparent 30%),
+    radial-gradient(circle at 86% 2%, rgba(118, 87, 255, 0.1), transparent 26%),
+    linear-gradient(180deg, #f4f5ff 0%, #fbfcff 48%, #eefbff 100%);
+}
+
+.studyPhone:has(.resultIntro) {
+  max-width: 430px;
+  padding: max(14px, calc(env(safe-area-inset-top, 0px) + 10px)) 10px
+    calc(env(safe-area-inset-bottom, 0px) + 106px);
+}
+
+.studyPhone:has(.resultIntro) .brandHeader {
+  min-height: clamp(64px, 16vw, 76px);
+  margin: 0 0 10px;
+  border-radius: clamp(18px, 4.5vw, 24px);
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.95), transparent 30%),
+    rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 12px 28px rgba(75, 88, 145, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.studyPhone:has(.resultIntro) .brand {
+  transform: translateY(0);
+}
+
+.studyPhone:has(.resultIntro) .courseCrumb {
+  display: none;
+}
+
+.studyPhone:has(.resultIntro) .resultIntro {
+  margin: 0 0 12px;
+  border-color: rgba(225, 219, 249, 0.9);
+  border-radius: clamp(18px, 4.5vw, 24px);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow:
+    0 16px 34px rgba(84, 102, 155, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+  padding: clamp(16px, 4vw, 20px) clamp(16px, 4.5vw, 22px) clamp(14px, 3.8vw, 18px);
+}
+
+.studyPhone:has(.resultIntro) .resultIntro .studyTitleRow {
+  grid-template-columns: auto minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: clamp(12px, 3.4vw, 18px);
+}
+
+.studyPhone:has(.resultIntro) .resultIntro .studyTitleRow .practicePill {
+  min-width: clamp(62px, 16vw, 74px);
+  min-height: clamp(32px, 8vw, 38px);
+  border-radius: 14px;
+  background: #eee8ff;
+  color: #7657ff;
+  font-size: clamp(0.9rem, 3.6vw, 1.06rem);
+  font-weight: 780;
+}
+
+.studyPhone:has(.resultIntro) .resultIntro .studyTitleRow h1 {
+  color: #11163c;
+  font-size: clamp(1rem, 4.1vw, 1.24rem);
+  font-weight: 780;
+  line-height: 1.24;
+  letter-spacing: 0;
+}
+
+.studyPhone:has(.resultIntro) .resultIntro .studyTitleRow a {
+  width: 36px;
+  height: 36px;
+  color: #dda04f;
+}
+
+.studyPhone:has(.resultIntro) .resultIntro .studyTitleRow a svg {
+  width: 1.55rem;
+  height: 1.55rem;
+  stroke-width: 2.7;
+}
+
+.studyPhone:has(.resultIntro) .resultIntro .progressRow {
+  margin: clamp(16px, 4vw, 20px) 0 7px clamp(78px, 20vw, 100px);
+  color: #69718d;
+  font-size: clamp(0.78rem, 3.2vw, 0.92rem);
+  font-weight: 700;
+}
+
+.studyPhone:has(.resultIntro) .resultIntro .progressRow strong {
+  color: #7657ff;
+  font-size: inherit;
+  font-weight: 850;
+}
+
+.studyPhone:has(.resultIntro) .resultIntro .progressTrack {
+  height: 5px;
+  margin-left: clamp(78px, 20vw, 100px);
+  border-radius: 999px;
+  background: #ddd8f4;
+}
+
+.studyPhone:has(.resultIntro) .expressionStack {
+  gap: clamp(10px, 3vw, 14px);
+  margin-top: 0;
+  padding-bottom: 10px;
+}
+
+.studyPhone:has(.resultIntro) :is(.resultIntro h1, .userExpression p, .variantCard p) button {
+  display: inline;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: inherit;
+  font: inherit;
+  letter-spacing: 0;
+  line-height: inherit;
+  padding: 0 !important;
+  text-align: inherit;
+  vertical-align: baseline;
+}
+
+.studyPhone:has(.resultIntro) :is(.resultIntro h1, .userExpression p, .variantCard p) span {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+.studyPhone:has(.resultIntro) .userExpression {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(56px, 14vw, 64px);
+  column-gap: clamp(14px, 3.8vw, 22px);
+  align-items: center;
+  min-height: clamp(150px, 35vw, 182px);
+  border-color: rgba(152, 126, 255, 0.38);
+  border-radius: clamp(18px, 4.5vw, 24px);
+  background:
+    radial-gradient(circle at 88% 20%, rgba(118, 87, 255, 0.11), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(252, 250, 255, 0.96));
+  box-shadow:
+    0 16px 34px rgba(84, 102, 155, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  padding: clamp(18px, 4.5vw, 24px) clamp(20px, 5vw, 28px);
+}
+
+.studyPhone:has(.resultIntro) .expressionLabel {
+  grid-column: 1;
+  width: fit-content;
+  min-height: 38px;
+  border-radius: 13px;
+  background: #eee8ff;
+  color: #7657ff;
+  font-size: clamp(0.92rem, 3.6vw, 1.05rem);
+  font-weight: 850;
+  padding: 8px 14px;
+}
+
+.studyPhone:has(.resultIntro) .expressionLabel svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  stroke-width: 2.9;
+}
+
+.studyPhone:has(.resultIntro) .userExpression p {
+  grid-column: 1;
+  margin: clamp(18px, 4.4vw, 24px) 0 0;
+  color: #10163b;
+  font-size: clamp(1.22rem, 5.2vw, 1.66rem);
+  font-weight: 650;
+  line-height: 1.38;
+}
+
+.studyPhone:has(.resultIntro) .userExpression small {
+  grid-column: 1;
+  margin-top: clamp(16px, 4vw, 20px);
+  color: #7657ff;
+  font-size: clamp(0.84rem, 3.3vw, 0.96rem);
+  font-weight: 780;
+}
+
+.studyPhone:has(.resultIntro) .userExpression > button,
+.studyPhone:has(.resultIntro) .variantCard > button {
+  display: grid;
+  width: clamp(50px, 13vw, 58px);
+  height: clamp(50px, 13vw, 58px);
+  place-items: center;
+  border: 1px solid rgba(229, 225, 252, 0.96);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #7657ff;
+  box-shadow:
+    0 12px 24px rgba(105, 78, 225, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+.studyPhone:has(.resultIntro) .userExpression > button {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+}
+
+.studyPhone:has(.resultIntro) .userExpression > button svg,
+.studyPhone:has(.resultIntro) .variantCard > button svg {
+  width: clamp(23px, 6vw, 28px);
+  height: clamp(23px, 6vw, 28px);
+  stroke-width: 2.8;
+}
+
+.studyPhone:has(.resultIntro) .variantCard {
+  display: grid;
+  grid-template-columns: clamp(52px, 13.5vw, 62px) minmax(0, 1fr) clamp(50px, 12.5vw, 58px);
+  align-items: center;
+  gap: clamp(12px, 3.5vw, 18px);
+  min-height: clamp(94px, 24vw, 116px);
+  border-radius: clamp(17px, 4.5vw, 22px);
+  padding: clamp(15px, 4vw, 20px) clamp(15px, 4.5vw, 22px);
+  box-shadow:
+    0 14px 28px rgba(84, 102, 155, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.studyPhone:has(.resultIntro) .variantIcon {
+  width: clamp(48px, 12vw, 58px);
+  height: clamp(48px, 12vw, 58px);
+  background: color-mix(in srgb, currentColor 15%, white);
+}
+
+.studyPhone:has(.resultIntro) .variantIcon svg {
+  width: clamp(24px, 6.2vw, 30px);
+  height: clamp(24px, 6.2vw, 30px);
+  stroke-width: 2.7;
+}
+
+.studyPhone:has(.resultIntro) .variantCard strong {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  margin-bottom: 7px;
+  border-radius: 9px;
+  background: color-mix(in srgb, currentColor 16%, white);
+  color: currentColor;
+  font-size: clamp(0.86rem, 3.4vw, 0.98rem);
+  font-weight: 850;
+  line-height: 1;
+  padding: 6px 10px;
+}
+
+.studyPhone:has(.resultIntro) .variantCard p {
+  margin: 0;
+  color: #10163b;
+  font-size: clamp(1rem, 4.35vw, 1.34rem);
+  font-weight: 650;
+  line-height: 1.34;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] {
+  grid-template-columns: clamp(54px, 14vw, 66px) minmax(0, 1fr) clamp(54px, 14vw, 62px);
+  min-height: clamp(150px, 34vw, 172px);
+  border-color: rgba(132, 103, 255, 0.62);
+  background:
+    radial-gradient(circle at 90% 4%, rgba(118, 87, 255, 0.15), transparent 18%),
+    linear-gradient(135deg, #ffffff, #fbf8ff);
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="featured"]::before {
+  width: clamp(32px, 8.5vw, 40px);
+  height: clamp(66px, 17vw, 82px);
+  border-radius: 0 0 10px 10px;
+  left: clamp(14px, 3.8vw, 20px);
+  background: linear-gradient(180deg, #8061ff, #6e4df4);
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="featured"]::after {
+  width: clamp(42px, 11vw, 52px);
+  height: clamp(42px, 11vw, 52px);
+  border-radius: 0 18px 0 22px;
+  font-size: 1.1rem;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] .variantIcon {
+  z-index: 1;
+  margin-top: clamp(-18px, -4vw, -12px);
+  background: rgba(248, 246, 255, 0.95);
+  color: #7657ff;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] strong {
+  margin-bottom: clamp(16px, 4vw, 20px);
+  background: transparent;
+  padding: 0;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] p {
+  font-size: clamp(1.18rem, 5vw, 1.55rem);
+  font-weight: 720;
+  line-height: 1.28;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] p button {
+  color: inherit;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] > button {
+  background: linear-gradient(135deg, #8f73ff, #6d4cf4);
+  color: #ffffff;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="orange"] {
+  border-color: rgba(255, 194, 135, 0.58);
+  background: linear-gradient(135deg, #fffaf3, #fff7ed);
+  color: #ff8722;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="blue"] {
+  border-color: rgba(174, 213, 255, 0.64);
+  background: linear-gradient(135deg, #fbfdff, #f3f9ff);
+  color: #3c9bec;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="green"] {
+  border-color: rgba(177, 222, 171, 0.64);
+  background: linear-gradient(135deg, #fbfffa, #f4fbf1);
+  color: #42ac54;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="orange"] > button {
+  color: #ff8722;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="blue"] > button {
+  color: #3c9bec;
+}
+
+.studyPhone:has(.resultIntro) .variantCard[data-tone="green"] > button {
+  color: #42ac54;
+}
+
+.studyPhone:has(.resultIntro) .followCard {
+  bottom: max(8px, env(safe-area-inset-bottom, 0px));
+  width: min(calc(100vw - 28px), 394px);
+  min-height: clamp(78px, 20vw, 92px);
+  gap: clamp(10px, 3vw, 18px);
+  border: 1px solid rgba(228, 223, 252, 0.78);
+  border-radius: clamp(22px, 5vw, 28px);
+  background:
+    radial-gradient(ellipse at 50% -24%, rgba(118, 87, 255, 0.16), transparent 44%),
+    linear-gradient(180deg, rgba(252, 250, 255, 0.92), rgba(248, 245, 255, 0.9));
+  box-shadow:
+    0 -12px 34px rgba(75, 88, 145, 0.08),
+    0 14px 34px rgba(75, 88, 145, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+.studyPhone:has(.resultIntro) .followCard::before {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  width: 170px;
+  height: 110px;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(ellipse at 50% 50%, rgba(118, 87, 255, 0.16) 0 1px, transparent 2px 18px);
+  content: "";
+  opacity: 0.55;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.studyPhone:has(.resultIntro) .followCard .prevButton,
+.studyPhone:has(.resultIntro) .followCard .skipButton,
+.studyPhone:has(.resultIntro) .followCard .slowReadButton {
+  min-height: clamp(44px, 11vw, 50px);
+  border-color: rgba(222, 223, 244, 0.94);
+  background: rgba(255, 255, 255, 0.96);
+  color: #7657ff;
+  font-size: clamp(0.92rem, 3.7vw, 1.06rem);
+  font-weight: 850;
+}
+
+.studyPhone:has(.resultIntro) .followCard .slowReadButton {
+  min-width: clamp(106px, 30vw, 128px);
+  border-radius: 12px;
+  background: rgba(245, 240, 255, 0.96);
+}
+
+@media (max-width: 380px), (max-height: 760px) {
+  .studyPhone:has(.resultIntro) {
+    padding-inline: 8px;
+  }
+
+  .studyPhone:has(.resultIntro) .resultIntro {
+    padding: 14px 14px 13px;
+  }
+
+  .studyPhone:has(.resultIntro) .resultIntro .studyTitleRow {
+    grid-template-columns: auto minmax(0, 1fr) 30px;
+    gap: 10px;
+  }
+
+  .studyPhone:has(.resultIntro) .resultIntro .progressRow,
+  .studyPhone:has(.resultIntro) .resultIntro .progressTrack {
+    margin-left: 0;
+  }
+
+  .studyPhone:has(.resultIntro) .userExpression {
+    min-height: 136px;
+    padding: 16px;
+  }
+
+  .studyPhone:has(.resultIntro) .userExpression p {
+    font-size: clamp(1.08rem, 5.2vw, 1.34rem);
+  }
+
+  .studyPhone:has(.resultIntro) .variantCard {
+    grid-template-columns: 48px minmax(0, 1fr) 48px;
+    min-height: 86px;
+    padding: 13px 12px;
+  }
+
+  .studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] {
+    min-height: 136px;
+  }
+
+  .studyPhone:has(.resultIntro) .variantCard p {
+    font-size: clamp(0.96rem, 4.45vw, 1.16rem);
+  }
+
+  .studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] p {
+    font-size: clamp(1.08rem, 5.1vw, 1.34rem);
+  }
+
+  .studyPhone:has(.resultIntro) .followCard {
+    width: min(calc(100vw - 18px), 374px);
+    gap: 8px;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .studyPhone:has(.resultIntro) .followCard .prevButton,
+  .studyPhone:has(.resultIntro) .followCard .skipButton,
+  .studyPhone:has(.resultIntro) .followCard .slowReadButton {
+    font-size: 0.84rem;
+    padding: 0 10px;
+  }
+
+  .studyPhone:has(.resultIntro) .followCard .slowReadButton {
+    min-width: 94px;
   }
 }

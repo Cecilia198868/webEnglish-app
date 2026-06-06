@@ -468,10 +468,10 @@ export default function FreeStudyHelpModal({
           border: 0;
           border-radius: 999px;
           background: linear-gradient(90deg, #b372ff 0%, #8552ef 100%);
-          color: white;
+          color: #ffffff !important;
           box-shadow: 0 14px 24px rgba(132,82,236,.26), inset 0 1px 0 rgba(255,255,255,.42);
           font-size: clamp(1rem, 4.4vw, 1.2rem);
-          font-weight: 950;
+          font-weight: 950 !important;
           cursor: pointer;
         }
 

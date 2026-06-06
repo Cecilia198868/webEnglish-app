@@ -237,10 +237,13 @@ function StatIcon({
     | "file"
     | "headphones"
     | "mic"
+    | "car"
+    | "plusChat"
     | "quote"
     | "speaker"
     | "star"
-    | "target";
+    | "target"
+    | "utensils";
 }) {
   if (type === "bulb") {
     return (
@@ -285,6 +288,30 @@ function StatIcon({
       <svg viewBox="0 0 28 28" aria-hidden="true">
         <path d="M5 16v-3a9 9 0 0 1 18 0v3" />
         <path d="M5 16a3 3 0 0 1 3-3h1v9H8a3 3 0 0 1-3-3v-3ZM23 16a3 3 0 0 0-3-3h-1v9h1a3 3 0 0 0 3-3v-3Z" />
+      </svg>
+    );
+  }
+  if (type === "utensils") {
+    return (
+      <svg viewBox="0 0 28 28" aria-hidden="true">
+        <path d="M8 4v8M4.8 4v7.2A3.2 3.2 0 0 0 8 14.4h0a3.2 3.2 0 0 0 3.2-3.2V4M8 14.5V25" />
+        <path d="M19 4c2.2 2 3.4 5 3.4 8.5v.7H19V25" />
+      </svg>
+    );
+  }
+  if (type === "car") {
+    return (
+      <svg viewBox="0 0 28 28" aria-hidden="true">
+        <path d="m6 14 2.2-6.2A3 3 0 0 1 11 5.8h6a3 3 0 0 1 2.8 2L22 14" />
+        <path d="M5 14h18v8H5v-8ZM8 22v2M20 22v2M8.5 18h.1M19.5 18h.1" />
+      </svg>
+    );
+  }
+  if (type === "plusChat") {
+    return (
+      <svg viewBox="0 0 28 28" aria-hidden="true">
+        <path d="M5 11c0-4 3.6-7 9-7s9 3 9 7-3.6 7-9 7c-1.2 0-2.4-.2-3.4-.5L6 21v-6.1A6.8 6.8 0 0 1 5 11Z" />
+        <path d="M14 8v7M10.5 11.5h7" />
       </svg>
     );
   }
@@ -643,6 +670,12 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   const nextPatternHref = nextPattern
     ? `/sentence-patterns/${level.id}/${nextPattern.id}`
     : `/sentence-patterns/${level.id}/${patternId}`;
+  const completedPracticeCount = Math.max(practiceId - 1, 0);
+  const remainingPracticeCount = Math.max(practiceCount - completedPracticeCount, 0);
+  const completedProgress = Math.min(
+    100,
+    Math.round((completedPracticeCount / Math.max(practiceCount, 1)) * 100)
+  );
 
   function clearFinishAfterSilenceTimer() {
     if (finishAfterSilenceTimerRef.current === null) return;
@@ -857,6 +890,17 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
           <strong>学习小贴士</strong>
           <p>大胆开口，不用担心语法错误，先表达出来才是进步的第一步！</p>
         </div>
+
+        <div className={styles.studyBottomProgress} aria-label="句型学习进度">
+          <span>已完成 {completedPracticeCount} 句</span>
+          <span className={styles.studyBottomTrack}>
+            <i style={{ width: `${completedProgress}%` }} />
+          </span>
+          <span className={styles.studyBottomRemaining}>
+            <StatIcon type="target" />
+            还剩 {remainingPracticeCount} 句
+          </span>
+        </div>
       </section>
 
       {isHelpOpen ? <SentencePatternHelpModal onClose={() => setIsHelpOpen(false)} /> : null}
@@ -893,19 +937,19 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
       tone: "featured",
     },
     {
-      icon: "chat",
+      icon: "utensils",
       label: "更地道",
       text: practice.idiomatic,
       tone: "orange",
     },
     {
-      icon: "book",
+      icon: "car",
       label: "更简单",
       text: practice.simple,
       tone: "blue",
     },
     {
-      icon: "chat",
+      icon: "plusChat",
       label: "更自然",
       text: practice.natural,
       tone: "green",
@@ -969,7 +1013,7 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
               />
             </p>
             <button type="button" onClick={() => speak(userExpression)} aria-label="播放你的表达">
-              <StatIcon type="mic" />
+              <StatIcon type="speaker" />
             </button>
             <small>点击播放你的录音</small>
           </div>
@@ -993,7 +1037,7 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
                 </p>
               </div>
               <button type="button" onClick={() => speak(variant.text)} aria-label={`播放${variant.label}`}>
-                <StatIcon type="mic" />
+                <StatIcon type="speaker" />
               </button>
             </article>
           ))}

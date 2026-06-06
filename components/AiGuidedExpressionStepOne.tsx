@@ -67,6 +67,15 @@ function SparkleGlyph() {
   );
 }
 
+function UpArrowGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 18V6" />
+      <path d="m7 11 5-5 5 5" />
+    </svg>
+  );
+}
+
 function CheckCircleGlyph() {
   return (
     <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
@@ -1027,6 +1036,263 @@ export default function AiGuidedExpressionStepOne({
             margin-top: 0.54rem;
           }
         }
+
+        .sf-ai-guide-start-page {
+          background:
+            radial-gradient(circle at 18% 4%, rgba(222, 241, 255, 0.82), transparent 31%),
+            radial-gradient(circle at 92% 28%, rgba(233, 224, 255, 0.68), transparent 28%),
+            linear-gradient(180deg, #f5fbff 0%, #fbfdff 49%, #f4f7ff 100%);
+        }
+
+        .sf-ai-guide-start-shell {
+          width: min(100%, 430px);
+          min-height: 100%;
+          padding:
+            max(0.34rem, calc(env(safe-area-inset-top, 0px) + 0.34rem))
+            clamp(0.9rem, 4vw, 1.18rem)
+            clamp(0.85rem, 2.6dvh, 1.15rem);
+          border: 1px solid rgba(198, 214, 240, 0.78);
+          border-radius: clamp(1.18rem, 5vw, 1.9rem);
+          background:
+            radial-gradient(circle at 50% 32%, rgba(255, 255, 255, 0.96), transparent 30%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08));
+          overflow: hidden;
+        }
+
+        .sf-ai-guide-start-shell::before {
+          inset: 7.2rem -5.8rem auto;
+          height: min(68vw, 18.8rem);
+          border-color: rgba(223, 232, 250, 0.54);
+        }
+
+        .sf-ai-guide-start-shell::after {
+          inset: 8.1rem -3.2rem auto;
+          height: min(57vw, 15.4rem);
+          border-color: rgba(232, 238, 252, 0.5);
+        }
+
+        .sf-ai-guide-start-header {
+          border-radius: 1.46rem !important;
+          background: rgba(255, 255, 255, 0.82);
+          box-shadow:
+            0 0.95rem 2rem rgba(104, 126, 178, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.98);
+        }
+
+        .sf-ai-guide-start-home-button,
+        .sf-ai-guide-start-help-button {
+          box-shadow:
+            0 0.62rem 1.2rem rgba(85, 99, 154, 0.13),
+            inset 0 0 0 1px rgba(219, 226, 246, 0.78);
+        }
+
+        .sf-ai-guide-start-hero {
+          margin-top: clamp(1.15rem, 3.9dvh, 1.86rem);
+        }
+
+        .sf-ai-guide-start-title {
+          font-size: clamp(2.1rem, 10.6vw, 3rem);
+          line-height: 1.03;
+        }
+
+        .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-title {
+          font-size: clamp(1.72rem, 8.7vw, 2.42rem);
+        }
+
+        .sf-ai-guide-start-subtitle {
+          margin-top: clamp(0.42rem, 1.5dvh, 0.62rem);
+          font-size: clamp(0.82rem, 3.72vw, 1.02rem);
+          color: rgba(72, 78, 122, 0.74);
+        }
+
+        .sf-ai-guide-start-recording-status {
+          margin-top: clamp(0.42rem, 1.6dvh, 0.7rem);
+          color: #316cff;
+        }
+
+        .sf-ai-guide-start-mic-zone {
+          margin-top: clamp(0.64rem, 2.1dvh, 1rem);
+          min-height: clamp(8.6rem, 41vw, 11.1rem);
+        }
+
+        .sf-ai-guide-start-mic-ring {
+          width: clamp(7.95rem, 40.5vw, 10.85rem);
+        }
+
+        .sf-ai-guide-start-mic-ring::before {
+          inset: -1.35rem;
+          background:
+            radial-gradient(circle, rgba(176, 126, 255, 0.2), rgba(109, 151, 255, 0.11) 50%, transparent 68%);
+        }
+
+        .sf-ai-guide-start-mic-ring::after {
+          inset: -1rem;
+          box-shadow:
+            0 0 0 0.34rem rgba(255, 255, 255, 0.58),
+            0 0 0 0.84rem rgba(225, 232, 255, 0.34),
+            0 0 0 1.38rem rgba(225, 232, 255, 0.2),
+            0 0 2.4rem rgba(111, 111, 229, 0.18);
+        }
+
+        .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-mic-ring::after {
+          box-shadow:
+            0 0 0 0.38rem rgba(255, 255, 255, 0.66),
+            0 0 0 0.96rem rgba(218, 204, 255, 0.36),
+            0 0 0 1.55rem rgba(218, 204, 255, 0.22),
+            0 0 3.1rem rgba(143, 95, 255, 0.28);
+        }
+
+        .sf-ai-guide-start-mic-button {
+          background:
+            radial-gradient(circle at 32% 21%, rgba(255, 255, 255, 0.5), transparent 18%),
+            linear-gradient(135deg, #d79cff 0%, #8b70ff 48%, #4b9cff 100%);
+          box-shadow:
+            inset 0 0 0 0.14rem rgba(255, 255, 255, 0.9),
+            inset -0.9rem -1.1rem 2.2rem rgba(34, 70, 210, 0.18),
+            0 0.95rem 2.05rem rgba(105, 90, 223, 0.18);
+        }
+
+        .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-mic-button {
+          background:
+            radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.46), transparent 18%),
+            linear-gradient(135deg, #dca2ff 0%, #8f5fff 50%, #4f7dff 100%);
+          box-shadow:
+            inset 0 0 0 0.14rem rgba(255, 255, 255, 0.92),
+            inset -0.96rem -1.12rem 2.15rem rgba(44, 50, 188, 0.22),
+            0 1rem 2.2rem rgba(126, 87, 255, 0.23);
+        }
+
+        .sf-ai-guide-start-mic-button svg {
+          width: 41%;
+          height: 41%;
+          stroke-width: 4.35;
+        }
+
+        .sf-ai-guide-start-wave-bars {
+          width: clamp(2.7rem, 13.2vw, 3.85rem);
+          height: clamp(2.5rem, 12vw, 3.6rem);
+          color: rgba(105, 176, 255, 0.42);
+        }
+
+        .sf-ai-guide-start-wave-bars-left {
+          right: calc(50% + clamp(3.68rem, 21.8vw, 5.58rem));
+        }
+
+        .sf-ai-guide-start-wave-bars-right {
+          left: calc(50% + clamp(3.68rem, 21.8vw, 5.58rem));
+        }
+
+        .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-wave-bars {
+          color: rgba(150, 101, 255, 0.58);
+        }
+
+        .sf-ai-guide-start-action-area {
+          margin-top: clamp(0.32rem, 1.35dvh, 0.58rem);
+          gap: clamp(0.5rem, 1.7dvh, 0.66rem);
+        }
+
+        .sf-ai-guide-start-instruction {
+          width: auto;
+          min-height: 0;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          box-shadow: none;
+          backdrop-filter: none;
+          display: inline-flex;
+          flex-direction: column;
+          gap: 0.38rem;
+          color: #245fff;
+          font-size: clamp(0.78rem, 3.45vw, 0.95rem);
+          font-weight: 900;
+        }
+
+        .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-instruction {
+          color: #245fff;
+        }
+
+        .sf-ai-guide-start-instruction-icon,
+        .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-instruction-icon {
+          width: 1.42rem;
+          height: 1.42rem;
+          border: 2px solid currentColor;
+          background: rgba(255, 255, 255, 0.72);
+          color: #2d67ff;
+          box-shadow: 0 0.38rem 0.8rem rgba(69, 100, 220, 0.12);
+        }
+
+        .sf-ai-guide-start-instruction-icon svg,
+        .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-instruction-icon svg {
+          width: 62%;
+          height: 62%;
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 2.8;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .sf-ai-guide-start-note {
+          color: rgba(72, 78, 122, 0.72);
+          font-size: clamp(0.66rem, 3vw, 0.8rem);
+          font-weight: 820;
+        }
+
+        .sf-ai-guide-start-note svg {
+          width: 1rem;
+          height: 1rem;
+          stroke: #7d78ff;
+        }
+
+        .sf-ai-guide-start-help-card {
+          margin-top: clamp(1.12rem, 4.2dvh, 2.1rem);
+          border-radius: 1.18rem;
+          background: rgba(255, 255, 255, 0.74);
+          padding: clamp(0.78rem, 2.5vw, 0.95rem) clamp(0.72rem, 2.8vw, 0.9rem) clamp(0.7rem, 2.5vw, 0.86rem);
+        }
+
+        .sf-ai-guide-start-help-title {
+          font-size: clamp(0.9rem, 3.75vw, 1.02rem);
+        }
+
+        .sf-ai-guide-start-steps {
+          margin-top: clamp(0.62rem, 2.4vw, 0.78rem);
+          gap: clamp(0.18rem, 1.1vw, 0.32rem);
+        }
+
+        .sf-ai-guide-start-step {
+          gap: 0.32rem;
+          font-size: clamp(0.64rem, 2.95vw, 0.78rem);
+        }
+
+        .sf-ai-guide-start-step-icon {
+          width: clamp(2.12rem, 9.3vw, 2.48rem);
+          height: clamp(2.12rem, 9.3vw, 2.48rem);
+        }
+
+        .sf-ai-guide-start-step:not(:last-child)::after {
+          top: clamp(0.9rem, 4vw, 1.08rem);
+          left: calc(50% + clamp(0.98rem, 4.3vw, 1.22rem));
+          width: clamp(0.74rem, 3.5vw, 1.05rem);
+        }
+
+        @media (max-height: 760px) {
+          .sf-ai-guide-start-hero {
+            margin-top: 0.85rem;
+          }
+
+          .sf-ai-guide-start-mic-zone {
+            min-height: 8.4rem;
+          }
+
+          .sf-ai-guide-start-mic-ring {
+            width: clamp(7.4rem, 38vw, 9.7rem);
+          }
+
+          .sf-ai-guide-start-help-card {
+            margin-top: 0.9rem;
+          }
+        }
       `}</style>
 
       <div className="sf-ai-guide-start-shell">
@@ -1037,7 +1303,7 @@ export default function AiGuidedExpressionStepOne({
             onClick={handleHomeClick}
             aria-label="返回首页"
           >
-            <HomeMenuIcon />
+            <HomeMenuIcon label={null} showHint={false} />
           </button>
 
           <div className="sf-ai-guide-start-brand" aria-label="SpeakFlow">
@@ -1121,7 +1387,7 @@ export default function AiGuidedExpressionStepOne({
             aria-label={isRecording ? "结束中文录音" : "开始中文录音"}
           >
             <span className="sf-ai-guide-start-instruction-icon" aria-hidden="true">
-              {isRecording ? <MicGlyph /> : <SparkleGlyph />}
+              <UpArrowGlyph />
             </span>
             <span>{instructionText}</span>
           </button>
@@ -1137,7 +1403,7 @@ export default function AiGuidedExpressionStepOne({
         <section className="sf-ai-guide-start-help-card" aria-label="怎么练">
           <h2 className="sf-ai-guide-start-help-title">
             <HelpBoltGlyph />
-            <span>怎么练?</span>
+            <span>怎么练？</span>
           </h2>
           <div className="sf-ai-guide-start-steps">
             {learningFlow.map((item) => (

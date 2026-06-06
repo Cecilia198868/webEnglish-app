@@ -267,8 +267,10 @@ export default function FreeStudyPageFiveTop({
 
         .sf-free-result-frame {
           min-height: 100%;
-          padding: calc(env(safe-area-inset-top, 0px) + .5rem) clamp(.65rem, 3vw, .95rem)
-            calc(env(safe-area-inset-bottom, 0px) + .8rem);
+          padding:
+            calc(env(safe-area-inset-top, 0px) + clamp(.62rem, 2dvh, .9rem))
+            clamp(.82rem, 3.8vw, 1.08rem)
+            calc(env(safe-area-inset-bottom, 0px) + .88rem);
         }
 
         .sf-free-result-header,
@@ -369,12 +371,13 @@ export default function FreeStudyPageFiveTop({
 
         .sf-free-result-ai-card {
           display: grid;
-          grid-template-columns: clamp(2.95rem, 13vw, 3.55rem) minmax(0, 1fr) auto;
+          grid-template-columns: clamp(3.05rem, 13.5vw, 3.72rem) minmax(0, 1fr) auto;
           align-items: center;
-          gap: clamp(.55rem, 2.6vw, .85rem);
-          margin-top: .88rem;
-          border-radius: 1.15rem;
-          padding: .9rem .85rem;
+          gap: clamp(.62rem, 2.8vw, .92rem);
+          min-height: clamp(5.72rem, 22vw, 6.42rem);
+          margin-top: clamp(.88rem, 3dvh, 1.12rem);
+          border-radius: 1.36rem;
+          padding: .88rem .95rem;
         }
 
         .sf-free-result-ai-icon {
@@ -405,7 +408,7 @@ export default function FreeStudyPageFiveTop({
         .sf-free-result-ai-copy strong {
           display: block;
           color: #101342;
-          font-size: clamp(1rem, 4.8vw, 1.38rem);
+          font-size: clamp(1.2rem, 5.3vw, 1.62rem);
           font-weight: 950;
           line-height: 1.2;
         }
@@ -414,7 +417,7 @@ export default function FreeStudyPageFiveTop({
           display: block;
           margin-top: .15rem;
           color: #8353ef;
-          font-size: clamp(1rem, 4.6vw, 1.34rem);
+          font-size: clamp(1.18rem, 5.2vw, 1.56rem);
           font-weight: 900;
         }
 
@@ -443,19 +446,20 @@ export default function FreeStudyPageFiveTop({
           position: relative;
           display: grid;
           grid-template-columns: minmax(0, 1fr) auto;
-          gap: .58rem .7rem;
-          margin-top: .85rem;
-          border-radius: 1.15rem;
-          padding: .92rem .9rem 1rem;
+          gap: .82rem .78rem;
+          min-height: clamp(8.35rem, 30vw, 9.7rem);
+          margin-top: .92rem;
+          border-radius: 1.42rem;
+          padding: clamp(1.08rem, 4.2vw, 1.28rem) clamp(1.02rem, 4.5vw, 1.32rem);
         }
 
         .sf-free-result-user-title {
           grid-column: 1 / -1;
           display: flex;
           align-items: center;
-          gap: .45rem;
+          gap: .55rem;
           color: #101342;
-          font-size: clamp(1rem, 4.7vw, 1.35rem);
+          font-size: clamp(1.25rem, 5.45vw, 1.65rem);
           font-weight: 950;
           line-height: 1;
         }
@@ -471,34 +475,50 @@ export default function FreeStudyPageFiveTop({
           align-self: center;
           margin: 0;
           color: #101342;
-          font-size: clamp(1.72rem, 7.5vw, 2.3rem);
+          font-size: clamp(1.55rem, 6.65vw, 2rem);
           font-weight: 950;
-          line-height: 1.06;
+          line-height: 1.08;
           letter-spacing: 0;
-          word-break: break-word;
+          word-break: normal;
+          overflow-wrap: anywhere;
         }
 
         .sf-free-result-user-highlight {
           display: inline;
-          border-radius: .42rem;
-          background: linear-gradient(180deg, #fff0b7, #ffe289);
+          border-radius: .46rem;
+          background:
+            linear-gradient(180deg, rgba(255,244,178,.88), rgba(255,224,111,.88));
           box-decoration-break: clone;
           -webkit-box-decoration-break: clone;
-          padding: .02em .16em .06em;
+          padding: .03em .16em .08em;
+          box-shadow: inset 0 -.26em 0 rgba(255,211,75,.45);
+        }
+
+        .sf-free-result-user-highlight :where(button, span) {
+          display: inline !important;
+          margin: 0 !important;
+          border: 0 !important;
+          border-radius: 0 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          color: inherit !important;
+          padding: 0 !important;
+          font: inherit !important;
+          line-height: inherit !important;
         }
 
         .sf-free-result-retry {
           align-self: center;
           display: inline-flex;
           align-items: center;
-          gap: .36rem;
-          min-height: clamp(2.25rem, 9.5vw, 2.7rem);
+          gap: .44rem;
+          min-height: clamp(2.65rem, 11.3vw, 3.15rem);
           border: 1px solid #9a61ef;
-          border-radius: .82rem;
+          border-radius: 1rem;
           background: rgba(255,255,255,.78);
-          padding: 0 clamp(.58rem, 3vw, .85rem);
+          padding: 0 clamp(.72rem, 3.4vw, 1rem);
           color: #101342;
-          font-size: clamp(.82rem, 3.7vw, 1rem);
+          font-size: clamp(.96rem, 4.05vw, 1.16rem);
           font-weight: 900;
           white-space: nowrap;
           cursor: pointer;
@@ -517,10 +537,10 @@ export default function FreeStudyPageFiveTop({
         .sf-free-result-section-title {
           display: flex;
           align-items: center;
-          gap: .42rem;
-          margin: .88rem 0 .58rem;
+          gap: .48rem;
+          margin: clamp(.9rem, 3.1dvh, 1.12rem) 0 .6rem;
           color: #101342;
-          font-size: clamp(1rem, 4.8vw, 1.36rem);
+          font-size: clamp(1.28rem, 5.6vw, 1.72rem);
           font-weight: 950;
         }
 
@@ -533,16 +553,23 @@ export default function FreeStudyPageFiveTop({
 
         .sf-free-result-list {
           display: grid;
-          gap: .62rem;
+          gap: clamp(.68rem, 2.7vw, .84rem);
         }
 
         .sf-free-result-expression-card {
+          position: relative;
           display: grid;
-          grid-template-columns: clamp(3rem, 13vw, 3.55rem) minmax(0, 1fr) auto;
+          grid-template-columns: minmax(0, 1fr) auto;
           align-items: center;
-          gap: clamp(.52rem, 2.5vw, .78rem);
-          border-radius: 1rem;
-          padding: .78rem .72rem;
+          gap: clamp(.54rem, 2.4vw, .72rem);
+          min-height: clamp(5.52rem, 20vw, 6.28rem);
+          overflow: hidden;
+          border-radius: 1.22rem;
+          padding:
+            clamp(.78rem, 3.2vw, .96rem)
+            clamp(.66rem, 3vw, .82rem)
+            clamp(.78rem, 3.2vw, .96rem)
+            clamp(2.95rem, 13vw, 3.56rem);
           cursor: pointer;
         }
 
@@ -551,13 +578,18 @@ export default function FreeStudyPageFiveTop({
         }
 
         .sf-free-result-expression-icon {
+          position: absolute;
+          left: clamp(.65rem, 3vw, .86rem);
+          top: 50%;
+          transform: translateY(-50%);
           display: grid;
-          width: clamp(2.62rem, 11.5vw, 3rem);
-          height: clamp(2.62rem, 11.5vw, 3rem);
+          width: clamp(2.4rem, 10.8vw, 2.9rem);
+          height: clamp(2.4rem, 10.8vw, 2.9rem);
           place-items: center;
           border-radius: 50%;
           color: #8353ef;
           background: rgba(237,229,255,.86);
+          opacity: .78;
         }
 
         .sf-free-result-expression-card.is-green .sf-free-result-expression-icon {
@@ -587,12 +619,12 @@ export default function FreeStudyPageFiveTop({
         .sf-free-result-badge {
           display: inline-flex;
           align-items: center;
-          min-height: 1.22rem;
-          border-radius: .4rem;
+          min-height: 1.32rem;
+          border-radius: .44rem;
           background: linear-gradient(90deg, #9c66ff, #7452ed);
-          padding: 0 .46rem;
+          padding: 0 .52rem;
           color: white;
-          font-size: clamp(.58rem, 2.55vw, .72rem);
+          font-size: clamp(.68rem, 2.95vw, .82rem);
           font-weight: 900;
           line-height: 1;
         }
@@ -606,22 +638,37 @@ export default function FreeStudyPageFiveTop({
         }
 
         .sf-free-result-expression-text {
-          margin: .28rem 0 0;
+          margin: .46rem 0 0;
           color: #101342;
-          font-size: clamp(1.08rem, 5vw, 1.45rem);
+          font-size: clamp(1.2rem, 5.28vw, 1.62rem);
           font-weight: 900;
           line-height: 1.12;
           letter-spacing: 0;
-          word-break: break-word;
+          word-break: normal;
+          overflow-wrap: anywhere;
+        }
+
+        .sf-free-result-expression-text :where(button, span),
+        .sf-free-result-emphasis {
+          display: inline !important;
+          margin: 0 !important;
+          border: 0 !important;
+          border-radius: 0 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          color: inherit !important;
+          padding: 0 !important;
+          font: inherit !important;
+          line-height: inherit !important;
         }
 
         .sf-free-result-note {
           display: inline-flex;
           align-items: center;
-          gap: .28rem;
-          margin-top: .34rem;
+          gap: .34rem;
+          margin-top: .42rem;
           color: rgba(54,55,98,.72);
-          font-size: clamp(.68rem, 3vw, .82rem);
+          font-size: clamp(.82rem, 3.3vw, .96rem);
           font-weight: 650;
         }
 
@@ -641,7 +688,7 @@ export default function FreeStudyPageFiveTop({
 
         .sf-free-result-actions {
           display: flex;
-          gap: .38rem;
+          gap: .44rem;
           align-items: center;
         }
 
@@ -658,8 +705,8 @@ export default function FreeStudyPageFiveTop({
         }
 
         .sf-free-result-play {
-          width: clamp(2.32rem, 9.5vw, 2.72rem);
-          height: clamp(2.32rem, 9.5vw, 2.72rem);
+          width: clamp(2.62rem, 11vw, 3.08rem);
+          height: clamp(2.62rem, 11vw, 3.08rem);
         }
 
         .sf-free-result-play svg {
@@ -669,11 +716,11 @@ export default function FreeStudyPageFiveTop({
         }
 
         .sf-free-result-slow {
-          min-width: clamp(2.72rem, 11vw, 3.1rem);
-          height: clamp(2.32rem, 9.5vw, 2.72rem);
-          padding: 0 .38rem;
+          min-width: clamp(3rem, 12.8vw, 3.48rem);
+          height: clamp(2.62rem, 11vw, 3.08rem);
+          padding: 0 .45rem;
           color: #6f4dea;
-          font-size: clamp(.86rem, 3.8vw, 1.06rem);
+          font-size: clamp(1rem, 4.25vw, 1.2rem);
           font-weight: 850;
         }
 
@@ -778,11 +825,12 @@ export default function FreeStudyPageFiveTop({
           }
 
           .sf-free-result-expression-card {
-            grid-template-columns: 3.6rem minmax(0, 1fr);
+            grid-template-columns: minmax(0, 1fr) auto;
+            padding-left: 2.82rem;
           }
 
           .sf-free-result-actions {
-            grid-column: 2;
+            grid-column: auto;
           }
         }
       `}</style>

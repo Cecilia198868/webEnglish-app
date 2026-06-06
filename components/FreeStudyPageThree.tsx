@@ -215,16 +215,22 @@ export default function FreeStudyPageThree({
 
         .sf-free-confirm-frame {
           min-height: 100%;
-          padding: calc(env(safe-area-inset-top, 0px) + 1.55rem) clamp(1.35rem, 5vw, 1.75rem)
-            calc(env(safe-area-inset-bottom, 0px) + 1.45rem);
+          padding:
+            calc(env(safe-area-inset-top, 0px) + clamp(.9rem, 2.4dvh, 1.22rem))
+            clamp(1.02rem, 4.6vw, 1.34rem)
+            calc(env(safe-area-inset-bottom, 0px) + 1rem);
         }
 
         .sf-free-confirm-header {
           display: grid;
-          grid-template-columns: 3.45rem minmax(0, 1fr) 3.45rem;
+          grid-template-columns: 3.25rem minmax(0, 1fr) 3.25rem !important;
           align-items: center;
-          gap: .66rem;
-          margin-bottom: clamp(2.1rem, 5.3dvh, 3.25rem);
+          gap: .5rem !important;
+          height: 4.35rem !important;
+          min-height: 4.35rem !important;
+          max-height: 4.35rem !important;
+          margin-bottom: clamp(1.35rem, 3.8dvh, 2.05rem);
+          padding: 0 !important;
         }
 
         .sf-free-confirm-home,
@@ -242,8 +248,10 @@ export default function FreeStudyPageThree({
 
         .sf-free-confirm-home,
         .sf-free-confirm-help {
-          width: 3.45rem;
-          height: 3.45rem;
+          width: 3.25rem !important;
+          min-width: 3.25rem !important;
+          height: 3.25rem !important;
+          min-height: 3.25rem !important;
         }
 
         .sf-free-confirm-home .sf-home-menu-icon,
@@ -256,7 +264,7 @@ export default function FreeStudyPageThree({
         .sf-free-confirm-help {
           justify-self: end;
           color: #7a4dea;
-          font-size: 1.55rem;
+          font-size: 1.38rem !important;
           font-weight: 950;
         }
 
@@ -264,20 +272,22 @@ export default function FreeStudyPageThree({
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: .75rem;
+          gap: .52rem !important;
           min-width: 0;
+          overflow: visible;
         }
 
         .sf-free-confirm-logo {
-          width: 3rem;
-          height: 3rem;
+          width: 2.45rem !important;
+          min-width: 2.45rem !important;
+          height: 2.45rem !important;
           display: grid;
           place-items: center;
         }
 
         .sf-free-confirm-logo svg {
-          width: 3rem;
-          height: 3rem;
+          width: 2.45rem !important;
+          height: 2.45rem !important;
         }
 
         .sf-free-confirm-brand-copy {
@@ -288,54 +298,57 @@ export default function FreeStudyPageThree({
 
         .sf-free-confirm-brand-title {
           color: #0b1244;
-          font-size: clamp(1.95rem, 7.8vw, 2.55rem);
+          font-size: clamp(1.46rem, 5.45vw, 1.78rem) !important;
           font-weight: 950;
-          line-height: .94;
+          line-height: .94 !important;
           letter-spacing: 0;
-          white-space: nowrap;
+          white-space: nowrap !important;
         }
 
         .sf-free-confirm-brand-subtitle {
-          margin-top: .42rem;
+          margin-top: .24rem !important;
           color: #7c4eed;
-          font-size: clamp(.72rem, 3vw, .98rem);
+          font-size: clamp(.52rem, 2.05vw, .66rem) !important;
           font-weight: 850;
-          line-height: 1;
-          letter-spacing: .1em;
+          line-height: 1 !important;
+          letter-spacing: .13em !important;
+          white-space: nowrap !important;
         }
 
         .sf-free-confirm-title {
           display: flex;
           align-items: center;
-          gap: .78rem;
-          margin: 0 0 1.15rem;
+          gap: .52rem;
+          margin: 0 0 .86rem;
           color: #101342;
-          font-size: clamp(1.9rem, 7.2vw, 2.45rem);
+          font-size: clamp(1.55rem, 6.15vw, 2rem);
           font-weight: 950;
           line-height: 1.08;
           letter-spacing: 0;
         }
 
         .sf-free-confirm-title svg {
-          width: 2.1rem;
-          height: 2.1rem;
+          width: 1.58rem;
+          height: 1.58rem;
           flex: 0 0 auto;
           fill: #8a56ee;
         }
 
         .sf-free-confirm-card {
-          border: 1px solid rgba(157,111,233,.12);
-          border-radius: 1.9rem;
-          background: rgba(255,255,255,.82);
-          min-height: clamp(13.8rem, 28.5dvh, 16.6rem);
-          padding: clamp(1.25rem, 4.7vw, 1.85rem);
-          box-shadow: 0 18px 40px rgba(110,74,180,.1), inset 0 1px 0 rgba(255,255,255,.96);
+          border: 1px solid rgba(157,111,233,.11);
+          border-radius: 1.68rem;
+          background: rgba(255,255,255,.86);
+          min-height: clamp(11.9rem, 25dvh, 14.2rem);
+          padding: clamp(1rem, 4.1vw, 1.34rem) clamp(1.12rem, 4.7vw, 1.52rem);
+          box-shadow:
+            0 18px 40px rgba(111, 77, 180, .11),
+            inset 0 1px 0 rgba(255,255,255,.96);
         }
 
         .sf-free-confirm-card-head {
           display: flex;
           justify-content: flex-end;
-          margin-bottom: clamp(1.45rem, 3.5dvh, 2.05rem);
+          margin-bottom: clamp(.95rem, 2.75dvh, 1.42rem);
         }
 
         .sf-free-confirm-edit {
@@ -345,7 +358,7 @@ export default function FreeStudyPageThree({
           border: 0;
           background: transparent;
           color: #8a54ee;
-          font-size: clamp(1.05rem, 4.1vw, 1.22rem);
+          font-size: clamp(.9rem, 3.65vw, 1.06rem);
           font-weight: 900;
           cursor: pointer;
         }
@@ -370,35 +383,54 @@ export default function FreeStudyPageThree({
         .sf-free-confirm-textarea {
           display: block;
           width: 100%;
-          max-height: 10.2rem;
+          min-height: clamp(5.9rem, 13dvh, 7.4rem);
+          max-height: clamp(7.2rem, 18dvh, 9.4rem);
           resize: none;
-          border: 0;
-          outline: 0;
-          background: transparent;
-          color: #101342;
-          font: inherit;
-          font-size: clamp(2.18rem, 8vw, 2.85rem);
-          font-weight: 900;
-          line-height: 1.46;
-          letter-spacing: 0;
+          border: 0 !important;
+          outline: 0 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          color: #101342 !important;
+          padding: 0 !important;
+          font-family: var(--sf-font-zh, "PingFang SC", "Microsoft YaHei", sans-serif) !important;
+          font-size: clamp(2.05rem, 8.25vw, 2.75rem) !important;
+          font-weight: 950 !important;
+          line-height: 1.38 !important;
+          letter-spacing: 0 !important;
+          caret-color: #8a54ee;
+        }
+
+        .sf-free-confirm-page .sf-free-confirm-card .sf-free-confirm-textarea {
+          border-color: transparent !important;
+          background: transparent !important;
+          color: #101342 !important;
+          font-size: clamp(2.05rem, 8.25vw, 2.75rem) !important;
+          font-weight: 950 !important;
+          line-height: 1.38 !important;
+          appearance: none;
+        }
+
+        .sf-free-confirm-page .sf-free-confirm-textarea::placeholder {
+          color: rgba(81, 73, 126, .42) !important;
         }
 
         .sf-free-confirm-note {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: .72rem;
-          margin: .95rem 0 1rem;
+          gap: .56rem;
+          margin: .72rem 0 .85rem;
           color: rgba(48,48,93,.72);
-          font-size: clamp(.96rem, 3.8vw, 1.2rem);
+          font-size: clamp(.78rem, 3.15vw, .94rem);
           font-weight: 650;
-          line-height: 1.45;
+          line-height: 1.35;
           text-align: center;
+          white-space: nowrap;
         }
 
         .sf-free-confirm-note svg {
-          width: 1.65rem;
-          height: 1.65rem;
+          width: 1.28rem;
+          height: 1.28rem;
           flex: 0 0 auto;
           fill: #7f56ee;
           stroke: white;
@@ -409,22 +441,23 @@ export default function FreeStudyPageThree({
 
         .sf-free-confirm-actions {
           display: grid;
-          grid-template-columns: minmax(0, .9fr) minmax(0, 1.42fr);
-          gap: .88rem;
-          margin-bottom: 1.05rem;
+          grid-template-columns: minmax(0, .88fr) minmax(0, 1.45fr);
+          gap: .78rem;
+          margin-bottom: .9rem;
         }
 
         .sf-free-confirm-retry,
         .sf-free-confirm-button {
           display: flex;
-          min-height: 3.95rem;
+          min-height: clamp(3.05rem, 8.6dvh, 3.65rem);
           align-items: center;
           justify-content: center;
-          gap: .66rem;
-          border-radius: 1.32rem;
-          font-size: clamp(.98rem, 3.75vw, 1.22rem);
+          gap: .52rem;
+          border-radius: 1.18rem;
+          font-size: clamp(.84rem, 3.45vw, 1.08rem);
           font-weight: 900;
           cursor: pointer;
+          white-space: nowrap;
         }
 
         .sf-free-confirm-retry {
@@ -451,32 +484,38 @@ export default function FreeStudyPageThree({
 
         .sf-free-record-divider {
           height: 1px;
-          margin: 0 0 1.1rem;
+          margin: 0 0 .78rem;
           background-image: linear-gradient(90deg, transparent 0, transparent 2%, rgba(161,117,238,.34) 2%, rgba(161,117,238,.34) 4%, transparent 4%, transparent 7%);
           background-size: 1.4rem 1px;
         }
 
         .sf-free-record-panel {
           border: 1px solid rgba(157,111,233,.13);
-          border-radius: 1.65rem;
-          background: rgba(255,255,255,.72);
-          padding: 1.15rem 1rem 1.1rem;
+          border-radius: 1.5rem;
+          background: rgba(255,255,255,.78);
+          padding: .92rem .92rem 1rem;
           text-align: center;
           box-shadow: 0 18px 42px rgba(111,78,182,.1), inset 0 1px 0 rgba(255,255,255,.95);
         }
 
         .sf-free-confirm-page.is-confirming .sf-free-record-panel {
-          opacity: .46;
+          background: rgba(255,255,255,.62);
+        }
+
+        .sf-free-confirm-page.is-confirming .sf-free-record-panel h2,
+        .sf-free-confirm-page.is-confirming .sf-free-record-mic-row,
+        .sf-free-confirm-page.is-confirming .sf-free-record-stop {
+          opacity: .42;
         }
 
         .sf-free-record-panel h2 {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: .66rem;
+          gap: .5rem;
           margin: 0;
           color: #8a54ee;
-          font-size: clamp(1.32rem, 5.3vw, 1.82rem);
+          font-size: clamp(1.16rem, 4.85vw, 1.56rem);
           font-weight: 950;
           line-height: 1.14;
         }
@@ -491,17 +530,17 @@ export default function FreeStudyPageThree({
         }
 
         .sf-free-record-panel > p {
-          margin: .38rem 0 0;
+          margin: .3rem 0 0;
           color: rgba(41,43,86,.72);
-          font-size: clamp(.94rem, 3.7vw, 1.12rem);
+          font-size: clamp(.82rem, 3.35vw, .98rem);
           font-weight: 650;
         }
 
         .sf-free-record-status {
           display: none;
-          margin-top: .72rem;
+          margin-top: .54rem;
           color: #8a54ee;
-          font-size: clamp(1.02rem, 4.3vw, 1.22rem);
+          font-size: clamp(.96rem, 3.9vw, 1.12rem);
           font-weight: 900;
         }
 
@@ -514,8 +553,8 @@ export default function FreeStudyPageThree({
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: clamp(.85rem, 5.6vw, 1.95rem);
-          margin: .95rem 0 .82rem;
+          gap: clamp(.78rem, 5vw, 1.7rem);
+          margin: .72rem 0 .66rem;
         }
 
         .sf-free-record-wave {
@@ -534,7 +573,7 @@ export default function FreeStudyPageThree({
 
         .sf-free-record-mic {
           display: grid;
-          width: clamp(5.35rem, 22vw, 6.7rem);
+          width: clamp(4.55rem, 19.6vw, 5.65rem);
           aspect-ratio: 1;
           place-items: center;
           border: .55rem solid rgba(255,255,255,.82);
@@ -543,6 +582,14 @@ export default function FreeStudyPageThree({
           color: white;
           box-shadow: 0 15px 34px rgba(133,78,235,.24), 0 0 0 .85rem rgba(148,94,238,.12);
           cursor: pointer;
+        }
+
+        .sf-free-confirm-page.is-recording-english .sf-free-record-mic {
+          width: clamp(5rem, 21vw, 6.2rem);
+          box-shadow:
+            0 16px 36px rgba(133,78,235,.26),
+            0 0 0 .76rem rgba(148,94,238,.12),
+            0 0 0 1.35rem rgba(190,160,246,.1);
         }
 
         .sf-free-confirm-page.is-confirming .sf-free-record-mic {
@@ -562,25 +609,25 @@ export default function FreeStudyPageThree({
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: .55rem;
-          width: min(100%, 16.4rem);
-          min-height: 2.9rem;
+          gap: .45rem;
+          width: min(100%, 16.7rem);
+          min-height: 2.55rem;
           border: 1px solid #9b63ef;
           border-radius: 999px;
           background: rgba(255,255,255,.74);
           color: #8353ef;
-          font-size: clamp(.96rem, 3.7vw, 1.06rem);
+          font-size: clamp(.82rem, 3.35vw, .98rem);
           font-weight: 850;
           cursor: pointer;
         }
 
         .sf-free-record-tip {
-          margin: .9rem auto 0;
-          border-radius: 1rem;
+          margin: .65rem auto 0;
+          border-radius: .86rem;
           background: rgba(240,232,255,.78);
-          padding: .82rem .95rem;
+          padding: .62rem .82rem;
           color: rgba(76,62,125,.72);
-          font-size: clamp(.92rem, 3.55vw, 1rem);
+          font-size: clamp(.78rem, 3.1vw, .92rem);
           font-weight: 650;
         }
 
@@ -642,16 +689,21 @@ export default function FreeStudyPageThree({
 
         @media (max-width: 360px) {
           .sf-free-confirm-frame {
-            padding-left: 1rem;
-            padding-right: 1rem;
+            padding-left: .86rem;
+            padding-right: .86rem;
           }
 
-          .sf-free-confirm-actions {
-            grid-template-columns: 1fr;
+          .sf-free-confirm-header {
+            grid-template-columns: 3rem minmax(0, 1fr) 3rem !important;
           }
 
           .sf-free-confirm-textarea {
-            font-size: 2rem;
+            font-size: 1.85rem !important;
+          }
+
+          .sf-free-confirm-retry,
+          .sf-free-confirm-button {
+            font-size: .82rem;
           }
         }
       `}</style>
