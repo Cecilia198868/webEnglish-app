@@ -100,6 +100,9 @@ export default function HomePageClient() {
           <Sparkle className={styles.topSparkle} />
           <span className={styles.helloBubble}>Hello!</span>
         </div>
+        <span className={styles.chatDecorBubble} aria-hidden="true" />
+        <span className={styles.decorStarLeft} aria-hidden="true" />
+        <span className={styles.decorStarRight} aria-hidden="true" />
 
         <h1 className={styles.brand}>SpeakFlow</h1>
         <h2 className={styles.heroTitle}>

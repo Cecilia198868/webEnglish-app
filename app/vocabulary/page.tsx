@@ -666,7 +666,14 @@ function WordIllustration() {
 }
 
 function HighlightedExample({ sentence }: { sentence: string }) {
-  return <InteractiveExpressionText sourceSentence={sentence} text={sentence} />;
+  return (
+    <InteractiveExpressionText
+      highlightClassName="sf-vocabulary-example-highlight"
+      sourceSentence={sentence}
+      text={sentence}
+      wordClassName="sf-vocabulary-example-word"
+    />
+  );
 }
 
 function getVocabularyCreatedTime(word: VocabularyWord) {

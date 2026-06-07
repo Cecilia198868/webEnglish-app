@@ -353,12 +353,12 @@ export default function AiGuidedExpressionStepOne({
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: clamp(0.36rem, 1.8vw, 0.52rem);
+          gap: clamp(0.32rem, 1.55vw, 0.46rem);
         }
 
         .sf-ai-guide-start-logo {
-          width: clamp(1.7rem, 8.1vw, 2.2rem);
-          height: clamp(1.7rem, 8.1vw, 2.2rem);
+          width: clamp(1.53rem, 7.25vw, 1.98rem);
+          height: clamp(1.53rem, 7.25vw, 1.98rem);
           border-radius: 0.62rem;
           background: rgba(255, 255, 255, 0.9);
           display: grid;
@@ -382,16 +382,16 @@ export default function AiGuidedExpressionStepOne({
 
         .sf-ai-guide-start-brand-title {
           color: #070c31;
-          font-size: clamp(0.92rem, 4.6vw, 1.32rem);
+          font-size: clamp(0.84rem, 4.15vw, 1.18rem);
           font-weight: 1000;
           letter-spacing: 0;
           white-space: nowrap;
         }
 
         .sf-ai-guide-start-brand-subtitle {
-          margin-top: 0.18rem;
+          margin-top: 0.14rem;
           color: #4d66ff;
-          font-size: clamp(0.4rem, 2vw, 0.58rem);
+          font-size: clamp(0.36rem, 1.78vw, 0.52rem);
           font-weight: 900;
           letter-spacing: 0.17em;
           white-space: nowrap;
@@ -805,13 +805,14 @@ export default function AiGuidedExpressionStepOne({
         }
 
         .sf-ai-guide-start-step-icon svg {
-          width: 55%;
-          height: 55%;
+          width: 57%;
+          height: 57%;
           fill: none;
           stroke: currentColor;
-          stroke-width: 3.6;
+          stroke-width: 2;
           stroke-linecap: round;
           stroke-linejoin: round;
+          vector-effect: non-scaling-stroke;
         }
 
         .sf-ai-guide-start-help-backdrop {
@@ -970,6 +971,17 @@ export default function AiGuidedExpressionStepOne({
           }
         }
 
+        @keyframes sf-ai-guide-start-mic-breathe {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.96;
+          }
+          50% {
+            transform: scale(1.05);
+            opacity: 1;
+          }
+        }
+
         @media (min-width: 720px) {
           .sf-ai-guide-start-shell {
             width: 430px;
@@ -1072,6 +1084,9 @@ export default function AiGuidedExpressionStepOne({
         }
 
         .sf-ai-guide-start-header {
+          min-height: clamp(2.34rem, 8.4vw, 2.76rem);
+          padding: 0.22rem clamp(0.38rem, 2vw, 0.58rem);
+          grid-template-columns: clamp(1.92rem, 8.4vw, 2.42rem) minmax(0, 1fr) clamp(1.92rem, 8.4vw, 2.42rem);
           border-radius: 1.46rem !important;
           background: rgba(255, 255, 255, 0.82);
           box-shadow:
@@ -1081,6 +1096,8 @@ export default function AiGuidedExpressionStepOne({
 
         .sf-ai-guide-start-home-button,
         .sf-ai-guide-start-help-button {
+          width: clamp(1.92rem, 8.4vw, 2.42rem);
+          height: clamp(1.92rem, 8.4vw, 2.42rem);
           box-shadow:
             0 0.62rem 1.2rem rgba(85, 99, 154, 0.13),
             inset 0 0 0 1px rgba(219, 226, 246, 0.78);
@@ -1091,12 +1108,14 @@ export default function AiGuidedExpressionStepOne({
         }
 
         .sf-ai-guide-start-title {
-          font-size: clamp(2.1rem, 10.6vw, 3rem);
+          font-size: clamp(1.82rem, 8.9vw, 2.58rem);
+          font-weight: 700;
           line-height: 1.03;
         }
 
         .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-title {
-          font-size: clamp(1.72rem, 8.7vw, 2.42rem);
+          font-size: clamp(1.58rem, 7.55vw, 2.18rem);
+          font-weight: 750;
         }
 
         .sf-ai-guide-start-subtitle {
@@ -1112,11 +1131,11 @@ export default function AiGuidedExpressionStepOne({
 
         .sf-ai-guide-start-mic-zone {
           margin-top: clamp(0.64rem, 2.1dvh, 1rem);
-          min-height: clamp(8.6rem, 41vw, 11.1rem);
+          min-height: clamp(8.28rem, 38.5vw, 10.55rem);
         }
 
         .sf-ai-guide-start-mic-ring {
-          width: clamp(7.95rem, 40.5vw, 10.85rem);
+          width: clamp(7.55rem, 37.8vw, 10.1rem);
         }
 
         .sf-ai-guide-start-mic-ring::before {
@@ -1150,6 +1169,7 @@ export default function AiGuidedExpressionStepOne({
             inset 0 0 0 0.14rem rgba(255, 255, 255, 0.9),
             inset -0.9rem -1.1rem 2.2rem rgba(34, 70, 210, 0.18),
             0 0.95rem 2.05rem rgba(105, 90, 223, 0.18);
+          animation: sf-ai-guide-start-mic-breathe 2.5s ease-in-out infinite;
         }
 
         .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-mic-button {
@@ -1169,21 +1189,21 @@ export default function AiGuidedExpressionStepOne({
         }
 
         .sf-ai-guide-start-wave-bars {
-          width: clamp(2.7rem, 13.2vw, 3.85rem);
-          height: clamp(2.5rem, 12vw, 3.6rem);
-          color: rgba(105, 176, 255, 0.42);
+          width: clamp(3.1rem, 15.2vw, 4.42rem);
+          height: clamp(2.82rem, 13.8vw, 4.05rem);
+          color: rgba(105, 176, 255, 0.52);
         }
 
         .sf-ai-guide-start-wave-bars-left {
-          right: calc(50% + clamp(3.68rem, 21.8vw, 5.58rem));
+          right: calc(50% + clamp(3.44rem, 20.8vw, 5.18rem));
         }
 
         .sf-ai-guide-start-wave-bars-right {
-          left: calc(50% + clamp(3.68rem, 21.8vw, 5.58rem));
+          left: calc(50% + clamp(3.44rem, 20.8vw, 5.18rem));
         }
 
         .sf-ai-guide-start-page.is-recording .sf-ai-guide-start-wave-bars {
-          color: rgba(150, 101, 255, 0.58);
+          color: rgba(150, 101, 255, 0.68);
         }
 
         .sf-ai-guide-start-action-area {
@@ -1233,15 +1253,39 @@ export default function AiGuidedExpressionStepOne({
         }
 
         .sf-ai-guide-start-note {
-          color: rgba(72, 78, 122, 0.72);
-          font-size: clamp(0.66rem, 3vw, 0.8rem);
-          font-weight: 820;
+          flex-direction: column;
+          gap: 0.22rem;
+          color: rgba(72, 78, 122, 0.68);
+          font-size: clamp(0.62rem, 2.75vw, 0.74rem);
+          font-weight: 760;
         }
 
         .sf-ai-guide-start-note svg {
-          width: 1rem;
-          height: 1rem;
+          width: 0.95rem;
+          height: 0.95rem;
           stroke: #7d78ff;
+        }
+
+        .sf-ai-guide-start-note-pill {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.34rem;
+          min-height: 1.72rem;
+          padding: 0 0.68rem;
+          border: 1px solid rgba(196, 195, 255, 0.62);
+          border-radius: 999px;
+          color: #5f62a5;
+          background: rgba(255, 255, 255, 0.66);
+          box-shadow:
+            0 0.5rem 1rem rgba(94, 101, 172, 0.07),
+            inset 0 1px 0 rgba(255, 255, 255, 0.88);
+        }
+
+        .sf-ai-guide-start-note-save {
+          color: rgba(92, 96, 136, 0.62);
+          font-size: 0.95em;
+          font-weight: 720;
         }
 
         .sf-ai-guide-start-help-card {
@@ -1393,9 +1437,12 @@ export default function AiGuidedExpressionStepOne({
           </button>
 
           <p className="sf-ai-guide-start-note">
-            <CheckCircleGlyph />
-            <span>
-              免费体验 {FREE_PRACTICE_DAILY_LIMIT} 句 · 登录可保存学习记录
+            <span className="sf-ai-guide-start-note-pill">
+              <CheckCircleGlyph />
+              <span>免费体验 {FREE_PRACTICE_DAILY_LIMIT} 句</span>
+            </span>
+            <span className="sf-ai-guide-start-note-save">
+              登录可保存学习记录
             </span>
           </p>
         </section>

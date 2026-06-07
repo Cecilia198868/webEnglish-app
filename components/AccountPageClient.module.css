@@ -1052,6 +1052,464 @@
   color: #ff3f68;
 }
 
+.proUpgradeView {
+  display: grid;
+  gap: 16px;
+}
+
+.proUpgradeHero,
+.proUpgradeActiveCard,
+.proUpgradePlan,
+.proUpgradeFeaturePanel,
+.proUpgradeRestoreCard {
+  border: 1px solid rgba(226, 229, 247, 0.9);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 20px 54px rgba(84, 72, 146, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.proUpgradeHero {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  justify-items: center;
+  min-height: 262px;
+  border-radius: 30px;
+  padding: 25px 18px 23px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(144, 103, 255, 0.2), transparent 48%),
+    radial-gradient(circle at 12% 84%, rgba(78, 176, 255, 0.14), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(249, 246, 255, 0.82));
+}
+
+.proUpgradeHero::before,
+.proUpgradeHero::after {
+  position: absolute;
+  content: "";
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.proUpgradeHero::before {
+  inset: 22px 24px auto;
+  height: 156px;
+  border: 1px solid rgba(126, 118, 255, 0.12);
+  box-shadow:
+    0 0 0 26px rgba(126, 118, 255, 0.035),
+    0 0 0 52px rgba(126, 118, 255, 0.025);
+}
+
+.proUpgradeHero::after {
+  right: -42px;
+  bottom: -56px;
+  width: 176px;
+  height: 176px;
+  background: rgba(118, 92, 255, 0.12);
+  filter: blur(12px);
+}
+
+.proUpgradeSparkle {
+  position: absolute;
+  z-index: 1;
+  color: #8b67ff;
+  font-size: 1.2rem;
+  font-weight: 950;
+  opacity: 0.55;
+}
+
+.proUpgradeSparkle:nth-child(1) {
+  top: 48px;
+  left: 34px;
+}
+
+.proUpgradeSparkle:nth-child(2) {
+  right: 42px;
+  bottom: 58px;
+  color: #4f90ff;
+  font-size: 0.95rem;
+  opacity: 0.38;
+}
+
+.proUpgradeIcon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 68px;
+  height: 68px;
+  place-items: center;
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(242, 235, 255, 0.9)),
+    #ffffff;
+  color: #765cff;
+  box-shadow:
+    0 18px 42px rgba(118, 92, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.proUpgradeIcon svg {
+  width: 36px;
+  height: 36px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.8;
+}
+
+.proUpgradeEyebrow,
+.proUpgradeHero h2,
+.proUpgradeHero p,
+.proUpgradeFeaturePanel h3,
+.proUpgradeActiveCard strong,
+.proUpgradeActiveCard small,
+.proUpgradeRestoreCard strong,
+.proUpgradeRestoreCard small {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+.proUpgradeEyebrow {
+  margin-top: 13px;
+  color: #765cff;
+  font-size: 0.82rem;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.proUpgradeHero h2 {
+  margin-top: 9px;
+  background: linear-gradient(90deg, #11183f 0%, #765cff 58%, #2f72ff 100%);
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.78rem, 7.8vw, 2.36rem);
+  font-weight: 950;
+  line-height: 1.08;
+}
+
+.proUpgradeHero p {
+  width: min(100%, 338px);
+  margin-top: 10px;
+  color: rgba(21, 31, 68, 0.66);
+  font-size: 0.94rem;
+  font-weight: 820;
+  line-height: 1.55;
+}
+
+.proUpgradeChips {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.proUpgradeChips span {
+  border-radius: 999px;
+  background: rgba(239, 234, 255, 0.9);
+  color: #6a55df;
+  font-size: 0.78rem;
+  font-weight: 950;
+  padding: 7px 11px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.proUpgradeActiveCard,
+.proUpgradeRestoreCard {
+  display: grid;
+  align-items: center;
+  border-radius: 24px;
+  padding: 16px;
+}
+
+.proUpgradeActiveCard {
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(82, 211, 124, 0.14), transparent 42%),
+    rgba(255, 255, 255, 0.84);
+}
+
+.proUpgradeActiveIcon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #4bd26f, #25b65a);
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(45, 191, 95, 0.22);
+}
+
+.proUpgradeActiveIcon svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.2;
+}
+
+.proUpgradeActiveCopy {
+  display: grid;
+  gap: 4px;
+}
+
+.proUpgradeActiveCard strong,
+.proUpgradeRestoreCard strong {
+  color: #10163b;
+  font-size: 1rem;
+  font-weight: 950;
+  line-height: 1.25;
+}
+
+.proUpgradeActiveCard small,
+.proUpgradeRestoreCard small {
+  color: rgba(21, 31, 68, 0.56);
+  font-size: 0.84rem;
+  font-weight: 780;
+  line-height: 1.35;
+}
+
+.proUpgradeActiveCard button,
+.proUpgradeRestoreCard button {
+  grid-column: 1 / -1;
+  min-height: 48px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 17px;
+  background: linear-gradient(135deg, #765cff 0%, #4f7dff 100%);
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 950;
+  box-shadow: 0 14px 28px rgba(118, 92, 255, 0.22);
+}
+
+.proUpgradePlans {
+  display: grid;
+  gap: 13px;
+}
+
+.proUpgradePlan {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 11px;
+  min-height: 166px;
+  border-radius: 26px;
+  padding: 18px;
+  color: #10163b;
+  text-align: left;
+}
+
+.proUpgradePlan::after {
+  position: absolute;
+  right: -38px;
+  top: -42px;
+  width: 118px;
+  height: 118px;
+  border-radius: 999px;
+  background: rgba(118, 92, 255, 0.12);
+  content: "";
+}
+
+.proUpgradePlan[data-featured="true"] {
+  border-color: rgba(132, 103, 255, 0.68);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(191, 91, 255, 0.14), transparent 38%),
+    rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 22px 58px rgba(118, 92, 255, 0.18),
+    0 0 0 3px rgba(118, 92, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.proUpgradePlanTop,
+.proUpgradePrice,
+.proUpgradeDescription,
+.proUpgradePlanAction {
+  position: relative;
+  z-index: 1;
+}
+
+.proUpgradePlanTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.proUpgradePlanTop strong {
+  color: #10163b;
+  font-size: 1.08rem;
+  font-weight: 950;
+}
+
+.proUpgradePlanTop em {
+  border-radius: 999px;
+  background: linear-gradient(135deg, #765cff, #c85cff);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 950;
+  padding: 6px 11px;
+  box-shadow: 0 10px 20px rgba(118, 92, 255, 0.2);
+}
+
+.proUpgradePrice {
+  color: #10163b;
+  font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
+  font-size: clamp(2.15rem, 10vw, 3rem);
+  font-weight: 950;
+  line-height: 0.95;
+}
+
+.proUpgradePrice small {
+  margin-left: 5px;
+  color: rgba(21, 31, 68, 0.58);
+  font-size: 0.95rem;
+  font-weight: 850;
+}
+
+.proUpgradeDescription {
+  color: rgba(21, 31, 68, 0.58);
+  font-size: 0.92rem;
+  font-weight: 820;
+  line-height: 1.36;
+}
+
+.proUpgradePlanAction {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 17px;
+  background: linear-gradient(135deg, #765cff 0%, #5b72ff 62%, #326dff 100%);
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 950;
+  box-shadow:
+    0 16px 32px rgba(84, 112, 255, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.proUpgradePlanAction svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.proUpgradeFeaturePanel {
+  display: grid;
+  gap: 13px;
+  border-radius: 26px;
+  padding: 18px;
+}
+
+.proUpgradeFeaturePanel h3 {
+  color: #10163b;
+  font-size: 1.16rem;
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.proUpgradeFeatureGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.proUpgradeFeatureItem {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 66px;
+  border-radius: 20px;
+  background: rgba(248, 246, 255, 0.78);
+  padding: 10px 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.proUpgradeFeatureIcon {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #8d73ff, #5335f5);
+  color: #ffffff;
+  box-shadow:
+    0 13px 26px rgba(102, 81, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.26);
+}
+
+.proUpgradeFeatureIcon svg {
+  width: 29px;
+  height: 29px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.8;
+}
+
+.proUpgradeFeatureItem span:last-child {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.proUpgradeFeatureItem strong {
+  color: #10163b;
+  font-size: 1rem;
+  font-weight: 950;
+  line-height: 1.12;
+}
+
+.proUpgradeFeatureItem small {
+  overflow: hidden;
+  color: rgba(21, 31, 68, 0.56);
+  font-size: 0.82rem;
+  font-weight: 780;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.proUpgradeRestoreCard {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(126, 92, 255, 0.11), transparent 44%),
+    rgba(255, 255, 255, 0.78);
+}
+
+.proUpgradeRestoreCard button {
+  grid-column: auto;
+  min-width: 96px;
+  margin-top: 0;
+  padding: 0 16px;
+}
+
+.proUpgradePlan:disabled,
+.proUpgradeActiveCard button:disabled,
+.proUpgradeRestoreCard button:disabled {
+  cursor: progress;
+  opacity: 0.72;
+}
+
 .planGrid {
   display: grid;
   gap: 12px;

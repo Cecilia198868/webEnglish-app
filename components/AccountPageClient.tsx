@@ -5,8 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { useLanguage } from "@/components/LanguageProvider";
 import styles from "./AccountPageClient.module.css";
 import { playSpeakFlowTts, stopSpeakFlowTts } from "@/lib/speakFlowTtsClient";
+import type { AppLanguage } from "@/lib/i18n";
 import {
   SPEAKFLOW_DEFAULT_VOICE_ID,
   SPEAKFLOW_VOICES,
@@ -134,18 +136,36 @@ const displayFontSizeOptions: Array<{
   },
 ];
 
-const accountPanelTitles: Record<AccountPanelId, { eyebrow: string; title: string }> = {
-  aboutSpeakFlow: { eyebrow: "关于", title: "关于 SpeakFlow" },
-  accountManagement: { eyebrow: "账户", title: "账号管理" },
-  helpCenter: { eyebrow: "帮助", title: "帮助中心" },
-  interfaceLanguage: { eyebrow: "学习体验", title: "界面语言" },
-  manageSubscription: { eyebrow: "订阅", title: "管理订阅" },
-  notifications: { eyebrow: "消息", title: "通知" },
-  referrals: { eyebrow: "会员奖励", title: "邀请好友" },
-  reportIssue: { eyebrow: "帮助", title: "联系与反馈" },
-  subscription: { eyebrow: "会员", title: "SpeakFlow Pro" },
-  textSize: { eyebrow: "学习体验", title: "文字大小" },
-  voice: { eyebrow: "学习体验", title: "声音" },
+const accountPanelTitles: Record<
+  AppLanguage,
+  Record<AccountPanelId, { eyebrow: string; title: string }>
+> = {
+  en: {
+    aboutSpeakFlow: { eyebrow: "About", title: "About SpeakFlow" },
+    accountManagement: { eyebrow: "Account", title: "Account Management" },
+    helpCenter: { eyebrow: "Help", title: "Help Center" },
+    interfaceLanguage: { eyebrow: "Learning Experience", title: "Interface Language" },
+    manageSubscription: { eyebrow: "Subscription", title: "Manage Subscription" },
+    notifications: { eyebrow: "Messages", title: "Notifications" },
+    referrals: { eyebrow: "Member Rewards", title: "Invite Friends" },
+    reportIssue: { eyebrow: "Help", title: "Contact & Feedback" },
+    subscription: { eyebrow: "Membership", title: "SpeakFlow Pro" },
+    textSize: { eyebrow: "Learning Experience", title: "Text Size" },
+    voice: { eyebrow: "Learning Experience", title: "Voice" },
+  },
+  "zh-CN": {
+    aboutSpeakFlow: { eyebrow: "关于", title: "关于 SpeakFlow" },
+    accountManagement: { eyebrow: "账户", title: "账号管理" },
+    helpCenter: { eyebrow: "帮助", title: "帮助中心" },
+    interfaceLanguage: { eyebrow: "学习体验", title: "界面语言" },
+    manageSubscription: { eyebrow: "订阅", title: "管理订阅" },
+    notifications: { eyebrow: "消息", title: "通知" },
+    referrals: { eyebrow: "会员奖励", title: "邀请好友" },
+    reportIssue: { eyebrow: "帮助", title: "联系与反馈" },
+    subscription: { eyebrow: "会员", title: "SpeakFlow Pro" },
+    textSize: { eyebrow: "学习体验", title: "文字大小" },
+    voice: { eyebrow: "学习体验", title: "声音" },
+  },
 };
 
 const proPlanCards = [
@@ -166,13 +186,6 @@ const proPlanCards = [
   },
 ] as const;
 
-const proFeatureRows = [
-  "不限次数 AI 口语练习",
-  "经典场景和课程完整开放",
-  "表达库、收藏和学习记录持续保存",
-  "更自然的英文朗读和跟读体验",
-];
-
 const interfaceLanguageOptions = [
   { available: true, code: "zh-CN", localName: "简体中文", name: "Chinese (Simplified)" },
   { available: true, code: "en", localName: "English", name: "English" },
@@ -181,6 +194,152 @@ const interfaceLanguageOptions = [
   { available: false, code: "ko", localName: "한국어", name: "Korean" },
   { available: false, code: "fr", localName: "Français", name: "French" },
 ] as const;
+
+const accountPageCopy: Record<
+  AppLanguage,
+  {
+    accountCenterLabel: string;
+    accountTitle: string;
+    adminDashboard: string;
+    backToAccountSettings: string;
+    contactFeedback: string;
+    help: string;
+    helpCenter: string;
+    home: string;
+    homeDescription: string;
+    interfaceLanguage: string;
+    interfaceLanguagePanel: {
+      available: string;
+      current: (languageName: string) => string;
+      description: string;
+      planned: string;
+    };
+    learningExperience: string;
+    manageSubscription: string;
+    notifications: string;
+    referrals: string;
+    accountManagement: string;
+    aboutSpeakFlow: string;
+    privacy: string;
+    signedInFallback: string;
+    signOut: string;
+    terms: string;
+    textSize: string;
+    textSizePanel: {
+      chooseTitle: string;
+      note: string;
+      options: Record<DisplayFontSize, { description: string; label: string }>;
+      title: string;
+    };
+    voice: string;
+    voicePanel: {
+      emptyBody: string;
+      emptyTitle: string;
+      subtitle: string;
+      title: string;
+    };
+  }
+> = {
+  en: {
+    accountCenterLabel: "SpeakFlow Account Center",
+    accountTitle: "Account",
+    adminDashboard: "Admin Dashboard",
+    backToAccountSettings: "Back to account settings",
+    contactFeedback: "Contact & Feedback",
+    help: "Help",
+    helpCenter: "Help Center",
+    home: "Home",
+    homeDescription: "Return to the learning home",
+    interfaceLanguage: "Interface Language",
+    interfaceLanguagePanel: {
+      available: "Available",
+      current: (languageName) => `Current language: ${languageName}`,
+      description:
+        "Choose the interface language used by SpeakFlow menus, account pages, and settings pages.",
+      planned: "Planned",
+    },
+    learningExperience: "Learning Experience",
+    manageSubscription: "Manage Subscription",
+    notifications: "Notifications",
+    referrals: "Invite Friends",
+    accountManagement: "Account Management",
+    aboutSpeakFlow: "About SpeakFlow",
+    privacy: "Privacy Policy",
+    signedInFallback: "Signed in to SpeakFlow",
+    signOut: "Sign Out",
+    terms: "Terms of Service",
+    textSize: "Text Size",
+    textSizePanel: {
+      chooseTitle: "Choose text size",
+      note:
+        "This preference is saved on this device and affects the home page, learning pages, expression library, account pages, and pop-ups.",
+      options: {
+        large: { description: "More prominent text", label: "Large" },
+        small: { description: "More compact information", label: "Small" },
+        standard: { description: "Default reading size", label: "Standard" },
+      },
+      title: "Text Size",
+    },
+    voice: "Voice",
+    voicePanel: {
+      emptyBody: "Please check your browser or system speech service, then reopen this page.",
+      emptyTitle: "No English voices are available",
+      subtitle: "This affects English playback and shadowing previews on practice pages.",
+      title: "Choose an English reading voice",
+    },
+  },
+  "zh-CN": {
+    accountCenterLabel: "SpeakFlow 账户中心",
+    accountTitle: "账户",
+    adminDashboard: "后台管理",
+    backToAccountSettings: "返回账户设置",
+    contactFeedback: "联系与反馈",
+    help: "帮助",
+    helpCenter: "帮助中心",
+    home: "首页",
+    homeDescription: "返回学习首页",
+    interfaceLanguage: "界面语言",
+    interfaceLanguagePanel: {
+      available: "可用",
+      current: (languageName) => `当前语言：${languageName}`,
+      description: "选择 SpeakFlow 菜单、账户页和设置页使用的界面语言。",
+      planned: "计划中",
+    },
+    learningExperience: "学习体验",
+    manageSubscription: "管理订阅",
+    notifications: "通知",
+    referrals: "邀请好友",
+    accountManagement: "账号管理",
+    aboutSpeakFlow: "关于 SpeakFlow",
+    privacy: "隐私政策",
+    signedInFallback: "已登录 SpeakFlow",
+    signOut: "退出登录",
+    terms: "用户协议",
+    textSize: "文字大小",
+    textSizePanel: {
+      chooseTitle: "选择文字大小",
+      note:
+        "这个选择会保存在这台设备上，并同步影响首页、学习页、表达库、账户页和弹窗。",
+      options: {
+        large: { description: "文字更醒目", label: "大" },
+        small: { description: "信息更紧凑", label: "小" },
+        standard: { description: "默认阅读大小", label: "标准" },
+      },
+      title: "文字大小",
+    },
+    voice: "声音",
+    voicePanel: {
+      emptyBody: "请检查浏览器或系统的语音服务，稍后重新进入这个页面。",
+      emptyTitle: "没有读取到可用英文声音",
+      subtitle: "这里会影响练习页里的英文播放和跟读预览。",
+      title: "选择英文朗读声音",
+    },
+  },
+};
+
+function isSelectableInterfaceLanguage(code: string): code is AppLanguage {
+  return code === "en" || code === "zh-CN";
+}
 
 const feedbackIssueTypes = [
   { label: "付款或 Pro 状态", value: "payment" },
@@ -224,7 +383,7 @@ function isTextSizePanel(value: string) {
 }
 
 function isAccountPanelId(value: string): value is AccountPanelId {
-  return value in accountPanelTitles;
+  return value in accountPanelTitles["zh-CN"];
 }
 
 function formatRelativeNotificationTime(value: string) {
@@ -628,6 +787,8 @@ export default function AccountPageClient({
   userName,
 }: AccountPageClientProps) {
   const router = useRouter();
+  const { language, setLanguage } = useLanguage();
+  const accountCopy = accountPageCopy[language];
   const displayName = useMemo(
     () => getDisplayName(userName, userEmail),
     [userEmail, userName]
@@ -655,7 +816,6 @@ export default function AccountPageClient({
   const [feedbackStatus, setFeedbackStatus] = useState<
     "error" | "idle" | "success" | "submitting"
   >("idle");
-  const [interfaceLanguage, setInterfaceLanguage] = useState("zh-CN");
   const [notifications, setNotifications] = useState<NotificationItem[] | null>(
     null
   );
@@ -980,7 +1140,7 @@ export default function AccountPageClient({
         body: JSON.stringify({
           contactEmail: feedbackForm.contactEmail,
           issueType: feedbackForm.issueType,
-          language: "zh-CN",
+          language,
           message: feedbackForm.message,
           page: feedbackForm.page,
         }),
@@ -1005,52 +1165,59 @@ export default function AccountPageClient({
   }
 
   if (isTextSizePanel(activePanel)) {
+    const textSizeCopy = accountCopy.textSizePanel;
+
     return (
       <main className={styles.page}>
-        <section className={`${styles.phone} ${styles.settingsPhone}`} aria-label="文字大小">
+        <section
+          className={`${styles.phone} ${styles.settingsPhone}`}
+          aria-label={textSizeCopy.title}
+        >
           <header className={styles.settingsHeader}>
             <button
               type="button"
               className={styles.settingsBack}
               onClick={closePanel}
-              aria-label="返回账户设置"
+              aria-label={accountCopy.backToAccountSettings}
             >
               <ChevronIcon />
             </button>
             <div className={styles.settingsTitle}>
-              <p>学习体验</p>
-              <h1>文字大小</h1>
+              <p>{accountCopy.learningExperience}</p>
+              <h1>{textSizeCopy.title}</h1>
             </div>
           </header>
 
           <section className={styles.settingsSection} aria-labelledby="text-size-title">
-            <h2 id="text-size-title">选择文字大小</h2>
+            <h2 id="text-size-title">{textSizeCopy.chooseTitle}</h2>
             <div className={styles.optionStack}>
-              {displayFontSizeOptions.map((option) => (
-                <button
-                  type="button"
-                  key={option.value}
-                  className={styles.optionRow}
-                  data-selected={displayFontSize === option.value}
-                  onClick={() => updateDisplayFontSize(option.value)}
-                >
-                  <span className={styles.optionText}>
-                    <strong>{option.label}</strong>
-                    <small>{option.description}</small>
-                  </span>
-                  <span className={styles.sampleText} data-size={option.value}>
-                    Aa
-                  </span>
-                </button>
-              ))}
+              {displayFontSizeOptions.map((option) => {
+                const optionCopy = textSizeCopy.options[option.value];
+
+                return (
+                  <button
+                    type="button"
+                    key={option.value}
+                    className={styles.optionRow}
+                    data-selected={displayFontSize === option.value}
+                    onClick={() => updateDisplayFontSize(option.value)}
+                  >
+                    <span className={styles.optionText}>
+                      <strong>{optionCopy.label}</strong>
+                      <small>{optionCopy.description}</small>
+                    </span>
+                    <span className={styles.sampleText} data-size={option.value}>
+                      Aa
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </section>
 
           <section className={styles.settingsNote}>
             <MenuIcon name="text" />
-            <p>
-              这个选择会保存在这台设备上，并同步影响首页、学习页、表达库、账户页和弹窗。
-            </p>
+            <p>{textSizeCopy.note}</p>
           </section>
         </section>
       </main>
@@ -1063,59 +1230,115 @@ export default function AccountPageClient({
       : null;
 
   if (secondaryPanel) {
-    const panelTitle = accountPanelTitles[secondaryPanel];
+    const panelTitle = accountPanelTitles[language][secondaryPanel];
     const selectedLanguage =
-      interfaceLanguageOptions.find((option) => option.code === interfaceLanguage) ||
+      interfaceLanguageOptions.find((option) => option.code === language) ||
       interfaceLanguageOptions[0];
 
     const panelContent =
       secondaryPanel === "subscription" ? (
-        <div className={styles.panelStack}>
-          <section className={styles.panelHero}>
-            <span className={styles.panelHeroIcon}>
+        <div className={styles.proUpgradeView}>
+          <section className={styles.proUpgradeHero}>
+            <span className={styles.proUpgradeSparkle} aria-hidden="true">
+              ✦
+            </span>
+            <span className={styles.proUpgradeSparkle} aria-hidden="true">
+              ✦
+            </span>
+            <span className={styles.proUpgradeIcon}>
               <MenuIcon name="star" />
             </span>
-            <div>
-              <h2>让练习不再被次数打断</h2>
-              <p>
-                Pro 适合每天稳定练口语的学习者，解锁更多练习次数、课程和表达复习能力。
-              </p>
+            <p className={styles.proUpgradeEyebrow}>SpeakFlow Pro</p>
+            <h2>让练习不再被次数打断</h2>
+            <p>
+              解锁更多练习次数、完整课程、表达收藏和学习记录，让口语练习每天稳定进行。
+            </p>
+            <div className={styles.proUpgradeChips} aria-label="Pro 权益">
+              <span>无限练习</span>
+              <span>课程全开</span>
+              <span>记录保存</span>
             </div>
           </section>
 
-          <div className={styles.planGrid}>
-            {proPlanCards.map((plan) => (
+          {isProSubscription ? (
+            <section className={styles.proUpgradeActiveCard}>
+              <span className={styles.proUpgradeActiveIcon}>
+                <CheckIcon />
+              </span>
+              <span className={styles.proUpgradeActiveCopy}>
+                <strong>你的 Pro 权限已开启</strong>
+                <small>{subscriptionCopy.subtitle}</small>
+              </span>
               <button
                 type="button"
-                className={styles.planCard}
-                data-featured={plan.id === "yearly"}
-                key={plan.id}
-                onClick={() => void createStripeCheckout(plan.id)}
-                disabled={busyAction === `checkout-${plan.id}`}
+                onClick={() => void openBillingPortal()}
+                disabled={busyAction === "portal"}
               >
-                <span className={styles.planTopLine}>
-                  <strong>{plan.name}</strong>
-                  {"badge" in plan ? <em>{plan.badge}</em> : null}
-                </span>
-                <span className={styles.planPrice}>
-                  {plan.price}
-                  <small>{plan.suffix}</small>
-                </span>
-                <span>{plan.description}</span>
+                {busyAction === "portal" ? "正在打开..." : "管理订阅"}
               </button>
-            ))}
-          </div>
-
-          <section className={styles.panelCard}>
-            <h3>Pro 包含</h3>
-            <ul className={styles.checkList}>
-              {proFeatureRows.map((feature) => (
-                <li key={feature}>
-                  <CheckIcon />
-                  {feature}
-                </li>
+            </section>
+          ) : (
+            <div className={styles.proUpgradePlans}>
+              {proPlanCards.map((plan) => (
+                <button
+                  type="button"
+                  className={styles.proUpgradePlan}
+                  data-featured={plan.id === "yearly"}
+                  key={plan.id}
+                  onClick={() => void createStripeCheckout(plan.id)}
+                  disabled={busyAction === `checkout-${plan.id}`}
+                >
+                  <span className={styles.proUpgradePlanTop}>
+                    <strong>{plan.name}</strong>
+                    {"badge" in plan ? <em>{plan.badge}</em> : null}
+                  </span>
+                  <span className={styles.proUpgradePrice}>
+                    {plan.price}
+                    <small>{plan.suffix}</small>
+                  </span>
+                  <span className={styles.proUpgradeDescription}>
+                    {plan.description}
+                  </span>
+                  <span className={styles.proUpgradePlanAction}>
+                    {busyAction === `checkout-${plan.id}`
+                      ? "正在打开..."
+                      : `开通${plan.name}`}
+                    <ArrowRightIcon />
+                  </span>
+                </button>
               ))}
-            </ul>
+            </div>
+          )}
+
+          <section className={styles.proUpgradeFeaturePanel}>
+            <h3>Pro 包含</h3>
+            <div className={styles.proUpgradeFeatureGrid}>
+              {proSuccessFeatures.map((feature) => (
+                <div className={styles.proUpgradeFeatureItem} key={feature.title}>
+                  <span className={styles.proUpgradeFeatureIcon}>
+                    <ProFeatureIcon name={feature.icon} />
+                  </span>
+                  <span>
+                    <strong>{feature.title}</strong>
+                    <small>{feature.description}</small>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className={styles.proUpgradeRestoreCard}>
+            <div>
+              <strong>已经付款但没有生效？</strong>
+              <small>可以刷新当前邮箱的 Pro 状态。</small>
+            </div>
+            <button
+              type="button"
+              onClick={() => void restorePurchase()}
+              disabled={busyAction === "restore"}
+            >
+              {busyAction === "restore" ? "正在恢复..." : "恢复购买"}
+            </button>
           </section>
         </div>
       ) : secondaryPanel === "manageSubscription" ? (
@@ -1258,8 +1481,8 @@ export default function AccountPageClient({
               <MenuIcon name="headphones" />
             </span>
             <div>
-              <h2>选择英文朗读声音</h2>
-              <p>这里会影响练习页里的英文播放和跟读预览。</p>
+              <h2>{accountCopy.voicePanel.title}</h2>
+              <p>{accountCopy.voicePanel.subtitle}</p>
             </div>
           </section>
 
@@ -1289,8 +1512,8 @@ export default function AccountPageClient({
             ))}
             {SPEAKFLOW_VOICES.length === 0 ? (
               <section className={styles.panelCard}>
-                <h3>没有读取到可用英文声音</h3>
-                <p>请检查浏览器或系统的语音服务，稍后重新进入这个页面。</p>
+                <h3>{accountCopy.voicePanel.emptyTitle}</h3>
+                <p>{accountCopy.voicePanel.emptyBody}</p>
               </section>
             ) : null}
           </div>
@@ -1302,31 +1525,45 @@ export default function AccountPageClient({
               <MenuIcon name="globe" />
             </span>
             <div>
-              <h2>当前语言：{selectedLanguage.localName}</h2>
-              <p>选择 SpeakFlow 菜单、账户页和设置页使用的界面语言。</p>
+              <h2>{accountCopy.interfaceLanguagePanel.current(selectedLanguage.localName)}</h2>
+              <p>{accountCopy.interfaceLanguagePanel.description}</p>
             </div>
           </section>
 
           <div className={styles.optionStack}>
-            {interfaceLanguageOptions.map((option) => (
-              <button
-                type="button"
-                className={styles.choiceRow}
-                data-selected={interfaceLanguage === option.code}
-                key={option.code}
-                disabled={!option.available}
-                onClick={() => option.available && setInterfaceLanguage(option.code)}
-              >
-                <span className={styles.choiceDot}>
-                  {interfaceLanguage === option.code ? <CheckIcon /> : null}
-                </span>
-                <span>
-                  <strong>{option.localName}</strong>
-                  <small>{option.name}</small>
-                </span>
-                <em>{option.available ? "可用" : "计划中"}</em>
-              </button>
-            ))}
+            {interfaceLanguageOptions.map((option) => {
+              const isAvailable =
+                option.available && isSelectableInterfaceLanguage(option.code);
+              const isSelected = language === option.code;
+
+              return (
+                <button
+                  type="button"
+                  className={styles.choiceRow}
+                  data-selected={isSelected}
+                  key={option.code}
+                  disabled={!isAvailable}
+                  onClick={() => {
+                    if (isSelectableInterfaceLanguage(option.code)) {
+                      setLanguage(option.code);
+                    }
+                  }}
+                >
+                  <span className={styles.choiceDot}>
+                    {isSelected ? <CheckIcon /> : null}
+                  </span>
+                  <span>
+                    <strong>{option.localName}</strong>
+                    <small>{option.name}</small>
+                  </span>
+                  <em>
+                    {isAvailable
+                      ? accountCopy.interfaceLanguagePanel.available
+                      : accountCopy.interfaceLanguagePanel.planned}
+                  </em>
+                </button>
+              );
+            })}
           </div>
         </div>
       ) : secondaryPanel === "notifications" ? (
@@ -1502,7 +1739,7 @@ export default function AccountPageClient({
               type="button"
               className={styles.settingsBack}
               onClick={closePanel}
-              aria-label="返回账户设置"
+              aria-label={accountCopy.backToAccountSettings}
             >
               <ChevronIcon />
             </button>
@@ -1531,7 +1768,7 @@ export default function AccountPageClient({
 
   return (
     <main className={styles.page}>
-      <section className={styles.phone} aria-label="SpeakFlow 账户中心">
+      <section className={styles.phone} aria-label={accountCopy.accountCenterLabel}>
         <header className={styles.profile}>
           <div className={styles.avatar}>
             {avatarState.src && !avatarState.failed ? (
@@ -1551,9 +1788,9 @@ export default function AccountPageClient({
           </div>
 
           <div className={styles.profileCopy}>
-            <p>账户</p>
+            <p>{accountCopy.accountTitle}</p>
             <h1>{displayName}</h1>
-            <span>{userEmail || "已登录 SpeakFlow"}</span>
+            <span>{userEmail || accountCopy.signedInFallback}</span>
           </div>
         </header>
 
@@ -1561,8 +1798,8 @@ export default function AccountPageClient({
           <Row
             href="/start"
             icon="home"
-            label="首页"
-            description="返回学习首页"
+            label={accountCopy.home}
+            description={accountCopy.homeDescription}
             tone="purple"
           />
         </Section>
@@ -1578,51 +1815,63 @@ export default function AccountPageClient({
           <Row
             href={accountPageUrl("manageSubscription")}
             icon="card"
-            label="管理订阅"
+            label={accountCopy.manageSubscription}
           />
-          <Row href={accountPageUrl("referrals")} icon="gift" label="邀请好友" />
+          <Row
+            href={accountPageUrl("referrals")}
+            icon="gift"
+            label={accountCopy.referrals}
+          />
           <Row
             href={accountPageUrl("accountManagement")}
             icon="lock"
-            label="账号管理"
+            label={accountCopy.accountManagement}
           />
           {isAdmin ? (
-            <Row href="/admin" icon="grid" label="后台管理" />
+            <Row href="/admin" icon="grid" label={accountCopy.adminDashboard} />
           ) : null}
         </Section>
 
-        <Section title="学习体验">
-          <Row href={accountPageUrl("voice")} icon="headphones" label="声音" />
+        <Section title={accountCopy.learningExperience}>
+          <Row
+            href={accountPageUrl("voice")}
+            icon="headphones"
+            label={accountCopy.voice}
+          />
           <Row
             href={accountPageUrl("textSize")}
             icon="text"
-            label="文字大小"
+            label={accountCopy.textSize}
           />
           <Row
             href={accountPageUrl("interfaceLanguage")}
             icon="globe"
-            label="界面语言"
+            label={accountCopy.interfaceLanguage}
           />
           <Row
             href={accountPageUrl("notifications")}
             icon="bell"
-            label="通知"
+            label={accountCopy.notifications}
           />
         </Section>
 
-        <Section title="帮助">
-          <Row href={accountPageUrl("helpCenter")} icon="help" label="帮助中心" />
+        <Section title={accountCopy.help}>
+          <Row
+            href={accountPageUrl("helpCenter")}
+            icon="help"
+            label={accountCopy.helpCenter}
+          />
           <Row
             href={accountPageUrl("reportIssue")}
             icon="feedback"
-            label="联系与反馈"
+            label={accountCopy.contactFeedback}
           />
-          <Row href="/terms" icon="document" label="用户协议" />
-          <Row href="/privacy" icon="lock" label="隐私政策" />
+          <Row href="/terms" icon="document" label={accountCopy.terms} />
+          <Row href="/privacy" icon="lock" label={accountCopy.privacy} />
           <Row
             href={accountPageUrl("aboutSpeakFlow")}
             icon="info"
-            label="关于 SpeakFlow"
+            label={accountCopy.aboutSpeakFlow}
           />
         </Section>
 
@@ -1634,7 +1883,7 @@ export default function AccountPageClient({
           <span className={styles.logoutIcon}>
             <MenuIcon name="logout" />
           </span>
-          <strong>退出登录</strong>
+          <strong>{accountCopy.signOut}</strong>
         </button>
       </section>
       {showProSuccessModal ? (

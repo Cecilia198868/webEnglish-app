@@ -920,7 +920,7 @@
   display: grid;
   grid-template-columns: 46px max-content minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .starterMenuButton {
@@ -948,9 +948,9 @@
 
 .starterBrand {
   display: inline-grid;
-  grid-template-columns: 40px minmax(0, max-content);
+  grid-template-columns: 56px minmax(0, max-content);
   align-items: center;
-  gap: 7px;
+  gap: 10px;
   min-width: 0;
   color: #10163b;
   text-decoration: none;
@@ -958,11 +958,11 @@
 
 .starterBrandIcon {
   display: grid;
-  width: 40px;
-  height: 40px;
+  width: 56px;
+  height: 56px;
   place-items: center;
   overflow: hidden;
-  border-radius: 13px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 14px 28px rgba(92, 125, 202, 0.13);
 }
@@ -982,7 +982,7 @@
 .starterBrandCopy strong {
   color: #10163b;
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: clamp(1.42rem, 6.1vw, 1.64rem);
+  font-size: clamp(1.54rem, 6.6vw, 1.78rem);
   font-weight: 900;
   letter-spacing: 0;
   line-height: 0.95;
@@ -1007,7 +1007,7 @@
   position: relative;
   z-index: 1;
   min-height: 184px;
-  margin-top: 28px;
+  margin-top: 24px;
 }
 
 .starterHeroCopy {
@@ -1023,7 +1023,7 @@
   font-size: clamp(1.92rem, 8.2vw, 2.18rem);
   font-weight: 950;
   letter-spacing: 0;
-  line-height: 1.12;
+  line-height: 1.26;
   overflow-wrap: normal;
 }
 
@@ -1073,11 +1073,11 @@
 
 .starterRobot {
   position: absolute;
-  right: 36px;
-  top: -18px;
+  right: -6px;
+  top: -38px;
   z-index: 1;
   display: block;
-  width: min(28vw, 112px);
+  width: min(43vw, 178px);
   height: auto;
   filter: drop-shadow(0 24px 34px rgba(91, 92, 218, 0.16));
   pointer-events: none;
@@ -1122,8 +1122,8 @@
 
 .starterRecommendedBody {
   position: relative;
-  min-height: 204px;
-  padding: 64px 22px 20px;
+  min-height: 222px;
+  padding: 72px 22px 26px;
 }
 
 .starterRecommendedCopy {
@@ -1163,8 +1163,8 @@
   top: 64px;
   right: 28px;
   display: grid;
-  width: 116px;
-  height: 104px;
+  width: 137px;
+  height: 123px;
   place-items: center;
   pointer-events: none;
 }
@@ -1267,9 +1267,9 @@
 
 .starterPracticeCard {
   display: grid;
-  grid-template-columns: 52px minmax(0, 1fr) 24px;
+  grid-template-columns: 58px minmax(0, 1fr) 24px;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   min-height: 74px;
   border: 1px solid rgba(226, 235, 252, 0.94);
   border-radius: 22px;
@@ -1299,10 +1299,10 @@
 
 .starterPracticeIcon {
   display: grid;
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   place-items: center;
-  border-radius: 18px;
+  border-radius: 20px;
   background: linear-gradient(135deg, var(--starter-accent), var(--starter-accent-2));
   color: #ffffff;
   box-shadow:
@@ -1311,8 +1311,8 @@
 }
 
 .starterPracticeIcon svg {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -1322,7 +1322,7 @@
 
 .starterPracticeIcon > span {
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: 1.18rem;
+  font-size: 1.32rem;
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1;
@@ -1372,7 +1372,8 @@
 .starterTrust {
   justify-content: center;
   width: 100%;
-  margin-top: 22px;
+  margin-top: 12px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom, 0px));
   color: rgba(21, 31, 68, 0.58);
   font-size: clamp(0.72rem, 2.9vw, 0.82rem);
   font-weight: 850;
@@ -1585,7 +1586,7 @@
 
   .starterTopBar {
     grid-template-columns: 44px max-content minmax(0, 1fr);
-    gap: 10px;
+    gap: 11px;
   }
 
   .starterMenuButton {
@@ -1594,25 +1595,26 @@
   }
 
   .starterBrandIcon {
-    width: 38px;
-    height: 38px;
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
   }
 
   .starterBrand {
-    grid-template-columns: 38px minmax(0, max-content);
-    gap: 6px;
+    grid-template-columns: 50px minmax(0, max-content);
+    gap: 8px;
   }
 
   .starterBrandCopy strong {
-    font-size: 1.32rem;
+    font-size: 1.43rem;
   }
 
   .starterBrandCopy small {
-    font-size: 0.48rem;
+    font-size: 0.52rem;
   }
 
   .starterHero {
-    min-height: 176px;
+    min-height: 178px;
     margin-top: 24px;
   }
 
@@ -1622,6 +1624,7 @@
 
   .starterHeroCopy h1 {
     font-size: 1.78rem;
+    line-height: 1.24;
   }
 
   .starterBenefitRow {
@@ -1630,20 +1633,21 @@
   }
 
   .starterRobot {
-    right: 20px;
-    width: 98px;
+    right: -2px;
+    top: -32px;
+    width: 154px;
   }
 
   .starterRecommendedBody {
-    min-height: 194px;
-    padding: 60px 18px 18px;
+    min-height: 212px;
+    padding: 68px 18px 24px;
   }
 
   .starterBubbleArt {
     top: 64px;
     right: 18px;
-    width: 102px;
-    height: 92px;
+    width: 120px;
+    height: 108px;
   }
 
   .starterRecommendedCopy {
@@ -1666,15 +1670,16 @@
   }
 
   .starterPracticeCard {
-    grid-template-columns: 48px minmax(0, 1fr) 22px;
+    grid-template-columns: 54px minmax(0, 1fr) 22px;
     gap: 10px;
     min-height: 68px;
     padding: 9px 10px;
   }
 
   .starterPracticeIcon {
-    width: 48px;
-    height: 48px;
+    width: 54px;
+    height: 54px;
+    border-radius: 19px;
   }
 
   .starterPracticeCopy strong {
