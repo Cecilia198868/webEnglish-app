@@ -3683,3 +3683,52 @@
   font-size: var(--sf-learning-header-subtitle) !important;
   line-height: 1 !important;
 }
+
+/* Sentence pattern overview title: compact two-line hero requested for the menu page. */
+.overviewHeader {
+  height: 6.875rem !important;
+  min-height: 6.875rem !important;
+  max-height: 6.875rem !important;
+  align-items: start !important;
+  padding: 0 0.65rem !important;
+}
+
+.overviewHeader .roundBack {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  justify-self: start !important;
+}
+
+.overviewHeader > div {
+  display: grid !important;
+  justify-items: center !important;
+  gap: 0.25rem !important;
+  max-width: min(72vw, 20rem) !important;
+}
+
+.overviewHeader h1 {
+  display: grid !important;
+  justify-items: center !important;
+  gap: 0 !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  font-size: clamp(2rem, 7vw, 2.5rem) !important;
+  font-weight: 800 !important;
+  line-height: 0.95 !important;
+}
+
+.overviewHeader h1 span {
+  display: block !important;
+  white-space: nowrap !important;
+}
+
+.overviewHeader p {
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+}
+
+.overviewHeader + .overviewMeta {
+  margin-top: 0.2rem !important;
+}

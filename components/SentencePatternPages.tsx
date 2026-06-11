@@ -486,7 +486,10 @@ export function SentencePatternOverviewPage({
             <HomeMenuIcon label={null} showHint={false} />
           </Link>
           <div>
-            <h1>100 个口语常用句型</h1>
+            <h1>
+              <span>100个口语常用</span>
+              <span>句型</span>
+            </h1>
             <p>掌握句型，开口更轻松</p>
           </div>
         </div>
