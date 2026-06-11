@@ -12,15 +12,71 @@ type PlaySpeakFlowTtsOptions = {
   voiceId?: SpeakFlowVoiceId;
 };
 
+const MAX_TTS_CACHE_ENTRIES = 32;
+const QUICK_FALLBACK_DELAY_MS = 1400;
+
 let currentAudio: HTMLAudioElement | null = null;
 let currentAudioUrl = "";
+let playbackRequestId = 0;
+const ttsBlobCache = new Map<string, Promise<Blob>>();
 
 function normalizeRate(rate: number) {
   return Math.min(Math.max(rate, 0.5), 1.15);
 }
 
+function createTtsCacheKey(text: string, rate: number, voiceId: SpeakFlowVoiceId) {
+  return `${voiceId}\u0001${rate.toFixed(2)}\u0001${text}`;
+}
+
+function rememberTtsBlob(key: string, request: Promise<Blob>) {
+  if (!ttsBlobCache.has(key) && ttsBlobCache.size >= MAX_TTS_CACHE_ENTRIES) {
+    const firstKey = ttsBlobCache.keys().next().value;
+    if (firstKey) {
+      ttsBlobCache.delete(firstKey);
+    }
+  }
+
+  ttsBlobCache.set(key, request);
+}
+
+function getSpeakFlowTtsBlob(
+  text: string,
+  rate: number,
+  voiceId: SpeakFlowVoiceId
+) {
+  const cacheKey = createTtsCacheKey(text, rate, voiceId);
+  const cachedRequest = ttsBlobCache.get(cacheKey);
+  if (cachedRequest) return cachedRequest;
+
+  const request = fetch("/api/text-to-speech", {
+    body: JSON.stringify({
+      rate,
+      text,
+      voice: voiceId,
+    }),
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Text to speech request failed");
+      }
+
+      return response.blob();
+    })
+    .catch((error) => {
+      ttsBlobCache.delete(cacheKey);
+      throw error;
+    });
+
+  rememberTtsBlob(cacheKey, request);
+  return request;
+}
+
 export function stopSpeakFlowTts() {
   if (typeof window === "undefined") return;
+
+  playbackRequestId += 1;
 
   if (currentAudio) {
     currentAudio.pause();
@@ -35,6 +91,24 @@ export function stopSpeakFlowTts() {
   }
 
   window.speechSynthesis?.cancel();
+}
+
+export function preloadSpeakFlowTts({
+  rate = 1,
+  text,
+  voiceId,
+}: PlaySpeakFlowTtsOptions) {
+  const normalizedText = text.trim();
+  if (!normalizedText || typeof window === "undefined") return;
+
+  const selectedVoiceId = voiceId || getSavedSpeakFlowVoiceId();
+  const normalizedRate = normalizeRate(rate);
+
+  void getSpeakFlowTtsBlob(
+    normalizedText,
+    normalizedRate,
+    selectedVoiceId
+  ).catch(() => undefined);
 }
 
 export function speakWithBrowserFallback({
@@ -81,26 +155,34 @@ export async function playSpeakFlowTts({
   const normalizedRate = normalizeRate(rate);
 
   stopSpeakFlowTts();
+  const requestId = playbackRequestId;
+  let fallbackStarted = false;
+  const fallbackTimer = window.setTimeout(() => {
+    if (playbackRequestId !== requestId) return;
+
+    fallbackStarted = true;
+    speakWithBrowserFallback({
+      fallbackVoice,
+      rate: normalizedRate,
+      text: normalizedText,
+      voiceId: selectedVoiceId,
+    });
+  }, QUICK_FALLBACK_DELAY_MS);
 
   try {
-    const response = await fetch("/api/text-to-speech", {
-      body: JSON.stringify({
-        rate: normalizedRate,
-        text: normalizedText,
-        voice: selectedVoiceId,
-      }),
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-    });
+    const audioBlob = await getSpeakFlowTtsBlob(
+      normalizedText,
+      normalizedRate,
+      selectedVoiceId
+    );
 
-    if (!response.ok) {
-      throw new Error("Text to speech request failed");
-    }
+    window.clearTimeout(fallbackTimer);
+    if (playbackRequestId !== requestId || fallbackStarted) return;
 
-    const audioBlob = await response.blob();
     currentAudioUrl = URL.createObjectURL(audioBlob);
     currentAudio = new Audio(currentAudioUrl);
-    currentAudio.playbackRate = normalizedRate;
+    currentAudio.preload = "auto";
+    currentAudio.playbackRate = 1;
     currentAudio.addEventListener(
       "ended",
       () => {
@@ -115,11 +197,14 @@ export async function playSpeakFlowTts({
 
     await currentAudio.play();
   } catch {
-    speakWithBrowserFallback({
-      fallbackVoice,
-      rate: normalizedRate,
-      text: normalizedText,
-      voiceId: selectedVoiceId,
-    });
+    window.clearTimeout(fallbackTimer);
+    if (!fallbackStarted && playbackRequestId === requestId) {
+      speakWithBrowserFallback({
+        fallbackVoice,
+        rate: normalizedRate,
+        text: normalizedText,
+        voiceId: selectedVoiceId,
+      });
+    }
   }
 }

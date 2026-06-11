@@ -24,7 +24,11 @@ import {
   updateVocabularyWord,
   type VocabularyWord,
 } from "@/lib/vocabulary";
-import { playSpeakFlowTts, stopSpeakFlowTts } from "@/lib/speakFlowTtsClient";
+import {
+  playSpeakFlowTts,
+  preloadSpeakFlowTts,
+  stopSpeakFlowTts,
+} from "@/lib/speakFlowTtsClient";
 import {
   SPEAKFLOW_DEFAULT_VOICE_ID,
   getSavedSpeakFlowVoiceId,
@@ -889,6 +893,28 @@ export default function VocabularyPage() {
       .filter(Boolean)
       .join(". ");
   }, [displayedExampleText, displayedExpression, displayedExpressionText]);
+  const vocabularyPreloadKey = [displayedExpressionText, displayedExampleText, speechText]
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .join("\u0001");
+
+  useEffect(() => {
+    const textsToPreload = vocabularyPreloadKey
+      .split("\u0001")
+      .map((text) => text.trim())
+      .filter(Boolean)
+      .slice(0, 3);
+
+    textsToPreload.forEach((text) => {
+      preloadSpeakFlowTts({ rate: 1, text, voiceId: selectedVoiceId });
+      preloadSpeakFlowTts({
+        rate: SLOW_READ_RATE,
+        text,
+        voiceId: selectedVoiceId,
+      });
+    });
+  }, [selectedVoiceId, vocabularyPreloadKey]);
+
   const isExampleTranslationLoading =
     Boolean(displayedExpression) &&
     loadingExampleTranslationFor === displayedExpression.word &&

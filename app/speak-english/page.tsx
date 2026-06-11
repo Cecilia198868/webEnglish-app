@@ -29,7 +29,11 @@ import {
   tokenizeEnglishSentence,
   updateVocabularyWord,
 } from "@/lib/vocabulary";
-import { playSpeakFlowTts, stopSpeakFlowTts } from "@/lib/speakFlowTtsClient";
+import {
+  playSpeakFlowTts,
+  preloadSpeakFlowTts,
+  stopSpeakFlowTts,
+} from "@/lib/speakFlowTtsClient";
 import {
   SPEAKFLOW_DEFAULT_VOICE_ID,
   SPEAKFLOW_VOICES,
@@ -3392,6 +3396,10 @@ function SpeakEnglishClient() {
       ? variantText
       : fallbackText;
   });
+  const referenceResultPreloadKey = referenceResultVariantTexts
+    .map((text) => text.trim())
+    .filter(Boolean)
+    .join("\u0001");
   const guidedResultSuggestion =
     guidedFollowupSuggestion.trim() || "我还想多说一点我的感受。";
   const freeConversationExpressionVariants = useMemo(() => {
@@ -3676,6 +3684,28 @@ function SpeakEnglishClient() {
 
     saveSpeakFlowVoiceId(selectedVoiceId);
   }, [selectedVoiceId, voicePreferenceLoaded]);
+
+  useEffect(() => {
+    const textsToPreload = referenceResultPreloadKey
+      .split("\u0001")
+      .map((text) => text.trim())
+      .filter(
+        (text) =>
+          text &&
+          text !== "This sentence is still being prepared." &&
+          text !== "Preparing a better expression..."
+      )
+      .slice(0, 4);
+
+    textsToPreload.forEach((text) => {
+      preloadSpeakFlowTts({ rate: 1, text, voiceId: selectedVoiceId });
+      preloadSpeakFlowTts({
+        rate: SLOW_READ_RATE,
+        text,
+        voiceId: selectedVoiceId,
+      });
+    });
+  }, [referenceResultPreloadKey, selectedVoiceId]);
 
   useEffect(() => {
     let cancelled = false;
