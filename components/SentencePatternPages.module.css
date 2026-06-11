@@ -3191,9 +3191,9 @@
 
 .studyPhone:has(.resultIntro) .userExpression {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(56px, 14vw, 64px);
-  column-gap: clamp(14px, 3.8vw, 22px);
-  align-items: center;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  column-gap: clamp(12px, 3.5vw, 18px);
+  align-items: start;
   min-height: clamp(150px, 35vw, 182px);
   border-color: rgba(152, 126, 255, 0.38);
   border-radius: clamp(18px, 4.5vw, 24px);
@@ -3208,6 +3208,7 @@
 
 .studyPhone:has(.resultIntro) .expressionLabel {
   grid-column: 1;
+  grid-row: 1;
   width: fit-content;
   min-height: 38px;
   border-radius: 13px;
@@ -3225,16 +3226,21 @@
 }
 
 .studyPhone:has(.resultIntro) .userExpression p {
-  grid-column: 1;
+  grid-column: 1 / -1;
+  grid-row: 2;
   margin: clamp(18px, 4.4vw, 24px) 0 0;
   color: #10163b;
-  font-size: clamp(1.22rem, 5.2vw, 1.66rem);
+  font-size: clamp(1.28rem, 5.45vw, 1.78rem);
   font-weight: 650;
-  line-height: 1.38;
+  line-height: 1.34;
+  overflow-wrap: normal;
+  text-wrap: pretty;
+  word-break: normal;
 }
 
 .studyPhone:has(.resultIntro) .userExpression small {
-  grid-column: 1;
+  grid-column: 1 / -1;
+  grid-row: 3;
   margin-top: clamp(16px, 4vw, 20px);
   color: #7657ff;
   font-size: clamp(0.84rem, 3.3vw, 0.96rem);
@@ -3258,8 +3264,10 @@
 
 .studyPhone:has(.resultIntro) .userExpression > button {
   grid-column: 2;
-  grid-row: 1 / span 3;
-  align-self: center;
+  grid-row: 1;
+  align-self: start;
+  justify-self: start;
+  margin-top: -2px;
 }
 
 .studyPhone:has(.resultIntro) .userExpression > button svg,
@@ -3271,8 +3279,8 @@
 
 .studyPhone:has(.resultIntro) .variantCard {
   display: grid;
-  grid-template-columns: clamp(52px, 13.5vw, 62px) minmax(0, 1fr) clamp(50px, 12.5vw, 58px);
-  align-items: center;
+  grid-template-columns: clamp(52px, 13.5vw, 62px) minmax(0, 1fr);
+  align-items: start;
   gap: clamp(12px, 3.5vw, 18px);
   min-height: clamp(94px, 24vw, 116px);
   border-radius: clamp(17px, 4.5vw, 22px);
@@ -3283,6 +3291,8 @@
 }
 
 .studyPhone:has(.resultIntro) .variantIcon {
+  grid-column: 1;
+  grid-row: 1;
   width: clamp(48px, 12vw, 58px);
   height: clamp(48px, 12vw, 58px);
   background: color-mix(in srgb, currentColor 15%, white);
@@ -3311,13 +3321,25 @@
 .studyPhone:has(.resultIntro) .variantCard p {
   margin: 0;
   color: #10163b;
-  font-size: clamp(1rem, 4.35vw, 1.34rem);
+  font-size: clamp(1.08rem, 4.6vw, 1.42rem);
   font-weight: 650;
-  line-height: 1.34;
+  line-height: 1.32;
+  overflow-wrap: normal;
+  text-wrap: pretty;
+  word-break: normal;
+}
+
+.studyPhone:has(.resultIntro) .variantCard > button {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  justify-self: start;
+  margin-left: clamp(82px, 22vw, 116px);
+  margin-top: clamp(0px, 0.4vw, 3px);
 }
 
 .studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] {
-  grid-template-columns: clamp(54px, 14vw, 66px) minmax(0, 1fr) clamp(54px, 14vw, 62px);
+  grid-template-columns: clamp(54px, 14vw, 66px) minmax(0, 1fr);
   min-height: clamp(150px, 34vw, 172px);
   border-color: rgba(132, 103, 255, 0.62);
   background:
@@ -3354,7 +3376,7 @@
 }
 
 .studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] p {
-  font-size: clamp(1.18rem, 5vw, 1.55rem);
+  font-size: clamp(1.28rem, 5.25vw, 1.68rem);
   font-weight: 720;
   line-height: 1.28;
 }
@@ -3366,6 +3388,7 @@
 .studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] > button {
   background: linear-gradient(135deg, #8f73ff, #6d4cf4);
   color: #ffffff;
+  margin-left: clamp(88px, 23vw, 120px);
 }
 
 .studyPhone:has(.resultIntro) .variantCard[data-tone="orange"] {
@@ -3472,11 +3495,11 @@
   }
 
   .studyPhone:has(.resultIntro) .userExpression p {
-    font-size: clamp(1.08rem, 5.2vw, 1.34rem);
+    font-size: clamp(1.18rem, 5.45vw, 1.44rem);
   }
 
   .studyPhone:has(.resultIntro) .variantCard {
-    grid-template-columns: 48px minmax(0, 1fr) 48px;
+    grid-template-columns: 48px minmax(0, 1fr);
     min-height: 86px;
     padding: 13px 12px;
   }
@@ -3486,11 +3509,19 @@
   }
 
   .studyPhone:has(.resultIntro) .variantCard p {
-    font-size: clamp(0.96rem, 4.45vw, 1.16rem);
+    font-size: clamp(1.02rem, 4.65vw, 1.24rem);
   }
 
   .studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] p {
-    font-size: clamp(1.08rem, 5.1vw, 1.34rem);
+    font-size: clamp(1.16rem, 5.25vw, 1.42rem);
+  }
+
+  .studyPhone:has(.resultIntro) .variantCard > button {
+    margin-left: clamp(72px, 21vw, 96px);
+  }
+
+  .studyPhone:has(.resultIntro) .variantCard[data-tone="featured"] > button {
+    margin-left: clamp(78px, 22vw, 102px);
   }
 
   .studyPhone:has(.resultIntro) .followCard {
