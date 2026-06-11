@@ -2008,3 +2008,22 @@
   font-size: var(--sf-learning-header-title) !important;
   line-height: 0.96 !important;
 }
+
+/* Account blue action buttons must keep white, bold labels. */
+.proUpgradePlanAction,
+.proUpgradePlanAction *,
+.proUpgradeActiveCard button,
+.proUpgradeActiveCard button *,
+.proUpgradeRestoreCard button,
+.proUpgradeRestoreCard button *,
+.proStartButton,
+.proStartButton *,
+.primaryAction,
+.primaryAction *,
+.inviteCopyAction,
+.inviteCopyAction *,
+.feedbackSubmitAction,
+.feedbackSubmitAction * {
+  color: #ffffff !important;
+  font-weight: 950 !important;
+}
