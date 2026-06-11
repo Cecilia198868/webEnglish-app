@@ -3789,11 +3789,12 @@
 }
 
 .overviewHeader ~ .levelStack .levelSubtitle {
-  top: 6.25rem !important;
+  top: 5.72rem !important;
   left: 1rem !important;
   width: min(58%, 13rem) !important;
-  font-size: 0.82rem !important;
-  line-height: 1.25 !important;
+  color: #6c738f !important;
+  font-size: 1rem !important;
+  line-height: 1.45 !important;
 }
 
 .overviewHeader ~ .levelStack .levelCount {
@@ -3832,8 +3833,10 @@
   }
 
   .overviewHeader ~ .levelStack .levelSubtitle {
-    top: 5.95rem !important;
-    font-size: 0.76rem !important;
+    top: 5.52rem !important;
+    color: #6c738f !important;
+    font-size: 1rem !important;
+    line-height: 1.45 !important;
   }
 
   .overviewHeader ~ .levelStack .levelArt {
