@@ -179,6 +179,10 @@
   padding: 15px 14px 14px;
 }
 
+.proStatusCard:empty {
+  display: none;
+}
+
 .proStatusHeader {
   display: grid;
   grid-template-columns: 54px minmax(0, 1fr) 36px;

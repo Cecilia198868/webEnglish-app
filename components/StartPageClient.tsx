@@ -28,6 +28,7 @@ type ContinueStudySummary = {
 type StartPageClientProps = {
   aiProgress: AiProgressSummary;
   fallbackContinueStudy: ContinueStudySummary;
+  hasProEntitlement: boolean;
   userEmail: string;
   userImage: string;
   userName: string;
@@ -462,6 +463,7 @@ function SubscriberRobot() {
 export default function StartPageClient({
   aiProgress,
   fallbackContinueStudy,
+  hasProEntitlement,
   userEmail,
   userImage,
   userName,
@@ -509,7 +511,6 @@ export default function StartPageClient({
   const menuHref = guestMenuHref;
   const menuLabel = "打开游客菜单";
   const showStarterHome = showGuestHome;
-
   if (showStarterHome) {
     return (
       <main className={styles.starterPage}>
@@ -671,7 +672,9 @@ export default function StartPageClient({
                 <span>{getInitial(name)}</span>
               )}
             </span>
-            <span className={styles.subscriberProBadge}>PRO</span>
+            {hasProEntitlement ? (
+              <span className={styles.subscriberProBadge}>PRO</span>
+            ) : null}
           </Link>
           <Link href="/start" className={styles.brand} aria-label="SpeakFlow 首页">
             <span className={styles.brandIcon}>
@@ -693,6 +696,8 @@ export default function StartPageClient({
         </header>
 
         <section className={styles.proStatusCard} aria-label="SpeakFlow Pro 状态">
+          {hasProEntitlement ? (
+            <>
           <div className={styles.proStatusHeader}>
             <span className={styles.proCrown}>
               <CrownIcon />
@@ -716,6 +721,8 @@ export default function StartPageClient({
               </div>
             ))}
           </div>
+            </>
+          ) : null}
         </section>
 
         <section className={styles.subscriberWelcome} aria-labelledby="subscriber-title">
