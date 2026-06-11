@@ -276,3 +276,134 @@
 :global(html[data-app-theme]) .chevron {
   color: var(--accent-green);
 }
+
+/* Standard classic-scene course directory polish. */
+.pageShell,
+:global(html[data-app-theme]) .pageShell {
+  background:
+    radial-gradient(circle at 50% -8%, rgba(232, 164, 109, 0.08), transparent 32%),
+    linear-gradient(180deg, #fbfaf5 0%, #fffdf8 54%, #fbfaf5 100%) !important;
+  color: #284a2e !important;
+}
+
+.phone,
+:global(html[data-app-theme]) .phone {
+  width: min(100%, 390px);
+  padding: calc(38px + env(safe-area-inset-top)) 18px 34px !important;
+  background: transparent !important;
+}
+
+.header {
+  min-height: 70px !important;
+  place-items: center !important;
+  margin-bottom: 16px;
+}
+
+.backButton,
+:global(html[data-app-theme]) .backButton {
+  top: 4px !important;
+  width: 52px !important;
+  min-height: 52px !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,.9) !important;
+  border: 1px solid rgba(111,143,109,.12) !important;
+  box-shadow: 0 10px 20px rgba(67,88,58,.07), inset 0 1px 0 rgba(255,255,255,.98) !important;
+  color: #365f39 !important;
+}
+
+.backButton svg {
+  width: 22px !important;
+  height: 22px !important;
+  stroke-width: 3 !important;
+}
+
+.backButton span {
+  display: none !important;
+}
+
+.title,
+:global(html[data-app-theme]) .title {
+  max-width: calc(100% - 108px) !important;
+  margin-top: 8px !important;
+  color: #243d28 !important;
+  font-size: clamp(1.52rem, 7.2vw, 1.88rem) !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+  text-align: center !important;
+}
+
+.lessonList {
+  gap: 16px !important;
+}
+
+.lessonCard,
+:global(html[data-app-theme]) .lessonCard {
+  min-height: 112px !important;
+  grid-template-columns: 76px minmax(0, 1fr) 38px !important;
+  padding: 18px 20px 18px 16px !important;
+  border: 1px solid rgba(111,143,109,.11) !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.94) !important;
+  box-shadow: 0 6px 20px rgba(65,82,55,.08), inset 0 1px 0 rgba(255,255,255,.96) !important;
+}
+
+.iconTile,
+:global(html[data-app-theme]) .iconTile {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 15px !important;
+  background:
+    radial-gradient(circle at 26% 18%, rgba(255,255,255,.7), transparent 38%),
+    linear-gradient(145deg, #fbf8ee 0%, #f7f3e8 100%) !important;
+  color: #6f8f6d !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.96), 0 8px 18px rgba(67,88,58,.08) !important;
+}
+
+.lessonIcon {
+  width: 40px !important;
+  height: 40px !important;
+  fill: rgba(111,143,109,.18) !important;
+  stroke-width: 2.7 !important;
+  filter: drop-shadow(0 4px 4px rgba(67,88,58,.12));
+}
+
+.lessonTitle,
+:global(html[data-app-theme]) .lessonTitle {
+  color: #243d28 !important;
+  font-size: clamp(1.05rem, 4.8vw, 1.26rem) !important;
+  font-weight: 850 !important;
+  line-height: 1.26 !important;
+}
+
+.chevron,
+:global(html[data-app-theme]) .chevron {
+  width: 36px !important;
+  height: 46px !important;
+  color: #e8a46d !important;
+}
+
+.chevron svg {
+  width: 28px !important;
+  height: 28px !important;
+  stroke-width: 3.2 !important;
+}
+
+@media (max-width: 374px) {
+  .phone,
+  :global(html[data-app-theme]) .phone {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .lessonCard,
+  :global(html[data-app-theme]) .lessonCard {
+    grid-template-columns: 66px minmax(0, 1fr) 34px !important;
+    min-height: 104px !important;
+  }
+
+  .iconTile,
+  :global(html[data-app-theme]) .iconTile {
+    width: 56px !important;
+    height: 56px !important;
+  }
+}

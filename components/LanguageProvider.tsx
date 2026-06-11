@@ -34,6 +34,14 @@ type LanguageProviderProps = {
   initialLanguage: AppLanguage;
 };
 
+function persistLanguagePreference(language: AppLanguage) {
+  if (typeof window === "undefined") return;
+
+  window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+  document.cookie = `${LANGUAGE_COOKIE_NAME}=${language}; path=/; max-age=31536000; samesite=lax`;
+  document.documentElement.lang = language;
+}
+
 export default function LanguageProvider({
   children,
   initialLanguage,
@@ -43,21 +51,23 @@ export default function LanguageProvider({
       return initialLanguage;
     }
 
-    return normalizeLanguage(window.localStorage.getItem(LANGUAGE_STORAGE_KEY));
+    const savedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+
+    return savedLanguage ? normalizeLanguage(savedLanguage) : initialLanguage;
   });
 
   useEffect(() => {
-    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
-    document.cookie = `${LANGUAGE_COOKIE_NAME}=${language}; path=/; max-age=31536000; samesite=lax`;
+    persistLanguagePreference(language);
   }, [language]);
 
   const value = useMemo<LanguageContextValue>(() => {
     return {
       language,
       setLanguage: (nextLanguage) => {
-        setLanguageState(nextLanguage);
-        window.localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLanguage);
-        document.cookie = `${LANGUAGE_COOKIE_NAME}=${nextLanguage}; path=/; max-age=31536000; samesite=lax`;
+        const normalizedLanguage = normalizeLanguage(nextLanguage);
+
+        setLanguageState(normalizedLanguage);
+        persistLanguagePreference(normalizedLanguage);
       },
       t: ((key: StringTranslationKey | ArrayTranslationKey) =>
         translations[language][key]) as LanguageContextValue["t"],

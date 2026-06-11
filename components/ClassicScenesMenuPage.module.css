@@ -1035,3 +1035,136 @@
   opacity: 0.72;
   filter: brightness(0.82) saturate(0.82);
 }
+
+/* Classic scenes menu final standard tuning. */
+.pageShell,
+:global(html[data-app-theme]) .pageShell {
+  background:
+    radial-gradient(circle at 72% 8%, rgba(232,164,109,.08), transparent 30%),
+    linear-gradient(180deg, #fbfaf5 0%, #fffdf8 54%, #fbfaf5 100%) !important;
+  color: #253f29 !important;
+}
+
+.panel,
+:global(html[data-app-theme]) .panel {
+  padding: 10px 14px calc(env(safe-area-inset-bottom, 0px) + 36px) !important;
+  background: transparent !important;
+}
+
+.header {
+  min-height: 54px !important;
+}
+
+.menuButton {
+  transform: translateY(-8px);
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 15px !important;
+  background: rgba(255,255,255,.78) !important;
+  color: #365f39 !important;
+}
+
+.brand {
+  transform: translateY(-3px) scale(1.08);
+  color: #254929 !important;
+}
+
+.brandMark {
+  color: #5f8561 !important;
+}
+
+.hero,
+:global(html[data-app-theme]) .hero {
+  min-height: 195px !important;
+  margin-top: 15px !important;
+  border: 1px solid rgba(111,143,109,.12) !important;
+  border-radius: 19px !important;
+  background:
+    radial-gradient(circle at 84% 34%, rgba(210,224,190,.62), transparent 34%),
+    linear-gradient(135deg, #fffef9 0%, #fbfaf0 48%, #edf4df 100%) !important;
+  box-shadow: 0 6px 20px rgba(65,82,55,.08), inset 0 1px 0 rgba(255,255,255,.96) !important;
+}
+
+.heroText {
+  padding-top: 48px !important;
+  padding-bottom: 26px !important;
+  transform: translateY(8px);
+}
+
+.heroText h1,
+:global(html[data-app-theme]) .heroText h1 {
+  color: #243d28 !important;
+  font-weight: 900 !important;
+}
+
+.heroVisual {
+  transform: translate(2px, 8px) scale(1.15);
+  transform-origin: right center;
+}
+
+.cardGrid {
+  gap: 15px 13px !important;
+  padding-top: 23px !important;
+}
+
+.sceneCard,
+:global(html[data-app-theme]) .sceneCard {
+  min-height: 174px !important;
+  padding: 18px 12px 16px 14px !important;
+  border: 1px solid rgba(111,143,109,.11) !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,.92) !important;
+  box-shadow: 0 6px 20px rgba(65,82,55,.08), inset 0 1px 0 rgba(255,255,255,.96) !important;
+}
+
+.iconTile,
+:global(html[data-app-theme]) .iconTile {
+  background: rgba(247,243,232,.98) !important;
+  color: var(--card-accent) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 18px rgba(66,83,55,.07) !important;
+}
+
+.cardCopy {
+  gap: 12px !important;
+  padding-top: 14px !important;
+}
+
+.cardCopy strong,
+:global(html[data-app-theme]) .cardCopy strong {
+  color: #243d28 !important;
+}
+
+.cardCopy span,
+:global(html[data-app-theme]) .cardCopy span {
+  color: rgba(45,62,49,.72) !important;
+  line-height: 1.48 !important;
+}
+
+.cardMeta,
+:global(html[data-app-theme]) .cardMeta {
+  transform: translateY(6px);
+  color: #5f8561 !important;
+}
+
+.arrowCircle,
+:global(html[data-app-theme]) .arrowCircle {
+  width: 40px !important;
+  height: 40px !important;
+  color: #e8a46d !important;
+  background: rgba(255,255,255,.9) !important;
+  border-color: rgba(111,143,109,.12) !important;
+}
+
+@media (max-width: 760px) {
+  .cardCopy strong {
+    font-size: 1.06rem !important;
+  }
+
+  .cardCopy span {
+    font-size: .78rem !important;
+  }
+
+  .cardMeta {
+    font-size: .78rem !important;
+  }
+}

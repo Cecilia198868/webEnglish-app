@@ -4955,7 +4955,7 @@ function SpeakEnglishClient() {
     if (!suggestedSpeech || isLoadingGuidedFollowup) return;
 
     aiGuidedFollowPracticePendingRef.current = true;
-    saveFreeStudyRouteState("", { nativeSpeech: suggestedSpeech });
+    saveFreeStudyRouteState(suggestedSpeech, { nativeSpeech: suggestedSpeech });
     handledStepRouteRef.current = `/ai-guided-expression/step-4:${suggestedSpeech}`;
     router.push("/ai-guided-expression/step-4");
     startAiGuidedStepFourEnglishRound(suggestedSpeech);
@@ -5225,7 +5225,14 @@ function SpeakEnglishClient() {
       if (!confirmedSpeech) return;
 
       const routeKey = `${pathname}:${confirmedSpeech}`;
-      if (handledStepRouteRef.current === routeKey) return;
+      const isRouteStateReady =
+        nativeSpeech.trim() === confirmedSpeech &&
+        message.trim() === confirmedSpeech &&
+        hasNativeSpeech &&
+        isNativeSpeechConfirmed &&
+        practiceStage === "english";
+
+      if (handledStepRouteRef.current === routeKey && isRouteStateReady) return;
 
       handledStepRouteRef.current = routeKey;
       startAiGuidedStepFourEnglishRound(confirmedSpeech);
@@ -5259,7 +5266,14 @@ function SpeakEnglishClient() {
     if (!confirmedSpeech) return;
 
     const routeKey = `${pathname}:${confirmedSpeech}`;
-    if (handledStepRouteRef.current === routeKey) return;
+    const isRouteStateReady =
+      nativeSpeech.trim() === confirmedSpeech &&
+      message.trim() === confirmedSpeech &&
+      hasNativeSpeech &&
+      isNativeSpeechConfirmed &&
+      practiceStage === "english";
+
+    if (handledStepRouteRef.current === routeKey && isRouteStateReady) return;
 
     handledStepRouteRef.current = routeKey;
     startFreeStudyStepFourEnglishRound(confirmedSpeech);

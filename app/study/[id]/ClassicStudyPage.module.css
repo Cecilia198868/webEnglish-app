@@ -7942,3 +7942,1078 @@
     gap: 0.48rem !important;
   }
 }
+
+/* Final classic-scene result pass: match the light sage/apricot standard mockup. */
+.classicPhone.resultPhone.studyPhone {
+  --classic-sage: #6f8f6d;
+  --classic-sage-dark: #315f37;
+  --classic-apricot: #e8a46d;
+  --classic-cream: #fbfaf6;
+  --classic-ink: #1d2f20;
+  --classic-soft-shadow: rgba(54, 72, 48, 0.08);
+  --classic-card-shadow: 0 6px 20px var(--classic-soft-shadow);
+  background:
+    radial-gradient(circle at 50% 3%, rgba(255, 255, 255, 0.96), transparent 34%),
+    radial-gradient(circle at 9% 21%, rgba(232, 246, 226, 0.56), transparent 28%),
+    radial-gradient(circle at 91% 72%, rgba(242, 229, 210, 0.46), transparent 28%),
+    linear-gradient(180deg, #fffef9 0%, var(--classic-cream) 58%, #faf6ee 100%) !important;
+  color: var(--classic-ink) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopbar {
+  grid-template-columns: 3.75rem minmax(0, 1fr) 3.75rem !important;
+  height: 4.05rem !important;
+  min-height: 4.05rem !important;
+  margin: 0 0 0.34rem !important;
+  padding: 0 0.9rem !important;
+  border: 1px solid rgba(111, 143, 109, 0.12) !important;
+  border-radius: 0.78rem !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 253, 247, 0.93)) !important;
+  box-shadow:
+    0 6px 20px rgba(54, 72, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .homeIconBox,
+.classicPhone.resultPhone.studyPhone .switchCourseButton {
+  width: 3.05rem !important;
+  min-width: 3.05rem !important;
+  height: 3.05rem !important;
+  min-height: 3.05rem !important;
+  border: 1px solid rgba(111, 143, 109, 0.12) !important;
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.96), transparent 42%),
+    rgba(255, 255, 255, 0.94) !important;
+  color: var(--classic-sage-dark) !important;
+  box-shadow:
+    0 6px 20px rgba(54, 72, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .homeIconBox svg {
+  width: 1.34rem !important;
+  height: 1.34rem !important;
+  stroke-width: 3 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .switchCourseButton {
+  font-size: 1.44rem !important;
+  font-weight: 900 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .brand {
+  gap: 0.5rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .brandIcon {
+  width: 2.02rem !important;
+  height: 2.02rem !important;
+  color: var(--classic-sage) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .brandTitle {
+  color: #1c3d23 !important;
+  font-size: clamp(1.3rem, 5.25vw, 1.64rem) !important;
+  line-height: 0.96 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .brandSubtitle {
+  margin-top: 0.18rem !important;
+  color: rgba(49, 95, 55, 0.74) !important;
+  font-size: clamp(0.5rem, 2.1vw, 0.62rem) !important;
+  letter-spacing: 0.18em !important;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopicBar {
+  grid-template-columns: 4.45rem minmax(0, auto) !important;
+  min-height: 5.7rem !important;
+  column-gap: 1.02rem !important;
+  margin: 0 -18px 0.2rem !important;
+  padding: 0.6rem 1.25rem 0.64rem !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.94), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 249, 0.88), rgba(247, 250, 241, 0.58)) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon,
+.classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon svg {
+  width: 4.25rem !important;
+  height: 4.25rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon {
+  color: #8eab83 !important;
+  filter: drop-shadow(0 6px 12px rgba(54, 72, 48, 0.08)) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .topicTitleRow {
+  grid-template-columns: minmax(0, auto) 1.82rem !important;
+  gap: 0.5rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .topicTitle {
+  color: #1d3f24 !important;
+  font-size: clamp(1.45rem, 5.9vw, 1.86rem) !important;
+  font-weight: 900 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .lessonArrowButton:last-of-type {
+  color: var(--classic-apricot) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .topicProgress {
+  color: #3d5b38 !important;
+  font-size: clamp(0.92rem, 3.75vw, 1.05rem) !important;
+  font-weight: 760 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .progressTrack {
+  height: 0.54rem !important;
+  background: rgba(111, 143, 109, 0.18) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .progressTrack span {
+  background: linear-gradient(90deg, #9ba5e7 0%, #cfd5ed 100%) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .progressPercent {
+  color: #2f7438 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .resultScrollArea {
+  height: calc(100dvh - 14.35rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+  padding: 0 0.08rem 5.55rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .resultExpressionPanel {
+  padding: 1.08rem 1.08rem 1.1rem !important;
+  border: 1px solid rgba(111, 143, 109, 0.16) !important;
+  border-radius: 1.08rem !important;
+  background:
+    radial-gradient(circle at 82% 6%, rgba(111, 143, 109, 0.08), transparent 34%),
+    #ffffff !important;
+  box-shadow: var(--classic-card-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionLabel {
+  gap: 0.72rem !important;
+  margin-bottom: 0.78rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionIcon,
+.classicPhone.resultPhone.studyPhone .userExpressionIcon svg {
+  width: 2.58rem !important;
+  height: 2.58rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionLabel strong {
+  min-height: 2.12rem !important;
+  border-radius: 999px !important;
+  background: #eef4e9 !important;
+  padding: 0 1rem !important;
+  color: var(--classic-sage-dark) !important;
+  font-weight: 760 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionBubble {
+  min-height: 5.35rem !important;
+  margin: 0 0.1rem 0 1.62rem !important;
+  border-color: rgba(111, 143, 109, 0.22) !important;
+  border-radius: 1.02rem !important;
+  background:
+    radial-gradient(circle at 20% 6%, rgba(111, 143, 109, 0.07), transparent 44%),
+    #fffefa !important;
+  box-shadow: var(--classic-card-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionBubble::after {
+  border-color: rgba(111, 143, 109, 0.22) !important;
+  background: #fffefa !important;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionText {
+  color: #202620 !important;
+  font-size: clamp(1.04rem, 4.25vw, 1.22rem) !important;
+  line-height: 1.28 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .highlightedExpressionToken {
+  border-radius: 0.25em !important;
+  background: rgba(248, 225, 156, 0.55) !important;
+  box-shadow: inset 0 -0.18em 0 rgba(232, 164, 109, 0.18) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .userExpressionSpeaker,
+.classicPhone.resultPhone.studyPhone .variantSpeaker {
+  width: 2.78rem !important;
+  height: 2.78rem !important;
+  border: 1px solid rgba(111, 143, 109, 0.12) !important;
+  background:
+    radial-gradient(circle at 34% 24%, rgba(255, 255, 255, 0.86), transparent 38%),
+    rgba(255, 255, 255, 0.96) !important;
+  color: var(--tone, var(--classic-sage)) !important;
+  box-shadow:
+    0 6px 20px rgba(54, 72, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionList {
+  gap: 0.76rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .toneRecommended {
+  --tone: #6f8f6d;
+  --tone-soft: #eaf2e6;
+  --tone-pale: rgba(111, 143, 109, 0.09);
+  --tone-border: rgba(111, 143, 109, 0.28);
+}
+
+.classicPhone.resultPhone.studyPhone .toneIdiomatic {
+  --tone: #d88446;
+  --tone-soft: #fff0e5;
+  --tone-pale: rgba(232, 164, 109, 0.11);
+  --tone-border: rgba(232, 164, 109, 0.28);
+}
+
+.classicPhone.resultPhone.studyPhone .toneSimple {
+  --tone: #5e9eaa;
+  --tone-soft: #e8f4f5;
+  --tone-pale: rgba(94, 158, 170, 0.1);
+  --tone-border: rgba(94, 158, 170, 0.24);
+}
+
+.classicPhone.resultPhone.studyPhone .toneNatural {
+  --tone: #6f8f6d;
+  --tone-soft: #eaf2e6;
+  --tone-pale: rgba(111, 143, 109, 0.1);
+  --tone-border: rgba(111, 143, 109, 0.24);
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCard {
+  min-height: 4.78rem !important;
+  border-color: var(--tone-border) !important;
+  border-radius: 0.9rem !important;
+  background:
+    radial-gradient(circle at 12% 8%, var(--tone-pale), transparent 42%),
+    rgba(255, 254, 250, 0.98) !important;
+  box-shadow: var(--classic-card-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured {
+  min-height: 7.65rem !important;
+  border-color: rgba(111, 143, 109, 0.5) !important;
+  background:
+    radial-gradient(circle at 20% 4%, rgba(111, 143, 109, 0.1), transparent 40%),
+    linear-gradient(180deg, #ffffff 0%, #fffefa 100%) !important;
+  box-shadow: var(--classic-card-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .expressionSelectArea {
+  min-height: 7.65rem !important;
+  padding-left: 4.55rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantRibbon {
+  left: 1.02rem !important;
+  width: 2.9rem !important;
+  height: 5.35rem !important;
+  background:
+    linear-gradient(180deg, #8ea684 0%, var(--classic-sage) 100%) !important;
+  filter: drop-shadow(0 6px 10px rgba(54, 72, 48, 0.08)) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .variantTitle {
+  color: var(--tone) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .variantText {
+  color: #1c211d !important;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantText {
+  font-weight: 760 !important;
+}
+
+.classicPhone.resultPhone.studyPhone .variantNote {
+  min-height: 1.52rem !important;
+  border-radius: 999px !important;
+  background: rgba(243, 241, 232, 0.94) !important;
+  padding: 0.34rem 0.8rem !important;
+  color: #66715c !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantSpeaker {
+  background:
+    radial-gradient(circle at 34% 24%, rgba(255, 255, 255, 0.34), transparent 36%),
+    linear-gradient(145deg, #f0b07f, var(--classic-apricot)) !important;
+  color: #ffffff !important;
+  border-color: rgba(232, 164, 109, 0.22) !important;
+  box-shadow:
+    0 6px 20px rgba(232, 164, 109, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .cornerStar {
+  width: 3.9rem !important;
+  height: 3.9rem !important;
+  padding: 0.5rem 0.5rem 0 0 !important;
+  background:
+    linear-gradient(135deg, transparent 0 49%, rgba(232, 164, 109, 0.96) 50% 100%) !important;
+  filter: drop-shadow(-0.18rem 0.24rem 0.38rem rgba(232, 164, 109, 0.14)) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .cornerStar svg {
+  width: 1.05rem !important;
+  height: 1.05rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .followCard {
+  right: 1rem !important;
+  left: 1rem !important;
+  padding: 0.62rem 0.78rem calc(0.64rem + env(safe-area-inset-bottom)) !important;
+  border-color: rgba(232, 164, 109, 0.18) !important;
+  border-radius: 1.12rem 1.12rem 0 0 !important;
+  background:
+    radial-gradient(circle at 50% -12%, rgba(232, 164, 109, 0.09), transparent 44%),
+    rgba(255, 253, 247, 0.96) !important;
+  box-shadow:
+    0 -6px 20px rgba(54, 72, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .followControls {
+  grid-template-columns: minmax(0, 1fr) 6.65rem minmax(0, 1fr) !important;
+  gap: 0.8rem !important;
+}
+
+.classicPhone.resultPhone.studyPhone .followControls .sentenceButton,
+.classicPhone.resultPhone.studyPhone .slowReadButton {
+  height: 2.55rem !important;
+  min-height: 2.55rem !important;
+  border-width: 1px !important;
+  box-shadow: 0 6px 20px rgba(54, 72, 48, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .followControls .sentenceButton {
+  color: var(--classic-sage) !important;
+}
+
+.classicPhone.resultPhone.studyPhone .followControls .sentenceButton:last-child,
+.classicPhone.resultPhone.studyPhone .slowReadButton {
+  color: #d88446 !important;
+}
+
+@media (max-width: 390px) {
+  .classicPhone.resultPhone.studyPhone .studyTopbar {
+    grid-template-columns: 3.35rem minmax(0, 1fr) 3.35rem !important;
+    height: 3.82rem !important;
+    min-height: 3.82rem !important;
+    padding-right: 0.68rem !important;
+    padding-left: 0.68rem !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .homeIconBox,
+  .classicPhone.resultPhone.studyPhone .switchCourseButton {
+    width: 2.82rem !important;
+    min-width: 2.82rem !important;
+    height: 2.82rem !important;
+    min-height: 2.82rem !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .brandTitle {
+    font-size: clamp(1.18rem, 5.6vw, 1.44rem) !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .brandIcon {
+    width: 1.86rem !important;
+    height: 1.86rem !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .studyTopicBar {
+    grid-template-columns: 3.75rem minmax(0, auto) !important;
+    min-height: 5.25rem !important;
+    margin-right: -10px !important;
+    margin-left: -10px !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon,
+  .classicPhone.resultPhone.studyPhone .studyTopicBar .topicIcon svg {
+    width: 3.58rem !important;
+    height: 3.58rem !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .topicTitle {
+    font-size: clamp(1.32rem, 6vw, 1.58rem) !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .resultScrollArea {
+    height: calc(100dvh - 13.35rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+    padding-bottom: 5.25rem !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .expressionCardFeatured .expressionSelectArea {
+    padding-left: 4.12rem !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .expressionCardFeatured .variantRibbon {
+    width: 2.55rem !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .followCard {
+    right: 0.62rem !important;
+    left: 0.62rem !important;
+  }
+
+  .classicPhone.resultPhone.studyPhone .followControls {
+    grid-template-columns: minmax(0, 1fr) 5.92rem minmax(0, 1fr) !important;
+    gap: 0.52rem !important;
+  }
+}
+
+/* Classic-scene first screen final proportion pass: state A/B only. */
+.classicPhone.studyPhone.studyPhoneIdle,
+.classicPhone.studyPhone.studyPhoneRecording {
+  background:
+    radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.98), transparent 38%),
+    radial-gradient(circle at 18% 42%, rgba(239, 246, 231, 0.5), transparent 30%),
+    linear-gradient(180deg, #fbfaf6 0%, #fffefa 48%, #fbf8ef 100%) !important;
+  color: #17391f !important;
+  padding-top: calc(6px + env(safe-area-inset-top)) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .studyTopbar,
+.classicPhone.studyPhone.studyPhoneRecording .studyTopbar {
+  height: 4rem !important;
+  min-height: 4rem !important;
+  grid-template-columns: 2.82rem minmax(0, 1fr) 2.82rem !important;
+  gap: 0.52rem !important;
+  margin-bottom: 0.26rem !important;
+  padding: 0 0.56rem !important;
+  border-color: rgba(54, 72, 48, 0.08) !important;
+  border-radius: 0.56rem !important;
+  box-shadow:
+    0 6px 20px rgba(54, 72, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .homeIconBox,
+.classicPhone.studyPhone.studyPhoneIdle .switchCourseButton,
+.classicPhone.studyPhone.studyPhoneRecording .homeIconBox,
+.classicPhone.studyPhone.studyPhoneRecording .switchCourseButton {
+  width: 2.72rem !important;
+  min-width: 2.72rem !important;
+  height: 2.72rem !important;
+  min-height: 2.72rem !important;
+  box-shadow:
+    0 6px 20px rgba(54, 72, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .homeIconBox svg,
+.classicPhone.studyPhone.studyPhoneRecording .homeIconBox svg {
+  width: 1.34rem !important;
+  height: 1.34rem !important;
+  stroke-width: 2.8 !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .switchCourseButton,
+.classicPhone.studyPhone.studyPhoneRecording .switchCourseButton {
+  font-size: 1.22rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .brand,
+.classicPhone.studyPhone.studyPhoneRecording .brand {
+  gap: 0.42rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .brandIcon,
+.classicPhone.studyPhone.studyPhoneRecording .brandIcon {
+  width: 1.82rem !important;
+  height: 1.82rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .brandTitle,
+.classicPhone.studyPhone.studyPhoneRecording .brandTitle {
+  font-size: clamp(1.08rem, 4.7vw, 1.36rem) !important;
+  line-height: 0.96 !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .brandSubtitle,
+.classicPhone.studyPhone.studyPhoneRecording .brandSubtitle {
+  margin-top: 0.16rem !important;
+  font-size: clamp(0.42rem, 1.62vw, 0.54rem) !important;
+  letter-spacing: 0.17em !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .studyTopicBar,
+.classicPhone.studyPhone.studyPhoneRecording .studyTopicBar {
+  min-height: 5.18rem !important;
+  grid-template-columns: 3.48rem minmax(0, auto) !important;
+  column-gap: 0.82rem !important;
+  margin-top: 0 !important;
+  padding: 0.38rem 1.1rem 0.46rem !important;
+  border-color: rgba(111, 143, 109, 0.15) !important;
+  background:
+    radial-gradient(circle at 28% 10%, rgba(255, 255, 255, 0.92), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 251, 0.98), rgba(240, 247, 232, 0.9)) !important;
+  box-shadow:
+    0 6px 20px rgba(54, 72, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .studyTopicBar .topicIcon,
+.classicPhone.studyPhone.studyPhoneIdle .studyTopicBar .topicIcon svg,
+.classicPhone.studyPhone.studyPhoneRecording .studyTopicBar .topicIcon,
+.classicPhone.studyPhone.studyPhoneRecording .studyTopicBar .topicIcon svg {
+  width: 3.38rem !important;
+  height: 3.38rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .topicTitle,
+.classicPhone.studyPhone.studyPhoneRecording .topicTitle {
+  font-size: clamp(1.22rem, 5.4vw, 1.5rem) !important;
+  line-height: 1 !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .topicTitleRow,
+.classicPhone.studyPhone.studyPhoneRecording .topicTitleRow {
+  grid-template-columns: minmax(0, auto) 1.78rem !important;
+  gap: 0.4rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .lessonArrowButton:last-of-type,
+.classicPhone.studyPhone.studyPhoneRecording .lessonArrowButton:last-of-type {
+  width: 1.78rem !important;
+  height: 1.78rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .lessonArrowButton:last-of-type svg,
+.classicPhone.studyPhone.studyPhoneRecording .lessonArrowButton:last-of-type svg {
+  width: 1.55rem !important;
+  height: 1.55rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .topicProgress,
+.classicPhone.studyPhone.studyPhoneRecording .topicProgress {
+  margin-top: 0.1rem !important;
+  font-size: clamp(0.76rem, 3.1vw, 0.9rem) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .progressRow,
+.classicPhone.studyPhone.studyPhoneRecording .progressRow {
+  grid-template-columns: minmax(0, 7.25rem) auto !important;
+  gap: 0.62rem !important;
+  margin-top: 0.22rem !important;
+  align-items: center !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .progressTrack,
+.classicPhone.studyPhone.studyPhoneRecording .progressTrack {
+  height: 0.32rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .progressPercent,
+.classicPhone.studyPhone.studyPhoneRecording .progressPercent {
+  font-size: clamp(0.66rem, 2.7vw, 0.78rem) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .dialogCard,
+.classicPhone.studyPhone.studyPhoneRecording .dialogCard {
+  min-height: calc(100dvh - 9.9rem - env(safe-area-inset-top)) !important;
+  margin-top: 0.34rem !important;
+  padding: 1.2rem 1.32rem calc(1rem + env(safe-area-inset-bottom)) !important;
+  border-color: rgba(54, 72, 48, 0.08) !important;
+  border-radius: 1.42rem 1.42rem 0 0 !important;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(244, 248, 236, 0.54), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(255, 255, 253, 0.98)) !important;
+  box-shadow:
+    0 -6px 20px rgba(54, 72, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .dialogCard {
+  padding-bottom: calc(7.65rem + env(safe-area-inset-bottom)) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .speakerLine,
+.classicPhone.studyPhone.studyPhoneRecording .speakerLine {
+  gap: 0.72rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .speakerAvatar,
+.classicPhone.studyPhone.studyPhoneIdle .speakerAvatar svg,
+.classicPhone.studyPhone.studyPhoneRecording .speakerAvatar,
+.classicPhone.studyPhone.studyPhoneRecording .speakerAvatar svg {
+  width: 3.12rem !important;
+  height: 3.12rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .roleBadge,
+.classicPhone.studyPhone.studyPhoneRecording .roleBadge {
+  min-height: 2rem !important;
+  padding: 0 1rem !important;
+  font-size: clamp(0.85rem, 3.55vw, 1rem) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .speechBubble,
+.classicPhone.studyPhone.studyPhoneRecording .speechBubble {
+  min-height: 8.4rem !important;
+  margin-top: 1.05rem !important;
+  padding: 1.45rem 1.35rem !important;
+  border-color: rgba(55, 83, 45, 0.1) !important;
+  border-radius: 1.05rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .quoteStart,
+.classicPhone.studyPhone.studyPhoneRecording .quoteStart {
+  left: 1.25rem !important;
+  top: 0.72rem !important;
+  font-size: 3.35rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .chinesePrompt,
+.classicPhone.studyPhone.studyPhoneRecording .chinesePrompt {
+  font-size: clamp(1.22rem, 5.05vw, 1.48rem) !important;
+  line-height: 1.18 !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .recordingArea,
+.classicPhone.studyPhone.studyPhoneRecording .recordingArea {
+  flex: 0 0 auto !important;
+  justify-content: flex-start !important;
+  min-height: 10rem !important;
+  margin-top: 1.05rem !important;
+  padding-top: 0.1rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingArea {
+  min-height: 12.2rem !important;
+  margin-top: 0.74rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .recordingArea .micButton {
+  width: 4.5rem !important;
+  height: 4.5rem !important;
+  border-width: 0.36rem !important;
+  box-shadow:
+    0 0.72rem 1.45rem rgba(64, 106, 66, 0.2),
+    0 0 0 0.72rem rgba(234, 240, 226, 0.6),
+    inset 0 2px 0 rgba(255, 255, 255, 0.26) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .recordingArea .micButton svg {
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingArea .micButton {
+  width: 5.72rem !important;
+  height: 5.72rem !important;
+  border-width: 0.42rem !important;
+  box-shadow:
+    0 0.88rem 1.75rem rgba(64, 106, 66, 0.24),
+    0 0 0 0.78rem rgba(234, 240, 226, 0.66),
+    0 0 0 1.58rem rgba(234, 240, 226, 0.38),
+    inset 0 2px 0 rgba(255, 255, 255, 0.26) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingArea .micButton svg {
+  width: 2.78rem !important;
+  height: 2.78rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneIdle .recordingArea .micHint,
+.classicPhone.studyPhone.studyPhoneRecording .recordingArea .micHint {
+  min-height: 1.42rem !important;
+  gap: 0.25rem !important;
+  margin-top: 0.72rem !important;
+  font-size: clamp(0.86rem, 3.55vw, 1rem) !important;
+  line-height: 1.12 !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingArea .micHint strong {
+  color: #1f5f2a !important;
+  font-size: clamp(1rem, 4.25vw, 1.18rem) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingArea .micHint span {
+  color: rgba(35, 45, 35, 0.62) !important;
+  font-size: clamp(0.78rem, 3.25vw, 0.92rem) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingWave {
+  top: 0.72rem !important;
+  width: 5.45rem !important;
+  height: 3.7rem !important;
+  gap: 0.38rem !important;
+  opacity: 0.9 !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingWaveLeft {
+  right: calc(50% + 3.05rem) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingWaveRight {
+  left: calc(50% + 3.05rem) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingWave i {
+  width: 0.34rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingSentenceNav {
+  right: 1.08rem !important;
+  bottom: calc(0.82rem + env(safe-area-inset-bottom)) !important;
+  left: 1.08rem !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: clamp(3.6rem, 18vw, 5.4rem) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingSentenceNav .sentenceButton {
+  min-height: 2.72rem !important;
+  height: 2.72rem !important;
+  padding: 0 0.72rem !important;
+  border-color: rgba(116, 139, 99, 0.16) !important;
+  box-shadow:
+    0 6px 20px rgba(54, 72, 48, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingSentenceNav .sentenceButton span {
+  font-size: clamp(0.86rem, 3.5vw, 1rem) !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .recordingSentenceNav .sentenceButton svg {
+  width: 1.18rem !important;
+  height: 1.18rem !important;
+}
+
+.classicPhone.studyPhone.studyPhoneRecording .slowReadButton {
+  display: none !important;
+}
+
+@media (max-width: 390px) {
+  .classicPhone.studyPhone.studyPhoneIdle .studyTopbar,
+  .classicPhone.studyPhone.studyPhoneRecording .studyTopbar {
+    height: 3.72rem !important;
+    min-height: 3.72rem !important;
+    grid-template-columns: 2.58rem minmax(0, 1fr) 2.58rem !important;
+  }
+
+  .classicPhone.studyPhone.studyPhoneIdle .homeIconBox,
+  .classicPhone.studyPhone.studyPhoneIdle .switchCourseButton,
+  .classicPhone.studyPhone.studyPhoneRecording .homeIconBox,
+  .classicPhone.studyPhone.studyPhoneRecording .switchCourseButton {
+    width: 2.48rem !important;
+    min-width: 2.48rem !important;
+    height: 2.48rem !important;
+    min-height: 2.48rem !important;
+  }
+
+  .classicPhone.studyPhone.studyPhoneIdle .studyTopicBar,
+  .classicPhone.studyPhone.studyPhoneRecording .studyTopicBar {
+    min-height: 4.82rem !important;
+    grid-template-columns: 3.12rem minmax(0, auto) !important;
+    padding-top: 0.32rem !important;
+    padding-bottom: 0.38rem !important;
+  }
+
+  .classicPhone.studyPhone.studyPhoneIdle .studyTopicBar .topicIcon,
+  .classicPhone.studyPhone.studyPhoneIdle .studyTopicBar .topicIcon svg,
+  .classicPhone.studyPhone.studyPhoneRecording .studyTopicBar .topicIcon,
+  .classicPhone.studyPhone.studyPhoneRecording .studyTopicBar .topicIcon svg {
+    width: 3.04rem !important;
+    height: 3.04rem !important;
+  }
+
+  .classicPhone.studyPhone.studyPhoneIdle .dialogCard,
+  .classicPhone.studyPhone.studyPhoneRecording .dialogCard {
+    min-height: calc(100dvh - 9.1rem - env(safe-area-inset-top)) !important;
+    padding-right: 1.02rem !important;
+    padding-left: 1.02rem !important;
+  }
+
+  .classicPhone.studyPhone.studyPhoneIdle .speechBubble,
+  .classicPhone.studyPhone.studyPhoneRecording .speechBubble {
+    min-height: 7.85rem !important;
+    margin-top: 0.86rem !important;
+  }
+
+  .classicPhone.studyPhone.studyPhoneRecording .recordingArea {
+    min-height: 11.5rem !important;
+  }
+
+  .classicPhone.studyPhone.studyPhoneRecording .recordingSentenceNav {
+    gap: clamp(2.5rem, 15vw, 3.7rem) !important;
+  }
+}
+
+/* Final classic-scene help modal polish. */
+.classicHelpBackdrop {
+  padding: clamp(2rem, 6vw, 3.75rem) !important;
+}
+
+.classicHelpDialog {
+  width: min(79vw, 700px) !important;
+  border-color: rgba(72, 94, 64, 0.12) !important;
+  box-shadow:
+    0 18px 30px rgba(17, 22, 17, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.classicHelpHeader h2 {
+  color: #326837 !important;
+  font-size: clamp(1.42rem, 2.8vw, 1.9rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.18 !important;
+}
+
+.classicHelpClose {
+  top: -0.5rem !important;
+  right: -0.75rem !important;
+  width: 2.75rem !important;
+  height: 2.75rem !important;
+  color: rgba(28, 31, 27, 0.42) !important;
+  font-size: 2rem !important;
+  font-weight: 330 !important;
+}
+
+.classicHelpDivider {
+  border-top-color: rgba(68, 76, 64, 0.12) !important;
+  border-top-width: 1px !important;
+}
+
+.classicHelpTimeline {
+  gap: 1.55rem !important;
+}
+
+.classicHelpTimeline::before {
+  left: 1.95rem !important;
+  border-left: 1px dashed rgba(67, 89, 61, 0.11) !important;
+}
+
+.classicHelpStep {
+  grid-template-columns: 4.15rem minmax(0, 1fr) !important;
+  column-gap: 1.45rem !important;
+}
+
+.classicHelpStepIcon {
+  width: 3.95rem !important;
+  height: 3.95rem !important;
+  background: linear-gradient(180deg, rgba(240, 245, 234, 0.88) 0%, rgba(231, 239, 226, 0.78) 100%) !important;
+}
+
+.classicHelpStepIcon svg {
+  width: 1.9rem !important;
+  height: 1.9rem !important;
+  stroke-width: 3 !important;
+}
+
+.classicHelpStepTitleRow {
+  gap: 0.75rem !important;
+}
+
+.classicHelpStepTitleRow strong {
+  width: 1.65rem !important;
+  height: 1.65rem !important;
+  font-size: 0.9rem !important;
+  box-shadow: 0 3px 8px rgba(58, 98, 55, 0.12) !important;
+}
+
+.classicHelpStepCopy > p {
+  margin-top: 0.88rem !important;
+  line-height: 1.55 !important;
+}
+
+.classicHelpStepHint {
+  gap: 0.45rem !important;
+  width: fit-content !important;
+  margin-top: 0.62rem !important;
+  border-radius: 0.58rem !important;
+  background: rgba(235, 241, 228, 0.82) !important;
+  padding: 0.3rem 0.72rem !important;
+  line-height: 1.25 !important;
+}
+
+.classicHelpStepHint svg {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+.classicHelpTip {
+  grid-template-columns: 2.85rem minmax(0, 1fr) !important;
+  gap: 1rem !important;
+  margin-top: 2rem !important;
+  border: 1px solid rgba(76, 109, 67, 0.08) !important;
+  border-radius: 1rem !important;
+  padding: 1.5rem 2rem 1.38rem !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+}
+
+.classicHelpTipIcon {
+  width: 2.38rem !important;
+  height: 2.38rem !important;
+}
+
+.classicHelpTipIcon svg {
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+.classicHelpTip ul {
+  margin-top: 0.85rem !important;
+  line-height: 1.55 !important;
+}
+
+.classicHelpMenuButton {
+  width: min(calc(100% + 2rem), 446px) !important;
+  min-height: 3.45rem !important;
+  margin-top: 2rem !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), transparent 42%),
+    linear-gradient(135deg, #6f8f6d 0%, #407746 100%) !important;
+  color: #ffffff !important;
+  font-weight: 850 !important;
+  box-shadow:
+    0 10px 18px rgba(54, 102, 55, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+@media (max-width: 640px) {
+  .classicHelpBackdrop {
+    padding: 1.7rem !important;
+  }
+
+  .classicHelpDialog {
+    width: min(92%, 394px) !important;
+    max-height: calc(100dvh - 3.4rem) !important;
+    padding: 1.75rem 1.38rem 1.75rem !important;
+  }
+
+  .classicHelpHeader h2 {
+    font-size: clamp(1.13rem, 5.15vw, 1.35rem) !important;
+    font-weight: 600 !important;
+  }
+
+  .classicHelpClose {
+    top: -0.38rem !important;
+    right: -0.38rem !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    font-size: 1.7rem !important;
+  }
+
+  .classicHelpSubtitle {
+    margin-top: 0.9rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .classicHelpDivider {
+    margin: 1rem 0 1.35rem !important;
+  }
+
+  .classicHelpTimeline {
+    gap: 1.24rem !important;
+  }
+
+  .classicHelpTimeline::before {
+    top: 2.75rem !important;
+    bottom: 2.75rem !important;
+    left: 1.6rem !important;
+  }
+
+  .classicHelpStep {
+    grid-template-columns: 3.35rem minmax(0, 1fr) !important;
+    column-gap: 0.88rem !important;
+  }
+
+  .classicHelpStepIcon {
+    width: 3.2rem !important;
+    height: 3.2rem !important;
+  }
+
+  .classicHelpStepIcon svg {
+    width: 1.58rem !important;
+    height: 1.58rem !important;
+  }
+
+  .classicHelpStepTitleRow {
+    gap: 0.55rem !important;
+  }
+
+  .classicHelpStepTitleRow strong {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .classicHelpStepTitleRow h3 {
+    font-size: clamp(0.92rem, 4.2vw, 1.05rem) !important;
+  }
+
+  .classicHelpStepCopy > p {
+    margin-top: 0.58rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .classicHelpStepHint {
+    display: inline-flex !important;
+    width: auto !important;
+    max-width: 100% !important;
+    padding: 0.28rem 0.62rem !important;
+  }
+
+  .classicHelpTip {
+    grid-template-columns: 2.35rem minmax(0, 1fr) !important;
+    gap: 0.75rem !important;
+    margin-top: 1.55rem !important;
+    padding: 1.22rem 1.18rem 1.12rem !important;
+  }
+
+  .classicHelpTipIcon {
+    width: 2.18rem !important;
+    height: 2.18rem !important;
+  }
+
+  .classicHelpTipIcon svg {
+    width: 1.82rem !important;
+    height: 1.82rem !important;
+  }
+
+  .classicHelpMenuButton {
+    width: min(calc(100% + 1.45rem), 21rem) !important;
+    min-height: 3.25rem !important;
+    margin-top: 1.62rem !important;
+    font-size: clamp(1.05rem, 4.8vw, 1.22rem) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .classicHelpBackdrop {
+    padding: 1.35rem !important;
+  }
+
+  .classicHelpDialog {
+    width: min(92%, 360px) !important;
+    padding: 1.48rem 1.05rem 1.45rem !important;
+  }
+
+  .classicHelpTimeline::before {
+    left: 1.42rem !important;
+  }
+
+  .classicHelpStep {
+    grid-template-columns: 2.95rem minmax(0, 1fr) !important;
+    column-gap: 0.7rem !important;
+  }
+
+  .classicHelpStepIcon {
+    width: 2.85rem !important;
+    height: 2.85rem !important;
+  }
+}

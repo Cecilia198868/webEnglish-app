@@ -687,6 +687,153 @@ export default function FreeStudyPageThree({
           line-height: 1.65;
         }
 
+        /* Final free-study confirm/speak polish against the standard reference. */
+        .sf-speak-page:has(.sf-free-confirm-page) {
+          background:
+            radial-gradient(circle at 50% 8%, rgba(255,255,255,.95), transparent 24%),
+            radial-gradient(circle at 50% 58%, rgba(168,128,255,.12), transparent 48%),
+            linear-gradient(180deg, #fcfbff 0%, #faf7ff 52%, #f8f3ff 100%) !important;
+        }
+
+        .sf-free-confirm-frame {
+          padding-top: calc(env(safe-area-inset-top, 0px) + .38rem) !important;
+          gap: .78rem !important;
+        }
+
+        .sf-free-confirm-header {
+          transform: translateY(-1rem);
+          margin-bottom: -.45rem !important;
+        }
+
+        .sf-free-confirm-brand {
+          transform: scale(1.08);
+        }
+
+        .sf-free-confirm-home,
+        .sf-free-confirm-help {
+          border-radius: 999px !important;
+          background: rgba(255,255,255,.92) !important;
+          box-shadow: 0 14px 26px rgba(112,83,184,.12), inset 0 1px 0 rgba(255,255,255,.98) !important;
+        }
+
+        .sf-free-confirm-title {
+          margin: .35rem 0 .95rem !important;
+          padding-left: 2.15rem !important;
+          gap: .55rem !important;
+        }
+
+        .sf-free-confirm-card {
+          min-height: clamp(14.8rem, 34dvh, 18rem) !important;
+          border-radius: 1.55rem !important;
+          padding: 1.08rem 1.18rem 1.35rem !important;
+          box-shadow: 0 20px 42px rgba(111,78,182,.08), inset 0 1px 0 rgba(255,255,255,.96) !important;
+        }
+
+        .sf-free-confirm-edit {
+          color: #8b5cf6 !important;
+          font-size: .88rem !important;
+          gap: .32rem !important;
+        }
+
+        .sf-free-confirm-edit svg {
+          width: 1rem !important;
+          height: 1rem !important;
+        }
+
+        .sf-free-confirm-textarea {
+          min-height: 9.4rem !important;
+          padding: 1.45rem 1.15rem !important;
+          font-size: clamp(1.85rem, 8.4vw, 2.62rem) !important;
+          line-height: 1.42 !important;
+          align-content: center;
+        }
+
+        .sf-free-confirm-note {
+          margin-top: .96rem !important;
+          color: rgba(66,61,111,.82) !important;
+          font-weight: 700 !important;
+        }
+
+        .sf-free-confirm-actions {
+          grid-template-columns: minmax(0, .78fr) minmax(0, 1.42fr) !important;
+          gap: .92rem !important;
+          margin: .95rem 0 1.02rem !important;
+        }
+
+        .sf-free-confirm-retry,
+        .sf-free-confirm-button {
+          min-height: 4rem !important;
+          border-radius: 1.38rem !important;
+          font-size: clamp(.86rem, 3.25vw, 1.02rem) !important;
+        }
+
+        .sf-free-confirm-button {
+          background: linear-gradient(100deg, #dda4ff 0%, #a064f4 48%, #754df0 100%) !important;
+          color: rgba(255,255,255,.96) !important;
+          box-shadow: 0 17px 30px rgba(137,82,238,.22), inset 0 1px 0 rgba(255,255,255,.52) !important;
+        }
+
+        .sf-free-confirm-button:disabled {
+          color: rgba(135,93,218,.42) !important;
+          background: rgba(255,255,255,.5) !important;
+        }
+
+        .sf-free-record-divider {
+          margin-bottom: .95rem !important;
+          background-size: 1.22rem 1px !important;
+          background-image: linear-gradient(90deg, transparent 0, transparent 22%, rgba(216,199,255,.55) 22%, rgba(216,199,255,.55) 55%, transparent 55%, transparent 100%) !important;
+        }
+
+        .sf-free-record-panel {
+          border-radius: 1.45rem !important;
+          padding: 1.05rem .9rem 1.1rem !important;
+          background: rgba(255,255,255,.74) !important;
+          box-shadow: 0 18px 38px rgba(111,78,182,.07), inset 0 1px 0 rgba(255,255,255,.96) !important;
+        }
+
+        .sf-free-confirm-page.is-confirming .sf-free-record-panel {
+          background: linear-gradient(180deg, rgba(255,255,255,.62), rgba(250,246,255,.5)) !important;
+        }
+
+        .sf-free-confirm-page.is-confirming .sf-free-record-panel h2,
+        .sf-free-confirm-page.is-confirming .sf-free-record-mic-row,
+        .sf-free-confirm-page.is-confirming .sf-free-record-stop {
+          opacity: .34 !important;
+        }
+
+        .sf-free-confirm-page.is-confirming .sf-free-record-panel h2 {
+          font-size: clamp(1.08rem, 4.25vw, 1.36rem) !important;
+        }
+
+        .sf-free-confirm-page.is-confirming .sf-free-record-mic-row {
+          margin: .5rem 0 .5rem !important;
+        }
+
+        .sf-free-confirm-page.is-confirming .sf-free-record-mic {
+          width: clamp(3.7rem, 16vw, 4.55rem) !important;
+          border-width: .45rem !important;
+          background: linear-gradient(135deg, #efe8ff, #c7aff7) !important;
+          color: white !important;
+          box-shadow: 0 0 0 .72rem rgba(180,150,245,.1), 0 12px 22px rgba(116,82,178,.08) !important;
+        }
+
+        .sf-free-confirm-page.is-confirming .sf-free-record-wave {
+          opacity: .32 !important;
+          transform: scale(.92) !important;
+        }
+
+        .sf-free-confirm-page.is-confirming .sf-free-record-stop {
+          width: min(100%, 14.6rem) !important;
+          min-height: 2.25rem !important;
+          font-size: .82rem !important;
+          background: rgba(255,255,255,.58) !important;
+          border-color: rgba(153,111,235,.22) !important;
+        }
+
+        .sf-free-confirm-page.is-recording-english .sf-free-record-mic {
+          width: clamp(4.55rem, 18.5vw, 5.35rem) !important;
+        }
+
         @media (max-width: 360px) {
           .sf-free-confirm-frame {
             padding-left: .86rem;

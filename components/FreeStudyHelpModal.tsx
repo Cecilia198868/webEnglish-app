@@ -475,6 +475,195 @@ export default function FreeStudyHelpModal({
           cursor: pointer;
         }
 
+        /* Product-style free-study help sheet: standalone onboarding card. */
+        .sf-free-help-standard {
+          background:
+            radial-gradient(circle at 78% 9%, rgba(122,104,255,.18), transparent 24%),
+            radial-gradient(circle at 9% 28%, rgba(184,175,255,.18), transparent 30%),
+            linear-gradient(180deg, #fbf9ff 0%, #f8f5ff 100%) !important;
+        }
+
+        .sf-free-help-standard-frame {
+          position: relative;
+          max-width: 430px;
+          margin: 0 auto;
+          padding:
+            calc(env(safe-area-inset-top, 0px) + 2.35rem)
+            clamp(1.05rem, 4.8vw, 1.35rem)
+            calc(env(safe-area-inset-bottom, 0px) + 1rem) !important;
+        }
+
+        .sf-free-help-standard-header {
+          display: none !important;
+        }
+
+        .sf-free-help-standard-close {
+          position: absolute;
+          right: clamp(1.05rem, 4.8vw, 1.35rem);
+          top: calc(env(safe-area-inset-top, 0px) + 1.05rem);
+          z-index: 3;
+          display: grid;
+          width: 2.55rem;
+          height: 2.55rem;
+          place-items: center;
+          border: 0;
+          border-radius: 999px;
+          background: rgba(255,255,255,.9);
+          color: rgba(16,19,66,.72);
+          box-shadow: 0 12px 24px rgba(104,78,180,.12), inset 0 1px 0 rgba(255,255,255,.98);
+          cursor: pointer;
+        }
+
+        .sf-free-help-standard-close svg {
+          width: 1.08rem;
+          height: 1.08rem;
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 2.6;
+          stroke-linecap: round;
+        }
+
+        .sf-free-help-standard-hero {
+          min-height: 8.1rem;
+          margin-top: 0 !important;
+          padding: 1.35rem 4.25rem 1.5rem 0;
+          text-align: left !important;
+        }
+
+        .sf-free-help-standard-hero::before {
+          content: "";
+          position: absolute;
+          right: 1rem;
+          top: .95rem;
+          width: 5.4rem;
+          height: 4.2rem;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(122,104,255,.18), transparent 68%);
+          pointer-events: none;
+        }
+
+        .sf-free-help-standard-hero::after {
+          content: "✦";
+          position: absolute;
+          right: 1.15rem;
+          top: 1.1rem;
+          color: rgba(122,104,255,.55);
+          font-size: 1.35rem;
+        }
+
+        .sf-free-help-standard-hero h2 {
+          font-size: clamp(2.25rem, 10.5vw, 2.86rem) !important;
+          line-height: 1.04 !important;
+        }
+
+        .sf-free-help-standard-hero p {
+          margin-top: .85rem !important;
+          max-width: 18.5rem !important;
+          color: rgba(36,38,84,.72) !important;
+          line-height: 1.55 !important;
+        }
+
+        .sf-free-help-standard-orbit {
+          right: 1rem !important;
+          top: 2.25rem !important;
+          width: 4.85rem !important;
+          opacity: .72;
+        }
+
+        .sf-free-help-standard-steps {
+          gap: 1rem !important;
+          margin-top: .2rem !important;
+        }
+
+        .sf-free-help-standard-step {
+          grid-template-columns: 4.4rem 2.1rem minmax(0, 1fr) 1rem !important;
+          gap: .72rem !important;
+          min-height: 5.9rem;
+          border-radius: 1.75rem !important;
+          background: rgba(255,255,255,.9) !important;
+          padding: .78rem .9rem !important;
+          box-shadow: 0 16px 32px rgba(92,72,166,.09), inset 0 1px 0 rgba(255,255,255,.98) !important;
+        }
+
+        .sf-free-help-standard-step-icon {
+          width: 3.85rem !important;
+          height: 3.85rem !important;
+          background: linear-gradient(145deg, #f5f0ff, #e8ddff) !important;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.88), 0 10px 20px rgba(122,104,255,.1);
+        }
+
+        .sf-free-help-standard-step-number {
+          width: 1.75rem !important;
+          height: 1.75rem !important;
+          border-radius: 999px !important;
+          background: linear-gradient(135deg, #b8afff, #7a68ff) !important;
+        }
+
+        .sf-free-help-standard-step p {
+          line-height: 1.55 !important;
+        }
+
+        .sf-free-help-standard-info,
+        .sf-free-help-standard-tip {
+          margin-top: 1rem !important;
+          border-radius: 1.55rem !important;
+          background: rgba(255,255,255,.82) !important;
+          box-shadow: 0 16px 32px rgba(92,72,166,.08), inset 0 1px 0 rgba(255,255,255,.95) !important;
+        }
+
+        .sf-free-help-standard-info {
+          grid-template-columns: minmax(0, 1fr) 6.2rem !important;
+          padding: 1.1rem 1.05rem !important;
+        }
+
+        .sf-free-help-standard-robot {
+          width: 5.75rem !important;
+          height: 4.65rem !important;
+          box-shadow: 0 14px 28px rgba(122,104,255,.14);
+        }
+
+        .sf-free-help-standard-tip {
+          padding: 1.12rem 1.08rem !important;
+        }
+
+        .sf-free-help-standard-tip-icon {
+          width: 2.45rem !important;
+          height: 2.45rem !important;
+        }
+
+        .sf-free-help-standard-tip ul,
+        .sf-free-help-standard-info ul {
+          list-style: none;
+          padding-left: 0 !important;
+          line-height: 1.7 !important;
+        }
+
+        .sf-free-help-standard-tip li,
+        .sf-free-help-standard-info li {
+          position: relative;
+          padding-left: 1.35rem;
+        }
+
+        .sf-free-help-standard-tip li::before,
+        .sf-free-help-standard-info li::before {
+          content: "✓";
+          position: absolute;
+          left: 0;
+          top: 0;
+          color: #7a68ff;
+          font-weight: 950;
+        }
+
+        .sf-free-help-standard-ok {
+          position: sticky;
+          bottom: calc(env(safe-area-inset-bottom, 0px) + .7rem);
+          width: 100% !important;
+          min-height: 4rem !important;
+          margin-top: 1rem !important;
+          background: linear-gradient(90deg, #b8afff 0%, #7a68ff 58%, #6f54ed 100%) !important;
+          box-shadow: 0 16px 28px rgba(122,104,255,.28), inset 0 1px 0 rgba(255,255,255,.46) !important;
+        }
+
         @media (max-width: 360px) {
           .sf-free-help-standard-step {
             grid-template-columns: 3.55rem 1.9rem minmax(0, 1fr) .8rem;
@@ -504,6 +693,17 @@ export default function FreeStudyHelpModal({
         className="sf-free-help-standard-frame"
         onClick={(event) => event.stopPropagation()}
       >
+        <button
+          type="button"
+          aria-label="Close free study help"
+          onClick={onClose}
+          className="sf-free-help-standard-close"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+
         <header className="sf-free-help-standard-header">
           <button
             type="button"

@@ -915,6 +915,108 @@ export default function FreeStudyPageOne({
           cursor: pointer;
         }
 
+        /* Final free-study first-page visual polish: match the compact standard art. */
+        .sf-speak-page:has(.sf-free-start-page) {
+          background:
+            radial-gradient(circle at 50% 26%, rgba(255,255,255,.95), transparent 34%),
+            radial-gradient(circle at 50% 58%, rgba(181,154,255,.14), transparent 42%),
+            linear-gradient(180deg, #fbfdff 0%, #f8fbff 54%, #fbf8ff 100%) !important;
+        }
+
+        .sf-free-start-frame {
+          background:
+            radial-gradient(circle at 50% 36%, rgba(255,255,255,.88), transparent 33%),
+            radial-gradient(circle at 50% 50%, rgba(151,122,255,.1), transparent 48%),
+            linear-gradient(180deg, rgba(252,254,255,.98), rgba(247,251,255,.98) 58%, rgba(251,248,255,.98)) !important;
+        }
+
+        .sf-free-start-mic-area {
+          transform: scale(1.15);
+          transform-origin: center;
+          margin-top: .35rem !important;
+          margin-bottom: .85rem !important;
+        }
+
+        .sf-free-start-mic-area::before {
+          opacity: .9 !important;
+          box-shadow:
+            0 0 0 2.4rem rgba(145,119,255,.10),
+            0 0 0 4.05rem rgba(130,170,255,.08),
+            0 0 0 5.55rem rgba(130,170,255,.06),
+            0 0 0 7.1rem rgba(145,119,255,.045),
+            0 0 54px rgba(122,82,238,.18) !important;
+        }
+
+        .sf-free-start-mic-area::after {
+          opacity: .42 !important;
+          transform: translate(-50%, -50%) scale(1.08) !important;
+        }
+
+        .sf-free-start-mic {
+          animation: sf-free-start-breathe 2.5s ease-in-out infinite !important;
+        }
+
+        @keyframes sf-free-start-breathe {
+          0%, 100% { transform: scale(1); opacity: .98; }
+          50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .sf-free-start-wave-bars {
+          width: 120% !important;
+          left: -10% !important;
+          opacity: .82 !important;
+        }
+
+        .sf-free-start-page.is-recording .sf-free-start-wave-bars {
+          width: 142% !important;
+          left: -21% !important;
+          opacity: .95 !important;
+        }
+
+        .sf-free-start-page.is-recording .sf-free-start-hero {
+          padding-top: 1rem !important;
+        }
+
+        .sf-free-start-page.is-recording .sf-free-start-title {
+          margin-top: 1rem !important;
+        }
+
+        .sf-free-start-recording-pill {
+          font-size: 1.05rem !important;
+          color: #7253ff !important;
+          filter: saturate(1.15);
+        }
+
+        .sf-free-start-recording-pill svg {
+          width: 1.35rem !important;
+          height: 1.35rem !important;
+        }
+
+        .sf-free-start-instruction {
+          min-height: 2.65rem !important;
+          padding: .52rem 1rem !important;
+          border-radius: 999px !important;
+        }
+
+        .sf-free-start-page.is-recording .sf-free-start-instruction {
+          background: rgba(255,255,255,.58) !important;
+          border-color: rgba(145,119,255,.22) !important;
+          box-shadow: 0 10px 24px rgba(111,78,182,.07) !important;
+        }
+
+        .sf-free-start-note {
+          font-weight: 560 !important;
+          color: rgba(74,74,112,.72) !important;
+        }
+
+        .sf-free-start-help-card {
+          margin-top: -1.1rem !important;
+        }
+
+        .sf-free-start-small-tip {
+          box-shadow: 0 20px 40px rgba(111,78,182,.08), inset 0 1px 0 rgba(255,255,255,.95) !important;
+        }
+
         @media (max-width: 360px) {
           .sf-free-start-frame {
             padding-left: 1rem;

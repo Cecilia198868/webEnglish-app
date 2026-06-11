@@ -801,6 +801,161 @@ export default function FreeStudyPageFiveTop({
           line-height: 1.65;
         }
 
+        /* Final free-study result page polish: compact, clean standard layout. */
+        .sf-free-result-frame {
+          gap: .78rem !important;
+          padding-top: calc(env(safe-area-inset-top, 0px) + .52rem) !important;
+        }
+
+        .sf-free-result-header {
+          min-height: 3.85rem !important;
+          border-radius: 1.35rem !important;
+          padding: .45rem .7rem !important;
+        }
+
+        .sf-free-result-home,
+        .sf-free-result-help {
+          width: 2.62rem !important;
+          height: 2.62rem !important;
+        }
+
+        .sf-free-result-logo {
+          width: 2.16rem !important;
+          height: 2.16rem !important;
+        }
+
+        .sf-free-result-brand {
+          transform: scale(.92) !important;
+        }
+
+        .sf-free-result-ai-card {
+          min-height: 4.8rem !important;
+          grid-template-columns: 3.65rem minmax(0, 1fr) auto !important;
+          padding: .78rem .92rem !important;
+          border-radius: 1.28rem !important;
+        }
+
+        .sf-free-result-ai-icon {
+          width: 3rem !important;
+          height: 3rem !important;
+        }
+
+        .sf-free-result-change {
+          min-height: 2.5rem !important;
+          padding: 0 .88rem !important;
+          font-size: .9rem !important;
+        }
+
+        .sf-free-result-user-card {
+          min-height: 6.8rem !important;
+          padding: 1.05rem 1rem !important;
+          border-radius: 1.38rem !important;
+        }
+
+        .sf-free-result-user-text {
+          display: inline-block !important;
+          width: auto !important;
+          max-width: min(100%, 18.2rem) !important;
+          padding: .14rem .38rem .2rem !important;
+          border-radius: .5rem !important;
+          background: linear-gradient(180deg, rgba(255,238,148,.78), rgba(255,222,91,.68)) !important;
+          box-decoration-break: clone;
+          -webkit-box-decoration-break: clone;
+          line-height: 1.06 !important;
+          white-space: normal !important;
+        }
+
+        .sf-free-result-user-highlight {
+          display: inline !important;
+          background: transparent !important;
+          padding: 0 !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+        }
+
+        .sf-free-result-retry {
+          min-height: 2.45rem !important;
+          padding: 0 .88rem !important;
+          border-width: 1px !important;
+          font-size: .9rem !important;
+        }
+
+        .sf-free-result-section-title {
+          margin: .38rem 0 .62rem !important;
+          font-size: 1.18rem !important;
+          font-weight: 850 !important;
+        }
+
+        .sf-free-result-list {
+          gap: .78rem !important;
+        }
+
+        .sf-free-result-expression-card {
+          min-height: 5.05rem !important;
+          grid-template-columns: minmax(0, 1fr) auto !important;
+          overflow: hidden !important;
+          padding: .86rem .9rem .86rem 1.05rem !important;
+          border: 1px solid rgba(139,116,240,.1) !important;
+          border-radius: 1.15rem !important;
+          box-shadow: 0 10px 20px rgba(79,86,130,.08), inset 0 1px 0 rgba(255,255,255,.96) !important;
+        }
+
+        .sf-free-result-expression-icon {
+          display: none !important;
+        }
+
+        .sf-free-result-badge {
+          align-self: start !important;
+          width: fit-content !important;
+          border-radius: .55rem !important;
+        }
+
+        .sf-free-result-expression-card.is-selected .sf-free-result-badge {
+          background: linear-gradient(90deg, #7a68ff, #8f78ff) !important;
+          color: white !important;
+        }
+
+        .sf-free-result-expression-card.is-green .sf-free-result-badge {
+          background: rgba(65,181,115,.18) !important;
+          color: #22945c !important;
+        }
+
+        .sf-free-result-expression-card.is-blue .sf-free-result-badge {
+          background: rgba(72,132,245,.16) !important;
+          color: #2f75e6 !important;
+        }
+
+        .sf-free-result-expression-card.is-purple .sf-free-result-badge {
+          background: rgba(122,104,255,.15) !important;
+          color: #7654f1 !important;
+        }
+
+        .sf-free-result-expression-text {
+          font-size: clamp(1.2rem, 5.2vw, 1.55rem) !important;
+          line-height: 1.2 !important;
+        }
+
+        .sf-free-result-actions {
+          gap: .5rem !important;
+        }
+
+        .sf-free-result-play {
+          width: clamp(2.88rem, 12vw, 3.28rem) !important;
+          height: clamp(2.88rem, 12vw, 3.28rem) !important;
+          box-shadow: 0 12px 24px rgba(87,76,150,.12), inset 0 1px 0 rgba(255,255,255,.98) !important;
+        }
+
+        .sf-free-result-slow {
+          min-width: clamp(3.12rem, 13.4vw, 3.62rem) !important;
+          height: clamp(2.72rem, 11.4vw, 3.12rem) !important;
+          background: rgba(255,255,255,.9) !important;
+        }
+
+        .sf-free-result-user-highlight,
+        .sf-free-result-emphasis {
+          color: inherit !important;
+        }
+
         @media (max-width: 340px) {
           .sf-free-result-frame {
             padding-left: .75rem;
