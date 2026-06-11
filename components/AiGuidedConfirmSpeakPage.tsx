@@ -175,8 +175,8 @@ export default function AiGuidedConfirmSpeakPage({
 
         .sf-ai-confirm-speak-page {
           width: 100%;
-          height: 100%;
-          min-height: 100%;
+          height: 100dvh;
+          min-height: 100dvh;
           overflow-x: hidden;
           overflow-y: auto;
           color: #080d33;
@@ -192,9 +192,9 @@ export default function AiGuidedConfirmSpeakPage({
           position: relative;
           isolation: isolate;
           width: min(100%, 430px);
-          min-height: 100%;
+          min-height: 100dvh;
           margin: 0 auto;
-          padding: calc(env(safe-area-inset-top, 0px) + clamp(0.66rem, 2.5dvh, 1rem))
+          padding: calc(env(safe-area-inset-top, 0px) + clamp(0.18rem, 0.9dvh, 0.42rem))
             clamp(0.88rem, 4.5vw, 1.2rem)
             calc(env(safe-area-inset-bottom, 0px) + 0.86rem);
           overflow: hidden;
@@ -203,9 +203,9 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-frame::before {
           content: "";
           position: absolute;
-          inset: 3.4rem -4rem auto;
+          inset: 2.15rem -4rem auto;
           z-index: -1;
-          height: 13rem;
+          height: 12rem;
           border: 1px solid rgba(255, 255, 255, 0.68);
           border-bottom: 0;
           border-radius: 999px 999px 0 0;
@@ -214,10 +214,10 @@ export default function AiGuidedConfirmSpeakPage({
 
         .sf-ai-confirm-speak-header {
           display: grid;
-          grid-template-columns: clamp(2.2rem, 10vw, 2.7rem) minmax(0, 1fr) clamp(2.2rem, 10vw, 2.7rem);
+          grid-template-columns: clamp(2.1rem, 9.5vw, 2.58rem) minmax(0, 1fr) clamp(2.1rem, 9.5vw, 2.58rem);
           align-items: center;
           gap: clamp(0.42rem, 2vw, 0.62rem);
-          min-height: clamp(2.5rem, 10.8vw, 3.15rem);
+          min-height: clamp(2.34rem, 10vw, 2.9rem);
         }
 
         .sf-ai-confirm-speak-home,
@@ -237,8 +237,8 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-home,
         .sf-ai-confirm-speak-help {
           display: grid;
-          width: clamp(2.2rem, 10vw, 2.7rem);
-          height: clamp(2.2rem, 10vw, 2.7rem);
+          width: clamp(2.1rem, 9.5vw, 2.58rem);
+          height: clamp(2.1rem, 9.5vw, 2.58rem);
           place-items: center;
           border-radius: 999px;
           background: rgba(255, 255, 255, 0.86);
@@ -301,8 +301,8 @@ export default function AiGuidedConfirmSpeakPage({
 
         .sf-ai-confirm-speak-logo {
           display: grid;
-          width: clamp(1.55rem, 7.6vw, 2rem);
-          height: clamp(1.55rem, 7.6vw, 2rem);
+          width: clamp(1.66rem, 7.9vw, 2.08rem);
+          height: clamp(1.66rem, 7.9vw, 2.08rem);
           flex: 0 0 auto;
           place-items: center;
           border-radius: 0.62rem;
@@ -326,7 +326,7 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-brand-title {
           max-width: 100%;
           color: #07103a;
-          font-size: clamp(0.98rem, 4.35vw, 1.28rem);
+          font-size: clamp(1.06rem, 4.55vw, 1.38rem);
           font-weight: 1000;
           letter-spacing: 0;
           line-height: 0.95;
@@ -336,7 +336,7 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-brand-subtitle {
           margin-top: 0.18rem;
           color: #4e62ff !important;
-          font-size: clamp(0.38rem, 1.85vw, 0.54rem);
+          font-size: clamp(0.41rem, 1.92vw, 0.57rem);
           font-weight: 900;
           letter-spacing: 0.16em;
           line-height: 1;
@@ -350,8 +350,8 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-content {
           display: flex;
           flex-direction: column;
-          min-height: calc(100dvh - 5.1rem);
-          padding-top: clamp(0.78rem, 3.4dvh, 1.25rem);
+          min-height: auto;
+          padding-top: clamp(1.05rem, 4.2dvh, 1.88rem);
         }
 
         .sf-ai-confirm-speak-title {
@@ -360,7 +360,7 @@ export default function AiGuidedConfirmSpeakPage({
           align-items: center;
           gap: 0.42rem;
           color: #07103a;
-          font-size: clamp(1.12rem, 5.2vw, 1.36rem);
+          font-size: clamp(1.26rem, 5.75vw, 1.58rem);
           font-weight: 950;
           letter-spacing: 0;
           line-height: 1.12;
@@ -368,8 +368,8 @@ export default function AiGuidedConfirmSpeakPage({
         }
 
         .sf-ai-confirm-speak-title svg {
-          width: 1.22rem;
-          height: 1.22rem;
+          width: 1.36rem;
+          height: 1.36rem;
           fill: #875cff;
           flex: 0 0 auto;
           filter: drop-shadow(0 0.32rem 0.6rem rgba(142, 98, 255, 0.18));
@@ -377,15 +377,15 @@ export default function AiGuidedConfirmSpeakPage({
 
         .sf-ai-confirm-speak-chinese-card {
           position: relative;
-          margin-top: clamp(0.65rem, 2.8dvh, 0.95rem);
-          min-height: clamp(7.1rem, 28dvh, 9.2rem);
+          margin-top: clamp(0.88rem, 3.4dvh, 1.18rem);
+          min-height: clamp(8.65rem, 31dvh, 10.35rem);
           border: 1px solid rgba(214, 224, 247, 0.9);
-          border-radius: clamp(0.9rem, 4vw, 1.15rem);
-          background: rgba(255, 255, 255, 0.78);
+          border-radius: clamp(1.12rem, 5vw, 1.38rem);
+          background: rgba(255, 255, 255, 0.88);
           box-shadow:
-            0 1rem 2.4rem rgba(81, 96, 156, 0.11),
+            0 1.05rem 2.5rem rgba(81, 96, 156, 0.1),
             inset 0 1px 0 rgba(255, 255, 255, 0.96);
-          padding: clamp(0.75rem, 3.2vw, 0.96rem);
+          padding: clamp(0.86rem, 3.6vw, 1.08rem);
           backdrop-filter: blur(16px);
         }
 
@@ -403,9 +403,9 @@ export default function AiGuidedConfirmSpeakPage({
           border: 0;
           border-radius: 999px;
           background: rgba(239, 243, 255, 0.84);
-          color: #754dff;
-          padding: 0.25rem 0.5rem;
-          font-size: clamp(0.58rem, 2.65vw, 0.7rem);
+          color: #8b5cf6;
+          padding: 0.22rem 0.46rem;
+          font-size: clamp(0.56rem, 2.55vw, 0.68rem);
           font-weight: 900;
           line-height: 1;
           cursor: pointer;
@@ -423,21 +423,23 @@ export default function AiGuidedConfirmSpeakPage({
 
         .sf-ai-confirm-speak-textarea {
           width: 100%;
-          min-height: clamp(4.8rem, 16dvh, 6.2rem);
-          max-height: clamp(6.3rem, 22dvh, 8rem);
-          margin-top: 0.34rem;
-          border: 0;
-          background: transparent;
+          min-height: clamp(5.72rem, 19dvh, 6.92rem);
+          max-height: clamp(7.1rem, 23dvh, 8.7rem);
+          margin-top: 0.48rem;
+          border: 0 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          appearance: none;
           color: #070d34;
           resize: none;
           text-align: left;
           font: inherit;
           font-size: var(--sf-ai-confirm-speak-chinese-size);
-          font-weight: 920;
+          font-weight: 900;
           letter-spacing: 0;
-          line-height: 1.55;
+          line-height: 1.58;
           outline: none;
-          padding: 0.18rem clamp(0.38rem, 2.8vw, 1.15rem);
+          padding: 0.38rem clamp(1rem, 5vw, 1.58rem) 0;
         }
 
         .sf-ai-confirm-speak-textarea::placeholder {
@@ -449,9 +451,9 @@ export default function AiGuidedConfirmSpeakPage({
           align-items: center;
           justify-content: center;
           gap: 0.42rem;
-          margin: clamp(0.46rem, 2dvh, 0.68rem) 0 0;
-          color: rgba(61, 67, 110, 0.64);
-          font-size: clamp(0.61rem, 2.8vw, 0.73rem);
+          margin: clamp(0.58rem, 2.4dvh, 0.78rem) 0 0;
+          color: rgba(45, 58, 112, 0.72);
+          font-size: clamp(0.63rem, 2.9vw, 0.75rem);
           font-weight: 720;
           line-height: 1.35;
           text-align: center;
@@ -471,20 +473,20 @@ export default function AiGuidedConfirmSpeakPage({
 
         .sf-ai-confirm-speak-actions {
           display: grid;
-          grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.22fr);
-          gap: clamp(0.48rem, 2.4vw, 0.72rem);
-          margin-top: clamp(0.62rem, 2.7dvh, 0.82rem);
+          grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.32fr);
+          gap: clamp(0.58rem, 2.9vw, 0.86rem);
+          margin-top: clamp(0.72rem, 3dvh, 0.96rem);
         }
 
         .sf-ai-confirm-speak-retry-button,
         .sf-ai-confirm-speak-confirm-button {
           min-width: 0;
-          min-height: clamp(2.58rem, 10.5vw, 3.05rem);
+          min-height: clamp(2.86rem, 11.2vw, 3.36rem);
           display: inline-flex;
           align-items: center;
           justify-content: center;
           gap: 0.38rem;
-          border-radius: 0.86rem;
+          border-radius: 1rem;
           font-weight: 920;
           letter-spacing: 0;
           line-height: 1.16;
@@ -501,9 +503,9 @@ export default function AiGuidedConfirmSpeakPage({
         }
 
         .sf-ai-confirm-speak-confirm-button {
-          background: linear-gradient(135deg, #c686ff 0%, #7a54ff 100%);
+          background: linear-gradient(135deg, #bd86ff 0%, #7454ff 50%, #1c66ff 100%);
           color: #fff !important;
-          font-size: clamp(0.64rem, 2.9vw, 0.78rem);
+          font-size: clamp(0.64rem, 3vw, 0.8rem);
           padding-inline: 0.48rem;
           text-align: center;
           box-shadow:
@@ -532,19 +534,19 @@ export default function AiGuidedConfirmSpeakPage({
         }
 
         .sf-ai-confirm-speak-divider {
-          margin: clamp(0.7rem, 3.2dvh, 0.96rem) 0 clamp(0.55rem, 2.5dvh, 0.78rem);
-          border-top: 2px dashed rgba(185, 162, 245, 0.42);
+          margin: clamp(0.82rem, 3.4dvh, 1.08rem) 0 clamp(0.62rem, 2.6dvh, 0.84rem);
+          border-top: 2px dashed rgba(216, 199, 255, 0.55);
         }
 
         .sf-ai-confirm-speak-record-panel {
           position: relative;
           border: 1px solid rgba(217, 224, 247, 0.9);
-          border-radius: clamp(0.95rem, 4.6vw, 1.28rem);
-          background: rgba(255, 255, 255, 0.74);
+          border-radius: clamp(1.06rem, 4.9vw, 1.36rem);
+          background: rgba(255, 255, 255, 0.78);
           box-shadow:
             0 1.05rem 2.35rem rgba(86, 99, 153, 0.1),
             inset 0 1px 0 rgba(255, 255, 255, 0.96);
-          padding: clamp(0.78rem, 3.3vw, 0.98rem) clamp(0.7rem, 3.4vw, 1rem);
+          padding: clamp(0.9rem, 3.7vw, 1.12rem) clamp(0.78rem, 3.6vw, 1.06rem);
           text-align: center;
           overflow: hidden;
           transition: opacity 180ms ease, transform 180ms ease, box-shadow 180ms ease;
@@ -560,13 +562,16 @@ export default function AiGuidedConfirmSpeakPage({
         }
 
         .sf-ai-confirm-speak-record-panel-idle {
-          opacity: 0.58;
+          opacity: 0.55;
+          min-height: clamp(9.5rem, 31dvh, 11.2rem);
         }
 
         .sf-ai-confirm-speak-record-panel-active {
           opacity: 1;
+          min-height: clamp(14.2rem, 41dvh, 16.5rem);
+          border-color: rgba(199, 213, 255, 0.86);
           box-shadow:
-            0 1.22rem 2.8rem rgba(114, 91, 214, 0.16),
+            0 1.24rem 2.9rem rgba(83, 105, 210, 0.14),
             inset 0 1px 0 rgba(255, 255, 255, 0.98);
         }
 
@@ -578,8 +583,8 @@ export default function AiGuidedConfirmSpeakPage({
           align-items: center;
           justify-content: center;
           gap: 0.45rem;
-          color: #8b61ff;
-          font-size: clamp(0.9rem, 4.1vw, 1.08rem);
+          color: #315fff;
+          font-size: clamp(1rem, 4.35vw, 1.16rem);
           font-weight: 950;
           line-height: 1.18;
         }
@@ -593,16 +598,16 @@ export default function AiGuidedConfirmSpeakPage({
 
         .sf-ai-confirm-speak-record-panel-idle .sf-ai-confirm-speak-record-title {
           color: rgba(70, 69, 107, 0.66);
-          font-size: clamp(0.88rem, 3.9vw, 1.02rem);
+          font-size: clamp(0.92rem, 4vw, 1.06rem);
           line-height: 1.3;
         }
 
         .sf-ai-confirm-speak-record-copy {
           position: relative;
           z-index: 1;
-          margin: 0.28rem 0 0;
+          margin: 0.32rem 0 0;
           color: rgba(54, 62, 106, 0.68);
-          font-size: clamp(0.62rem, 2.85vw, 0.74rem);
+          font-size: clamp(0.64rem, 2.95vw, 0.76rem);
           font-weight: 720;
           line-height: 1.32;
         }
@@ -610,9 +615,9 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-listening-copy {
           position: relative;
           z-index: 1;
-          margin: 0.48rem 0 0;
-          color: #9a61ff;
-          font-size: clamp(0.76rem, 3.35vw, 0.9rem);
+          margin: 0.52rem 0 0;
+          color: #315fff;
+          font-size: clamp(0.82rem, 3.55vw, 0.96rem);
           font-weight: 900;
           line-height: 1.15;
         }
@@ -641,8 +646,8 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-mic-area {
           position: relative;
           z-index: 1;
-          min-height: clamp(5.35rem, 22vw, 6.35rem);
-          margin-top: clamp(0.55rem, 2.4vw, 0.76rem);
+          min-height: clamp(5.9rem, 24vw, 7rem);
+          margin-top: clamp(0.7rem, 2.8vw, 0.92rem);
           display: grid;
           place-items: center;
         }
@@ -650,7 +655,7 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-mic-wrap {
           position: relative;
           display: grid;
-          width: clamp(4.4rem, 19vw, 5.3rem);
+          width: clamp(4.8rem, 20.5vw, 5.75rem);
           aspect-ratio: 1;
           place-items: center;
         }
@@ -673,7 +678,7 @@ export default function AiGuidedConfirmSpeakPage({
 
         .sf-ai-confirm-speak-record-panel-active .sf-ai-confirm-speak-mic-wrap::before {
           animation: sf-ai-confirm-speak-pulse 1.75s ease-in-out infinite;
-          background: rgba(170, 103, 255, 0.16);
+          background: rgba(83, 113, 255, 0.18);
         }
 
         .sf-ai-confirm-speak-record-panel-active .sf-ai-confirm-speak-mic-wrap::after {
@@ -698,7 +703,7 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-mic-active {
           background:
             radial-gradient(circle at 33% 22%, rgba(255, 255, 255, 0.52), transparent 18%),
-            linear-gradient(135deg, #b56cff 0%, #744dff 52%, #3042e6 100%);
+            linear-gradient(135deg, #8a6dff 0%, #3459ff 56%, #1430c5 100%);
           color: #ffffff;
           box-shadow:
             0 1rem 2.2rem rgba(101, 70, 226, 0.32),
@@ -718,22 +723,22 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-wave-bars {
           position: absolute;
           top: 50%;
-          width: clamp(3rem, 14vw, 3.85rem);
-          height: clamp(2.7rem, 12vw, 3.45rem);
+          width: clamp(3.35rem, 16vw, 4.35rem);
+          height: clamp(2.95rem, 13vw, 3.7rem);
           transform: translateY(-50%);
           display: flex;
           align-items: center;
           justify-content: space-between;
-          color: rgba(159, 188, 255, 0.42);
+          color: rgba(145, 180, 255, 0.46);
           pointer-events: none;
         }
 
         .sf-ai-confirm-speak-wave-bars-left {
-          right: calc(50% + clamp(2.85rem, 13vw, 3.6rem));
+          right: calc(50% + clamp(3.2rem, 14.5vw, 4.05rem));
         }
 
         .sf-ai-confirm-speak-wave-bars-right {
-          left: calc(50% + clamp(2.85rem, 13vw, 3.6rem));
+          left: calc(50% + clamp(3.2rem, 14.5vw, 4.05rem));
         }
 
         .sf-ai-confirm-speak-wave-bars span {
@@ -752,7 +757,7 @@ export default function AiGuidedConfirmSpeakPage({
         .sf-ai-confirm-speak-wave-bars span:nth-child(4) { height: 100%; animation-delay: 300ms; }
 
         .sf-ai-confirm-speak-record-panel-active .sf-ai-confirm-speak-wave-bars {
-          color: rgba(145, 97, 255, 0.58);
+          color: rgba(79, 95, 255, 0.64);
         }
 
         .sf-ai-confirm-speak-record-panel-idle .sf-ai-confirm-speak-wave-bars span,
@@ -764,12 +769,12 @@ export default function AiGuidedConfirmSpeakPage({
           position: relative;
           z-index: 1;
           width: min(100%, 13rem);
-          min-height: clamp(2rem, 8.5vw, 2.34rem);
-          margin-top: clamp(0.42rem, 1.9vw, 0.62rem);
-          border: 1px solid rgba(155, 104, 255, 0.76);
+          min-height: clamp(2.08rem, 8.8vw, 2.42rem);
+          margin-top: clamp(0.48rem, 2.1vw, 0.68rem);
+          border: 1px solid rgba(43, 84, 255, 0.76);
           border-radius: 999px;
           background: rgba(255, 255, 255, 0.68);
-          color: #8a54ff;
+          color: #265cff;
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -799,10 +804,10 @@ export default function AiGuidedConfirmSpeakPage({
           position: relative;
           z-index: 1;
           width: min(100%, 17.6rem);
-          margin: clamp(0.48rem, 2vw, 0.62rem) auto 0;
+          margin: clamp(0.56rem, 2.2vw, 0.72rem) auto 0;
           border-radius: 999px;
-          background: rgba(237, 238, 255, 0.72);
-          color: rgba(85, 72, 132, 0.72);
+          background: rgba(235, 241, 255, 0.76);
+          color: rgba(56, 76, 137, 0.76);
           padding: 0.45rem 0.7rem;
           font-size: clamp(0.6rem, 2.65vw, 0.72rem);
           font-weight: 760;
@@ -854,25 +859,25 @@ export default function AiGuidedConfirmSpeakPage({
 
         @media (max-height: 720px) {
           .sf-ai-confirm-speak-frame {
-            padding-top: calc(env(safe-area-inset-top, 0px) + 0.54rem);
-            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.64rem);
+            padding-top: calc(env(safe-area-inset-top, 0px) + 0.12rem);
+            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.58rem);
           }
 
           .sf-ai-confirm-speak-content {
-            padding-top: 0.58rem;
+            padding-top: 0.9rem;
           }
 
           .sf-ai-confirm-speak-chinese-card {
-            min-height: 6.45rem;
-            margin-top: 0.54rem;
-            padding-top: 0.62rem;
-            padding-bottom: 0.62rem;
+            min-height: 7.35rem;
+            margin-top: 0.64rem;
+            padding-top: 0.74rem;
+            padding-bottom: 0.74rem;
           }
 
           .sf-ai-confirm-speak-textarea {
-            min-height: 4.05rem;
-            max-height: 5.15rem;
-            line-height: 1.42;
+            min-height: 4.75rem;
+            max-height: 6.15rem;
+            line-height: 1.48;
           }
 
           .sf-ai-confirm-speak-card-note {
@@ -880,26 +885,34 @@ export default function AiGuidedConfirmSpeakPage({
           }
 
           .sf-ai-confirm-speak-actions {
-            margin-top: 0.5rem;
+            margin-top: 0.58rem;
           }
 
           .sf-ai-confirm-speak-divider {
-            margin-top: 0.58rem;
-            margin-bottom: 0.48rem;
+            margin-top: 0.66rem;
+            margin-bottom: 0.52rem;
           }
 
           .sf-ai-confirm-speak-record-panel {
-            padding-top: 0.66rem;
-            padding-bottom: 0.72rem;
+            padding-top: 0.74rem;
+            padding-bottom: 0.78rem;
+          }
+
+          .sf-ai-confirm-speak-record-panel-idle {
+            min-height: 8.55rem;
+          }
+
+          .sf-ai-confirm-speak-record-panel-active {
+            min-height: 13.25rem;
           }
 
           .sf-ai-confirm-speak-mic-area {
-            min-height: 4.85rem;
-            margin-top: 0.38rem;
+            min-height: 5.1rem;
+            margin-top: 0.46rem;
           }
 
           .sf-ai-confirm-speak-mic-wrap {
-            width: 4.1rem;
+            width: 4.45rem;
           }
 
           .sf-ai-confirm-speak-tip {
