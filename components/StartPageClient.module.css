@@ -492,11 +492,9 @@
   letter-spacing: 0;
   line-height: 1.1;
   text-decoration: none;
-  text-shadow:
-    0 1px 0 rgba(5, 7, 15, 0.82),
-    1px 0 0 rgba(5, 7, 15, 0.52),
-    0 -1px 0 rgba(5, 7, 15, 0.44),
-    -1px 0 0 rgba(5, 7, 15, 0.52);
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  paint-order: normal;
   box-shadow:
     0 16px 30px rgba(74, 91, 255, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -1043,9 +1041,9 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: 46px max-content minmax(0, 1fr);
+  grid-template-columns: 46px minmax(0, 1fr) 46px;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .starterMenuButton {
@@ -1073,12 +1071,13 @@
 
 .starterBrand {
   display: inline-grid;
-  grid-template-columns: 56px minmax(0, max-content);
+  grid-template-columns: minmax(0, max-content);
   align-items: center;
-  gap: 10px;
+  justify-self: center;
   min-width: 0;
   color: #10163b;
   text-decoration: none;
+  text-align: center;
 }
 
 .starterBrandIcon {
@@ -1107,7 +1106,7 @@
 .starterBrandCopy strong {
   color: #10163b;
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: clamp(1.54rem, 6.6vw, 1.78rem);
+  font-size: clamp(1.42rem, 6vw, 1.64rem);
   font-weight: 900;
   letter-spacing: 0;
   line-height: 0.95;
@@ -1117,7 +1116,7 @@
 .starterBrandCopy small {
   color: #6d5cff;
   font-family: var(--font-sora), var(--font-geist-sans), sans-serif;
-  font-size: clamp(0.5rem, 2.2vw, 0.62rem);
+  font-size: clamp(0.46rem, 2vw, 0.56rem);
   font-weight: 800;
   letter-spacing: 0;
   line-height: 1;
@@ -1196,18 +1195,6 @@
   color: #765cff;
 }
 
-.starterRobot {
-  position: absolute;
-  right: -6px;
-  top: -38px;
-  z-index: 1;
-  display: block;
-  width: min(43vw, 178px);
-  height: auto;
-  filter: drop-shadow(0 24px 34px rgba(91, 92, 218, 0.16));
-  pointer-events: none;
-}
-
 .starterRecommended {
   position: relative;
   z-index: 2;
@@ -1231,8 +1218,8 @@
   gap: 8px;
   min-height: 42px;
   border-radius: 20px 0 18px 0;
-  background: linear-gradient(135deg, #8350ff 0%, #5f47f5 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, #f5e7ff 0%, #eadbff 100%);
+  color: #05070f;
   font-size: clamp(0.84rem, 3.45vw, 0.96rem);
   font-weight: 950;
   padding: 0 20px;
@@ -1247,8 +1234,8 @@
 
 .starterRecommendedBody {
   position: relative;
-  min-height: 222px;
-  padding: 72px 22px 26px;
+  min-height: 214px;
+  padding: 68px 22px 24px;
 }
 
 .starterRecommendedCopy {
@@ -1285,12 +1272,13 @@
 
 .starterBubbleArt {
   position: absolute;
-  top: 64px;
-  right: 28px;
+  top: 50%;
+  right: 22px;
   display: grid;
-  width: 137px;
-  height: 123px;
+  width: 126px;
+  height: 118px;
   place-items: center;
+  transform: translateY(-42%);
   pointer-events: none;
 }
 
@@ -1317,6 +1305,9 @@
   letter-spacing: 0;
   line-height: 1.1;
   text-decoration: none;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  paint-order: normal;
   box-shadow:
     0 16px 30px rgba(74, 91, 255, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -1700,8 +1691,8 @@
   }
 
   .starterTopBar {
-    grid-template-columns: 44px max-content minmax(0, 1fr);
-    gap: 11px;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    gap: 10px;
   }
 
   .starterMenuButton {
@@ -1709,23 +1700,16 @@
     height: 44px;
   }
 
-  .starterBrandIcon {
-    width: 50px;
-    height: 50px;
-    border-radius: 16px;
-  }
-
   .starterBrand {
-    grid-template-columns: 50px minmax(0, max-content);
-    gap: 8px;
+    grid-template-columns: minmax(0, max-content);
   }
 
   .starterBrandCopy strong {
-    font-size: 1.43rem;
+    font-size: 1.34rem;
   }
 
   .starterBrandCopy small {
-    font-size: 0.52rem;
+    font-size: 0.49rem;
   }
 
   .starterHero {
@@ -1747,22 +1731,16 @@
     font-size: 0.66rem;
   }
 
-  .starterRobot {
-    right: -2px;
-    top: -32px;
-    width: 154px;
-  }
-
   .starterRecommendedBody {
-    min-height: 212px;
-    padding: 68px 18px 24px;
+    min-height: 204px;
+    padding: 64px 18px 22px;
   }
 
   .starterBubbleArt {
-    top: 64px;
-    right: 18px;
-    width: 120px;
-    height: 108px;
+    top: 50%;
+    right: 16px;
+    width: 112px;
+    height: 106px;
   }
 
   .starterRecommendedCopy {
@@ -1898,11 +1876,9 @@
   background: linear-gradient(135deg, #a487ff, #7390ff 70%, #7777ff);
   color: #ffffff;
   font-weight: 950;
-  text-shadow:
-    0 1px 0 rgba(5, 7, 15, 0.82),
-    1px 0 0 rgba(5, 7, 15, 0.52),
-    0 -1px 0 rgba(5, 7, 15, 0.44),
-    -1px 0 0 rgba(5, 7, 15, 0.52);
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  paint-order: normal;
   box-shadow:
     0 16px 30px rgba(74, 91, 255, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -1955,13 +1931,20 @@
     inset 0 0 0 1px rgba(190, 194, 255, 0.34);
 }
 
-:global(html[data-app-theme]) .starterRibbon,
 :global(html[data-app-theme]) .starterPrimaryCta {
   background: linear-gradient(135deg, #8b4cff 0%, #7159ff 58%, #5a42ee 100%);
   color: #ffffff;
 }
 
+:global(html[data-app-theme]) .starterRibbon {
+  background: linear-gradient(135deg, #f5e7ff 0%, #eadbff 100%);
+  color: #05070f;
+}
+
 :global(html[data-app-theme]) .starterPrimaryCta {
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  paint-order: normal;
   box-shadow:
     0 16px 30px rgba(74, 91, 255, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);

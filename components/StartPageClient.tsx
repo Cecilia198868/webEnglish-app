@@ -482,21 +482,6 @@ function NativeSenseTrainingCard() {
   );
 }
 
-function StarterRobot() {
-  return (
-    <Image
-      alt=""
-      className={styles.starterRobot}
-      draggable={false}
-      height={330}
-      priority
-      sizes="170px"
-      src="/images/starter-robot-standard.png"
-      width={328}
-    />
-  );
-}
-
 function SubscriberRobot() {
   return (
     <Image
@@ -578,16 +563,6 @@ export default function StartPageClient({
               <MenuIcon />
             </Link>
             <Link href="/start" className={styles.starterBrand} aria-label="SpeakFlow 首页">
-              <span className={styles.starterBrandIcon}>
-                <Image
-                  alt=""
-                  height={64}
-                  priority
-                  sizes="54px"
-                  src="/brand/speakflow-app-icon.png"
-                  width={64}
-                />
-              </span>
               <span className={styles.starterBrandCopy}>
                 <strong>SpeakFlow</strong>
                 <small>AI 语音口语练习伙伴</small>
@@ -616,7 +591,6 @@ export default function StartPageClient({
                 </span>
               </div>
             </div>
-            <StarterRobot />
           </section>
 
           <section
@@ -639,10 +613,10 @@ export default function StartPageClient({
                   alt=""
                   className={styles.starterBubbleImage}
                   draggable={false}
-                  height={260}
-                  sizes="150px"
-                  src="/images/starter-bubbles-standard.png"
-                  width={300}
+                  height={330}
+                  sizes="140px"
+                  src="/images/starter-robot-standard.png"
+                  width={328}
                 />
               </div>
               <Link

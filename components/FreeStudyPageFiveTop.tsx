@@ -1,10 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
-import FreeStudyHelpModal from "@/components/FreeStudyHelpModal";
-import HomeMenuIcon from "@/components/HomeMenuIcon";
-import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
+import FreeStudyBottomNav from "@/components/FreeStudyBottomNav";
 
 type FreeStudyPageFiveTopProps = {
   userEnglishText: string;
@@ -13,6 +10,7 @@ type FreeStudyPageFiveTopProps = {
   avatarSrc?: string;
   avatarAlt?: string;
   accountLabel?: string;
+  hasProEntitlement?: boolean;
   onAiGuidedPractice: () => void;
   onRetryEnglish: () => void;
   onMenuClick: () => void;
@@ -168,15 +166,16 @@ export default function FreeStudyPageFiveTop({
   userEnglishText,
   expressions,
   selectedExpressionIndex,
+  hasProEntitlement = false,
   onAiGuidedPractice,
   onRetryEnglish,
   onMenuClick,
+  onAccountClick,
   onPlayExpression,
   onSelectExpression,
   renderExpressionText: renderInteractiveExpressionText,
   renderUserExpressionText,
 }: FreeStudyPageFiveTopProps) {
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const displayText = userEnglishText.trim() || " ";
   const preparedExpressions = expressionMeta.map((meta, index) => ({
     ...meta,
@@ -189,17 +188,6 @@ export default function FreeStudyPageFiveTop({
     Math.max(selectedExpressionIndex, 0),
     preparedExpressions.length - 1
   );
-
-  useEffect(() => {
-    if (!isHelpOpen) return;
-
-    function closeOnEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") setIsHelpOpen(false);
-    }
-
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [isHelpOpen]);
 
   return (
     <section className="sf-free-result-page" aria-label="自由学习英语结果">
@@ -805,6 +793,7 @@ export default function FreeStudyPageFiveTop({
         .sf-free-result-frame {
           gap: .78rem !important;
           padding-top: calc(env(safe-area-inset-top, 0px) + .52rem) !important;
+          padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6.35rem) !important;
         }
 
         .sf-free-result-header {
@@ -1021,36 +1010,6 @@ export default function FreeStudyPageFiveTop({
       `}</style>
 
       <div className="sf-free-result-frame">
-        <header className="sf-free-result-header">
-          <button
-            type="button"
-            aria-label="回到学习首页"
-            onClick={onMenuClick}
-            className="sf-free-result-home"
-          >
-            <HomeMenuIcon label={null} showHint={false} />
-          </button>
-
-          <div className="sf-free-result-brand" aria-label="SpeakFlow AI Voice Practice">
-            <span className="sf-free-result-logo" aria-hidden="true">
-              <SpeakFlowBrandMark />
-            </span>
-            <span className="sf-free-result-brand-copy">
-              <span className="sf-free-result-brand-title">SpeakFlow</span>
-              <span className="sf-free-result-brand-subtitle">AI VOICE PRACTICE</span>
-            </span>
-          </div>
-
-          <button
-            type="button"
-            aria-label="打开自由学习帮助"
-            onClick={() => setIsHelpOpen(true)}
-            className="sf-free-result-help"
-          >
-            ?
-          </button>
-        </header>
-
         <section className="sf-free-result-ai-card">
           <span className="sf-free-result-ai-icon" aria-hidden="true">
             <LightGlyph />
@@ -1165,12 +1124,12 @@ export default function FreeStudyPageFiveTop({
         <div className="sf-free-result-more">向下查看更多表达</div>
       </div>
 
-      {isHelpOpen ? (
-        <FreeStudyHelpModal
-          onClose={() => setIsHelpOpen(false)}
-          onMenuClick={onMenuClick}
-        />
-      ) : null}
+      <FreeStudyBottomNav
+        hasProEntitlement={hasProEntitlement}
+        menuLabel={"\u56de\u5230\u5b66\u4e60\u9996\u9875"}
+        onAccountClick={onAccountClick}
+        onMenuClick={onMenuClick}
+      />
     </section>
   );
 }

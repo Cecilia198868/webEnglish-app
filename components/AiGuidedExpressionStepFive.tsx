@@ -1520,6 +1520,63 @@ export default function AiGuidedExpressionStepFive({
           }
 
         }
+
+        .sf-ai-guided-step-five-record-card {
+          display: block !important;
+          position: relative;
+          min-height: clamp(6.25rem, 23vw, 7.5rem);
+          padding:
+            clamp(0.72rem, 3vw, 0.9rem)
+            clamp(0.76rem, 3.3vw, 0.98rem)
+            clamp(0.82rem, 3.4vw, 1.04rem)
+            clamp(4.46rem, 17.8vw, 5.15rem) !important;
+        }
+
+        .sf-ai-guided-step-five-record-icon {
+          position: absolute;
+          left: clamp(0.72rem, 3vw, 0.92rem);
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        .sf-ai-guided-step-five-record-copy {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .sf-ai-guided-step-five-record-toolbar {
+          display: flex !important;
+          min-height: clamp(2.44rem, 10.5vw, 2.9rem);
+          align-items: center;
+          justify-content: space-between;
+          gap: clamp(0.42rem, 2vw, 0.62rem);
+        }
+
+        .sf-ai-guided-step-five-record-badge {
+          max-width: calc(100% - clamp(5.5rem, 24vw, 6.4rem));
+          flex: 0 1 auto;
+        }
+
+        .sf-ai-guided-step-five-record-actions {
+          flex: 0 0 auto;
+        }
+
+        .sf-ai-guided-step-five-record-text {
+          display: block;
+          width: 100%;
+          max-width: none;
+          margin-top: clamp(0.46rem, 2.2vw, 0.68rem);
+          text-align: left;
+          text-wrap: normal;
+          overflow-wrap: break-word;
+          word-break: normal;
+        }
+
+        .sf-ai-guided-step-five-record-text :where(button, span),
+        .sf-ai-guided-step-five-emphasis {
+          text-wrap: normal !important;
+          word-break: normal !important;
+        }
       `}</style>
 
       <div className="sf-ai-guided-step-five-frame">

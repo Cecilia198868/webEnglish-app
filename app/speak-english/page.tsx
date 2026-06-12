@@ -8475,6 +8475,7 @@ function SpeakEnglishClient() {
                 userEnglishText={message}
                 expressions={referenceResultVariantTexts}
                 selectedExpressionIndex={selectedExpressionIndex}
+                hasProEntitlement={isAccountPro}
                 avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
                 avatarAlt={accountEmail || accountName || "user"}
                 accountLabel={accountCopy.openAccountMenu}
