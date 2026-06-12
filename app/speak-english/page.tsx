@@ -7206,18 +7206,15 @@ function SpeakEnglishClient() {
             <div className="absolute inset-0 z-[90] overflow-hidden">
               <AiGuidedConfirmSpeakPage
                 chineseText={nativeSpeech}
+                hasProEntitlement={isAccountPro}
                 viewState={
                   showGuidedReferenceEnglishListening
                     ? "recordingEnglish"
                     : "confirmChinese"
                 }
-                headerAddon={
-                  shouldShowGuestAiProgress ? (
-                    <GuestAiPracticeProgress used={freePracticeUsageCount} />
-                  ) : undefined
-                }
                 menuLabel="回到学习首页"
                 onMenuClick={openLoggedInHomePage}
+                onAccountClick={openAccountPage}
                 onEditChinese={updateNativeSpeechDraft}
                 onRetryChinese={retryNativeSpeech}
                 onStartEnglishRecording={confirmAiGuidedNativeSpeechInline}

@@ -292,6 +292,7 @@ export default function AiGuidedExpressionStepOne({
   }
 
   function openProgress() {
+    setIsProgressLoading(true);
     setIsProgressOpen(true);
   }
 
@@ -1988,13 +1989,13 @@ export default function AiGuidedExpressionStepOne({
               </button>
             </div>
 
-            {isProgressLoading ? (
-              <div className="sf-ai-guide-start-progress-loading">
-                正在同步学习进度...
-              </div>
-            ) : progressError ? (
+            {progressError ? (
               <div className="sf-ai-guide-start-progress-error">
                 {progressError}
+              </div>
+            ) : isProgressLoading || !progressSnapshot ? (
+              <div className="sf-ai-guide-start-progress-loading">
+                正在同步学习进度...
               </div>
             ) : (
               <>
