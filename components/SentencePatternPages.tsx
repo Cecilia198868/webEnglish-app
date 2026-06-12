@@ -27,39 +27,6 @@ type StudyProps = {
   section: SentencePatternSection;
 };
 
-type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
-
-type SpeechRecognitionAlternativeLike = {
-  transcript?: string;
-};
-
-type SpeechRecognitionResultLike = {
-  0?: SpeechRecognitionAlternativeLike;
-};
-
-type SpeechRecognitionResultEventLike = Event & {
-  results: ArrayLike<SpeechRecognitionResultLike>;
-};
-
-type SpeechRecognitionInstance = {
-  abort?: () => void;
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  onend: (() => void) | null;
-  onerror: ((event: Event) => void) | null;
-  onresult: ((event: SpeechRecognitionResultEventLike) => void) | null;
-  onspeechend?: (() => void) | null;
-  onspeechstart?: (() => void) | null;
-  start: () => void;
-  stop: () => void;
-};
-
-type SpeechWindow = Window & {
-  SpeechRecognition?: SpeechRecognitionConstructor;
-  webkitSpeechRecognition?: SpeechRecognitionConstructor;
-};
-
 type PatternToneStyle = CSSProperties & {
   "--pattern-accent": string;
   "--pattern-accent-dark": string;
@@ -720,7 +687,7 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   const [isRecording, setIsRecording] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const transcriptRef = useRef("");
-  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const finishAfterSilenceTimerRef = useRef<number | null>(null);
   const finishRecordingRef = useRef(false);
   const heardSpeechRef = useRef(false);
@@ -816,9 +783,8 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
     heardSpeechRef.current = false;
     restartOnEndRef.current = false;
 
-    const speechWindow = window as SpeechWindow;
     const Recognition =
-      speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!Recognition) {
       finishRecording(practice.targetEnglish);

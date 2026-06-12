@@ -380,41 +380,6 @@ type ExpressionVariant = {
   text: string;
 };
 
-type SpeechRecognitionAlternativeLike = {
-  transcript?: string;
-};
-
-type SpeechRecognitionResultLike = {
-  0?: SpeechRecognitionAlternativeLike;
-};
-
-type SpeechRecognitionResultEventLike = Event & {
-  results: ArrayLike<SpeechRecognitionResultLike>;
-};
-
-type BrowserSpeechRecognition = {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  start: () => void;
-  stop: () => void;
-  abort?: () => void;
-  onspeechstart?: (() => void) | null;
-  onspeechend?: (() => void) | null;
-  onresult: ((event: SpeechRecognitionResultEventLike) => void) | null;
-  onerror: ((event: Event) => void) | null;
-  onend: (() => void) | null;
-};
-
-type SpeechRecognitionConstructor = new () => BrowserSpeechRecognition;
-
-declare global {
-  interface Window {
-    webkitSpeechRecognition?: SpeechRecognitionConstructor;
-    SpeechRecognition?: SpeechRecognitionConstructor;
-  }
-}
-
 function getDefaultLessonsData(): LocalLessonData {
   return { lessons: [] };
 }

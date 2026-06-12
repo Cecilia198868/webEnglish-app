@@ -101,32 +101,6 @@ type ExpressionVariant = {
   text: string;
 };
 
-type SpeechRecognitionAlternativeLike = {
-  transcript?: string;
-};
-
-type SpeechRecognitionResultLike = {
-  0?: SpeechRecognitionAlternativeLike;
-};
-
-type SpeechRecognitionResultEventLike = Event & {
-  results: ArrayLike<SpeechRecognitionResultLike>;
-};
-
-type BrowserSpeechRecognition = {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  start: () => void;
-  stop: () => void;
-  abort?: () => void;
-  onresult: ((event: SpeechRecognitionResultEventLike) => void) | null;
-  onerror: ((event: Event) => void) | null;
-  onend: (() => void) | null;
-};
-
-type SpeechRecognitionConstructor = new () => BrowserSpeechRecognition;
-
 type SubscriptionStatus = "free" | "pro" | "cancels_at_period_end";
 
 type SessionResponse = {
@@ -1903,13 +1877,6 @@ const aboutSpeakFlowContent = {
     tagline: "为真实表达而设计的英语口语练习。",
   },
 } as const;
-
-declare global {
-  interface Window {
-    webkitSpeechRecognition?: SpeechRecognitionConstructor;
-    SpeechRecognition?: SpeechRecognitionConstructor;
-  }
-}
 
 const letterRows = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
