@@ -1,18 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AiGuidedExpressionHelpModal from "@/components/AiGuidedExpressionHelpModal";
-import HomeMenuIcon from "@/components/HomeMenuIcon";
-import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import { FREE_PRACTICE_DAILY_LIMIT } from "@/lib/freePracticeLimit";
 
 type AiGuidedExpressionStepOneProps = {
+  hasProEntitlement?: boolean;
+  onAccountClick?: () => void;
   onHomeClick?: () => void;
   onStartChineseRecording?: () => void;
   onStopChineseRecording?: () => void;
   recordingState?: "idle" | "recording";
   showGuestProgress?: boolean;
+};
+
+type AiGuidedProgressStepId =
+  | "native"
+  | "english"
+  | "suggestions"
+  | "follow";
+
+type AiGuidedProgressStepStatus = "active" | "completed" | "locked";
+
+type AiGuidedProgressSnapshot = {
+  challenge?: {
+    completed?: number;
+    goal?: number;
+    percent?: number;
+  };
+  dailyGoal?: number;
+  level?: number;
+  steps?: Partial<
+    Record<
+      AiGuidedProgressStepId,
+      {
+        id?: AiGuidedProgressStepId;
+        label?: string;
+        status?: AiGuidedProgressStepStatus;
+      }
+    >
+  >;
+  streakDays?: number;
+  todayCompleted?: number;
+  totalCompleted?: number;
 };
 
 const learningFlow = [
@@ -21,6 +52,22 @@ const learningFlow = [
   { icon: "robot", title: "AI 给你表达" },
   { icon: "light", title: "继续下一句" },
 ] as const;
+
+const progressStepOrder: Array<{
+  id: AiGuidedProgressStepId;
+  fallbackLabel: string;
+}> = [
+  { id: "native", fallbackLabel: "说中文" },
+  { id: "english", fallbackLabel: "试着说英文" },
+  { id: "suggestions", fallbackLabel: "AI 给你表达" },
+  { id: "follow", fallbackLabel: "继续下一句" },
+];
+
+const progressStatusCopy: Record<AiGuidedProgressStepStatus, string> = {
+  active: "进行中",
+  completed: "已完成",
+  locked: "待练习",
+};
 
 function MicGlyph() {
   return (
@@ -93,6 +140,53 @@ function HelpBoltGlyph() {
   );
 }
 
+function BottomHomeIcon() {
+  return (
+    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="sf-ai-bottom-home-gradient" x1="9" x2="39" y1="39" y2="8">
+          <stop offset="0" stopColor="#5e79ff" />
+          <stop offset="1" stopColor="#914cff" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M8 21.6 24 8l16 13.6v16.2a4 4 0 0 1-4 4h-7.7V29.3h-8.6v12.5H12a4 4 0 0 1-4-4V21.6Z"
+        fill="url(#sf-ai-bottom-home-gradient)"
+      />
+    </svg>
+  );
+}
+
+function BottomProgressIcon() {
+  return (
+    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+      <path d="M12 34V21" />
+      <path d="M20 34V12" />
+      <path d="M28 34V17" />
+      <path d="M36 34V9" />
+    </svg>
+  );
+}
+
+function BottomHelpIcon() {
+  return (
+    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+      <path d="M24 7.5c-9.4 0-17 6.4-17 14.3 0 4.7 2.7 8.9 6.9 11.5l-1.5 7.2 7.2-4.8c1.4.3 2.9.5 4.4.5 9.4 0 17-6.4 17-14.4S33.4 7.5 24 7.5Z" />
+      <path d="M19.2 18.8a5.1 5.1 0 0 1 9.8 2.1c0 3.8-5 4.1-5 7.2" />
+      <path d="M24 34.2h.1" />
+    </svg>
+  );
+}
+
+function BottomAccountIcon() {
+  return (
+    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+      <circle cx="24" cy="15.2" r="7.1" />
+      <path d="M11.8 40c1.5-8 6-12 12.2-12s10.7 4 12.2 12" />
+    </svg>
+  );
+}
+
 function StepIcon({ icon }: { icon: (typeof learningFlow)[number]["icon"] }) {
   if (icon === "mic") return <MicGlyph />;
   if (icon === "chat") return <ChatGlyph />;
@@ -114,6 +208,8 @@ function WaveBars({ side }: { side: "left" | "right" }) {
 }
 
 export default function AiGuidedExpressionStepOne({
+  hasProEntitlement = false,
+  onAccountClick,
   onHomeClick,
   onStartChineseRecording,
   onStopChineseRecording,
@@ -127,9 +223,55 @@ export default function AiGuidedExpressionStepOne({
     "idle" | "recording"
   >("idle");
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isProgressOpen, setIsProgressOpen] = useState(false);
+  const [isProgressLoading, setIsProgressLoading] = useState(false);
+  const [progressError, setProgressError] = useState("");
+  const [progressSnapshot, setProgressSnapshot] =
+    useState<AiGuidedProgressSnapshot | null>(null);
 
   const effectiveRecordingState = recordingState ?? localRecordingState;
   const isRecording = effectiveRecordingState === "recording";
+
+  useEffect(() => {
+    if (!isProgressOpen) return;
+
+    let isActive = true;
+
+    async function loadProgress() {
+      setIsProgressLoading(true);
+      setProgressError("");
+
+      try {
+        const response = await fetch("/api/ai-guided-expression/progress", {
+          cache: "no-store",
+          credentials: "same-origin",
+        });
+
+        if (!response.ok) {
+          throw new Error("Progress request failed");
+        }
+
+        const snapshot = (await response.json()) as AiGuidedProgressSnapshot;
+        if (isActive) {
+          setProgressSnapshot(snapshot);
+        }
+      } catch {
+        if (isActive) {
+          setProgressError("学习进度暂时没有同步成功，请稍后再试。");
+        }
+      } finally {
+        if (isActive) {
+          setIsProgressLoading(false);
+        }
+      }
+    }
+
+    void loadProgress();
+
+    return () => {
+      isActive = false;
+    };
+  }, [isProgressOpen]);
 
   function handleHomeClick() {
     if (onHomeClick) {
@@ -138,6 +280,19 @@ export default function AiGuidedExpressionStepOne({
     }
 
     router.push("/start");
+  }
+
+  function handleAccountClick() {
+    if (onAccountClick) {
+      onAccountClick();
+      return;
+    }
+
+    router.push("/account");
+  }
+
+  function openProgress() {
+    setIsProgressOpen(true);
   }
 
   function startChineseRecording() {
@@ -163,12 +318,24 @@ export default function AiGuidedExpressionStepOne({
   const instructionText = isRecording
     ? "再次点击上方麦克风，结束录音"
     : "点击上方麦克风开始说中文";
+  const todayCompleted = progressSnapshot?.todayCompleted ?? 0;
+  const dailyGoal = progressSnapshot?.dailyGoal ?? FREE_PRACTICE_DAILY_LIMIT;
+  const streakDays = progressSnapshot?.streakDays ?? 0;
+  const totalCompleted = progressSnapshot?.totalCompleted ?? 0;
+  const challengeCompleted = progressSnapshot?.challenge?.completed ?? 0;
+  const challengeGoal = progressSnapshot?.challenge?.goal ?? dailyGoal;
+  const challengePercent = Math.max(
+    0,
+    Math.min(100, Math.round(progressSnapshot?.challenge?.percent ?? 0))
+  );
 
   return (
     <main
       className={`sf-ai-guide-start-page ${
         isRecording ? "is-recording" : "is-idle"
-      } ${isHelpOpen ? "is-help-open" : ""}`}
+      } ${isHelpOpen ? "is-help-open" : ""} ${
+        isProgressOpen ? "is-progress-open" : ""
+      }`}
     >
       <style>{`
         .sf-ai-guide-start-page,
@@ -233,7 +400,8 @@ export default function AiGuidedExpressionStepOne({
           -webkit-font-smoothing: antialiased;
         }
 
-        .sf-ai-guide-start-page.is-help-open {
+        .sf-ai-guide-start-page.is-help-open,
+        .sf-ai-guide-start-page.is-progress-open {
           overflow: hidden;
         }
 
@@ -1104,7 +1272,7 @@ export default function AiGuidedExpressionStepOne({
         }
 
         .sf-ai-guide-start-hero {
-          margin-top: clamp(1.15rem, 3.9dvh, 1.86rem);
+          margin-top: clamp(5.4rem, 12dvh, 6.9rem);
         }
 
         .sf-ai-guide-start-title {
@@ -1132,6 +1300,10 @@ export default function AiGuidedExpressionStepOne({
         .sf-ai-guide-start-mic-zone {
           margin-top: clamp(0.64rem, 2.1dvh, 1rem);
           min-height: clamp(8.28rem, 38.5vw, 10.55rem);
+        }
+
+        .sf-ai-guide-start-page.is-idle .sf-ai-guide-start-mic-zone {
+          margin-top: clamp(2.35rem, 5.8dvh, 3.2rem);
         }
 
         .sf-ai-guide-start-mic-ring {
@@ -1289,7 +1461,7 @@ export default function AiGuidedExpressionStepOne({
         }
 
         .sf-ai-guide-start-help-card {
-          margin-top: clamp(1.12rem, 4.2dvh, 2.1rem);
+          margin-top: auto;
           border-radius: 1.18rem;
           background: rgba(255, 255, 255, 0.74);
           padding: clamp(0.78rem, 2.5vw, 0.95rem) clamp(0.72rem, 2.8vw, 0.9rem) clamp(0.7rem, 2.5vw, 0.86rem);
@@ -1320,9 +1492,317 @@ export default function AiGuidedExpressionStepOne({
           width: clamp(0.74rem, 3.5vw, 1.05rem);
         }
 
+        .sf-ai-guide-start-bottom-nav {
+          position: relative;
+          z-index: 4;
+          margin-top: clamp(2.05rem, 5.8dvh, 3.55rem);
+          min-height: clamp(3.95rem, 17vw, 4.7rem);
+          padding: clamp(0.38rem, 1.7vw, 0.52rem) clamp(0.82rem, 4.2vw, 1.18rem);
+          border: 1px solid rgba(220, 227, 247, 0.92);
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.82);
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          align-items: center;
+          gap: clamp(0.18rem, 1vw, 0.42rem);
+          box-shadow:
+            0 1.05rem 2.4rem rgba(94, 112, 172, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.98);
+          backdrop-filter: blur(18px);
+        }
+
+        .sf-ai-guide-start-bottom-button {
+          position: relative;
+          width: 100%;
+          height: clamp(2.55rem, 11.5vw, 3.12rem);
+          border: 0;
+          border-radius: 999px;
+          padding: 0;
+          display: grid;
+          place-items: center;
+          color: #8b8eaf;
+          background: transparent;
+          appearance: none;
+          cursor: pointer;
+          transition: color 160ms ease, transform 160ms ease;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .sf-ai-guide-start-bottom-button:active {
+          transform: scale(0.96);
+        }
+
+        .sf-ai-guide-start-bottom-button:focus-visible,
+        .sf-ai-guide-start-progress-close:focus-visible {
+          outline: 3px solid rgba(132, 103, 255, 0.34);
+          outline-offset: 3px;
+        }
+
+        .sf-ai-guide-start-bottom-button svg {
+          width: clamp(1.62rem, 7.2vw, 2.05rem);
+          height: clamp(1.62rem, 7.2vw, 2.05rem);
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 3.1;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          vector-effect: non-scaling-stroke;
+        }
+
+        .sf-ai-guide-start-bottom-button.is-active svg {
+          width: clamp(1.72rem, 7.8vw, 2.16rem);
+          height: clamp(1.72rem, 7.8vw, 2.16rem);
+          stroke: none;
+        }
+
+        .sf-ai-guide-start-bottom-pro {
+          position: absolute;
+          right: clamp(0.34rem, 1.8vw, 0.52rem);
+          bottom: clamp(0.18rem, 0.9vw, 0.28rem);
+          padding: 0.06rem 0.18rem 0.05rem;
+          border-radius: 0.26rem;
+          background: rgba(9, 14, 54, 0.9);
+          color: #ffffff;
+          font-size: 0.44rem;
+          font-weight: 950;
+          line-height: 1;
+          letter-spacing: 0;
+          box-shadow: 0 0.18rem 0.36rem rgba(9, 14, 54, 0.16);
+        }
+
+        .sf-ai-guide-start-progress-backdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 60;
+          padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(14, 19, 46, 0.28);
+          backdrop-filter: blur(14px);
+        }
+
+        .sf-ai-guide-start-progress-modal {
+          width: min(100%, 24rem);
+          max-height: min(84dvh, 40rem);
+          overflow-y: auto;
+          border: 1px solid rgba(220, 228, 250, 0.94);
+          border-radius: 1.45rem;
+          background:
+            radial-gradient(circle at 88% 6%, rgba(222, 207, 255, 0.62), transparent 8rem),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 252, 255, 0.97));
+          padding: 1.08rem;
+          box-shadow:
+            0 1.8rem 4.2rem rgba(25, 32, 74, 0.22),
+            inset 0 1px 0 rgba(255, 255, 255, 0.96);
+        }
+
+        .sf-ai-guide-start-progress-head {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 1rem;
+        }
+
+        .sf-ai-guide-start-progress-kicker {
+          margin: 0 0 0.26rem;
+          color: #765cff;
+          font-size: 0.78rem;
+          font-weight: 900;
+          line-height: 1;
+        }
+
+        .sf-ai-guide-start-progress-head h2 {
+          margin: 0;
+          color: #07103d;
+          font-size: 1.42rem;
+          font-weight: 950;
+          line-height: 1.14;
+        }
+
+        .sf-ai-guide-start-progress-close {
+          width: 2.35rem;
+          height: 2.35rem;
+          border: 0;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.82);
+          color: #12183e;
+          display: grid;
+          place-items: center;
+          box-shadow: inset 0 0 0 1px rgba(211, 221, 244, 0.9);
+          cursor: pointer;
+        }
+
+        .sf-ai-guide-start-progress-close svg {
+          width: 1.06rem;
+          height: 1.06rem;
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 2.7;
+          stroke-linecap: round;
+        }
+
+        .sf-ai-guide-start-progress-loading,
+        .sf-ai-guide-start-progress-error {
+          margin-top: 1rem;
+          min-height: 7rem;
+          border-radius: 1rem;
+          display: grid;
+          place-items: center;
+          color: #687197;
+          background: rgba(255, 255, 255, 0.72);
+          font-size: 0.9rem;
+          font-weight: 820;
+          text-align: center;
+        }
+
+        .sf-ai-guide-start-progress-error {
+          color: #9b3351;
+          background: rgba(255, 242, 247, 0.82);
+        }
+
+        .sf-ai-guide-start-progress-grid {
+          margin-top: 1rem;
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 0.55rem;
+        }
+
+        .sf-ai-guide-start-progress-stat,
+        .sf-ai-guide-start-progress-card,
+        .sf-ai-guide-start-progress-step {
+          border: 1px solid rgba(222, 228, 247, 0.9);
+          background: rgba(255, 255, 255, 0.76);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.94);
+        }
+
+        .sf-ai-guide-start-progress-stat {
+          min-height: 4.35rem;
+          border-radius: 1rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0.18rem;
+          text-align: center;
+        }
+
+        .sf-ai-guide-start-progress-stat span {
+          color: #07103d;
+          font-size: 1.46rem;
+          font-weight: 1000;
+          line-height: 1;
+        }
+
+        .sf-ai-guide-start-progress-stat small {
+          color: #6a7197;
+          font-size: 0.66rem;
+          font-weight: 780;
+          line-height: 1.16;
+        }
+
+        .sf-ai-guide-start-progress-card {
+          margin-top: 0.7rem;
+          border-radius: 1.06rem;
+          padding: 0.88rem;
+        }
+
+        .sf-ai-guide-start-progress-card-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          color: #07103d;
+          font-size: 0.9rem;
+          font-weight: 900;
+        }
+
+        .sf-ai-guide-start-progress-card-head strong {
+          color: #765cff;
+          font-size: 1rem;
+        }
+
+        .sf-ai-guide-start-progress-track {
+          margin-top: 0.65rem;
+          height: 0.6rem;
+          border-radius: 999px;
+          background: rgba(230, 225, 255, 0.95);
+          overflow: hidden;
+        }
+
+        .sf-ai-guide-start-progress-track span {
+          display: block;
+          height: 100%;
+          border-radius: inherit;
+          background: linear-gradient(90deg, #845cff, #3f82ff);
+        }
+
+        .sf-ai-guide-start-progress-card p {
+          margin: 0.42rem 0 0;
+          color: #6a7197;
+          font-size: 0.72rem;
+          font-weight: 760;
+        }
+
+        .sf-ai-guide-start-progress-steps {
+          margin-top: 0.75rem;
+          display: grid;
+          gap: 0.48rem;
+        }
+
+        .sf-ai-guide-start-progress-step {
+          min-height: 3.55rem;
+          border-radius: 0.95rem;
+          padding: 0.62rem 0.72rem;
+          display: grid;
+          grid-template-columns: 2rem minmax(0, 1fr);
+          align-items: center;
+          gap: 0.64rem;
+        }
+
+        .sf-ai-guide-start-progress-step-index {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          color: #ffffff;
+          background: #a8abc4;
+          font-size: 0.86rem;
+          font-weight: 950;
+        }
+
+        .sf-ai-guide-start-progress-step.is-completed .sf-ai-guide-start-progress-step-index {
+          background: linear-gradient(135deg, #6b76ff, #8d5cff);
+        }
+
+        .sf-ai-guide-start-progress-step.is-active .sf-ai-guide-start-progress-step-index {
+          background: linear-gradient(135deg, #3f8cff, #7b63ff);
+        }
+
+        .sf-ai-guide-start-progress-step-copy {
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.16rem;
+        }
+
+        .sf-ai-guide-start-progress-step-copy strong {
+          color: #07103d;
+          font-size: 0.9rem;
+          font-weight: 900;
+          line-height: 1.18;
+        }
+
+        .sf-ai-guide-start-progress-step-copy small {
+          color: #6d7398;
+          font-size: 0.72rem;
+          font-weight: 780;
+        }
+
         @media (max-height: 760px) {
           .sf-ai-guide-start-hero {
-            margin-top: 0.85rem;
+            margin-top: clamp(3.6rem, 8.2dvh, 4.8rem);
           }
 
           .sf-ai-guide-start-mic-zone {
@@ -1340,40 +1820,6 @@ export default function AiGuidedExpressionStepOne({
       `}</style>
 
       <div className="sf-ai-guide-start-shell">
-        <header className="sf-ai-guide-start-header">
-          <button
-            type="button"
-            className="sf-ai-guide-start-home-button"
-            onClick={handleHomeClick}
-            aria-label="返回首页"
-          >
-            <HomeMenuIcon label={null} showHint={false} />
-          </button>
-
-          <div className="sf-ai-guide-start-brand" aria-label="SpeakFlow">
-            <span className="sf-ai-guide-start-logo" aria-hidden="true">
-              <SpeakFlowBrandMark className="sf-ai-guide-start-logo-mark" />
-            </span>
-            <span className="sf-ai-guide-start-brand-copy">
-              <span className="sf-ai-guide-start-brand-title">SpeakFlow</span>
-              <span className="sf-ai-guide-start-brand-subtitle">
-                AI VOICE PRACTICE
-              </span>
-            </span>
-          </div>
-
-          <button
-            type="button"
-            className="sf-ai-guide-start-help-button"
-            aria-label="打开帮助"
-            aria-haspopup="dialog"
-            aria-expanded={isHelpOpen}
-            onClick={() => setIsHelpOpen(true)}
-          >
-            ?
-          </button>
-        </header>
-
         <section className="sf-ai-guide-start-hero" aria-live="polite">
           <span className="sf-ai-guide-start-sparkle sf-ai-guide-start-sparkle-left">
             <SparkleGlyph />
@@ -1463,12 +1909,149 @@ export default function AiGuidedExpressionStepOne({
             ))}
           </div>
         </section>
+
+        <nav className="sf-ai-guide-start-bottom-nav" aria-label="学习导航">
+          <button
+            type="button"
+            className="sf-ai-guide-start-bottom-button is-active"
+            onClick={handleHomeClick}
+            aria-label="回到学习首页"
+          >
+            <BottomHomeIcon />
+          </button>
+          <button
+            type="button"
+            className="sf-ai-guide-start-bottom-button"
+            onClick={openProgress}
+            aria-label="查看学习进度"
+            aria-haspopup="dialog"
+            aria-expanded={isProgressOpen}
+          >
+            <BottomProgressIcon />
+          </button>
+          <button
+            type="button"
+            className="sf-ai-guide-start-bottom-button"
+            onClick={() => setIsHelpOpen(true)}
+            aria-label="打开使用帮助"
+            aria-haspopup="dialog"
+            aria-expanded={isHelpOpen}
+          >
+            <BottomHelpIcon />
+          </button>
+          <button
+            type="button"
+            className="sf-ai-guide-start-bottom-button"
+            onClick={handleAccountClick}
+            aria-label="打开账户"
+          >
+            <BottomAccountIcon />
+            {hasProEntitlement ? (
+              <span className="sf-ai-guide-start-bottom-pro">PRO</span>
+            ) : null}
+          </button>
+        </nav>
       </div>
 
       <AiGuidedExpressionHelpModal
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
       />
+
+      {isProgressOpen ? (
+        <div
+          className="sf-ai-guide-start-progress-backdrop"
+          role="presentation"
+          onClick={() => setIsProgressOpen(false)}
+        >
+          <section
+            className="sf-ai-guide-start-progress-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="sf-ai-guide-progress-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sf-ai-guide-start-progress-head">
+              <div>
+                <p className="sf-ai-guide-start-progress-kicker">学习进度</p>
+                <h2 id="sf-ai-guide-progress-title">AI 引导表达</h2>
+              </div>
+              <button
+                type="button"
+                className="sf-ai-guide-start-progress-close"
+                onClick={() => setIsProgressOpen(false)}
+                aria-label="关闭学习进度"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 6l12 12M18 6 6 18" />
+                </svg>
+              </button>
+            </div>
+
+            {isProgressLoading ? (
+              <div className="sf-ai-guide-start-progress-loading">
+                正在同步学习进度...
+              </div>
+            ) : progressError ? (
+              <div className="sf-ai-guide-start-progress-error">
+                {progressError}
+              </div>
+            ) : (
+              <>
+                <div className="sf-ai-guide-start-progress-grid">
+                  <div className="sf-ai-guide-start-progress-stat">
+                    <span>{todayCompleted}</span>
+                    <small>今日完成 / {dailyGoal}</small>
+                  </div>
+                  <div className="sf-ai-guide-start-progress-stat">
+                    <span>{streakDays}</span>
+                    <small>连续天数</small>
+                  </div>
+                  <div className="sf-ai-guide-start-progress-stat">
+                    <span>{totalCompleted}</span>
+                    <small>累计完成</small>
+                  </div>
+                </div>
+
+                <div className="sf-ai-guide-start-progress-card">
+                  <div className="sf-ai-guide-start-progress-card-head">
+                    <span>今日挑战</span>
+                    <strong>
+                      {challengeCompleted}/{challengeGoal}
+                    </strong>
+                  </div>
+                  <div className="sf-ai-guide-start-progress-track">
+                    <span style={{ width: `${challengePercent}%` }} />
+                  </div>
+                  <p>{challengePercent}% 已完成</p>
+                </div>
+
+                <div className="sf-ai-guide-start-progress-steps">
+                  {progressStepOrder.map((item, index) => {
+                    const step = progressSnapshot?.steps?.[item.id];
+                    const status = step?.status ?? "locked";
+
+                    return (
+                      <div
+                        className={`sf-ai-guide-start-progress-step is-${status}`}
+                        key={item.id}
+                      >
+                        <span className="sf-ai-guide-start-progress-step-index">
+                          {index + 1}
+                        </span>
+                        <span className="sf-ai-guide-start-progress-step-copy">
+                          <strong>{step?.label ?? item.fallbackLabel}</strong>
+                          <small>{progressStatusCopy[status]}</small>
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </section>
+        </div>
+      ) : null}
     </main>
   );
 }

@@ -6961,9 +6961,11 @@ function SpeakEnglishClient() {
           {showGuidedReferenceLanding ? (
             <div className="absolute inset-0 z-[90] overflow-hidden">
               <AiGuidedExpressionStepOne
+                hasProEntitlement={isAccountPro}
                 showGuestProgress={shouldShowGuestAiProgress}
                 recordingState="idle"
                 onHomeClick={openLoggedInHomePage}
+                onAccountClick={openAccountPage}
                 onStartChineseRecording={startAiGuidedStepTwoNativeRound}
               />
             </div>
@@ -7028,9 +7030,11 @@ function SpeakEnglishClient() {
           {showGuidedReferenceListening ? (
             <div className="absolute inset-0 z-[90] overflow-hidden">
               <AiGuidedExpressionStepOne
+                hasProEntitlement={isAccountPro}
                 showGuestProgress={shouldShowGuestAiProgress}
                 recordingState="recording"
                 onHomeClick={openLoggedInHomePage}
+                onAccountClick={openAccountPage}
                 onStopChineseRecording={handlePrimaryPracticeAction}
               />
             </div>
