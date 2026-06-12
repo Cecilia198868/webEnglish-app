@@ -1,20 +1,12 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import FreeStudyHelpModal from "@/components/FreeStudyHelpModal";
-import HomeMenuIcon from "@/components/HomeMenuIcon";
-import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
+import { useLayoutEffect, useRef } from "react";
+import FreeStudyBottomNav from "@/components/FreeStudyBottomNav";
 
 type FreeStudyPageThreeProps = {
   chineseText: string;
-  avatarSrc?: string;
-  avatarAlt?: string;
-  accountLabel?: string;
-  headingText?: string;
-  headerAddon?: ReactNode;
+  hasProEntitlement?: boolean;
   menuLabel?: string;
-  variant?: "free" | "guided";
   viewState?: "confirmChinese" | "recordingEnglish";
   onEditChinese: (value: string) => void;
   onRetryChinese: () => void;
@@ -91,17 +83,17 @@ function WaveGlyph() {
 
 export default function FreeStudyPageThree({
   chineseText,
-  headerAddon,
+  hasProEntitlement = false,
   menuLabel = "回到学习首页",
   viewState = "confirmChinese",
   onEditChinese,
   onRetryChinese,
   onStartEnglishPractice,
   onStopEnglishRecording,
+  onAccountClick,
   onMenuClick,
 }: FreeStudyPageThreeProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const isRecordingEnglish = viewState === "recordingEnglish";
   const canConfirm = Boolean(chineseText.trim()) && !isRecordingEnglish;
 
@@ -119,17 +111,6 @@ export default function FreeStudyPageThree({
     textarea.style.overflowY =
       textarea.scrollHeight > nextHeight + 1 ? "auto" : "hidden";
   }, [chineseText]);
-
-  useEffect(() => {
-    if (!isHelpOpen) return;
-
-    function closeOnEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") setIsHelpOpen(false);
-    }
-
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [isHelpOpen]);
 
   function focusChineseEditor() {
     const textarea = textareaRef.current;
@@ -216,9 +197,9 @@ export default function FreeStudyPageThree({
         .sf-free-confirm-frame {
           min-height: 100%;
           padding:
-            calc(env(safe-area-inset-top, 0px) + clamp(.9rem, 2.4dvh, 1.22rem))
+            calc(env(safe-area-inset-top, 0px) + clamp(2.25rem, 6.6dvh, 3.2rem))
             clamp(1.02rem, 4.6vw, 1.34rem)
-            calc(env(safe-area-inset-bottom, 0px) + 1rem);
+            calc(env(safe-area-inset-bottom, 0px) + 6.2rem);
         }
 
         .sf-free-confirm-header {
@@ -696,7 +677,8 @@ export default function FreeStudyPageThree({
         }
 
         .sf-free-confirm-frame {
-          padding-top: calc(env(safe-area-inset-top, 0px) + .38rem) !important;
+          padding-top: calc(env(safe-area-inset-top, 0px) + clamp(2.25rem, 6.6dvh, 3.2rem)) !important;
+          padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6.2rem) !important;
           gap: .78rem !important;
         }
 
@@ -856,38 +838,6 @@ export default function FreeStudyPageThree({
       `}</style>
 
       <div className="sf-free-confirm-frame">
-        <header className="sf-free-confirm-header">
-          <button
-            type="button"
-            aria-label={menuLabel}
-            onClick={onMenuClick}
-            className="sf-free-confirm-home"
-          >
-            <HomeMenuIcon label={null} showHint={false} />
-          </button>
-
-          <div className="sf-free-confirm-brand" aria-label="SpeakFlow AI Voice Practice">
-            <span className="sf-free-confirm-logo" aria-hidden="true">
-              <SpeakFlowBrandMark />
-            </span>
-            <span className="sf-free-confirm-brand-copy">
-              <span className="sf-free-confirm-brand-title">SpeakFlow</span>
-              <span className="sf-free-confirm-brand-subtitle">AI VOICE PRACTICE</span>
-            </span>
-          </div>
-
-          <button
-            type="button"
-            aria-label="打开自由学习帮助"
-            onClick={() => setIsHelpOpen(true)}
-            className="sf-free-confirm-help"
-          >
-            ?
-          </button>
-        </header>
-
-        {headerAddon}
-
         <main>
           <h1 className="sf-free-confirm-title">
             <SparklesGlyph />
@@ -1010,12 +960,12 @@ export default function FreeStudyPageThree({
         </main>
       </div>
 
-      {isHelpOpen ? (
-        <FreeStudyHelpModal
-          onClose={() => setIsHelpOpen(false)}
-          onMenuClick={onMenuClick}
-        />
-      ) : null}
+      <FreeStudyBottomNav
+        hasProEntitlement={hasProEntitlement}
+        menuLabel={menuLabel}
+        onAccountClick={onAccountClick}
+        onMenuClick={onMenuClick}
+      />
     </section>
   );
 }

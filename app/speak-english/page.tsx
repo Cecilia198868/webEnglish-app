@@ -8453,13 +8453,10 @@ function SpeakEnglishClient() {
           showReferenceEnglishListening ? (
             <FreeStudyPageThree
               chineseText={nativeSpeech}
+              hasProEntitlement={isAccountPro}
               menuLabel="回到学习首页"
               onMenuClick={openLoggedInHomePage}
-              accountLabel={accountCopy.openAccountMenu}
               onAccountClick={openAccountPage}
-              avatarSrc={accountImage && !accountImageFailed ? accountImage : ""}
-              avatarAlt={accountEmail || accountName || "user"}
-              onAvatarError={() => setAccountImageFailed(true)}
               onEditChinese={updateNativeSpeechDraft}
               onRetryChinese={openFreeStudyStepTwoForNextChinese}
               onStartEnglishPractice={confirmFreeStudyNativeSpeechInline}
