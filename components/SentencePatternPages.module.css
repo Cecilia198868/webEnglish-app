@@ -3699,13 +3699,18 @@
   line-height: 1 !important;
 }
 
-/* Sentence pattern overview title: compact two-line hero requested for the menu page. */
+/* Sentence pattern overview title: match the single-line reference menu. */
+.phone:has(.overviewHeader) {
+  padding: max(10px, calc(env(safe-area-inset-top, 0px) + 6px)) 21px
+    max(22px, calc(env(safe-area-inset-bottom, 0px) + 18px)) !important;
+}
+
 .overviewHeader {
-  height: 6.875rem !important;
-  min-height: 6.875rem !important;
-  max-height: 6.875rem !important;
-  align-items: start !important;
-  padding: 0 0.65rem !important;
+  height: 5.1rem !important;
+  min-height: 5.1rem !important;
+  max-height: 5.1rem !important;
+  align-items: center !important;
+  padding: 0 0.1rem !important;
 }
 
 .overviewHeader .roundBack {
@@ -3713,28 +3718,35 @@
   top: auto !important;
   left: auto !important;
   justify-self: start !important;
+  width: 2.85rem !important;
+  min-width: 2.85rem !important;
+  height: 2.85rem !important;
+  min-height: 2.85rem !important;
+  border-radius: 1.08rem !important;
+  box-shadow: 0 0.55rem 1.2rem rgba(50, 68, 122, 0.08) !important;
+}
+
+.overviewHeader .roundBack svg {
+  width: 1.32rem !important;
+  height: 1.32rem !important;
 }
 
 .overviewHeader > div {
   display: grid !important;
   justify-items: center !important;
-  gap: 0.25rem !important;
-  max-width: min(72vw, 20rem) !important;
+  gap: 0.5rem !important;
+  max-width: min(78vw, 22.5rem) !important;
 }
 
 .overviewHeader h1 {
-  display: grid !important;
+  display: block !important;
   justify-items: center !important;
   gap: 0 !important;
-  width: max-content !important;
+  width: 100% !important;
   max-width: 100% !important;
-  font-size: clamp(2rem, 7vw, 2.5rem) !important;
-  font-weight: 800 !important;
-  line-height: 0.95 !important;
-}
-
-.overviewHeader h1 span {
-  display: block !important;
+  font-size: clamp(1.58rem, 6.05vw, 1.92rem) !important;
+  font-weight: 900 !important;
+  line-height: 1.04 !important;
   white-space: nowrap !important;
 }
 
@@ -3749,32 +3761,32 @@
 }
 
 .overviewMeta {
-  height: 2.375rem !important;
-  min-height: 2.375rem !important;
-  gap: 0.45rem !important;
-  margin: 0.2rem auto 1.1rem !important;
-  padding: 0 0.8rem 0 0.5rem !important;
+  height: 2.1rem !important;
+  min-height: 2.1rem !important;
+  gap: 0.42rem !important;
+  margin: 0.05rem auto 1.02rem !important;
+  padding: 0 0.78rem 0 0.42rem !important;
   border-radius: 999px !important;
-  font-size: 0.9375rem !important;
+  font-size: 0.84rem !important;
   font-weight: 700 !important;
   line-height: 1 !important;
 }
 
 .overviewMeta svg {
   box-sizing: border-box !important;
-  width: 1.5rem !important;
-  height: 1.5rem !important;
-  padding: 0.24rem !important;
-  border-radius: 0.48rem !important;
+  width: 1.28rem !important;
+  height: 1.28rem !important;
+  padding: 0.2rem !important;
+  border-radius: 0.4rem !important;
 }
 
 .overviewHeader ~ .levelStack {
-  gap: 0.78rem !important;
+  gap: 0.86rem !important;
 }
 
 .overviewHeader ~ .levelStack .levelCard {
-  height: 11rem !important;
-  min-height: 11rem !important;
+  height: 11.15rem !important;
+  min-height: 11.15rem !important;
   border-radius: 1.55rem !important;
 }
 
@@ -3797,52 +3809,52 @@
 }
 
 .overviewHeader ~ .levelStack .levelBadge {
-  top: 1rem !important;
-  left: 1rem !important;
+  top: 1.08rem !important;
+  left: 1.08rem !important;
   border-radius: 0.82rem !important;
-  padding: 0.45rem 0.72rem !important;
-  font-size: 0.84rem !important;
+  padding: 0.38rem 0.68rem !important;
+  font-size: 0.82rem !important;
 }
 
 .overviewHeader ~ .levelStack .levelTitleRow {
-  top: 3.72rem !important;
-  left: 1rem !important;
-  gap: 0.46rem !important;
+  top: 3.95rem !important;
+  left: 1.05rem !important;
+  gap: 0.5rem !important;
 }
 
 .overviewHeader ~ .levelStack .levelTitleRow svg {
-  width: 1.58rem !important;
-  height: 1.58rem !important;
+  width: 1.48rem !important;
+  height: 1.48rem !important;
 }
 
 .overviewHeader ~ .levelStack .levelTitleRow strong {
-  font-size: 1.25rem !important;
-  line-height: 1.04 !important;
+  font-size: 1.28rem !important;
+  line-height: 1.08 !important;
   white-space: nowrap !important;
 }
 
 .overviewHeader ~ .levelStack .levelSubtitle {
-  top: 5.72rem !important;
-  left: 1rem !important;
-  width: min(58%, 13rem) !important;
+  top: 6.02rem !important;
+  left: 1.08rem !important;
+  width: min(56%, 12rem) !important;
   color: #6c738f !important;
-  font-size: 1rem !important;
-  line-height: 1.45 !important;
+  font-size: 0.86rem !important;
+  line-height: 1.42 !important;
 }
 
 .overviewHeader ~ .levelStack .levelCount {
-  left: 1rem !important;
-  bottom: 0.64rem !important;
+  left: 1.08rem !important;
+  bottom: 0.76rem !important;
   border-radius: 0.82rem !important;
-  padding: 0.46rem 0.78rem !important;
-  font-size: 0.8rem !important;
+  padding: 0.42rem 0.74rem !important;
+  font-size: 0.82rem !important;
 }
 
 .overviewHeader ~ .levelStack .levelArt {
-  top: 3.35rem !important;
-  right: 0.25rem !important;
-  width: 31.9% !important;
-  max-width: 7.5rem !important;
+  top: 3.25rem !important;
+  right: 0.52rem !important;
+  width: 40.5% !important;
+  max-width: 9.35rem !important;
 }
 
 .overviewHeader ~ .levelStack .cardChevron {
@@ -3855,10 +3867,60 @@
   height: 1.18rem !important;
 }
 
+.overviewHeader ~ .tipCard {
+  grid-template-columns: 2.55rem minmax(0, 1fr) !important;
+  gap: 0.72rem !important;
+  margin: 1.02rem 0.62rem 0 !important;
+  border-radius: 1.28rem !important;
+  padding: 0.78rem 1.05rem !important;
+}
+
+.overviewHeader ~ .tipCard .tipIcon {
+  width: 2.2rem !important;
+  height: 2.2rem !important;
+}
+
+.overviewHeader ~ .tipCard .tipIcon svg {
+  width: 1.72rem !important;
+  height: 1.72rem !important;
+}
+
+.overviewHeader ~ .tipCard p {
+  font-size: 0.84rem !important;
+  line-height: 1.55 !important;
+}
+
 @media (max-width: 380px) {
+  .phone:has(.overviewHeader) {
+    padding-right: 0.88rem !important;
+    padding-left: 0.88rem !important;
+  }
+
+  .overviewHeader {
+    height: 4.8rem !important;
+    min-height: 4.8rem !important;
+    max-height: 4.8rem !important;
+  }
+
+  .overviewHeader .roundBack {
+    width: 2.62rem !important;
+    min-width: 2.62rem !important;
+    height: 2.62rem !important;
+    min-height: 2.62rem !important;
+  }
+
+  .overviewHeader h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .overviewMeta {
+    margin-bottom: 0.88rem !important;
+    font-size: 0.78rem !important;
+  }
+
   .overviewHeader ~ .levelStack .levelCard {
-    height: 10.6rem !important;
-    min-height: 10.6rem !important;
+    height: 10.9rem !important;
+    min-height: 10.9rem !important;
   }
 
   .overviewHeader ~ .levelStack .levelTitleRow strong {
@@ -3866,15 +3928,24 @@
   }
 
   .overviewHeader ~ .levelStack .levelSubtitle {
-    top: 5.52rem !important;
+    top: 5.78rem !important;
+    width: min(55%, 10.8rem) !important;
     color: #6c738f !important;
-    font-size: 1rem !important;
-    line-height: 1.45 !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
   }
 
   .overviewHeader ~ .levelStack .levelArt {
-    width: 31% !important;
-    max-width: 6.8rem !important;
+    width: 39% !important;
+    max-width: 8rem !important;
+  }
+
+  .overviewHeader ~ .levelStack .levelCount {
+    font-size: 0.74rem !important;
+  }
+
+  .overviewHeader ~ .tipCard p {
+    font-size: 0.78rem !important;
   }
 }
 
