@@ -49,6 +49,8 @@ type SpeechRecognitionInstance = {
   onend: (() => void) | null;
   onerror: ((event: Event) => void) | null;
   onresult: ((event: SpeechRecognitionResultEventLike) => void) | null;
+  onspeechend?: (() => void) | null;
+  onspeechstart?: (() => void) | null;
   start: () => void;
   stop: () => void;
 };
@@ -545,12 +547,15 @@ export function SentencePatternLevelMenuPage({
     sectionId: string | null;
   }>(() => ({
     levelId: level.id,
-    sectionId: level.sections[0]?.id ?? null,
+    sectionId: null,
   }));
+  const [showAllPatternsSectionId, setShowAllPatternsSectionId] = useState<
+    string | null
+  >(null);
   const openSectionId =
     openSection.levelId === level.id
       ? openSection.sectionId
-      : level.sections[0]?.id ?? null;
+      : null;
 
   return (
     <main className={styles.page} style={getToneStyle(level.tone)}>
@@ -571,21 +576,27 @@ export function SentencePatternLevelMenuPage({
         <div className={styles.statsBar}>
           <span>
             <StatIcon type="chat" />
-            {level.stats[0]}
+            {level.totalPatterns} 个句型
           </span>
           <span>
             <StatIcon type="file" />
-            {level.stats[1]}
+            {level.exampleCount} 个例句
           </span>
           <span>
             <StatIcon type="star" />
-            {level.stats[2]}
+            {level.benefit}
           </span>
         </div>
 
         <div className={styles.sectionList}>
           {level.sections.map((section) => {
             const isOpen = openSectionId === section.id;
+            const isShowingAllPatterns = showAllPatternsSectionId === section.id;
+            const visiblePatterns =
+              isOpen && isShowingAllPatterns
+                ? section.patterns
+                : section.patterns.slice(0, 5);
+            const hiddenPatternCount = section.patterns.length - visiblePatterns.length;
 
             return (
               <section
@@ -597,12 +608,13 @@ export function SentencePatternLevelMenuPage({
                   aria-controls={`sentence-pattern-section-${section.id}`}
                   aria-expanded={isOpen}
                   className={styles.sectionTitle}
-                  onClick={() =>
+                  onClick={() => {
                     setOpenSection({
                       levelId: level.id,
                       sectionId: isOpen ? null : section.id,
-                    })
-                  }
+                    });
+                    setShowAllPatternsSectionId(null);
+                  }}
                   type="button"
                 >
                   <span>{section.range}</span>
@@ -617,7 +629,7 @@ export function SentencePatternLevelMenuPage({
                     className={styles.patternRows}
                     id={`sentence-pattern-section-${section.id}`}
                   >
-                    {section.patterns.map((pattern) => (
+                    {visiblePatterns.map((pattern) => (
                       <Link
                         className={styles.patternRow}
                         href={`/sentence-patterns/${level.id}/${pattern.id}`}
@@ -628,11 +640,31 @@ export function SentencePatternLevelMenuPage({
                         <ChevronIcon />
                       </Link>
                     ))}
+                    {hiddenPatternCount > 0 ? (
+                      <button
+                        className={`${styles.patternRow} ${styles.morePatternRow}`}
+                        onClick={() => setShowAllPatternsSectionId(section.id)}
+                        type="button"
+                      >
+                        <span>...</span>
+                        <strong>还有 {hiddenPatternCount} 个句型</strong>
+                        <ChevronIcon />
+                      </button>
+                    ) : null}
                   </div>
                 ) : null}
               </section>
             );
           })}
+        </div>
+
+        <div className={styles.adviceCard}>
+          <span>
+            <StatIcon type="bulb" />
+          </span>
+          <strong>学习建议</strong>
+          <p>{level.suggestion}</p>
+          <ChevronIcon />
         </div>
       </section>
     </main>
@@ -691,6 +723,7 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const finishAfterSilenceTimerRef = useRef<number | null>(null);
   const finishRecordingRef = useRef(false);
+  const heardSpeechRef = useRef(false);
   const restartOnEndRef = useRef(false);
   const progress = Math.round((practiceId / practiceCount) * 100);
   const nextPractice = practiceId >= practiceCount ? practiceId : practiceId + 1;
@@ -730,6 +763,7 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   function finishRecording(transcript: string) {
     if (finishRecordingRef.current) return;
     finishRecordingRef.current = true;
+    restartOnEndRef.current = false;
     clearFinishAfterSilenceTimer();
     recognitionRef.current = null;
     setIsRecording(false);
@@ -744,11 +778,42 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
     router.push(`/sentence-patterns/${level.id}/${patternId}/result?practice=${practiceId}`);
   }
 
+  function finishBufferedRecording() {
+    const transcript = transcriptRef.current.trim();
+
+    if ((!transcript && !heardSpeechRef.current) || finishRecordingRef.current) {
+      return false;
+    }
+
+    const recognition = recognitionRef.current;
+    try {
+      recognition?.stop();
+    } catch {}
+
+    finishRecording(transcript);
+    return true;
+  }
+
+  function stopRecordingForFinalResult() {
+    if (finishBufferedRecording()) {
+      return;
+    }
+
+    try {
+      recognitionRef.current?.stop();
+    } catch {}
+  }
+
   function startRecording() {
-    if (isRecording) return;
+    if (isRecording) {
+      stopRecordingForFinalResult();
+      return;
+    }
+
     setIsRecording(true);
     transcriptRef.current = "";
     finishRecordingRef.current = false;
+    heardSpeechRef.current = false;
     restartOnEndRef.current = false;
 
     const speechWindow = window as SpeechWindow;
@@ -768,6 +833,22 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
       recognition.lang = "en-US";
       recognition.continuous = true;
       recognition.interimResults = true;
+      const scheduleFinishAfterSilence = () => {
+        clearFinishAfterSilenceTimer();
+        finishAfterSilenceTimerRef.current = window.setTimeout(() => {
+          stopRecordingForFinalResult();
+        }, FINISH_AFTER_SILENCE_MS);
+      };
+
+      recognition.onspeechstart = () => {
+        heardSpeechRef.current = true;
+        clearFinishAfterSilenceTimer();
+      };
+
+      recognition.onspeechend = () => {
+        scheduleFinishAfterSilence();
+      };
+
       recognition.onresult = (event) => {
         const text = Array.from(event.results)
           .map((result) => result[0]?.transcript || "")
@@ -776,18 +857,18 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
         transcriptRef.current = text;
         if (!text) return;
 
-        clearFinishAfterSilenceTimer();
-        finishAfterSilenceTimerRef.current = window.setTimeout(() => {
-          try {
-            recognition.stop();
-          } catch {}
-        }, FINISH_AFTER_SILENCE_MS);
+        heardSpeechRef.current = true;
+        scheduleFinishAfterSilence();
       };
 
       recognition.onerror = (event) => {
         const errorName =
           "error" in event && typeof event.error === "string" ? event.error : "";
-        if ((errorName === "no-speech" || errorName === "aborted") && !transcriptRef.current.trim()) {
+        if (
+          (errorName === "no-speech" || errorName === "aborted") &&
+          !transcriptRef.current.trim() &&
+          !heardSpeechRef.current
+        ) {
           restartOnEndRef.current = errorName === "no-speech";
           return;
         }
@@ -802,6 +883,11 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
         const transcript = transcriptRef.current.trim();
         if (transcript) {
           finishRecording(transcript);
+          return;
+        }
+
+        if (heardSpeechRef.current) {
+          finishRecording(transcriptRef.current);
           return;
         }
 
@@ -896,7 +982,7 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
             className={styles.bigMic}
             data-recording={isRecording}
             onClick={startRecording}
-            aria-label="开始录音"
+            aria-label={isRecording ? "结束录音" : "开始录音"}
           >
             <StatIcon type="mic" />
           </button>
