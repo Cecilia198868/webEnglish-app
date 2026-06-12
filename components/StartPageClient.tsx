@@ -298,15 +298,6 @@ function CheckIcon() {
   );
 }
 
-function SparkleIcon() {
-  return (
-    <svg aria-hidden="true" focusable="false" viewBox="0 0 48 48">
-      <path d="M24 4c2.8 10.2 5.8 13.2 16 16-10.2 2.8-13.2 5.8-16 16-2.8-10.2-5.8-13.2-16-16 10.2-2.8 13.2-5.8 16-16Z" />
-      <path d="M39 30c1.4 5 2.8 6.4 8 8-5.2 1.6-6.6 3-8 8-1.6-5-3-6.4-8-8 5-1.6 6.4-3 8-8Z" />
-    </svg>
-  );
-}
-
 function PracticeIcon({ type }: { type: PracticeCardIcon }) {
   if (type === "hundred") {
     return <span aria-hidden="true">100</span>;
@@ -333,44 +324,6 @@ function PracticeIcon({ type }: { type: PracticeCardIcon }) {
     <svg aria-hidden="true" focusable="false" viewBox="0 0 48 48">
       <rect x="18" y="7" width="12" height="22" rx="6" />
       <path d="M12 23c0 7 5 12 12 12s12-5 12-12M24 35v7M17 42h14" />
-    </svg>
-  );
-}
-
-function SubscriberStarBuddy() {
-  return (
-    <svg
-      aria-hidden="true"
-      className={styles.subscriberStarBuddy}
-      focusable="false"
-      viewBox="0 0 180 180"
-    >
-      <defs>
-        <linearGradient id="subscriber-star-gradient" x1="28" x2="152" y1="20" y2="152">
-          <stop stopColor="#9f82ff" />
-          <stop offset="1" stopColor="#6a5bff" />
-        </linearGradient>
-      </defs>
-      <path
-        d="m90 16 22.4 47 51.8 7.5-37.5 36.6 8.9 51.6L90 134.5l-45.6 24.2 8.9-51.6L15.8 70.5 67.6 63 90 16Z"
-        fill="url(#subscriber-star-gradient)"
-      />
-      <circle cx="70" cy="78" r="6" fill="#fff" />
-      <circle cx="104" cy="78" r="6" fill="#fff" />
-      <path
-        d="M72 101c5.4 5.6 14.6 8.5 23 6.5 4-.9 7.8-3 10.5-6.5"
-        fill="none"
-        stroke="#fff"
-        strokeLinecap="round"
-        strokeWidth="5.2"
-      />
-      <path
-        d="M31 122h.1M145 58h.1M151 98h.1M48 50h.1"
-        fill="none"
-        stroke="#c4bcff"
-        strokeLinecap="round"
-        strokeWidth="10"
-      />
     </svg>
   );
 }
@@ -777,16 +730,6 @@ export default function StartPageClient({
             ) : null}
           </Link>
           <Link href="/start" className={styles.brand} aria-label="SpeakFlow 首页">
-            <span className={styles.brandIcon}>
-              <Image
-                alt=""
-                height={64}
-                priority
-                sizes="48px"
-                src="/brand/speakflow-app-icon.png"
-                width={64}
-              />
-            </span>
             <span className={styles.brandCopy}>
               <strong>SpeakFlow</strong>
               <small>AI VOICE PRACTICE</small>
@@ -806,9 +749,6 @@ export default function StartPageClient({
               <CheckIcon />
               SpeakFlow Pro 已激活
             </h1>
-            <span className={styles.proSparkle}>
-              <SparkleIcon />
-            </span>
           </div>
           <div className={styles.proBenefitGrid}>
             {proBenefits.map((benefit) => (
@@ -833,7 +773,6 @@ export default function StartPageClient({
             <h2 id="subscriber-title">欢迎回来 {name}</h2>
             <small>今天也一起大胆开口说英语吧！</small>
           </div>
-          <SubscriberStarBuddy />
         </section>
 
         <section
@@ -855,11 +794,6 @@ export default function StartPageClient({
               </p>
             </div>
             <div className={styles.subscriberRobotArt} aria-hidden="true">
-              <span className={styles.subscriberSpeechBubble}>
-                <i />
-                <i />
-                <i />
-              </span>
               <SubscriberRobot />
             </div>
             <Link
