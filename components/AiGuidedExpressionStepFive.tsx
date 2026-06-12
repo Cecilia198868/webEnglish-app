@@ -1522,53 +1522,55 @@ export default function AiGuidedExpressionStepFive({
         }
 
         .sf-ai-guided-step-five-record-card {
-          display: block !important;
-          position: relative;
-          min-height: clamp(6.25rem, 23vw, 7.5rem);
+          display: grid !important;
+          grid-template-columns: clamp(3.1rem, 13.2vw, 3.6rem) minmax(0, 1fr) !important;
+          align-items: center;
+          gap: clamp(0.72rem, 3vw, 0.92rem) !important;
+          min-height: clamp(5.3rem, 20vw, 6.35rem);
           padding:
-            clamp(0.72rem, 3vw, 0.9rem)
-            clamp(0.76rem, 3.3vw, 0.98rem)
-            clamp(0.82rem, 3.4vw, 1.04rem)
-            clamp(4.46rem, 17.8vw, 5.15rem) !important;
+            clamp(0.68rem, 2.8vw, 0.86rem)
+            clamp(0.78rem, 3.3vw, 1rem) !important;
         }
 
         .sf-ai-guided-step-five-record-icon {
-          position: absolute;
-          left: clamp(0.72rem, 3vw, 0.92rem);
-          top: 50%;
-          transform: translateY(-50%);
+          position: static !important;
+          align-self: center;
+          transform: none !important;
         }
 
         .sf-ai-guided-step-five-record-copy {
+          display: grid;
+          gap: clamp(0.2rem, 1vw, 0.34rem);
           width: 100%;
           min-width: 0;
         }
 
         .sf-ai-guided-step-five-record-toolbar {
-          display: flex !important;
-          min-height: clamp(2.44rem, 10.5vw, 2.9rem);
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) auto;
+          min-height: clamp(2.34rem, 9.7vw, 2.76rem);
           align-items: center;
-          justify-content: space-between;
           gap: clamp(0.42rem, 2vw, 0.62rem);
         }
 
         .sf-ai-guided-step-five-record-badge {
-          max-width: calc(100% - clamp(5.5rem, 24vw, 6.4rem));
-          flex: 0 1 auto;
+          width: fit-content;
+          max-width: 100%;
+          white-space: nowrap;
         }
 
         .sf-ai-guided-step-five-record-actions {
-          flex: 0 0 auto;
+          justify-self: end;
         }
 
         .sf-ai-guided-step-five-record-text {
           display: block;
           width: 100%;
           max-width: none;
-          margin-top: clamp(0.46rem, 2.2vw, 0.68rem);
+          margin-top: clamp(0.16rem, 1vw, 0.26rem);
           text-align: left;
           text-wrap: normal;
-          overflow-wrap: break-word;
+          overflow-wrap: normal;
           word-break: normal;
         }
 
