@@ -932,7 +932,6 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   const practiceId = usePracticeId(practiceCount);
   const { practice } = getPractice(level, patternId, practiceId);
   const [isRecording, setIsRecording] = useState(false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const transcriptRef = useRef("");
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const finishAfterSilenceTimerRef = useRef<number | null>(null);
@@ -1129,22 +1128,29 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
 
   return (
     <main className={styles.studyPage} style={getToneStyle(level.tone)}>
-      <section className={styles.studyPhone}>
-        <BrandHeader
-          backHref={`/sentence-patterns/${level.id}`}
-          backIcon="arrow"
-          backLabel="返回100个句型二级菜单"
-          onHelpClick={() => setIsHelpOpen(true)}
-        />
-
-        <Link href={`/sentence-patterns/${level.id}`} className={styles.courseCrumb}>
-          <span>
-            <PatternIcon icon={level.icon} />
-          </span>
-          <strong>{level.menuTitle}</strong>
-          <ChevronIcon />
-          <small>{section.title}（{section.englishTitle}）</small>
-        </Link>
+      <section className={`${styles.studyPhone} ${styles.studyPracticePhone}`}>
+        <header className={styles.studyTopBar}>
+          <Link
+            href={`/sentence-patterns/${level.id}`}
+            className={styles.studyBackButton}
+            aria-label="返回100个句型二级菜单"
+          >
+            <ChevronIcon direction="left" />
+          </Link>
+          <Link
+            href={`/sentence-patterns/${level.id}`}
+            className={styles.studyCourseHeader}
+            aria-label="返回当前句型菜单"
+          >
+            <span>
+              <PatternIcon icon={level.icon} />
+            </span>
+            <strong>{level.menuTitle}</strong>
+            <ChevronIcon />
+            <small>{section.title}（{section.englishTitle}）</small>
+          </Link>
+          <span aria-hidden="true" />
+        </header>
 
         <section className={styles.studyCard}>
           <div className={styles.studyTitleRow}>
@@ -1231,9 +1237,8 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
             还剩 {remainingPracticeCount} 句
           </span>
         </div>
+        <SentencePatternBottomNav />
       </section>
-
-      {isHelpOpen ? <SentencePatternHelpModal onClose={() => setIsHelpOpen(false)} /> : null}
     </main>
   );
 }

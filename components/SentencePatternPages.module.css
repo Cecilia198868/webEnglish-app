@@ -34,6 +34,11 @@
     calc(env(safe-area-inset-bottom, 0px) + 14px);
 }
 
+.studyPracticePhone {
+  padding: max(9px, calc(env(safe-area-inset-top, 0px) + 5px)) 10px
+    calc(env(safe-area-inset-bottom, 0px) + 104px);
+}
+
 .levelPhone {
   padding: max(12px, calc(env(safe-area-inset-top, 0px) + 8px)) 18px
     calc(env(safe-area-inset-bottom, 0px) + 18px);
@@ -654,6 +659,102 @@
   line-height: 1;
   padding: 0;
   box-shadow: 0 10px 22px rgba(84, 102, 155, 0.08);
+}
+
+.studyTopBar {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 8px;
+  min-height: 54px;
+  margin-bottom: 10px;
+}
+
+.studyBackButton {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  justify-self: start;
+  border-radius: 999px;
+  color: #10163b;
+  text-decoration: none;
+}
+
+.studyBackButton svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.4;
+}
+
+.studyCourseHeader {
+  display: grid;
+  grid-template-columns: 42px minmax(0, max-content) 16px;
+  align-items: center;
+  justify-content: center;
+  column-gap: 9px;
+  row-gap: 2px;
+  min-width: 0;
+  color: #10163b;
+  text-align: left;
+  text-decoration: none;
+}
+
+.studyCourseHeader > span {
+  display: grid;
+  grid-row: 1 / span 2;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(36, 189, 128, 0.18);
+  border-radius: 999px;
+  background: #eafaf4;
+}
+
+.studyCourseHeader > span svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: var(--pattern-accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.studyCourseHeader strong {
+  min-width: 0;
+  color: #10163b;
+  font-size: clamp(1.02rem, 4.3vw, 1.26rem);
+  font-weight: 950;
+  line-height: 1.06;
+  white-space: nowrap;
+}
+
+.studyCourseHeader > svg {
+  width: 1rem;
+  height: 1rem;
+  color: #10163b;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.studyCourseHeader small {
+  grid-column: 2 / 4;
+  min-width: 0;
+  color: #56617f;
+  font-size: clamp(0.65rem, 2.55vw, 0.78rem);
+  font-weight: 720;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .courseCrumb {
