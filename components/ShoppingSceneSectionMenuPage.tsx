@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import type { ClassicSceneCategoryIcon } from "@/data/classicSceneCategoryMenus";
+import ClassicScenesBottomNav from "./ClassicScenesBottomNav";
 import styles from "./ShoppingSceneSectionMenuPage.module.css";
 
 export type ClassicSceneSectionLesson = {
@@ -273,6 +274,7 @@ function LessonRow({ lesson }: { lesson: ClassicSceneSectionLesson }) {
       <span className={styles.iconTile}>
         <ShoppingSceneIcon type={lesson.icon} />
       </span>
+      <span className={styles.lessonNumber}>{lesson.number}</span>
       <span className={styles.lessonText}>
         <span className={styles.lessonTitle}>{lesson.title}</span>
         {lesson.description ? (
@@ -324,6 +326,8 @@ export default function ShoppingSceneSectionMenuPage({
             <LessonRow key={lesson.id} lesson={lesson} />
           ))}
         </nav>
+
+        <ClassicScenesBottomNav />
       </section>
     </main>
   );

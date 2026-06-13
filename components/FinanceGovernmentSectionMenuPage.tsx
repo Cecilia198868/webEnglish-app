@@ -7,6 +7,7 @@ import type {
   FinanceGovernmentLessonIcon,
   FinanceGovernmentSection,
 } from "@/data/financeGovernmentSections";
+import ClassicScenesBottomNav from "./ClassicScenesBottomNav";
 import styles from "./FinanceGovernmentSectionMenuPage.module.css";
 
 const backToFinanceMenuHref = "/classic-scenes/finance-government";
@@ -193,6 +194,7 @@ function LessonCard({
       <span className={styles.iconTile}>
         <LessonIcon type={lesson.icon} />
       </span>
+      <span className={styles.lessonNumber}>{lesson.number}</span>
       <span className={styles.lessonTitle}>{lesson.title}</span>
       {isLocked ? (
         <span className={styles.lockBadge}>
@@ -272,6 +274,8 @@ export default function FinanceGovernmentSectionMenuPage({
             />
           ))}
         </nav>
+
+        <ClassicScenesBottomNav />
       </section>
     </main>
   );
