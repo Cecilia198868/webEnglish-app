@@ -22,6 +22,10 @@ type ClassicProgressApiPayload = ClassicProgressSnapshot & {
   snapshot?: ClassicProgressSnapshot;
 };
 
+type ClassicScenesBottomNavProps = {
+  onHelpOpen?: () => void;
+};
+
 function normalizeProgressPayload(
   payload: ClassicProgressApiPayload,
 ): ClassicProgressSnapshot {
@@ -72,7 +76,9 @@ function CloseIcon() {
   );
 }
 
-export default function ClassicScenesBottomNav() {
+export default function ClassicScenesBottomNav({
+  onHelpOpen,
+}: ClassicScenesBottomNavProps = {}) {
   const router = useRouter();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isProgressLoading, setIsProgressLoading] = useState(false);
@@ -173,7 +179,14 @@ export default function ClassicScenesBottomNav() {
           className={styles.bottomNavButton}
           type="button"
           aria-label="打开使用帮助"
-          onClick={() => setIsHelpOpen(true)}
+          onClick={() => {
+            if (onHelpOpen) {
+              onHelpOpen();
+              return;
+            }
+
+            setIsHelpOpen(true);
+          }}
         >
           <ClassicHelpIcon />
         </button>

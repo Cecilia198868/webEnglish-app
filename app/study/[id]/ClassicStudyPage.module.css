@@ -9140,3 +9140,138 @@
 .resultPhone.studyPhone {
   padding-top: var(--sf-learning-header-safe-top) !important;
 }
+
+/* Classic-scene study pages now use the menu bottom nav and no app topbar. */
+.studyShellWithBottomNav {
+  --classic-study-bottom-space: calc(7.35rem + env(safe-area-inset-bottom, 0px));
+  padding-bottom: var(--classic-study-bottom-space);
+}
+
+.studyShellWithBottomNav .studyPhone,
+.studyShellWithBottomNav .resultPhone.studyPhone {
+  padding-top: calc(1.15rem + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: var(--classic-study-bottom-space) !important;
+}
+
+.studyBackButton {
+  position: absolute;
+  top: calc(1.15rem + env(safe-area-inset-top, 0px));
+  left: 1.15rem;
+  z-index: 20;
+  display: grid;
+  width: 2.85rem;
+  height: 2.85rem;
+  place-items: center;
+  border: 1px solid rgba(79, 143, 91, 0.16);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #4f8f5b;
+  box-shadow:
+    0 0.75rem 1.6rem rgba(55, 72, 50, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+.studyBackButton svg {
+  width: 1.62rem;
+  height: 1.62rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.8;
+}
+
+.studyShellWithBottomNav .studyTopicBar {
+  width: min(100%, 20.5rem) !important;
+  min-height: 5.35rem !important;
+  grid-template-columns: 3.2rem minmax(0, max-content) !important;
+  justify-content: center !important;
+  column-gap: 0.72rem !important;
+  margin: 0 auto 0.45rem !important;
+  padding: 0.22rem 3.15rem 0.5rem !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.studyShellWithBottomNav .categorySwitchRow {
+  display: none !important;
+}
+
+.studyShellWithBottomNav .studyTopicBar .topicIcon,
+.studyShellWithBottomNav .studyTopicBar .topicIcon svg {
+  width: 3.1rem !important;
+  height: 3.1rem !important;
+}
+
+.studyShellWithBottomNav .topicTitleRow {
+  grid-template-columns: minmax(0, max-content) 1.75rem !important;
+  justify-content: center !important;
+  gap: 0.42rem !important;
+}
+
+.studyShellWithBottomNav .topicTitleRow .lessonArrowButton:first-child {
+  display: none !important;
+}
+
+.studyShellWithBottomNav .topicTitle {
+  max-width: min(12.5rem, 50vw) !important;
+  font-size: clamp(1.32rem, 5.7vw, 1.72rem) !important;
+  line-height: 1.02 !important;
+  text-align: left !important;
+}
+
+.studyShellWithBottomNav .topicProgress {
+  font-size: clamp(0.78rem, 3.15vw, 0.94rem) !important;
+}
+
+.studyShellWithBottomNav .progressRow {
+  grid-template-columns: minmax(0, 7.25rem) auto !important;
+  gap: 0.62rem !important;
+  margin-top: 0.24rem !important;
+}
+
+.studyShellWithBottomNav .studyPhoneIdle .dialogCard,
+.studyShellWithBottomNav .studyPhoneRecording .dialogCard {
+  min-height: calc(
+    100dvh - 14.25rem - env(safe-area-inset-top, 0px) -
+      env(safe-area-inset-bottom, 0px)
+  ) !important;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+.studyShellWithBottomNav .studyPhoneRecording .dialogCard {
+  padding-bottom: calc(6.55rem + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+.studyShellWithBottomNav .classicPhone.resultPhone.studyPhone .resultScrollArea {
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+@media (max-width: 390px) {
+  .studyBackButton {
+    left: 0.9rem;
+    width: 2.55rem;
+    height: 2.55rem;
+    border-radius: 0.85rem;
+  }
+
+  .studyShellWithBottomNav .studyTopicBar {
+    width: min(100%, 19rem) !important;
+    min-height: 4.95rem !important;
+    grid-template-columns: 2.92rem minmax(0, max-content) !important;
+    padding-right: 2.75rem !important;
+    padding-left: 2.75rem !important;
+  }
+
+  .studyShellWithBottomNav .studyTopicBar .topicIcon,
+  .studyShellWithBottomNav .studyTopicBar .topicIcon svg {
+    width: 2.86rem !important;
+    height: 2.86rem !important;
+  }
+
+  .studyShellWithBottomNav .topicTitle {
+    max-width: min(11.4rem, 50vw) !important;
+    font-size: clamp(1.22rem, 5.35vw, 1.52rem) !important;
+  }
+}

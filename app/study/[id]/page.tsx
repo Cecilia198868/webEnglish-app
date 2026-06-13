@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import AccountAvatarButton from "@/components/AccountAvatarButton";
 import ClassicRoleAvatarIcon from "@/components/ClassicRoleAvatarIcon";
+import ClassicScenesBottomNav from "@/components/ClassicScenesBottomNav";
 import FreePracticeLimitModal from "@/components/FreePracticeLimitModal";
 import FreeUsageMeter from "@/components/FreeUsageMeter";
 import PlayIcon from "@/components/PlayIcon";
@@ -534,15 +535,6 @@ function createFallbackExpressionVariants(standardEnglish: string) {
     label,
     text: standardEnglish || "This sentence is still being prepared.",
   }));
-}
-
-function BrandBubbleIcon() {
-  return (
-    <svg aria-hidden="true" focusable="false" viewBox="0 0 52 52">
-      <path d="M10 25.4C10 14.7 18.4 7 29 7c10.3 0 18 7.2 18 17.2 0 10.4-8.1 17.4-18.5 17.4-2.1 0-4.1-.3-5.9-.9L11.8 45l3-9.6A16 16 0 0 1 10 25.4Z" />
-      <path d="M22 20v9M29 16v17M36 21v8M17 24v3M41 24v3" />
-    </svg>
-  );
 }
 
 function ArrowLeftIcon() {
@@ -2414,44 +2406,21 @@ export default function StudyPage() {
     const displayedChinese = currentPair.chinese || "没有内容";
 
     return (
-      <main className={styles.classicShell}>
+      <main className={`${styles.classicShell} ${styles.studyShellWithBottomNav}`}>
         <section
           className={`${styles.classicPhone} ${styles.studyPhone} ${
             isListening ? styles.studyPhoneRecording : styles.studyPhoneIdle
           }`}
           aria-labelledby="classic-study-title"
         >
-          <header className={`${styles.classicTopbar} ${styles.studyTopbar}`}>
-            <button
-              type="button"
-              aria-label="返回三级菜单"
-              className={styles.homeShortcut}
-              onClick={handleClassicBackToCategory}
-            >
-              <span className={styles.homeIconBox}>
-                <ArrowLeftIcon />
-              </span>
-            </button>
-
-            <div className={styles.brand} aria-label="SpeakFlow Voice Practice">
-              <span className={styles.brandIcon}>
-                <BrandBubbleIcon />
-              </span>
-              <span className={styles.brandCopy}>
-                <span className={styles.brandTitle}>SpeakFlow</span>
-                <span className={styles.brandSubtitle}>VOICE PRACTICE</span>
-              </span>
-            </div>
-
-            <button
-              type="button"
-              aria-label="经典场景帮助"
-              className={styles.switchCourseButton}
-              onClick={() => setIsClassicHelpOpen(true)}
-            >
-              <span>?</span>
-            </button>
-          </header>
+          <button
+            type="button"
+            aria-label="返回三级菜单"
+            className={styles.studyBackButton}
+            onClick={handleClassicBackToCategory}
+          >
+            <ArrowLeftIcon />
+          </button>
 
           <section className={`${styles.topicBar} ${styles.studyTopicBar}`} aria-label="当前话题">
             <span className={styles.topicIcon}>
@@ -2786,6 +2755,8 @@ export default function StudyPage() {
           </aside>
         </section>
 
+        <ClassicScenesBottomNav onHelpOpen={() => setIsClassicHelpOpen(true)} />
+
         {renderClassicHelpModal()}
 
         {shouldRenderFreePracticeLimitModal ? (
@@ -2807,42 +2778,19 @@ export default function StudyPage() {
       selectedExpression?.text || resultVariants[0]?.text || currentPair.english || "";
 
     return (
-      <main className={styles.classicShell}>
+      <main className={`${styles.classicShell} ${styles.studyShellWithBottomNav}`}>
         <section
           className={`${styles.classicPhone} ${styles.resultPhone} ${styles.studyPhone}`}
           aria-labelledby="classic-result-title"
         >
-          <header className={`${styles.classicTopbar} ${styles.studyTopbar}`}>
-            <button
-              type="button"
-              aria-label="返回三级菜单"
-              className={styles.homeShortcut}
-              onClick={handleClassicBackToCategory}
-            >
-              <span className={styles.homeIconBox}>
-                <ArrowLeftIcon />
-              </span>
-            </button>
-
-            <div className={styles.brand} aria-label="SpeakFlow Voice Practice">
-              <span className={styles.brandIcon}>
-                <BrandBubbleIcon />
-              </span>
-              <span className={styles.brandCopy}>
-                <span className={styles.brandTitle}>SpeakFlow</span>
-                <span className={styles.brandSubtitle}>VOICE PRACTICE</span>
-              </span>
-            </div>
-
-            <button
-              type="button"
-              aria-label="经典场景帮助"
-              className={styles.switchCourseButton}
-              onClick={() => setIsClassicHelpOpen(true)}
-            >
-              <span>?</span>
-            </button>
-          </header>
+          <button
+            type="button"
+            aria-label="返回三级菜单"
+            className={styles.studyBackButton}
+            onClick={handleClassicBackToCategory}
+          >
+            <ArrowLeftIcon />
+          </button>
 
           <section className={`${styles.topicBar} ${styles.studyTopicBar}`} aria-label="当前话题">
             <span className={styles.topicIcon}>
@@ -3088,6 +3036,8 @@ export default function StudyPage() {
             </div>
           </section>
         </section>
+
+        <ClassicScenesBottomNav onHelpOpen={() => setIsClassicHelpOpen(true)} />
 
         {renderClassicHelpModal()}
 
