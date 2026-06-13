@@ -20967,3 +20967,71 @@ body .sf-ai-guided-step-five-emphasis {
   overflow-wrap: normal !important;
   hyphens: none !important;
 }
+
+/* Absolute final guard for free-study result cards: English copy owns the card width. */
+body .sf-free-result-user-text,
+body .sf-free-result-expression-copy,
+body .sf-free-result-expression-text {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  text-align: left !important;
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
+  text-wrap: normal !important;
+}
+
+body .sf-free-result-expression-card {
+  display: block !important;
+  grid-template-columns: none !important;
+  padding: 0.9rem 1rem 1rem !important;
+}
+
+body .sf-free-result-expression-copy {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body .sf-free-result-badge {
+  display: inline-flex !important;
+  max-width: calc(100% - 6.9rem) !important;
+  margin-right: 6.9rem !important;
+}
+
+body .sf-free-result-actions {
+  position: absolute !important;
+  top: 0.68rem !important;
+  right: 0.78rem !important;
+  display: flex !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.44rem !important;
+}
+
+body .sf-free-result-expression-text {
+  display: block !important;
+  margin-top: 1.32rem !important;
+  padding-right: 0 !important;
+}
+
+body .sf-free-result-user-text :where(button, span),
+body .sf-free-result-expression-text :where(button, span),
+body .sf-free-result-user-highlight,
+body .sf-free-result-emphasis {
+  display: inline !important;
+  width: auto !important;
+  max-width: none !important;
+  text-align: left !important;
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
+  text-wrap: normal !important;
+}

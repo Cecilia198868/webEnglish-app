@@ -1149,6 +1149,93 @@ export default function FreeStudyPageFiveTop({
             font-size: .76rem !important;
           }
         }
+
+        /* Free-study result sentence width lock: controls never shrink English copy. */
+        .sf-free-result-user-text {
+          display: block !important;
+          width: 100% !important;
+          max-width: none !important;
+          text-align: left !important;
+          white-space: normal !important;
+          word-break: normal !important;
+          overflow-wrap: normal !important;
+          hyphens: none !important;
+        }
+
+        .sf-free-result-user-text :where(button, span),
+        .sf-free-result-user-highlight {
+          display: inline !important;
+          width: auto !important;
+          max-width: none !important;
+          white-space: normal !important;
+          word-break: normal !important;
+          overflow-wrap: normal !important;
+          hyphens: none !important;
+        }
+
+        .sf-free-result-expression-card {
+          display: block !important;
+          grid-template-columns: none !important;
+          padding: .9rem 1rem 1rem !important;
+        }
+
+        .sf-free-result-expression-copy {
+          display: block !important;
+          width: 100% !important;
+          max-width: none !important;
+          min-width: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          text-align: left !important;
+        }
+
+        .sf-free-result-badge {
+          display: inline-flex !important;
+          max-width: calc(100% - 6.9rem) !important;
+          margin-right: 6.9rem !important;
+        }
+
+        .sf-free-result-actions {
+          position: absolute !important;
+          top: .68rem !important;
+          right: .78rem !important;
+          display: flex !important;
+          width: auto !important;
+          min-width: 0 !important;
+          max-width: none !important;
+          flex: 0 0 auto !important;
+          align-items: center !important;
+          justify-content: flex-end !important;
+          gap: .44rem !important;
+        }
+
+        .sf-free-result-expression-text {
+          display: block !important;
+          width: 100% !important;
+          max-width: none !important;
+          min-width: 0 !important;
+          margin-top: 1.32rem !important;
+          padding-right: 0 !important;
+          text-align: left !important;
+          white-space: normal !important;
+          word-break: normal !important;
+          overflow-wrap: normal !important;
+          hyphens: none !important;
+          text-wrap: normal !important;
+        }
+
+        .sf-free-result-expression-text :where(button, span),
+        .sf-free-result-emphasis {
+          display: inline !important;
+          width: auto !important;
+          max-width: none !important;
+          text-align: left !important;
+          white-space: normal !important;
+          word-break: normal !important;
+          overflow-wrap: normal !important;
+          hyphens: none !important;
+          text-wrap: normal !important;
+        }
       `}</style>
 
       <div className="sf-free-result-frame">
@@ -1213,7 +1300,7 @@ export default function FreeStudyPageFiveTop({
                   <ExpressionIcon name={expression.icon} />
                 </span>
 
-                <span>
+                <span className="sf-free-result-expression-copy">
                   <span className="sf-free-result-badge">{expression.badge}</span>
                   <p lang="en" className="sf-free-result-expression-text">
                     {renderInteractiveExpressionText
