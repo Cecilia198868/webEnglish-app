@@ -1882,6 +1882,51 @@
   padding: 16px 14px 12px;
 }
 
+.resultTopRow {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 10px;
+}
+
+.resultTopRow h1 {
+  min-width: 0;
+  margin: 0;
+  color: #10163b;
+  font-size: clamp(1.08rem, 4.8vw, 1.5rem);
+  font-weight: 860;
+  line-height: 1.08;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultBackButton,
+.resultNextButton {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  color: #10163b;
+  text-decoration: none;
+}
+
+.resultNextButton {
+  color: #dda04f;
+}
+
+.resultBackButton svg,
+.resultNextButton svg {
+  width: 1.7rem;
+  height: 1.7rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
 .resultIntro .studyTitleRow {
   grid-template-columns: auto minmax(0, 1fr) 40px;
   gap: 12px;
@@ -4620,10 +4665,54 @@
 .studyPhone:has(.resultIntro) .resultIntro {
   min-height: auto !important;
   margin: 0 0 0.62rem !important;
-  border-radius: 1rem !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  box-shadow: 0 0.8rem 1.65rem rgba(84, 102, 155, 0.06) !important;
-  padding: 0.78rem 0.94rem 0.74rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0.5rem 0.2rem 0.74rem !important;
+}
+
+.studyPhone:has(.resultIntro) .resultTopRow {
+  grid-template-columns: 2.38rem minmax(0, 1fr) 2.38rem !important;
+  gap: 0.48rem !important;
+  align-items: center !important;
+}
+
+.studyPhone:has(.resultIntro) .resultTopRow h1 {
+  color: #10163b !important;
+  font-size: clamp(1.18rem, 5.2vw, 1.62rem) !important;
+  font-weight: 860 !important;
+  line-height: 1.06 !important;
+  letter-spacing: 0 !important;
+  overflow: hidden !important;
+  text-align: left !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.studyPhone:has(.resultIntro) .resultBackButton,
+.studyPhone:has(.resultIntro) .resultNextButton {
+  width: 2.38rem !important;
+  height: 2.38rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.studyPhone:has(.resultIntro) .resultBackButton {
+  color: #10163b !important;
+}
+
+.studyPhone:has(.resultIntro) .resultNextButton {
+  color: #dda04f !important;
+}
+
+.studyPhone:has(.resultIntro) .resultBackButton svg,
+.studyPhone:has(.resultIntro) .resultNextButton svg {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  stroke-width: 3.1 !important;
 }
 
 .studyPhone:has(.resultIntro) .resultIntro .studyTitleRow {
@@ -4657,7 +4746,7 @@
 }
 
 .studyPhone:has(.resultIntro) .resultIntro .progressRow {
-  margin: 0.62rem 0 0.32rem !important;
+  margin: 0.54rem 2.7rem 0.26rem 2.86rem !important;
   color: #69718d !important;
   font-size: 0.76rem !important;
   font-weight: 720 !important;
@@ -4671,7 +4760,7 @@
 
 .studyPhone:has(.resultIntro) .resultIntro .progressTrack {
   height: 0.32rem !important;
-  margin: 0 !important;
+  margin: 0 2.7rem 0 2.86rem !important;
 }
 
 .studyPhone:has(.resultIntro) .expressionStack {
@@ -4878,14 +4967,20 @@
 
 .studyPhone:has(.resultIntro) .followCard {
   display: grid !important;
+  position: static !important;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
   align-items: center !important;
+  left: auto !important;
+  right: auto !important;
   bottom: max(0.45rem, env(safe-area-inset-bottom, 0px)) !important;
-  width: min(calc(100vw - 1.35rem), 392px) !important;
+  z-index: auto !important;
+  width: 100% !important;
   min-height: 4.08rem !important;
   gap: 0.58rem !important;
+  margin: 0.62rem 0 0 !important;
   border-radius: 1.22rem !important;
   padding: 0.66rem 0.78rem calc(0.66rem + env(safe-area-inset-bottom, 0px)) !important;
+  transform: none !important;
 }
 
 .studyPhone:has(.resultIntro) .followCard::before {

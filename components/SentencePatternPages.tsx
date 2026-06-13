@@ -5,9 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import HomeMenuIcon from "@/components/HomeMenuIcon";
 import InteractiveExpressionText from "@/components/InteractiveExpressionText";
-import SpeakFlowBrandMark from "@/components/SpeakFlowBrandMark";
 import { playSpeakFlowTts, stopSpeakFlowTts } from "@/lib/speakFlowTtsClient";
 import {
   SPEAKFLOW_DEFAULT_VOICE_ID,
@@ -179,51 +177,6 @@ function ChatBubbleArt({ levelId }: { levelId: SentencePatternLevel["id"] }) {
       unoptimized
       width={298}
     />
-  );
-}
-
-function BrandHeader({
-  backHref = "/start",
-  backIcon = "home",
-  backLabel = "回到学习首页",
-  onHelpClick,
-}: {
-  backHref?: string;
-  backIcon?: "arrow" | "home";
-  backLabel?: string;
-  onHelpClick?: () => void;
-}) {
-  return (
-    <header className={styles.brandHeader}>
-      <Link
-        href={backHref}
-        className={`${styles.homeButton} ${backIcon === "arrow" ? styles.backArrowButton : ""}`}
-        aria-label={backLabel}
-      >
-        {backIcon === "arrow" ? <ChevronIcon direction="left" /> : <HomeMenuIcon label={null} showHint={false} />}
-      </Link>
-      <Link href="/start" className={styles.brand} aria-label="SpeakFlow 学习首页">
-        <SpeakFlowBrandMark className={styles.brandMark} />
-        <span>
-          <strong>SpeakFlow</strong>
-          <small>VOICE PRACTICE</small>
-        </span>
-      </Link>
-      {onHelpClick ? (
-        <button
-          type="button"
-          className={`${styles.switchButton} ${styles.helpButton}`}
-          aria-label="句型学习帮助"
-          onClick={onHelpClick}
-        >
-          ?
-        </button>
-      ) : (
-        <Link href="/sentence-patterns" className={styles.switchButton}>
-          切换课程
-        </Link>
-      )}
-    </header>
   );
 }
 
@@ -1243,7 +1196,7 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   );
 }
 
-export function SentencePatternResultPage({ level, patternId, section }: StudyProps) {
+export function SentencePatternResultPage({ level, patternId }: StudyProps) {
   const searchParams = useSearchParams();
   const practiceParam = Number(searchParams.get("practice") || "1");
   const practiceId = Number.isFinite(practiceParam)
@@ -1253,7 +1206,6 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
   const userExpression =
     readSavedTranscript(level.id, patternId, practiceId) ||
     practice.targetEnglish;
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const nextPractice = practiceId >= practiceCount ? practiceId : practiceId + 1;
   const previousPractice = practiceId <= 1 ? practiceId : practiceId - 1;
   const progress = Math.round((practiceId / practiceCount) * 100);
@@ -1308,25 +1260,15 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
   return (
     <main className={styles.studyPage} style={getToneStyle(level.tone)}>
       <section className={styles.studyPhone}>
-        <BrandHeader
-          backHref={`/sentence-patterns/${level.id}`}
-          backIcon="arrow"
-          backLabel="返回100个句型二级菜单"
-          onHelpClick={() => setIsHelpOpen(true)}
-        />
-
-        <Link href={`/sentence-patterns/${level.id}`} className={styles.courseCrumb}>
-          <span>
-            <PatternIcon icon={level.icon} />
-          </span>
-          <strong>{level.menuTitle}</strong>
-          <ChevronIcon />
-          <small>{section.title}（{section.englishTitle}）</small>
-        </Link>
-
         <section className={styles.resultIntro}>
-          <div className={styles.studyTitleRow}>
-            <span className={styles.practicePill}>{practiceId} / {practiceCount}</span>
+          <div className={styles.resultTopRow}>
+            <Link
+              href={`/sentence-patterns/${level.id}/${patternId}?practice=${practiceId}`}
+              className={styles.resultBackButton}
+              aria-label="返回上一页"
+            >
+              <ChevronIcon direction="left" />
+            </Link>
             <h1>
               <InteractiveExpressionText
                 sourceSentence={practice.targetEnglish}
@@ -1335,6 +1277,7 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
             </h1>
             <Link
               href={nextPatternHref}
+              className={styles.resultNextButton}
               aria-label="下一句型"
             >
               <ChevronIcon />
@@ -1436,9 +1379,8 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
             <ChevronIcon />
           </Link>
         </section>
+        <SentencePatternBottomNav />
       </section>
-
-      {isHelpOpen ? <SentencePatternHelpModal onClose={() => setIsHelpOpen(false)} /> : null}
     </main>
   );
 }
