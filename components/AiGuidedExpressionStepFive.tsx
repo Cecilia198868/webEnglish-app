@@ -1522,20 +1522,20 @@ export default function AiGuidedExpressionStepFive({
         }
 
         .sf-ai-guided-step-five-record-card {
-          display: grid !important;
-          grid-template-columns: clamp(3.1rem, 13.2vw, 3.6rem) minmax(0, 1fr) !important;
-          align-items: center;
-          gap: clamp(0.72rem, 3vw, 0.92rem) !important;
-          min-height: clamp(5.3rem, 20vw, 6.35rem);
+          position: relative;
+          display: block !important;
+          min-height: clamp(5.7rem, 21vw, 6.55rem);
           padding:
-            clamp(0.68rem, 2.8vw, 0.86rem)
-            clamp(0.78rem, 3.3vw, 1rem) !important;
+            clamp(0.66rem, 2.7vw, 0.84rem)
+            clamp(0.78rem, 3.3vw, 1rem)
+            clamp(0.78rem, 3.2vw, 0.98rem) !important;
         }
 
         .sf-ai-guided-step-five-record-icon {
-          position: static !important;
-          align-self: center;
-          transform: none !important;
+          position: absolute !important;
+          left: clamp(0.7rem, 3.4vw, 0.9rem);
+          top: 50%;
+          transform: translateY(-50%) !important;
         }
 
         .sf-ai-guided-step-five-record-copy {
@@ -1543,13 +1543,14 @@ export default function AiGuidedExpressionStepFive({
           gap: clamp(0.2rem, 1vw, 0.34rem);
           width: 100%;
           min-width: 0;
+          padding-left: clamp(3.55rem, 15.8vw, 4.25rem);
         }
 
         .sf-ai-guided-step-five-record-toolbar {
-          display: grid !important;
-          grid-template-columns: minmax(0, 1fr) auto;
-          min-height: clamp(2.34rem, 9.7vw, 2.76rem);
+          display: flex !important;
+          min-height: clamp(2.24rem, 9.2vw, 2.64rem);
           align-items: center;
+          justify-content: space-between;
           gap: clamp(0.42rem, 2vw, 0.62rem);
         }
 
@@ -1568,16 +1569,20 @@ export default function AiGuidedExpressionStepFive({
           width: 100%;
           max-width: none;
           margin-top: clamp(0.16rem, 1vw, 0.26rem);
-          text-align: left;
+          text-align: left !important;
           text-wrap: normal;
           overflow-wrap: normal;
           word-break: normal;
+          white-space: normal;
         }
 
         .sf-ai-guided-step-five-record-text :where(button, span),
         .sf-ai-guided-step-five-emphasis {
+          display: inline !important;
+          text-align: left !important;
           text-wrap: normal !important;
           word-break: normal !important;
+          white-space: normal !important;
         }
       `}</style>
 
