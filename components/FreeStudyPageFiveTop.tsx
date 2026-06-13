@@ -16,6 +16,7 @@ type FreeStudyPageFiveTopProps = {
   onMenuClick: () => void;
   onAccountClick: () => void;
   onAvatarError?: () => void;
+  onContinueNext: () => void;
   onPlayExpression: (index: number, rate?: number) => void;
   onSelectExpression: (index: number) => void;
   renderExpressionText?: (
@@ -96,6 +97,15 @@ function PlayGlyph() {
   );
 }
 
+function ContinueArrowGlyph() {
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path d="M6 16h19" />
+      <path d="m18 8 8 8-8 8" />
+    </svg>
+  );
+}
+
 function CheckGlyph() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -171,6 +181,7 @@ export default function FreeStudyPageFiveTop({
   onRetryEnglish,
   onMenuClick,
   onAccountClick,
+  onContinueNext,
   onPlayExpression,
   onSelectExpression,
   renderExpressionText: renderInteractiveExpressionText,
@@ -237,6 +248,9 @@ export default function FreeStudyPageFiveTop({
         }
 
         .sf-free-result-page {
+          --sf-free-result-cta-height: clamp(3.8rem, 15vw, 4.35rem);
+          --sf-free-result-nav-height: clamp(4.86rem, 20.2vw, 5.65rem);
+          --sf-free-result-fixed-gap: clamp(0.72rem, 3vw, 0.95rem);
           position: absolute;
           inset: 0;
           z-index: 90;
@@ -258,7 +272,12 @@ export default function FreeStudyPageFiveTop({
           padding:
             calc(env(safe-area-inset-top, 0px) + clamp(.62rem, 2dvh, .9rem))
             clamp(.82rem, 3.8vw, 1.08rem)
-            calc(env(safe-area-inset-bottom, 0px) + .88rem);
+            calc(
+              env(safe-area-inset-bottom, 0px) +
+              var(--sf-free-result-cta-height) +
+              var(--sf-free-result-nav-height) +
+              2.45rem
+            );
         }
 
         .sf-free-result-header,
@@ -742,6 +761,61 @@ export default function FreeStudyPageFiveTop({
           line-height: 1;
         }
 
+        .sf-free-result-continue-wrap {
+          position: fixed;
+          z-index: 157;
+          left: 50%;
+          bottom: calc(
+            max(0.58rem, env(safe-area-inset-bottom, 0px)) +
+            var(--sf-free-result-nav-height) +
+            var(--sf-free-result-fixed-gap)
+          );
+          width: min(calc(100% - 1.55rem), 398px);
+          transform: translateX(-50%);
+        }
+
+        .sf-free-result-continue {
+          display: flex;
+          width: 100%;
+          min-height: var(--sf-free-result-cta-height);
+          align-items: center;
+          justify-content: center;
+          gap: clamp(0.58rem, 2.8vw, 0.86rem);
+          border: 0;
+          border-radius: clamp(1rem, 4.7vw, 1.28rem);
+          background: linear-gradient(100deg, #7b55ff 0%, #6239e9 54%, #4d32d9 100%);
+          color: #ffffff;
+          box-shadow:
+            0 1rem 2rem rgba(86, 58, 210, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.22);
+          font-size: clamp(1.1rem, 4.7vw, 1.38rem);
+          font-weight: 950;
+          line-height: 1;
+          letter-spacing: 0;
+          white-space: nowrap;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .sf-free-result-continue:active {
+          transform: translateY(1px) scale(0.99);
+        }
+
+        .sf-free-result-continue:focus-visible {
+          outline: 3px solid rgba(117, 84, 241, 0.35);
+          outline-offset: 3px;
+        }
+
+        .sf-free-result-continue svg {
+          width: clamp(1.35rem, 5.8vw, 1.7rem);
+          height: clamp(1.35rem, 5.8vw, 1.7rem);
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 3.6;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
         .sf-free-result-help-backdrop {
           position: fixed;
           inset: 0;
@@ -802,7 +876,12 @@ export default function FreeStudyPageFiveTop({
         .sf-free-result-frame {
           gap: .78rem !important;
           padding-top: calc(env(safe-area-inset-top, 0px) + .52rem) !important;
-          padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6.35rem) !important;
+          padding-bottom: calc(
+            env(safe-area-inset-bottom, 0px) +
+            var(--sf-free-result-cta-height) +
+            var(--sf-free-result-nav-height) +
+            2.45rem
+          ) !important;
         }
 
         .sf-free-result-header {
@@ -1351,6 +1430,17 @@ export default function FreeStudyPageFiveTop({
         </section>
 
         <div className="sf-free-result-more">向下查看更多表达</div>
+      </div>
+
+      <div className="sf-free-result-continue-wrap">
+        <button
+          type="button"
+          className="sf-free-result-continue"
+          onClick={onContinueNext}
+        >
+          <ContinueArrowGlyph />
+          <span>{"\u7ee7\u7eed\u7ec3\u4e60\u4e0b\u4e00\u53e5"}</span>
+        </button>
       </div>
 
       <FreeStudyBottomNav

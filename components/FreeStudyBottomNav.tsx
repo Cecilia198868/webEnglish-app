@@ -110,6 +110,13 @@ function BottomAccountIcon() {
   );
 }
 
+const navItems = {
+  account: "\u6211\u7684",
+  help: "\u5e2e\u52a9\u4e2d\u5fc3",
+  home: "\u9996\u9875",
+  progress: "\u5b66\u4e60\u8bb0\u5f55",
+} as const;
+
 export default function FreeStudyBottomNav({
   hasProEntitlement = false,
   menuLabel = "\u56de\u5230\u5b66\u4e60\u9996\u9875",
@@ -198,12 +205,12 @@ export default function FreeStudyBottomNav({
           position: fixed;
           z-index: 156;
           left: 50%;
-          bottom: max(0.7rem, env(safe-area-inset-bottom, 0px));
+          bottom: max(0.58rem, env(safe-area-inset-bottom, 0px));
           width: min(calc(100% - 1.55rem), 398px);
-          min-height: clamp(3.95rem, 17vw, 4.7rem);
-          padding: clamp(0.38rem, 1.7vw, 0.52rem) clamp(0.82rem, 4.2vw, 1.18rem);
+          min-height: clamp(4.86rem, 20.2vw, 5.65rem);
+          padding: clamp(0.44rem, 1.9vw, 0.62rem) clamp(0.78rem, 4vw, 1.12rem);
           border: 1px solid rgba(220, 227, 247, 0.92);
-          border-radius: 999px;
+          border-radius: clamp(1.42rem, 6.4vw, 1.82rem);
           background: rgba(255, 255, 255, 0.9);
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -233,6 +240,10 @@ export default function FreeStudyBottomNav({
           -webkit-tap-highlight-color: transparent;
         }
 
+        .sf-free-bottom-button.is-active {
+          color: #765cff;
+        }
+
         .sf-free-bottom-button:active {
           transform: scale(0.97);
         }
@@ -244,8 +255,8 @@ export default function FreeStudyBottomNav({
         }
 
         .sf-free-bottom-button svg {
-          width: clamp(1.62rem, 7.2vw, 2.05rem);
-          height: clamp(1.62rem, 7.2vw, 2.05rem);
+          width: clamp(1.52rem, 6.8vw, 1.95rem);
+          height: clamp(1.52rem, 6.8vw, 1.95rem);
           fill: none;
           stroke: currentColor;
           stroke-width: 3.1;
@@ -255,15 +266,32 @@ export default function FreeStudyBottomNav({
         }
 
         .sf-free-bottom-button.is-active svg {
-          width: clamp(1.72rem, 7.8vw, 2.16rem);
-          height: clamp(1.72rem, 7.8vw, 2.16rem);
+          width: clamp(1.68rem, 7.5vw, 2.08rem);
+          height: clamp(1.68rem, 7.5vw, 2.08rem);
           stroke: none;
+        }
+
+        .sf-free-bottom-icon {
+          display: grid;
+          min-height: clamp(1.78rem, 7.8vw, 2.18rem);
+          place-items: center;
+          line-height: 0;
+        }
+
+        .sf-free-bottom-label {
+          display: block;
+          margin-top: 0.1rem;
+          color: currentColor;
+          font-size: clamp(0.66rem, 2.75vw, 0.82rem);
+          font-weight: 900;
+          line-height: 1;
+          white-space: nowrap;
         }
 
         .sf-free-bottom-pro {
           position: absolute;
           right: clamp(0.34rem, 1.8vw, 0.52rem);
-          bottom: clamp(0.18rem, 0.9vw, 0.28rem);
+          bottom: clamp(0.1rem, 0.65vw, 0.2rem);
           padding: 0.06rem 0.18rem 0.05rem;
           border-radius: 0.26rem;
           background: rgba(9, 14, 54, 0.9);
@@ -513,7 +541,10 @@ export default function FreeStudyBottomNav({
           onClick={onMenuClick}
           aria-label={menuLabel}
         >
-          <BottomHomeIcon />
+          <span className="sf-free-bottom-icon">
+            <BottomHomeIcon />
+          </span>
+          <span className="sf-free-bottom-label">{navItems.home}</span>
         </button>
         <button
           type="button"
@@ -523,7 +554,10 @@ export default function FreeStudyBottomNav({
           aria-haspopup="dialog"
           aria-expanded={isProgressOpen}
         >
-          <BottomProgressIcon />
+          <span className="sf-free-bottom-icon">
+            <BottomProgressIcon />
+          </span>
+          <span className="sf-free-bottom-label">{navItems.progress}</span>
         </button>
         <button
           type="button"
@@ -533,7 +567,10 @@ export default function FreeStudyBottomNav({
           aria-haspopup="dialog"
           aria-expanded={isHelpOpen}
         >
-          <BottomHelpIcon />
+          <span className="sf-free-bottom-icon">
+            <BottomHelpIcon />
+          </span>
+          <span className="sf-free-bottom-label">{navItems.help}</span>
         </button>
         <button
           type="button"
@@ -541,7 +578,10 @@ export default function FreeStudyBottomNav({
           onClick={onAccountClick}
           aria-label="\u6253\u5f00\u8d26\u6237"
         >
-          <BottomAccountIcon />
+          <span className="sf-free-bottom-icon">
+            <BottomAccountIcon />
+          </span>
+          <span className="sf-free-bottom-label">{navItems.account}</span>
           {hasProEntitlement ? <span className="sf-free-bottom-pro">PRO</span> : null}
         </button>
       </nav>

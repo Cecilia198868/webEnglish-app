@@ -10,7 +10,6 @@ import FreeStudyHeader from "@/components/FreeStudyHeader";
 import FreeStudyPageOne from "@/components/FreeStudyPageOne";
 import FreeStudyPageThree from "@/components/FreeStudyPageThree";
 import FreeStudyPageFiveTop from "@/components/FreeStudyPageFiveTop";
-import FreeStudyPageFiveBottomBar from "@/components/FreeStudyPageFiveBottomBar";
 import GuestAiPracticeProgress from "@/components/GuestAiPracticeProgress";
 import HomeMenuIcon from "@/components/HomeMenuIcon";
 import AiGuidedConfirmSpeakPage from "@/components/AiGuidedConfirmSpeakPage";
@@ -5918,10 +5917,6 @@ function SpeakEnglishClient() {
     return variantText || referenceText || standardEnglish.trim();
   }
 
-  function readSelectedReferenceResult(rate = 1) {
-    speakEnglishText(getSelectedReferenceResultText(), rate);
-  }
-
   function saveSelectedReferenceResultExpression() {
     const phrase = getSelectedReferenceResultText().trim();
     if (!phrase) return;
@@ -8482,6 +8477,7 @@ function SpeakEnglishClient() {
                 onAvatarError={() => setAccountImageFailed(true)}
                 onAiGuidedPractice={openAiGuidedExpressionStepOne}
                 onRetryEnglish={openFreeStudyStepFourForRetry}
+                onContinueNext={openFreeStudyStepTwoForNextChinese}
                 onMenuClick={openLoggedInHomePage}
                 onAccountClick={openAccountPage}
                 onPlayExpression={readReferenceResultVariant}
@@ -8689,14 +8685,6 @@ function SpeakEnglishClient() {
                 </>
               ) : null}
             </div>
-          ) : null}
-
-          {false && showReferenceResult ? (
-            <FreeStudyPageFiveBottomBar
-              onFollowPractice={() => readSelectedReferenceResult(1)}
-              onNextChinese={openFreeStudyStepTwoForNextChinese}
-              onSlowPlayback={() => readSelectedReferenceResult(SLOW_READ_RATE)}
-            />
           ) : null}
 
           {!showReferenceLanding && !showReferenceConfirmation && !showAccountMenu ? (
