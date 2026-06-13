@@ -66,6 +66,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 14px;
+  overflow: visible;
 }
 
 .levelHeader::after {
@@ -329,12 +330,14 @@
 
 .levelHeading {
   display: grid;
-  grid-template-columns: auto minmax(0, max-content);
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   justify-content: center;
   column-gap: 8px;
   row-gap: 5px;
   justify-items: center;
+  justify-self: center;
+  width: min(100%, 300px);
   min-width: 0;
   padding-top: 0;
 }
@@ -351,15 +354,18 @@
 
 .levelHeading h1 {
   margin: 0;
-  font-size: clamp(1.38rem, 5.75vw, 1.78rem);
+  min-width: 0;
+  font-size: clamp(1.28rem, 5.1vw, 1.62rem);
   line-height: 1.05;
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .levelHeading p {
   grid-column: 1 / -1;
-  max-width: 350px;
+  width: min(100%, 300px);
   font-size: clamp(0.78rem, 3.1vw, 0.92rem);
   line-height: 1.32;
 }
