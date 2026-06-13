@@ -485,6 +485,36 @@ function ChartStatIcon() {
   );
 }
 
+function BottomHomeIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 32 32">
+      <path
+        d="m5.2 15.2 10.7-9.1 10.9 9.1v11.2c0 1.1-.9 2-2 2h-5.6v-7.1h-6.4v7.1H7.2c-1.1 0-2-.9-2-2V15.2Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function BottomHelpIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 32 32">
+      <path d="M16 5.2c-6 0-10.8 4.2-10.8 9.4 0 3 1.5 5.6 4 7.3l-.7 4.9 4.8-2.7c.9.2 1.8.3 2.7.3 6 0 10.8-4.2 10.8-9.8S22 5.2 16 5.2Z" />
+      <path d="M13.4 12.6a2.7 2.7 0 0 1 5.1 1.4c0 1.8-1.4 2.4-2.2 3.2-.5.5-.5.9-.5 1.3" />
+      <path d="M15.8 21.6h.1" />
+    </svg>
+  );
+}
+
+function BottomAccountIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 32 32">
+      <circle cx="16" cy="10.2" r="4.2" />
+      <path d="M8.2 26.3c.8-4 3.8-6.3 7.8-6.3s7 2.3 7.8 6.3" />
+    </svg>
+  );
+}
+
 function CalendarStatIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 38 38">
@@ -680,6 +710,71 @@ function HighlightedExample({ sentence }: { sentence: string }) {
   );
 }
 
+function ExpressionLearningHelpModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      className="sf-vocabulary-help-backdrop"
+      role="presentation"
+      onClick={onClose}
+    >
+      <section
+        aria-labelledby="sf-vocabulary-help-title"
+        aria-modal="true"
+        className="sf-vocabulary-help-dialog"
+        role="dialog"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header className="sf-vocabulary-help-header">
+          <div>
+            <h2 id="sf-vocabulary-help-title">使用帮助</h2>
+            <p>学习新表达、管理表达库、查看学习成果，都可以从底部栏目快速进入。</p>
+          </div>
+          <button
+            type="button"
+            aria-label="关闭使用帮助"
+            className="sf-vocabulary-help-close"
+            onClick={onClose}
+          >
+            <CloseIcon />
+          </button>
+        </header>
+
+        <div className="sf-vocabulary-help-list">
+          <article>
+            <span>
+              <StarIcon />
+            </span>
+            <div>
+              <h3>学习新表达</h3>
+              <p>先听表达和例句，再看中文含义与翻译。遇到想掌握的表达，可以标记“我已掌握”。</p>
+            </div>
+          </article>
+          <article>
+            <span>
+              <LibraryBookIcon />
+            </span>
+            <div>
+              <h3>表达库</h3>
+              <p>你收藏过的新表达会保存在表达库里，可以继续学习、复习、筛选学习状态，也可以删除不需要的内容。</p>
+            </div>
+          </article>
+          <article>
+            <span>
+              <ChartStatIcon />
+            </span>
+            <div>
+              <h3>学习成果</h3>
+              <p>点击底部柱状图，可以查看累计收藏、本周新增、跟读次数、连续学习和最近学习记录。</p>
+            </div>
+          </article>
+        </div>
+
+        <p className="sf-vocabulary-help-tip">小贴士：每天复习一点点，表达会更容易变成自己的口语习惯。</p>
+      </section>
+    </div>
+  );
+}
+
 function getVocabularyCreatedTime(word: VocabularyWord) {
   const time = new Date(word.createdAt).getTime();
   return Number.isFinite(time) ? time : 0;
@@ -759,6 +854,7 @@ export default function VocabularyPage() {
     useState<VocabularyWord | null>(null);
   const [showLearningResultsModal, setShowLearningResultsModal] =
     useState(false);
+  const [showExpressionHelpModal, setShowExpressionHelpModal] = useState(false);
   const [selectedVoiceId, setSelectedVoiceId] =
     useState<SpeakFlowVoiceId>(SPEAKFLOW_DEFAULT_VOICE_ID);
   const [voicePreferenceLoaded, setVoicePreferenceLoaded] = useState(false);
@@ -841,6 +937,19 @@ export default function VocabularyPage() {
       window.clearTimeout(openPanelTimer);
     };
   }, []);
+
+  useEffect(() => {
+    if (!showExpressionHelpModal) return;
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setShowExpressionHelpModal(false);
+      }
+    }
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [showExpressionHelpModal]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1188,7 +1297,38 @@ export default function VocabularyPage() {
     setShowExpressionLibrary(false);
     setShowExpressionLimitModal(false);
     setShowLearningResultsModal(false);
+    setShowExpressionHelpModal(false);
     navigateTo("/new-expressions");
+  }
+
+  function openLearningHomeFromVocabulary() {
+    setShowExpressionLibrary(false);
+    setShowExpressionLimitModal(false);
+    setShowLearningResultsModal(false);
+    setShowExpressionHelpModal(false);
+    navigateTo("/start");
+  }
+
+  function openLearningResultsFromVocabulary() {
+    setShowExpressionLibrary(false);
+    setShowExpressionLimitModal(false);
+    setShowExpressionHelpModal(false);
+    setShowLearningResultsModal(true);
+  }
+
+  function openExpressionHelpFromVocabulary() {
+    setShowExpressionLibrary(false);
+    setShowExpressionLimitModal(false);
+    setShowLearningResultsModal(false);
+    setShowExpressionHelpModal(true);
+  }
+
+  function openAccountFromVocabulary() {
+    setShowExpressionLibrary(false);
+    setShowExpressionLimitModal(false);
+    setShowLearningResultsModal(false);
+    setShowExpressionHelpModal(false);
+    navigateTo("/account");
   }
 
   function openProFromExpressionLimit() {
@@ -1729,6 +1869,15 @@ export default function VocabularyPage() {
   return (
     <main className={`${styles.mount} sf-vocabulary-learning-page`}>
       <section className="sf-vocabulary-learning-phone" aria-label="新表达学习界面">
+        <button
+          type="button"
+          aria-label="返回上一页"
+          className="sf-vocabulary-page-back-button"
+          onClick={openHomeFromVocabulary}
+        >
+          <ArrowLeftIcon />
+        </button>
+
         <header className="sf-vocabulary-learning-header">
           <button
             type="button"
@@ -1952,6 +2101,43 @@ export default function VocabularyPage() {
           </section>
         </div>
 
+        <nav className="sf-vocabulary-app-bottom-nav" aria-label="新表达底部导航">
+          <button
+            type="button"
+            className="sf-vocabulary-app-bottom-button is-active"
+            aria-label="学习首页"
+            onClick={openLearningHomeFromVocabulary}
+          >
+            <BottomHomeIcon />
+          </button>
+          <button
+            type="button"
+            className="sf-vocabulary-app-bottom-button"
+            aria-label="学习成果"
+            onClick={openLearningResultsFromVocabulary}
+          >
+            <ChartStatIcon />
+          </button>
+          <button
+            type="button"
+            className="sf-vocabulary-app-bottom-button"
+            aria-label="新表达使用帮助"
+            aria-expanded={showExpressionHelpModal}
+            aria-haspopup="dialog"
+            onClick={openExpressionHelpFromVocabulary}
+          >
+            <BottomHelpIcon />
+          </button>
+          <button
+            type="button"
+            className="sf-vocabulary-app-bottom-button"
+            aria-label="我的"
+            onClick={openAccountFromVocabulary}
+          >
+            <BottomAccountIcon />
+          </button>
+        </nav>
+
         <footer className="sf-vocabulary-fixed-footer">
           <nav className="sf-vocabulary-learning-actions" aria-label="学习控制">
             <button
@@ -2077,6 +2263,12 @@ export default function VocabularyPage() {
           onLogin={openLoginFromExpressionLimit}
           onRegister={openRegisterFromExpressionLimit}
           onUnlockPro={openProFromExpressionLimit}
+        />
+      ) : null}
+
+      {showExpressionHelpModal ? (
+        <ExpressionLearningHelpModal
+          onClose={() => setShowExpressionHelpModal(false)}
         />
       ) : null}
 
