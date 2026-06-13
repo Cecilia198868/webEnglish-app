@@ -679,6 +679,14 @@ function HeadphonesIcon() {
   );
 }
 
+function ClassicStudyHomeIcon() {
+  return (
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 32 32">
+      <path d="M5.5 15.1 16 6.4l10.5 8.7v10.5c0 1.1-.8 1.9-1.9 1.9h-5.3v-7.4h-6.6v7.4H7.4c-1.1 0-1.9-.8-1.9-1.9V15.1Z" />
+    </svg>
+  );
+}
+
 type ClassicHelpStepIconType = "eye" | "mic" | "stop" | "feedback" | "next";
 
 function ClassicHelpStepIcon({ type }: { type: ClassicHelpStepIconType }) {
@@ -2087,6 +2095,13 @@ export default function StudyPage() {
     router.push(classicStudyNavigation.categoryHref);
   }
 
+  function handleClassicBackToPracticePrompt() {
+    stopAutoPlay();
+    stopSequencePlayback(true);
+    resetPracticeAttempt();
+    setMessage("");
+  }
+
   function renderClassicHelpModal() {
     if (!isClassicHelpOpen) return null;
 
@@ -2785,9 +2800,9 @@ export default function StudyPage() {
         >
           <button
             type="button"
-            aria-label="返回三级菜单"
+            aria-label="返回上一页练习界面"
             className={styles.studyBackButton}
-            onClick={handleClassicBackToCategory}
+            onClick={handleClassicBackToPracticePrompt}
           >
             <ArrowLeftIcon />
           </button>
@@ -2992,52 +3007,54 @@ export default function StudyPage() {
               </section>
             </section>
           </div>
-
-          <section className={styles.followCard} aria-label="跟读练习">
-            <div className={styles.followControls}>
-              <button
-                type="button"
-                onClick={handlePrev}
-                disabled={currentIndex === 0}
-                className={styles.sentenceButton}
-                aria-label="上一句"
-              >
-                <ArrowLeftIcon />
-                <span>上一句</span>
-              </button>
-
-              <button
-                type="button"
-                className={styles.slowReadButton}
-                onClick={() =>
-                  speakEnglish(
-                    selectedReadText,
-                    SLOW_READ_RATE,
-                    undefined,
-                    getClassicCourseAudioUrl(currentIndex, selectedExpression.key)
-                  )
-                }
-                aria-label="播放指定句子的慢速朗读"
-              >
-                <HeadphonesIcon />
-                <span>慢速朗读</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={currentIndex >= pairs.length - 1}
-                className={styles.sentenceButton}
-                aria-label="下一句"
-              >
-                <span>下一句</span>
-                <ArrowRightIcon />
-              </button>
-            </div>
-          </section>
         </section>
 
-        <ClassicScenesBottomNav onHelpOpen={() => setIsClassicHelpOpen(true)} />
+        <nav className={styles.resultBottomNav} aria-label="经典场景结果页导航">
+          <button
+            type="button"
+            className={`${styles.resultBottomButton} ${styles.resultBottomHome}`}
+            aria-label="回到学习首页"
+            onClick={() => router.push("/start")}
+          >
+            <ClassicStudyHomeIcon />
+          </button>
+          <button
+            type="button"
+            className={`${styles.resultBottomButton} ${styles.resultBottomPrev}`}
+            aria-label="上一句"
+            onClick={handlePrev}
+            aria-disabled={currentIndex === 0}
+          >
+            <ArrowLeftIcon />
+            <span>上一句</span>
+          </button>
+          <button
+            type="button"
+            className={`${styles.resultBottomButton} ${styles.resultBottomSlow}`}
+            aria-label="慢速朗读"
+            onClick={() =>
+              speakEnglish(
+                selectedReadText,
+                SLOW_READ_RATE,
+                undefined,
+                getClassicCourseAudioUrl(currentIndex, selectedExpression.key)
+              )
+            }
+          >
+            <HeadphonesIcon />
+            <span>慢速朗读</span>
+          </button>
+          <button
+            type="button"
+            className={`${styles.resultBottomButton} ${styles.resultBottomNext}`}
+            aria-label="下一句"
+            onClick={handleNext}
+            aria-disabled={currentIndex >= pairs.length - 1}
+          >
+            <span>下一句</span>
+            <ArrowRightIcon />
+          </button>
+        </nav>
 
         {renderClassicHelpModal()}
 
