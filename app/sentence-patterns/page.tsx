@@ -1,6 +1,6 @@
-import { SentencePatternOverviewPage } from "@/components/SentencePatternPages";
+import SentencePatternsWebPage from "@/components/SentencePatternsWebPage";
 import { sentencePatternLevels } from "@/data/sentencePatterns";
 
 export default function Page() {
-  return <SentencePatternOverviewPage levels={sentencePatternLevels} />;
+  return <SentencePatternsWebPage levels={sentencePatternLevels} />;
 }

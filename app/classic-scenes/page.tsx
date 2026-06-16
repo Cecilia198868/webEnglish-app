@@ -1,9 +1,5 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
-import ClassicScenesMenuPage from "@/components/ClassicScenesMenuPage";
+import ClassicScenePracticeWebPage from "@/components/ClassicScenePracticeWebPage";
 
-export default async function Page() {
-  const session = await getServerSession(authOptions);
-
-  return <ClassicScenesMenuPage isGuest={!session?.user?.email} />;
+export default function Page() {
+  return <ClassicScenePracticeWebPage />;
 }

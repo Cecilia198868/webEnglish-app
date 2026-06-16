@@ -8,7 +8,8 @@ const openai = new OpenAI({
 });
 
 const voiceInstructions = {
-  alloy: "Speak clearly with a neutral, classroom-friendly tone.",
+  alloy:
+    "Speak in clear, warm, natural American English with smooth classroom-friendly pacing.",
   nova: "Speak warmly and naturally, like a friendly young English teacher.",
   shimmer: "Speak very softly and gently, like a patient English teacher.",
   onyx: "Speak steadily with a calm, grounded male voice.",

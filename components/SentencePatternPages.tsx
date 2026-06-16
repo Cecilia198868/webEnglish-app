@@ -11,6 +11,7 @@ import {
   SPEAKFLOW_DEFAULT_VOICE_ID,
   SPEAKFLOW_VOICES,
 } from "@/lib/voiceSettings";
+import { recordSentencePatternProgress } from "@/lib/sentencePatternProgress";
 import type {
   SentencePatternLevel,
   SentencePatternPractice,
@@ -900,6 +901,7 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   const nextPatternHref = nextPattern
     ? `/sentence-patterns/${level.id}/${nextPattern.id}`
     : `/sentence-patterns/${level.id}/${patternId}`;
+  const currentPatternText = pattern?.text || practice.targetEnglish;
   const completedPracticeCount = Math.max(practiceId - 1, 0);
   const remainingPracticeCount = Math.max(practiceCount - completedPracticeCount, 0);
   const completedProgress = Math.min(
@@ -925,6 +927,27 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
       recognitionRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    recordSentencePatternProgress({
+      completed: false,
+      levelId: level.id,
+      levelTitle: level.menuTitle,
+      patternId,
+      patternText: currentPatternText,
+      practiceCount,
+      practiceId,
+      sectionTitle: section.title,
+    });
+  }, [
+    currentPatternText,
+    level.id,
+    level.menuTitle,
+    patternId,
+    practiceCount,
+    practiceId,
+    section.title,
+  ]);
 
   function finishRecording(transcript: string) {
     if (finishRecordingRef.current) return;
@@ -1111,7 +1134,7 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
             <h1>
               <InteractiveExpressionText
                 sourceSentence={practice.targetEnglish}
-                text={pattern?.text || practice.targetEnglish}
+                text={currentPatternText}
               />
             </h1>
             <Link
@@ -1196,7 +1219,7 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   );
 }
 
-export function SentencePatternResultPage({ level, patternId }: StudyProps) {
+export function SentencePatternResultPage({ level, patternId, section }: StudyProps) {
   const searchParams = useSearchParams();
   const practiceParam = Number(searchParams.get("practice") || "1");
   const practiceId = Number.isFinite(practiceParam)
@@ -1215,6 +1238,7 @@ export function SentencePatternResultPage({ level, patternId }: StudyProps) {
   const nextPatternHref = nextPattern
     ? `/sentence-patterns/${level.id}/${nextPattern.id}`
     : `/sentence-patterns/${level.id}/${patternId}`;
+  const currentPatternText = pattern?.text || practice.targetEnglish;
 
   const variants = [
     {
@@ -1252,6 +1276,27 @@ export function SentencePatternResultPage({ level, patternId }: StudyProps) {
   }
 
   useEffect(() => {
+    recordSentencePatternProgress({
+      completed: true,
+      levelId: level.id,
+      levelTitle: level.menuTitle,
+      patternId,
+      patternText: currentPatternText,
+      practiceCount,
+      practiceId,
+      sectionTitle: section.title,
+    });
+  }, [
+    currentPatternText,
+    level.id,
+    level.menuTitle,
+    patternId,
+    practiceCount,
+    practiceId,
+    section.title,
+  ]);
+
+  useEffect(() => {
     return () => {
       stopSpeakFlowTts();
     };
@@ -1272,7 +1317,7 @@ export function SentencePatternResultPage({ level, patternId }: StudyProps) {
             <h1>
               <InteractiveExpressionText
                 sourceSentence={practice.targetEnglish}
-                text={pattern?.text || practice.targetEnglish}
+                text={currentPatternText}
               />
             </h1>
             <Link

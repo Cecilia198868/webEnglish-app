@@ -1,0 +1,816 @@
+{
+  "generatedAt": "2026-06-15T20:29:17.872Z",
+  "outputRoot": "public\\native-flow-audio",
+  "sources": [
+    {
+      "candidateCount": 41,
+      "cost": 3.8296,
+      "day": 1,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A1.mp3",
+      "totalDuration": 70.426,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 44,
+      "cost": 6.3966,
+      "day": 2,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A2.mp3",
+      "totalDuration": 82.991,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 44,
+      "cost": 4.1755,
+      "day": 3,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A3.mp3",
+      "totalDuration": 79.961,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 41,
+      "cost": 5.0005,
+      "day": 4,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A4.mp3",
+      "totalDuration": 78.524,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 41,
+      "cost": 6.4077,
+      "day": 5,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A5.mp3",
+      "totalDuration": 74.371,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 42,
+      "cost": 7.5719,
+      "day": 6,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A6.mp3",
+      "totalDuration": 81.084,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 40,
+      "cost": 4.7064,
+      "day": 7,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A7.mp3",
+      "totalDuration": 77.166,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 43,
+      "cost": 3.3555,
+      "day": 8,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A8.mp3",
+      "totalDuration": 76.042,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 42,
+      "cost": 5.7706,
+      "day": 9,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A9.mp3",
+      "totalDuration": 85.316,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 41,
+      "cost": 8.7846,
+      "day": 10,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A10.mp3",
+      "totalDuration": 80.588,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 41,
+      "cost": 4.4555,
+      "day": 11,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A11.mp3",
+      "totalDuration": 81.711,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 46,
+      "cost": 9.5524,
+      "day": 12,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A12.mp3",
+      "totalDuration": 77.714,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 40,
+      "cost": 3.9187,
+      "day": 13,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A13.mp3",
+      "totalDuration": 77.009,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 41,
+      "cost": 10.2807,
+      "day": 14,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A14.mp3",
+      "totalDuration": 75.546,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 39,
+      "cost": 8.5966,
+      "day": 15,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A15.mp3",
+      "totalDuration": 74.606,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 44,
+      "cost": 4.7225,
+      "day": 16,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A16.mp3",
+      "totalDuration": 76.356,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 43,
+      "cost": 5.1818,
+      "day": 17,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A17.mp3",
+      "totalDuration": 86.909,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 67,
+      "cost": 3.6254,
+      "day": 18,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A18.mp3",
+      "totalDuration": 127.399,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 38,
+      "cost": 3.4052,
+      "day": 19,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A19.mp3",
+      "totalDuration": 74.527,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 39,
+      "cost": 8.7446,
+      "day": 20,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A20.mp3",
+      "totalDuration": 70.844,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 47,
+      "cost": 5.5538,
+      "day": 21,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A21.mp3",
+      "totalDuration": 79.882,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 47,
+      "cost": 10.3649,
+      "day": 22,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A22.mp3",
+      "totalDuration": 79.882,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 47,
+      "cost": 6.7823,
+      "day": 23,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A23.mp3",
+      "totalDuration": 79.882,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 44,
+      "cost": 10.5228,
+      "day": 24,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A24.mp3",
+      "totalDuration": 80.666,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 47,
+      "cost": 7.8995,
+      "day": 25,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A25.mp3",
+      "totalDuration": 90.044,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 44,
+      "cost": 6.1844,
+      "day": 26,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A26.mp3",
+      "totalDuration": 90.358,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 42,
+      "cost": 4.4286,
+      "day": 27,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A27.mp3",
+      "totalDuration": 89.887,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 42,
+      "cost": 8.771,
+      "day": 28,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A28.mp3",
+      "totalDuration": 86.831,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 40,
+      "cost": 6.1119,
+      "day": 29,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A29.mp3",
+      "totalDuration": 83.226,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 49,
+      "cost": 5.7551,
+      "day": 30,
+      "levelId": "everyday",
+      "source": "public\\images 2\\地道语感训练\\初级\\A30.mp3",
+      "totalDuration": 82.599,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 75,
+      "cost": 2.5571,
+      "day": 1,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B1.mp3",
+      "totalDuration": 163.082,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 84,
+      "cost": 6.7169,
+      "day": 2,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B2.mp3",
+      "totalDuration": 207.151,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 69,
+      "cost": 4.0301,
+      "day": 3,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B3.mp3",
+      "totalDuration": 152.033,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 70,
+      "cost": 3.6478,
+      "day": 4,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B4.mp3",
+      "totalDuration": 146.364,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 57,
+      "cost": 2.3361,
+      "day": 5,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B5.mp3",
+      "totalDuration": 133.407,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 65,
+      "cost": 3.8234,
+      "day": 6,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B6.mp3",
+      "totalDuration": 129.567,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 60,
+      "cost": 3.682,
+      "day": 7,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B7.mp3",
+      "totalDuration": 135.001,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 54,
+      "cost": 4.0094,
+      "day": 8,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B8.mp3",
+      "totalDuration": 114.521,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 71,
+      "cost": 2.5358,
+      "day": 9,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B9.mp3",
+      "totalDuration": 170.109,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 68,
+      "cost": 3.6348,
+      "day": 10,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B10.mp3",
+      "totalDuration": 143.386,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 72,
+      "cost": 2.3877,
+      "day": 11,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B11.mp3",
+      "totalDuration": 146.913,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 61,
+      "cost": 2.0694,
+      "day": 12,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B12.mp3",
+      "totalDuration": 130.116,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 61,
+      "cost": 4.163,
+      "day": 13,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B13.mp3",
+      "totalDuration": 127.869,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 55,
+      "cost": 4.4599,
+      "day": 14,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B14.mp3",
+      "totalDuration": 120.268,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 60,
+      "cost": 3.9397,
+      "day": 15,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B15.mp3",
+      "totalDuration": 118.988,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 71,
+      "cost": 3.5092,
+      "day": 16,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B16.mp3",
+      "totalDuration": 135.157,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 69,
+      "cost": 4.5688,
+      "day": 17,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B17.mp3",
+      "totalDuration": 140.513,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 59,
+      "cost": 4.6431,
+      "day": 18,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B18.mp3",
+      "totalDuration": 124.604,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 61,
+      "cost": 3.8739,
+      "day": 19,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B19.mp3",
+      "totalDuration": 127.007,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 62,
+      "cost": 3.8371,
+      "day": 20,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B20.mp3",
+      "totalDuration": 127.242,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 65,
+      "cost": 1.6427,
+      "day": 21,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B21.mp3",
+      "totalDuration": 121.626,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 62,
+      "cost": 3.9263,
+      "day": 22,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B22.mp3",
+      "totalDuration": 123.167,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 60,
+      "cost": 4.4522,
+      "day": 23,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B23.mp3",
+      "totalDuration": 115.801,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 53,
+      "cost": 4.3957,
+      "day": 24,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B24.mp3",
+      "totalDuration": 109.714,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 54,
+      "cost": 7.8522,
+      "day": 25,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B25.mp3",
+      "totalDuration": 109.714,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 59,
+      "cost": 2.6842,
+      "day": 26,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B26.mp3",
+      "totalDuration": 123.011,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 60,
+      "cost": 5.2497,
+      "day": 27,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B27.mp3",
+      "totalDuration": 118.909,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 56,
+      "cost": 2.7845,
+      "day": 28,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B28.mp3",
+      "totalDuration": 110.602,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 55,
+      "cost": 3.7317,
+      "day": 29,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B29.mp3",
+      "totalDuration": 110.602,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 53,
+      "cost": 2.316,
+      "day": 30,
+      "levelId": "natural",
+      "source": "public\\images 2\\地道语感训练\\中级\\B30.mp3",
+      "totalDuration": 118.126,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 50,
+      "cost": 8.8856,
+      "day": 1,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C1.mp3",
+      "totalDuration": 104.594,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 44,
+      "cost": 20.4469,
+      "day": 2,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C3.mp3",
+      "totalDuration": 85.786,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 52,
+      "cost": 14.901,
+      "day": 3,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C5.mp3",
+      "totalDuration": 85.237,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 46,
+      "cost": 11.6487,
+      "day": 4,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C7.mp3",
+      "totalDuration": 84.428,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 41,
+      "cost": 27.3738,
+      "day": 5,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C9.mp3",
+      "totalDuration": 74.109,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 42,
+      "cost": 12.7263,
+      "day": 6,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C11.mp3",
+      "totalDuration": 74.031,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 66,
+      "cost": 4.5964,
+      "day": 7,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C13.mp3",
+      "totalDuration": 130.769,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 60,
+      "cost": 2.4726,
+      "day": 8,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C14.mp3",
+      "totalDuration": 132.676,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 70,
+      "cost": 1.9114,
+      "day": 9,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C15.mp3",
+      "totalDuration": 167.079,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 66,
+      "cost": 3.3115,
+      "day": 10,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C16.mp3",
+      "totalDuration": 141.714,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 66,
+      "cost": 2.8342,
+      "day": 11,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C17.mp3",
+      "totalDuration": 142.367,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 64,
+      "cost": 2.9169,
+      "day": 12,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C18.mp3",
+      "totalDuration": 139.546,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 61,
+      "cost": 2.1999,
+      "day": 13,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C19.mp3",
+      "totalDuration": 130.769,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 57,
+      "cost": 2.8837,
+      "day": 14,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C20.mp3",
+      "totalDuration": 125.962,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 62,
+      "cost": 2.7883,
+      "day": 15,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C21.mp3",
+      "totalDuration": 126.929,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 55,
+      "cost": 2.1624,
+      "day": 16,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C22.mp3",
+      "totalDuration": 128.287,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 71,
+      "cost": 1.8481,
+      "day": 17,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C23.mp3",
+      "totalDuration": 158.511,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 65,
+      "cost": 3.2112,
+      "day": 18,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C24.mp3",
+      "totalDuration": 141.009,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 60,
+      "cost": 5.4322,
+      "day": 19,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\c25.mp3",
+      "totalDuration": 130.037,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 63,
+      "cost": 3.8793,
+      "day": 20,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C26.mp3",
+      "totalDuration": 132.519,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 67,
+      "cost": 4.3328,
+      "day": 21,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C27.mp3",
+      "totalDuration": 131.788,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 61,
+      "cost": 1.9604,
+      "day": 22,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C28.mp3",
+      "totalDuration": 128.366,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 55,
+      "cost": 3.1924,
+      "day": 23,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C29.mp3",
+      "totalDuration": 121.548,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 69,
+      "cost": 4.9259,
+      "day": 24,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C30.mp3",
+      "totalDuration": 126.589,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 62,
+      "cost": 2.1473,
+      "day": 25,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C31.mp3",
+      "totalDuration": 155.873,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 77,
+      "cost": 3.2365,
+      "day": 26,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C32.mp3",
+      "totalDuration": 147.722,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 64,
+      "cost": 3.3298,
+      "day": 27,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C33.mp3",
+      "totalDuration": 133.329,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 58,
+      "cost": 4.453,
+      "day": 28,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C34.mp3",
+      "totalDuration": 131.474,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 63,
+      "cost": 3.7703,
+      "day": 29,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C35.mp3",
+      "totalDuration": 124.526,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 71,
+      "cost": 3.2219,
+      "day": 30,
+      "levelId": "native",
+      "source": "public\\images 2\\地道语感训练\\高级\\C36.mp3",
+      "totalDuration": 144.431,
+      "virtualCuts": 0
+    }
+  ]
+}

@@ -1,6 +1,21 @@
-import { NativeFlowMenuPage } from "@/components/NativeFlowPages";
-import { nativeFlowLevels } from "@/data/nativeFlow/mockData";
+import { NativeFlowWebPage } from "@/components/NativeFlowWebPage";
+import {
+  getNativeFlowSentence,
+  nativeFlowLevels,
+  nativeFlowProgressRows,
+} from "@/data/nativeFlow/courseData";
 
 export default function Page() {
-  return <NativeFlowMenuPage levels={nativeFlowLevels} />;
+  const initial = getNativeFlowSentence("everyday", 15) || getNativeFlowSentence("everyday", 1);
+
+  if (!initial) return null;
+
+  return (
+    <NativeFlowWebPage
+      initialLevel={initial.level}
+      initialSentence={initial.sentence}
+      levels={nativeFlowLevels}
+      progressRows={nativeFlowProgressRows}
+    />
+  );
 }

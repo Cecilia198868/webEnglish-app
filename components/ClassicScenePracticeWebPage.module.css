@@ -1,0 +1,727 @@
+.page {
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+  background: #fff8f1;
+  color: #17133d;
+}
+
+.artboard {
+  position: relative;
+  width: min(100%, 1402px);
+  margin: 0 auto;
+  background: #fff8f1;
+  line-height: 0;
+}
+
+.pageArt {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+.hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.hotspot {
+  position: absolute;
+  display: block;
+  border-radius: 14px;
+  outline: 0;
+  text-decoration: none;
+}
+
+.hotspot[data-kind="button"] {
+  border-radius: 999px;
+}
+
+.hotspot[data-kind="category"] {
+  border-radius: 16px;
+}
+
+.hotspot:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.96),
+    0 0 0 6px rgba(255, 126, 23, 0.72);
+}
+
+.hotspot:hover {
+  background: rgba(255, 126, 23, 0.055);
+}
+
+.categoryButtons {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+.categoryButton {
+  position: absolute;
+  display: block;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  cursor: pointer;
+  outline: 0;
+  pointer-events: auto;
+}
+
+.categoryButton:hover,
+.categoryButtonActive {
+  background: rgba(255, 126, 23, 0.08);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 126, 23, 0.18),
+    0 12px 28px rgba(255, 126, 23, 0.12);
+}
+
+.categoryButton:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.96),
+    0 0 0 6px rgba(255, 126, 23, 0.72);
+}
+
+.menuFlyout {
+  position: absolute;
+  top: 12.4%;
+  left: 27.35%;
+  z-index: 9;
+  display: flex;
+  width: 62%;
+  align-items: flex-start;
+  gap: clamp(0.7rem, 1.2vw, 1.1rem);
+  color: #17133d;
+  font-family: var(--sf-font-zh), var(--font-geist-sans), sans-serif;
+  letter-spacing: 0;
+  line-height: 1.25;
+  pointer-events: auto;
+}
+
+.menuPanel {
+  width: min(34%, 320px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 126, 23, 0.18);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 26px 62px rgba(92, 60, 24, 0.18);
+}
+
+.lessonPanel {
+  width: min(46%, 420px);
+}
+
+.menuPanelHeader {
+  display: grid;
+  gap: 0.28rem;
+  border-bottom: 1px solid rgba(255, 126, 23, 0.12);
+  background:
+    linear-gradient(135deg, rgba(255, 246, 236, 0.98), rgba(246, 255, 244, 0.96));
+  padding: 0.85rem 1rem;
+}
+
+.menuPanelHeader strong {
+  overflow: hidden;
+  color: #16213a;
+  font-size: clamp(0.84rem, 1.12vw, 1.05rem);
+  font-weight: 950;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuPanelHeader span {
+  overflow: hidden;
+  color: #71806f;
+  font-size: clamp(0.66rem, 0.86vw, 0.8rem);
+  font-weight: 780;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuList {
+  display: grid;
+  max-height: 58dvh;
+  overflow: auto;
+  padding: 0.5rem;
+}
+
+.menuItem,
+.lessonMenuItem {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--sf-font-zh), var(--font-geist-sans), sans-serif;
+  letter-spacing: 0;
+  text-align: left;
+}
+
+.menuItem {
+  display: grid;
+  gap: 0.28rem;
+  border-radius: 13px;
+  color: #17223b;
+  padding: 0.68rem 0.75rem;
+}
+
+.menuItem span {
+  overflow: hidden;
+  font-size: clamp(0.76rem, 0.98vw, 0.92rem);
+  font-weight: 920;
+  line-height: 1.18;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuItem small {
+  color: #83907f;
+  font-size: clamp(0.62rem, 0.8vw, 0.74rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.menuItem:hover,
+.menuItemActive {
+  background: #fff2e7;
+  color: #e85f0d;
+}
+
+.lessonMenuItem {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.68rem;
+  border-radius: 13px;
+  color: #182039;
+  padding: 0.64rem 0.75rem;
+}
+
+.lessonMenuItem > span {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff0e1;
+  color: #f26a21;
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.lessonMenuItem strong {
+  overflow: hidden;
+  font-size: clamp(0.72rem, 0.95vw, 0.88rem);
+  font-weight: 900;
+  line-height: 1.18;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lessonMenuItem:hover,
+.lessonMenuItem:focus-visible {
+  background: #f4fbf1;
+  color: #287537;
+  outline: 0;
+}
+
+.learningMenu {
+  position: absolute;
+  z-index: 5;
+  line-height: 1;
+}
+
+.learningTrigger {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  outline: 0;
+}
+
+.learningTrigger:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.96),
+    0 0 0 6px rgba(104, 76, 255, 0.72);
+}
+
+.learningDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  display: grid;
+  min-width: 236px;
+  overflow: hidden;
+  border: 1px solid rgba(115, 94, 255, 0.16);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 22px 54px rgba(41, 23, 92, 0.16);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.learningMenu:hover .learningDropdown,
+.learningMenu:focus-within .learningDropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.learningDropdownItem {
+  color: #17133d;
+  font-family: var(--sf-font-zh), var(--font-geist-sans), sans-serif;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.2;
+  padding: 0.82rem 1rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.learningDropdownItem:hover,
+.learningDropdownItem:focus-visible {
+  background: rgba(104, 76, 255, 0.08);
+  color: #5b35ff;
+  outline: 0;
+}
+
+.courseLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  color: #121737;
+  font-family: var(--sf-font-zh), var(--font-geist-sans), sans-serif;
+  letter-spacing: 0;
+  line-height: 1.25;
+  pointer-events: none;
+}
+
+.continueLessonMeta {
+  position: absolute;
+  top: 15.9%;
+  left: 35.65%;
+  display: grid;
+  width: 40%;
+  gap: 0.45rem;
+  background: rgba(247, 255, 246, 0.9);
+  color: #44604c;
+  font-size: clamp(0.72rem, 1.1vw, 1.05rem);
+  font-weight: 700;
+  padding: 0.45rem 0.8rem;
+}
+
+.continueLessonMeta strong {
+  overflow: hidden;
+  color: #25343b;
+  font-size: clamp(0.78rem, 1.25vw, 1.15rem);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.continueLessonButton {
+  position: absolute;
+  top: 16.14%;
+  left: 77.25%;
+  display: inline-flex;
+  width: 10.8%;
+  height: 2.75%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(38, 135, 54, 0.96);
+  color: #ffffff;
+  font-size: clamp(0.72rem, 1.05vw, 1rem);
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: auto;
+  text-decoration: none;
+}
+
+.continueLessonButton:focus-visible,
+.recordEnglishButton:focus-visible,
+.practiceControl:focus-visible,
+.variantAudioButton:focus-visible,
+.variantSlowButton:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.96),
+    0 0 0 6px rgba(255, 126, 23, 0.74);
+  outline: 0;
+}
+
+.chinesePromptBox {
+  position: absolute;
+  top: 24.18%;
+  left: 28.9%;
+  display: flex;
+  width: 58.5%;
+  height: 6.7%;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 126, 23, 0.7);
+  border-radius: 16px;
+  background: rgba(255, 252, 248, 0.98);
+  color: #173822;
+  font-size: clamp(0.95rem, 1.45vw, 1.45rem);
+  font-weight: 900;
+  line-height: 1.35;
+  padding: 0.5rem 1.4rem;
+  text-align: left;
+}
+
+.recordEnglishButton {
+  position: absolute;
+  top: 31.7%;
+  left: 28.9%;
+  display: grid;
+  width: 58.5%;
+  height: 3.25%;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: clamp(0.95rem, 1.55vw, 1.55rem);
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: auto;
+  text-shadow: 0 2px 16px rgba(131, 61, 0, 0.25);
+}
+
+.recordEnglishButton.isListening {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.22), transparent 45%),
+    rgba(255, 108, 9, 0.22);
+  box-shadow:
+    0 14px 34px rgba(255, 116, 20, 0.24),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+
+.recordEnglishButton:active,
+.continueLessonButton:active,
+.practiceControl:active,
+.variantAudioButton:active,
+.variantSlowButton:active {
+  transform: translateY(1px);
+}
+
+.practiceControl {
+  position: absolute;
+  top: 36.2%;
+  display: grid;
+  height: 2.95%;
+  place-items: center;
+  border: 0;
+  background: rgba(255, 255, 255, 0.02);
+  color: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.practiceControl:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
+.previousButton {
+  left: 28.9%;
+  width: 18.4%;
+}
+
+.slowButton {
+  left: 47.65%;
+  width: 20.55%;
+}
+
+.nextButton {
+  left: 68.1%;
+  width: 19.35%;
+}
+
+.userExpressionText {
+  position: absolute;
+  top: 44.7%;
+  left: 35.55%;
+  display: flex;
+  width: 45%;
+  min-height: 3.7%;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #171717;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.88rem, 1.4vw, 1.34rem);
+  font-weight: 600;
+  line-height: 1.22;
+  padding: 0.58rem 1.2rem;
+}
+
+.statusText {
+  position: absolute;
+  top: 48.34%;
+  left: 35.55%;
+  width: 45%;
+  margin: 0;
+  color: #f26a21;
+  font-size: clamp(0.68rem, 0.95vw, 0.9rem);
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.variantCards {
+  position: absolute;
+  top: 50.05%;
+  left: 30.2%;
+  display: grid;
+  width: 56.35%;
+  gap: clamp(0.7rem, 1.35vw, 1.35rem);
+}
+
+.variantCard {
+  position: relative;
+  display: grid;
+  min-height: clamp(5.5rem, 7.7vw, 7.6rem);
+  align-content: center;
+  border: 1px solid rgba(126, 159, 123, 0.42);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.965);
+  box-shadow:
+    0 12px 30px rgba(93, 77, 52, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  padding: 1.1rem 6.2rem 1rem 5.4rem;
+}
+
+.variantCard::before {
+  position: absolute;
+  top: 50%;
+  left: 1.3rem;
+  display: grid;
+  width: clamp(2.7rem, 4.2vw, 4rem);
+  height: clamp(2.7rem, 4.2vw, 4rem);
+  place-items: center;
+  border-radius: 50%;
+  color: #ffffff;
+  content: "";
+  transform: translateY(-50%);
+}
+
+.variantStandard::before {
+  background: #6fa36c;
+}
+
+.variantIdiomatic::before {
+  background: #ff7d1b;
+}
+
+.variantSimple::before {
+  background: #72b2cb;
+}
+
+.variantNatural::before {
+  background: #71a95f;
+}
+
+.variantLabel {
+  width: fit-content;
+  border-radius: 999px;
+  font-size: clamp(0.62rem, 0.94vw, 0.86rem);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 0.42rem;
+  padding: 0.28rem 0.58rem;
+}
+
+.variantStandard .variantLabel {
+  background: #e9f6e8;
+  color: #24833d;
+}
+
+.variantIdiomatic .variantLabel {
+  background: #fff0e6;
+  color: #f26a21;
+}
+
+.variantSimple .variantLabel {
+  background: #eaf7fb;
+  color: #2a7da2;
+}
+
+.variantNatural .variantLabel {
+  background: #eef7e8;
+  color: #4c8f42;
+}
+
+.variantCard p {
+  margin: 0;
+  color: #161724;
+  font-size: clamp(0.9rem, 1.35vw, 1.32rem);
+  font-weight: 900;
+  line-height: 1.24;
+}
+
+.variantAudioButton,
+.variantSlowButton {
+  position: absolute;
+  right: 1.25rem;
+  border: 0;
+  background: rgba(255, 255, 255, 0.97);
+  color: #ff7a16;
+  cursor: pointer;
+  font-family: var(--sf-font-zh), var(--font-geist-sans), sans-serif;
+  font-weight: 900;
+  pointer-events: auto;
+}
+
+.variantAudioButton {
+  top: 1.15rem;
+  display: grid;
+  width: clamp(2rem, 3.2vw, 3rem);
+  height: clamp(2rem, 3.2vw, 3rem);
+  place-items: center;
+  border-radius: 50%;
+  box-shadow: 0 10px 24px rgba(92, 60, 24, 0.12);
+}
+
+.variantAudioButton span {
+  transform: translateX(1px);
+}
+
+.variantSlowButton {
+  right: 1rem;
+  bottom: 0.95rem;
+  min-width: clamp(3rem, 4.4vw, 4.4rem);
+  border: 1px solid rgba(255, 126, 23, 0.16);
+  border-radius: 999px;
+  color: #2872ff;
+  font-size: clamp(0.7rem, 1vw, 0.9rem);
+  line-height: 1;
+  padding: 0.5rem 0.62rem;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+}
+
+@media (max-width: 760px) {
+  .learningDropdown {
+    min-width: 210px;
+  }
+
+  .learningDropdownItem {
+    font-size: 0.78rem;
+    padding: 0.7rem 0.8rem;
+  }
+
+  .menuFlyout {
+    left: 26%;
+    width: 70%;
+    gap: 0.36rem;
+  }
+
+  .menuPanel {
+    border-radius: 10px;
+  }
+
+  .menuPanelHeader {
+    padding: 0.46rem 0.56rem;
+  }
+
+  .menuPanelHeader strong,
+  .menuItem span,
+  .lessonMenuItem strong {
+    font-size: 0.52rem;
+  }
+
+  .menuPanelHeader span,
+  .menuItem small {
+    font-size: 0.44rem;
+  }
+
+  .menuList {
+    max-height: 46dvh;
+    padding: 0.28rem;
+  }
+
+  .menuItem {
+    border-radius: 8px;
+    padding: 0.38rem 0.42rem;
+  }
+
+  .lessonMenuItem {
+    grid-template-columns: 1.25rem minmax(0, 1fr);
+    gap: 0.34rem;
+    border-radius: 8px;
+    padding: 0.34rem 0.42rem;
+  }
+
+  .lessonMenuItem > span {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.48rem;
+  }
+
+  .continueLessonMeta,
+  .continueLessonButton,
+  .chinesePromptBox,
+  .recordEnglishButton,
+  .userExpressionText,
+  .statusText,
+  .variantCard p {
+    font-size: 0.58rem;
+  }
+
+  .variantCards {
+    gap: 0.42rem;
+  }
+
+  .variantCard {
+    min-height: 3.85rem;
+    border-radius: 10px;
+    padding: 0.52rem 3.4rem 0.48rem 2.9rem;
+  }
+
+  .variantCard::before {
+    left: 0.68rem;
+    width: 1.65rem;
+    height: 1.65rem;
+  }
+
+  .variantLabel {
+    font-size: 0.48rem;
+    margin-bottom: 0.24rem;
+    padding: 0.18rem 0.35rem;
+  }
+
+  .variantAudioButton {
+    right: 0.58rem;
+    top: 0.52rem;
+    width: 1.65rem;
+    height: 1.65rem;
+  }
+
+  .variantSlowButton {
+    right: 0.42rem;
+    bottom: 0.42rem;
+    min-width: 2.4rem;
+    font-size: 0.48rem;
+    padding: 0.35rem 0.42rem;
+  }
+}

@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "split:native-flow-audio": "node scripts/split-native-flow-audio.mjs",
     "lint": "eslint"
   },
   "dependencies": {
@@ -26,6 +27,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
+    "ffmpeg-static": "^5.3.0",
+    "ffprobe-static": "^3.1.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
