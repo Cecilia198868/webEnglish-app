@@ -33,6 +33,7 @@ yarn-error.log*
 
 # local agent/runtime workspaces
 .codex-work/
+.chrome-headless-profile/
 
 # env files (can opt-in for committing if needed)
 .env*
