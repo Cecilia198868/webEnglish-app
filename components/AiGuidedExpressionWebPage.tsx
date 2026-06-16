@@ -69,30 +69,6 @@ type FollowupResponse = {
   suggestion?: string;
 };
 
-type LocalSpeechRecognitionResult = {
-  readonly 0?: {
-    readonly transcript?: string;
-  };
-};
-
-type LocalSpeechRecognitionEvent = {
-  readonly results: ArrayLike<LocalSpeechRecognitionResult>;
-};
-
-type LocalSpeechRecognizer = {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  abort: () => void;
-  onend: (() => void) | null;
-  onerror: ((event: { error?: string }) => void) | null;
-  onresult: ((event: LocalSpeechRecognitionEvent) => void) | null;
-  start: () => void;
-  stop: () => void;
-};
-
-type LocalSpeechRecognizerConstructor = new () => LocalSpeechRecognizer;
-
 type Hotspot = {
   href: string;
   label: string;
@@ -234,16 +210,11 @@ function hotspotStyle(
 function getSpeechRecognitionConstructor() {
   if (typeof window === "undefined") return null;
 
-  const speechWindow = window as unknown as {
-    SpeechRecognition?: LocalSpeechRecognizerConstructor;
-    webkitSpeechRecognition?: LocalSpeechRecognizerConstructor;
-  };
-
-  return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition ?? null;
+  return window.SpeechRecognition ?? window.webkitSpeechRecognition ?? null;
 }
 
 function readTranscript(
-  event: LocalSpeechRecognitionEvent,
+  event: SpeechRecognitionResultEventLike,
   separator: "" | " " = ""
 ) {
   const parts: string[] = [];
@@ -275,7 +246,7 @@ export default function AiGuidedExpressionWebPage() {
   const [activeRecorder, setActiveRecorder] = useState<ActiveRecorder>(null);
   const [statusText, setStatusText] = useState("");
   const [englishStatusText, setEnglishStatusText] = useState("");
-  const recognitionRef = useRef<LocalSpeechRecognizer | null>(null);
+  const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const silenceTimerRef = useRef<number | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chineseTextRef = useRef(chineseText);

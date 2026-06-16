@@ -7,19 +7,26 @@ declare global {
 
   interface SpeechRecognitionResultLike {
     [index: number]: SpeechRecognitionAlternativeLike | undefined;
+    isFinal?: boolean;
   }
 
   interface SpeechRecognitionResultEventLike extends Event {
+    resultIndex?: number;
     results: ArrayLike<SpeechRecognitionResultLike>;
   }
 
+  interface SpeechRecognitionErrorEventLike extends Event {
+    error?: string;
+    message?: string;
+  }
+
   interface BrowserSpeechRecognition {
-    abort?: () => void;
+    abort: () => void;
     continuous: boolean;
     interimResults: boolean;
     lang: string;
     onend: (() => void) | null;
-    onerror: ((event: Event) => void) | null;
+    onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null;
     onresult: ((event: SpeechRecognitionResultEventLike) => void) | null;
     onspeechend?: (() => void) | null;
     onspeechstart?: (() => void) | null;

@@ -59,41 +59,6 @@ type AudioTrainingResponse = {
   message?: string;
 };
 
-type SpeechRecognitionAlternativeLike = {
-  transcript: string;
-};
-
-type SpeechRecognitionResultLike = {
-  0?: SpeechRecognitionAlternativeLike;
-  isFinal: boolean;
-};
-
-type SpeechRecognitionEventLike = {
-  resultIndex?: number;
-  results: ArrayLike<SpeechRecognitionResultLike>;
-};
-
-type SpeechRecognitionLike = {
-  lang: string;
-  continuous: boolean;
-  interimResults: boolean;
-  onend: (() => void) | null;
-  onerror: (() => void) | null;
-  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
-  abort?: () => void;
-  start: () => void;
-  stop: () => void;
-};
-
-type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
-
-declare global {
-  interface Window {
-    SpeechRecognition?: SpeechRecognitionConstructor;
-    webkitSpeechRecognition?: SpeechRecognitionConstructor;
-  }
-}
-
 const LESSONS_STORAGE_KEY = "english-app-lessons";
 const LAST_STUDY_PROGRESS_KEY = "lastStudyProgress";
 const RECORDING_SILENCE_DELAY_MS = 2000;
@@ -433,7 +398,7 @@ export function CreateCourseWebPage() {
 
   const textFileInputRef = useRef<HTMLInputElement | null>(null);
   const audioFileInputRef = useRef<HTMLInputElement | null>(null);
-  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const speechSilenceTimerRef = useRef<number | null>(null);
   const finalTranscriptRef = useRef("");
 
@@ -698,6 +663,7 @@ export function CreateCourseWebPage() {
 
   function getRecognitionConstructor() {
     if (typeof window === "undefined") return null;
+
     return window.SpeechRecognition || window.webkitSpeechRecognition || null;
   }
 

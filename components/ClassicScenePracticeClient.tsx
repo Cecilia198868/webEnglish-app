@@ -92,30 +92,6 @@ type Hotspot = {
   kind?: "nav" | "button" | "category";
 };
 
-type LocalSpeechRecognitionResult = {
-  readonly 0?: {
-    readonly transcript?: string;
-  };
-};
-
-type LocalSpeechRecognitionEvent = {
-  readonly results: ArrayLike<LocalSpeechRecognitionResult>;
-};
-
-type LocalSpeechRecognizer = {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  abort: () => void;
-  onend: (() => void) | null;
-  onerror: ((event: { error?: string }) => void) | null;
-  onresult: ((event: LocalSpeechRecognitionEvent) => void) | null;
-  start: () => void;
-  stop: () => void;
-};
-
-type LocalSpeechRecognizerConstructor = new () => LocalSpeechRecognizer;
-
 const learningMenuHotspot: Omit<Hotspot, "href"> = {
   label: "Start learning menu",
   x: 414,
@@ -276,12 +252,7 @@ function hotspotStyle(
 function getSpeechRecognitionConstructor() {
   if (typeof window === "undefined") return null;
 
-  const speechWindow = window as unknown as {
-    SpeechRecognition?: LocalSpeechRecognizerConstructor;
-    webkitSpeechRecognition?: LocalSpeechRecognizerConstructor;
-  };
-
-  return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition ?? null;
+  return window.SpeechRecognition ?? window.webkitSpeechRecognition ?? null;
 }
 
 function variantToneClass(key: ClassicScenePracticeVariant["key"]) {
@@ -385,7 +356,7 @@ export default function ClassicScenePracticeClient({
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [continueTarget, setContinueTarget] =
     useState<ContinuePracticeTarget | null>(null);
-  const recognitionRef = useRef<LocalSpeechRecognizer | null>(null);
+  const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const speechBufferRef = useRef("");
 
