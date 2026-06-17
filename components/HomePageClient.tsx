@@ -786,17 +786,36 @@ function PhoneFrame({
 
 function HeroIllustration() {
   return (
-    <div className={styles.heroIllustration} aria-hidden="true">
-      <div className={styles.heroImageShell}>
-        <Image
-          alt=""
-          className={styles.heroImage}
-          height={591}
-          preload
-          sizes="(max-width: 1060px) 82vw, 520px"
-          src="/images/home-hero-speaking.png"
-          width={620}
-        />
+    <div
+      aria-label="SpeakFlow 英语口语练习示意"
+      className={styles.heroIllustration}
+      role="img"
+    >
+      <div className={styles.heroVisualCard}>
+        <span className={styles.heroVisualHalo} />
+        <span className={styles.heroSparkOne}>✦</span>
+        <span className={styles.heroSparkTwo}>✦</span>
+        <div className={`${styles.heroSpeechBubble} ${styles.heroSpeechOne}`}>
+          I&apos;d like a coffee.
+        </div>
+        <div className={`${styles.heroSpeechBubble} ${styles.heroSpeechTwo}`}>
+          I feel so tired today.
+        </div>
+        <div className={`${styles.heroSpeechBubble} ${styles.heroSpeechThree}`}>
+          Could you help me?
+        </div>
+        <div className={styles.heroPersonArt} aria-hidden="true">
+          <span className={styles.heroHair} />
+          <span className={styles.heroFace}>
+            <i />
+            <i />
+          </span>
+          <span className={styles.heroTorso} />
+          <span className={styles.heroArm} />
+        </div>
+        <div className={styles.heroLaptopArt} aria-hidden="true">
+          <span />
+        </div>
       </div>
     </div>
   );
@@ -1882,17 +1901,19 @@ export default function HomePageClient() {
               </Link>
             </div>
             <div
-              className={styles.heroProof}
               aria-label="4.9 分，来自 50,000+ 用户的反馈"
+              className={styles.heroProof}
             >
-              <Image
-                alt=""
-                className={styles.heroProofImage}
-                height={98}
-                sizes="(max-width: 520px) 320px, 340px"
-                src="/images/home-proof-feedback.png"
-                width={556}
-              />
+              <div className={styles.heroProofAvatars} aria-hidden="true">
+                {["J", "M", "A", "R"].map((avatar) => (
+                  <span key={avatar}>{avatar}</span>
+                ))}
+              </div>
+              <div className={styles.heroProofRating}>
+                <span aria-hidden="true">★★★★★</span>
+                <strong>4.9</strong>
+                <p>来自 50,000+ 用户的学习反馈</p>
+              </div>
             </div>
           </div>
           <HeroIllustration />

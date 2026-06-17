@@ -376,13 +376,72 @@
 .heroProof {
   display: flex;
   align-items: center;
+  gap: 16px;
   margin-top: 24px;
 }
 
-.heroProofImage {
-  width: min(100%, 340px);
-  height: auto;
-  object-fit: contain;
+.heroProofAvatars {
+  display: flex;
+  padding-left: 10px;
+}
+
+.heroProofAvatars span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  margin-left: -10px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7b9cff, #4c8cff);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 8px 18px rgba(74, 103, 207, 0.2);
+}
+
+.heroProofAvatars span:nth-child(2) {
+  background: linear-gradient(135deg, #61c4ff, #637dff);
+}
+
+.heroProofAvatars span:nth-child(3) {
+  background: linear-gradient(135deg, #ffc36b, #ff7f60);
+}
+
+.heroProofAvatars span:nth-child(4) {
+  background: linear-gradient(135deg, #8a69ff, #5d85ff);
+}
+
+.heroProofRating {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 8px;
+  row-gap: 4px;
+  align-items: center;
+  color: #5e5a79;
+  font-size: 0.86rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.heroProofRating span {
+  color: #ffb42e;
+  font-size: 0.98rem;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.heroProofRating strong {
+  color: #ff8a1f;
+  font-size: 1.08rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.heroProofRating p {
+  grid-column: 1 / -1;
+  margin: 0;
 }
 
 .heroIllustration {
@@ -394,18 +453,197 @@
   padding-left: 8px;
 }
 
-.heroImageShell {
+.heroVisualCard {
   position: relative;
   width: min(100%, 520px);
   aspect-ratio: 620 / 591;
 }
 
-.heroImage {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  object-fit: contain;
-  filter: drop-shadow(0 24px 42px rgba(78, 61, 165, 0.16));
+.heroVisualCard::before {
+  position: absolute;
+  right: 8%;
+  bottom: 6%;
+  width: 66%;
+  height: 46%;
+  border-radius: 34px 34px 18px 18px;
+  background: linear-gradient(180deg, rgba(245, 241, 255, 0.96), rgba(232, 225, 255, 0.7));
+  box-shadow: 0 30px 52px rgba(112, 91, 201, 0.13);
+  content: "";
+}
+
+.heroVisualHalo {
+  position: absolute;
+  top: 2%;
+  right: 2%;
+  width: 64%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(126, 96, 255, 0.12);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 45% 44%, rgba(255, 255, 255, 0.92), transparent 38%),
+    rgba(127, 99, 255, 0.08);
+}
+
+.heroSpeechBubble {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  border: 1px solid rgba(219, 215, 248, 0.98);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #17133d;
+  font-size: 0.88rem;
+  font-weight: 900;
+  line-height: 1.2;
+  padding: 0 18px;
+  box-shadow: 0 18px 38px rgba(81, 66, 156, 0.12);
+}
+
+.heroSpeechOne {
+  top: 17%;
+  left: 4%;
+}
+
+.heroSpeechTwo {
+  top: 43%;
+  left: 0;
+}
+
+.heroSpeechThree {
+  right: 0;
+  top: 40%;
+  max-width: 162px;
+}
+
+.heroSparkOne,
+.heroSparkTwo {
+  position: absolute;
+  z-index: 4;
+  color: #8d6bff;
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.heroSparkOne {
+  top: 8%;
+  left: 29%;
+}
+
+.heroSparkTwo {
+  top: 16%;
+  right: 12%;
+}
+
+.heroPersonArt {
+  position: absolute;
+  z-index: 3;
+  right: 16%;
+  bottom: 13%;
+  width: 190px;
+  height: 280px;
+}
+
+.heroHair {
+  position: absolute;
+  top: 0;
+  left: 46px;
+  width: 112px;
+  height: 118px;
+  border-radius: 54px 54px 42px 42px;
+  background: #392a37;
+  box-shadow: inset 18px 0 0 rgba(29, 22, 36, 0.2);
+}
+
+.heroFace {
+  position: absolute;
+  top: 46px;
+  left: 68px;
+  display: flex;
+  width: 72px;
+  height: 88px;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  border-radius: 34px 34px 38px 38px;
+  background: #ffd6bd;
+}
+
+.heroFace i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #17133d;
+}
+
+.heroTorso {
+  position: absolute;
+  right: 34px;
+  bottom: 2px;
+  width: 142px;
+  height: 178px;
+  border-radius: 44px 44px 30px 30px;
+  background: linear-gradient(135deg, #b49bff 0%, #7a5df2 100%);
+  box-shadow: 0 24px 44px rgba(113, 86, 229, 0.22);
+}
+
+.heroArm {
+  position: absolute;
+  right: 0;
+  bottom: 58px;
+  width: 58px;
+  height: 132px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffd8c5, #f2aa8c);
+  transform: rotate(-24deg);
+  transform-origin: top center;
+}
+
+.heroLaptopArt {
+  position: absolute;
+  z-index: 4;
+  left: 9%;
+  bottom: 3%;
+  width: 245px;
+  height: 118px;
+  border-radius: 18px 18px 10px 10px;
+  background: linear-gradient(145deg, #f1f2f9, #c9ccdc);
+  box-shadow: 0 24px 44px rgba(69, 62, 130, 0.16);
+  transform: perspective(420px) rotateX(5deg) rotateZ(6deg);
+}
+
+.heroLaptopArt::after {
+  position: absolute;
+  right: 18px;
+  bottom: -13px;
+  left: 18px;
+  height: 12px;
+  border-radius: 999px;
+  background: #b9bed0;
+  content: "";
+}
+
+.heroLaptopArt span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #8758ff, #2f83ff);
+  transform: translate(-50%, -50%);
+}
+
+.heroLaptopArt span::before {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 999px;
+  content: "";
 }
 
 .downloadSection {
@@ -613,27 +851,83 @@
 
 .freeStudyFeatureSection {
   background:
-    url("/images/home-free-study-card-bg.png") center / cover no-repeat,
+    radial-gradient(circle at 11% 64%, rgba(118, 88, 255, 0.22), transparent 18%),
+    radial-gradient(circle at 35% 28%, rgba(189, 171, 255, 0.24), transparent 16%),
+    linear-gradient(90deg, rgba(246, 241, 255, 0.98) 0 52%, rgba(255, 255, 255, 0.98) 52%),
     #fff;
 }
 
 .freeStudyFeatureSection::before {
-  display: none;
+  display: block;
+  background:
+    linear-gradient(90deg, rgba(118, 88, 255, 0.05), transparent 34%, rgba(118, 88, 255, 0.06)),
+    radial-gradient(circle at 8% 18%, rgba(118, 88, 255, 0.12), transparent 12%),
+    radial-gradient(circle at 90% 70%, rgba(118, 88, 255, 0.08), transparent 18%),
+    repeating-linear-gradient(0deg, rgba(118, 88, 255, 0.032) 0 1px, transparent 1px 24px);
+}
+
+.freeStudyFeatureSection::after {
+  position: absolute;
+  z-index: 1;
+  bottom: 12%;
+  left: 7%;
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #a88cff, #6b4eff);
+  box-shadow:
+    0 22px 42px rgba(111, 80, 239, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  content: "";
+  opacity: 0.7;
 }
 
 .sceneFeatureSection {
   display: block;
   min-height: 0;
   aspect-ratio: 1607 / 979;
-  border: 0;
+  border: 1px solid rgba(255, 222, 190, 0.78);
   border-radius: 24px;
-  background: url("/images/home-classic-scenes-card-bg.png") center / cover no-repeat;
+  background:
+    radial-gradient(circle at 60% 62%, rgba(255, 157, 53, 0.14), transparent 18%),
+    radial-gradient(circle at 16% 18%, rgba(255, 190, 126, 0.12), transparent 20%),
+    linear-gradient(115deg, rgba(255, 250, 245, 0.98), rgba(255, 245, 235, 0.92)),
+    #fff7ef;
   box-shadow: 0 22px 62px rgba(154, 95, 42, 0.11);
   padding: 0;
 }
 
 .sceneFeatureSection::before {
-  display: none;
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 72% 25%, rgba(108, 157, 255, 0.18), transparent 7%),
+    radial-gradient(circle at 83% 19%, rgba(255, 255, 255, 0.8), transparent 8%),
+    radial-gradient(circle at 54% 73%, rgba(255, 152, 45, 0.12), transparent 13%),
+    repeating-linear-gradient(0deg, rgba(255, 132, 35, 0.032) 0 1px, transparent 1px 24px);
+  content: "";
+  pointer-events: none;
+}
+
+.sceneFeatureSection::after {
+  position: absolute;
+  z-index: 1;
+  top: 5.3%;
+  right: 4.4%;
+  width: 39%;
+  height: 89%;
+  border: 1px solid rgba(228, 219, 244, 0.95);
+  border-radius: 46px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 253, 250, 0.96)),
+    #fff;
+  box-shadow:
+    0 26px 62px rgba(154, 95, 42, 0.15),
+    inset 0 0 0 10px rgba(255, 255, 255, 0.82);
+  content: "";
+  pointer-events: none;
 }
 
 .sceneDesignCopy {
@@ -5015,7 +5309,10 @@
   .sceneFeatureSection {
     min-height: 900px;
     aspect-ratio: auto;
-    background-position: center;
+  }
+
+  .sceneFeatureSection::after {
+    display: none;
   }
 
   .sceneDesignCopy {
@@ -5380,7 +5677,7 @@
     min-height: 300px;
   }
 
-  .heroImageShell {
+  .heroVisualCard {
     width: min(100%, 360px);
   }
 
