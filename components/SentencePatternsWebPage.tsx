@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -286,6 +286,118 @@ function getPatternEntry(
   };
 }
 
+function SpeakerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 9.5v5h3.6l4.9 4.1V5.4L7.6 9.5H4Z" />
+      <path d="M16 8.3a5.4 5.4 0 0 1 0 7.4" />
+      <path d="M18.7 5.7a9.2 9.2 0 0 1 0 12.6" />
+    </svg>
+  );
+}
+
+function MicrophoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="9" y="3" width="6" height="11" rx="3" />
+      <path d="M5.8 11.2a6.2 6.2 0 0 0 12.4 0" />
+      <path d="M12 17.4V21" />
+      <path d="M8.4 21h7.2" />
+    </svg>
+  );
+}
+
+function ArrowLeftIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m10 6-6 6 6 6" />
+      <path d="M5 12h15" />
+    </svg>
+  );
+}
+
+function ArrowRightIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m14 6 6 6-6 6" />
+      <path d="M4 12h15" />
+    </svg>
+  );
+}
+
+function HeadphonesIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 14v-2a7 7 0 0 1 14 0v2" />
+      <path d="M5 14h3v6H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Z" />
+      <path d="M19 14h-3v6h3a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2Z" />
+    </svg>
+  );
+}
+
+function WaveIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 10v4" />
+      <path d="M8 7v10" />
+      <path d="M12 9v6" />
+      <path d="M16 5v14" />
+      <path d="M20 9v6" />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m12 3.5 2.45 5 5.55.8-4 3.9.95 5.5L12 16.1l-4.95 2.6.95-5.5-4-3.9 5.55-.8L12 3.5Z" />
+    </svg>
+  );
+}
+
+function UtensilsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M7 3v8" />
+      <path d="M4.8 3v8" />
+      <path d="M9.2 3v8" />
+      <path d="M4.8 11h4.4" />
+      <path d="M7 11v10" />
+      <path d="M16.5 3c2 1.9 3 4.1 3 6.8 0 2.3-.9 3.9-2.7 4.7V21" />
+    </svg>
+  );
+}
+
+function CarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m5 12 1.6-4.2A2.8 2.8 0 0 1 9.2 6h5.6a2.8 2.8 0 0 1 2.6 1.8L19 12" />
+      <path d="M4 12h16v5H4v-5Z" />
+      <path d="M7 17v2" />
+      <path d="M17 17v2" />
+      <path d="M7.5 14.5h.1" />
+      <path d="M16.4 14.5h.1" />
+    </svg>
+  );
+}
+
+function PlusChatIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 11.4c0-4.1 3.4-7 8-7s8 2.9 8 7-3.4 7-8 7c-1 0-1.9-.1-2.8-.4L5 20.5v-5.2a6.4 6.4 0 0 1 0-3.9Z" />
+      <path d="M13 8v7" />
+      <path d="M9.5 11.5h7" />
+    </svg>
+  );
+}
+
+function variantIcon(tone: string): ReactNode {
+  if (tone === "idiomatic") return <UtensilsIcon />;
+  if (tone === "simple") return <CarIcon />;
+  if (tone === "natural") return <PlusChatIcon />;
+  return <StarIcon />;
+}
+
 function getAdjacentPattern(
   level: SentencePatternLevel,
   patternId: number,
@@ -319,8 +431,6 @@ export default function SentencePatternsWebPage({
   });
   const [continueProgress, setContinueProgress] =
     useState<SentencePatternContinueProgress | null>(null);
-  const [selectedProgress, setSelectedProgress] =
-    useState<SentencePatternProgressSnapshot | null>(null);
   const [activePracticeId, setActivePracticeId] = useState(1);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingStatus, setRecordingStatus] = useState("");
@@ -434,7 +544,6 @@ export default function SentencePatternsWebPage({
 
   function choosePattern(levelId: SentencePatternLevelId, patternId: number) {
     setSelectedPattern({ levelId, patternId });
-    setSelectedProgress(null);
     setActivePracticeId(1);
     setUserTranscript("");
     setRecordingStatus("");
@@ -443,7 +552,6 @@ export default function SentencePatternsWebPage({
 
   function chooseAdjacentPattern(target: AdjacentPatternTarget) {
     setSelectedPattern(target);
-    setSelectedProgress(null);
     setActivePracticeId(1);
     setUserTranscript("");
     setRecordingStatus("");
@@ -500,7 +608,6 @@ export default function SentencePatternsWebPage({
   function choosePractice(nextPracticeId: number) {
     const safePracticeId = clampPracticeId(nextPracticeId, selectedPracticeCount);
     setActivePracticeId(safePracticeId);
-    setSelectedProgress(null);
     setUserTranscript("");
     setRecordingStatus("");
     saveCurrentPracticeProgress(safePracticeId, false);
@@ -627,27 +734,10 @@ export default function SentencePatternsWebPage({
         fallbackProgress?.levelId === selectedEntry.level.id &&
         fallbackProgress.patternId === selectedEntry.pattern.id
       ) {
-        setSelectedProgress({
-          completedPracticeCount: Math.max(fallbackProgress.practiceId - 1, 0),
-          continueProgress: fallbackProgress,
-          currentPracticeId: clampPracticeId(
-            fallbackProgress.practiceId,
-            selectedPracticeCount
-          ),
-          percent: Math.min(
-            100,
-            Math.round(
-              (fallbackProgress.practiceId / Math.max(selectedPracticeCount, 1)) *
-                100
-            )
-          ),
-          practiceCount: selectedPracticeCount,
-        });
         setActivePracticeId(
           clampPracticeId(fallbackProgress.practiceId, selectedPracticeCount)
         );
       } else {
-        setSelectedProgress(null);
         setActivePracticeId(1);
       }
 
@@ -668,7 +758,6 @@ export default function SentencePatternsWebPage({
         const progress =
           (await response.json()) as SentencePatternProgressSnapshot;
         if (!controller.signal.aborted) {
-          setSelectedProgress(progress);
           setActivePracticeId(
             clampPracticeId(progress.currentPracticeId, selectedPracticeCount)
           );
@@ -687,10 +776,13 @@ export default function SentencePatternsWebPage({
   ]);
 
   useEffect(() => {
-    setUserTranscript("");
-    setRecordingStatus("");
+    const resetTimer = window.setTimeout(() => {
+      setUserTranscript("");
+      setRecordingStatus("");
+    }, 0);
 
     return () => {
+      window.clearTimeout(resetTimer);
       stopSpeakFlowTts();
       clearSilenceTimer();
       try {
@@ -859,43 +951,99 @@ export default function SentencePatternsWebPage({
             className={styles.recordAction}
             data-recording={isRecording}
             onClick={startEnglishRecording}
-          />
+          >
+            <span className={styles.recordActionContent}>
+              <MicrophoneIcon />
+              {isRecording ? "正在录制英语" : "点我，录制英语"}
+            </span>
+          </button>
           <button
             type="button"
             aria-label="\u4e0a\u4e00\u53e5\u7ec3\u4e60"
             className={`${styles.controlAction} ${styles.previousAction}`}
             onClick={() => choosePractice(selectedProgressPracticeId - 1)}
-          />
+          >
+            <span className={styles.controlActionContent}>
+              <ArrowLeftIcon />
+              上一句
+            </span>
+          </button>
           <button
             type="button"
             aria-label="\u7528 Alloy \u58f0\u97f3\u0030\u002e\u0037\u0035\u500d\u901f\u6717\u8bfb\u63a8\u8350\u8868\u8fbe"
             className={`${styles.controlAction} ${styles.slowAction}`}
             onClick={() => playPrebuiltExpression(selectedPractice.recommended)}
-          />
+          >
+            <span className={styles.controlActionContent}>
+              <HeadphonesIcon />
+              慢速朗读
+            </span>
+          </button>
           <button
             type="button"
             aria-label="\u4e0b\u4e00\u53e5\u7ec3\u4e60"
             className={`${styles.controlAction} ${styles.nextAction}`}
             onClick={() => choosePractice(selectedProgressPracticeId + 1)}
-          />
-          <div className={styles.userExpression}>
-            {userTranscript ||
-              recordingStatus ||
-              "\u70b9\u51fb\u84dd\u8272\u6309\u94ae\uff0c\u5f55\u5236\u4f60\u7684\u82f1\u8bed\u8868\u8fbe"}
+          >
+            <span className={styles.controlActionContent}>
+              下一句
+              <ArrowRightIcon />
+            </span>
+          </button>
+          <div className={styles.userExpressionCard}>
+            <span className={styles.userExpressionLabel}>
+              <MicrophoneIcon />
+              你的表达
+            </span>
+            <button
+              type="button"
+              className={styles.userExpressionAudio}
+              aria-label="播放你的表达"
+              onClick={() =>
+                playPrebuiltExpression(userTranscript || selectedPractice.targetEnglish)
+              }
+            >
+              <SpeakerIcon />
+            </button>
+            <p>
+              {userTranscript ||
+                recordingStatus ||
+                "点击蓝色按钮，录制你的英语表达"}
+            </p>
+            <small>
+              <WaveIcon />
+              点击播放你的录音
+            </small>
           </div>
           <div className={styles.variantList}>
             {variants.map((variant) => (
-              <button
-                type="button"
-                aria-label={`\u7528 Alloy \u58f0\u97f3\u0030\u002e\u0037\u0035\u500d\u901f\u6717\u8bfb${variant.label}`}
+              <article
                 className={styles.variantCard}
                 data-tone={variant.tone}
                 key={variant.label}
-                onClick={() => playPrebuiltExpression(variant.text)}
               >
-                <strong>{variant.label}</strong>
-                <p>{variant.text}</p>
-              </button>
+                <span className={styles.variantIcon} aria-hidden="true">
+                  {variantIcon(variant.tone)}
+                </span>
+                <div className={styles.variantCopy}>
+                  <strong>{variant.label}</strong>
+                  <p>{variant.text}</p>
+                  {variant.tone === "recommended" ? (
+                    <small>
+                      <StarIcon />
+                      最自然、更常用的表达
+                    </small>
+                  ) : null}
+                </div>
+                <button
+                  type="button"
+                  className={styles.variantAudioButton}
+                  aria-label={`用 Alloy 声音0.75倍速朗读${variant.label}`}
+                  onClick={() => playPrebuiltExpression(variant.text)}
+                >
+                  <SpeakerIcon />
+                </button>
+              </article>
             ))}
           </div>
         </section>

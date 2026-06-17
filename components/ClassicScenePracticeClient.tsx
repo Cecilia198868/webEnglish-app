@@ -1,7 +1,7 @@
 "use client";
 
-import type { CSSProperties } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { pickBrowserVoiceForSpeakFlowVoice } from "@/lib/voiceSettings";
@@ -262,6 +262,106 @@ function variantToneClass(key: ClassicScenePracticeVariant["key"]) {
   return styles.variantStandard;
 }
 
+function SpeakerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 9.5v5h3.6l4.9 4.1V5.4L7.6 9.5H4Z" />
+      <path d="M16 8.3a5.4 5.4 0 0 1 0 7.4" />
+      <path d="M18.7 5.7a9.2 9.2 0 0 1 0 12.6" />
+    </svg>
+  );
+}
+
+function MicrophoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="9" y="3" width="6" height="11" rx="3" />
+      <path d="M5.8 11.2a6.2 6.2 0 0 0 12.4 0" />
+      <path d="M12 17.4V21" />
+      <path d="M8.4 21h7.2" />
+    </svg>
+  );
+}
+
+function ArrowLeftIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m10 6-6 6 6 6" />
+      <path d="M5 12h15" />
+    </svg>
+  );
+}
+
+function ArrowRightIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m14 6 6 6-6 6" />
+      <path d="M4 12h15" />
+    </svg>
+  );
+}
+
+function HeadphonesIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 14v-2a7 7 0 0 1 14 0v2" />
+      <path d="M5 14h3v6H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Z" />
+      <path d="M19 14h-3v6h3a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2Z" />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m12 3.5 2.45 5 5.55.8-4 3.9.95 5.5L12 16.1l-4.95 2.6.95-5.5-4-3.9 5.55-.8L12 3.5Z" />
+    </svg>
+  );
+}
+
+function UtensilsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M7 3v8" />
+      <path d="M4.8 3v8" />
+      <path d="M9.2 3v8" />
+      <path d="M4.8 11h4.4" />
+      <path d="M7 11v10" />
+      <path d="M16.5 3c2 1.9 3 4.1 3 6.8 0 2.3-.9 3.9-2.7 4.7V21" />
+    </svg>
+  );
+}
+
+function CarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m5 12 1.6-4.2A2.8 2.8 0 0 1 9.2 6h5.6a2.8 2.8 0 0 1 2.6 1.8L19 12" />
+      <path d="M4 12h16v5H4v-5Z" />
+      <path d="M7 17v2" />
+      <path d="M17 17v2" />
+      <path d="M7.5 14.5h.1" />
+      <path d="M16.4 14.5h.1" />
+    </svg>
+  );
+}
+
+function ShieldCrossIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3.5 19 6v5.7c0 4.2-2.7 7.5-7 8.8-4.3-1.3-7-4.6-7-8.8V6l7-2.5Z" />
+      <path d="M12 8v7" />
+      <path d="M8.5 11.5h7" />
+    </svg>
+  );
+}
+
+function variantIcon(key: ClassicScenePracticeVariant["key"]): ReactNode {
+  if (key === "idiomatic") return <UtensilsIcon />;
+  if (key === "simple") return <CarIcon />;
+  if (key === "natural") return <ShieldCrossIcon />;
+  return <StarIcon />;
+}
+
 let activeAudio: HTMLAudioElement | null = null;
 let activeAudioUrl = "";
 
@@ -424,6 +524,69 @@ export default function ClassicScenePracticeClient({
   );
   const continueDisplay = continueTarget || defaultContinueTarget;
 
+  const findLessonTarget = useCallback(
+    (courseId: string) => {
+      for (const category of menuCategories) {
+        for (const section of category.sections) {
+          const item = section.lessons.find(
+            (lessonItem) => lessonItem.id === courseId
+          );
+
+          if (item) {
+            return { category, item, section };
+          }
+        }
+      }
+
+      return null;
+    },
+    [menuCategories]
+  );
+
+  const createContinueTarget = useCallback(
+    (
+      courseId: string,
+      sentenceIndex: number
+    ): ContinuePracticeTarget | null => {
+      const target = findLessonTarget(courseId);
+      if (!target) return null;
+
+      const totalSentences = Math.max(target.item.sentenceCount, 1);
+      const clampedIndex = Math.min(
+        Math.max(Number.isFinite(sentenceIndex) ? sentenceIndex : 0, 0),
+        totalSentences - 1
+      );
+
+      return {
+        categoryTitle: target.category.title,
+        courseId,
+        href: target.item.href,
+        lessonTitle: target.item.title,
+        sectionTitle: target.section.title,
+        sentenceIndex: clampedIndex,
+        totalSentences,
+      };
+    },
+    [findLessonTarget]
+  );
+
+  const readLastStudyProgressTarget = useCallback(() => {
+    try {
+      const rawProgress = window.localStorage.getItem(LAST_STUDY_PROGRESS_KEY);
+      if (!rawProgress) return null;
+
+      const progress = JSON.parse(rawProgress) as LastStudyProgress | null;
+      if (typeof progress?.courseId !== "string") return null;
+
+      return createContinueTarget(
+        progress.courseId,
+        typeof progress.sentenceIndex === "number" ? progress.sentenceIndex : 0
+      );
+    } catch {
+      return null;
+    }
+  }, [createContinueTarget]);
+
   useEffect(() => {
     const savedTarget = readLastStudyProgressTarget();
 
@@ -450,7 +613,13 @@ export default function ClassicScenePracticeClient({
     }
 
     setCurrentIndex(activeLesson.initialIndex);
-  }, [activeLesson.id, activeLesson.initialIndex, sentenceCount, storageKey]);
+  }, [
+    activeLesson.id,
+    activeLesson.initialIndex,
+    readLastStudyProgressTarget,
+    sentenceCount,
+    storageKey,
+  ]);
 
   useEffect(() => {
     setLiveTranscript("");
@@ -472,61 +641,6 @@ export default function ClassicScenePracticeClient({
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
       silenceTimerRef.current = null;
-    }
-  }
-
-  function findLessonTarget(courseId: string) {
-    for (const category of menuCategories) {
-      for (const section of category.sections) {
-        const item = section.lessons.find((lessonItem) => lessonItem.id === courseId);
-
-        if (item) {
-          return { category, item, section };
-        }
-      }
-    }
-
-    return null;
-  }
-
-  function createContinueTarget(
-    courseId: string,
-    sentenceIndex: number
-  ): ContinuePracticeTarget | null {
-    const target = findLessonTarget(courseId);
-    if (!target) return null;
-
-    const totalSentences = Math.max(target.item.sentenceCount, 1);
-    const clampedIndex = Math.min(
-      Math.max(Number.isFinite(sentenceIndex) ? sentenceIndex : 0, 0),
-      totalSentences - 1
-    );
-
-    return {
-      categoryTitle: target.category.title,
-      courseId,
-      href: target.item.href,
-      lessonTitle: target.item.title,
-      sectionTitle: target.section.title,
-      sentenceIndex: clampedIndex,
-      totalSentences,
-    };
-  }
-
-  function readLastStudyProgressTarget() {
-    try {
-      const rawProgress = window.localStorage.getItem(LAST_STUDY_PROGRESS_KEY);
-      if (!rawProgress) return null;
-
-      const progress = JSON.parse(rawProgress) as LastStudyProgress | null;
-      if (typeof progress?.courseId !== "string") return null;
-
-      return createContinueTarget(
-        progress.courseId,
-        typeof progress.sentenceIndex === "number" ? progress.sentenceIndex : 0
-      );
-    } catch {
-      return null;
     }
   }
 
@@ -812,7 +926,7 @@ export default function ClassicScenePracticeClient({
               <section className={`${styles.menuPanel} ${styles.lessonPanel}`}>
                 <div className={styles.menuPanelHeader}>
                   <strong>{activeSection.title}</strong>
-                  <span>\u9009\u62e9\u4e00\u9879\u8bfe\u7a0b\u5f00\u59cb\u7ec3\u4e60</span>
+                  <span>选择一项课程开始练习</span>
                 </div>
                 <div className={styles.menuList}>
                   {activeSection.lessons.map((item) => (
@@ -847,7 +961,7 @@ export default function ClassicScenePracticeClient({
             className={styles.continueLessonButton}
             href={continueDisplay.href}
           >
-            \u7ee7\u7eed\u5b66\u4e60
+            继续学习
           </Link>
 
           <div className={styles.chinesePromptBox}>
@@ -865,7 +979,8 @@ export default function ClassicScenePracticeClient({
             disabled={isLoadingLesson || !currentTurn}
             onClick={startEnglishRecording}
           >
-            <span>
+            <span className={styles.recordButtonContent}>
+              <MicrophoneIcon />
               {isLoadingLesson
                 ? "\u8bfe\u7a0b\u8f7d\u5165\u4e2d"
                 : isListening
@@ -880,14 +995,20 @@ export default function ClassicScenePracticeClient({
             disabled={safeCurrentIndex <= 0}
             onClick={() => moveSentence(-1)}
           >
-            \u4e0a\u4e00\u53e5
+            <span className={styles.practiceButtonContent}>
+              <ArrowLeftIcon />
+              上一句
+            </span>
           </button>
           <button
             type="button"
             className={`${styles.practiceControl} ${styles.slowButton}`}
             onClick={() => speakEnglish(currentTurn?.standardEnglish || "", 0.75)}
           >
-            \u6162\u901f\u6717\u8bfb
+            <span className={styles.practiceButtonContent}>
+              <HeadphonesIcon />
+              慢速朗读
+            </span>
           </button>
           <button
             type="button"
@@ -895,7 +1016,10 @@ export default function ClassicScenePracticeClient({
             disabled={safeCurrentIndex >= sentenceCount - 1}
             onClick={() => moveSentence(1)}
           >
-            \u4e0b\u4e00\u53e5
+            <span className={styles.practiceButtonContent}>
+              下一句
+              <ArrowRightIcon />
+            </span>
           </button>
 
           <div className={styles.userExpressionText}>
@@ -909,22 +1033,26 @@ export default function ClassicScenePracticeClient({
                 className={`${styles.variantCard} ${variantToneClass(variant.key)}`}
                 key={variant.key}
               >
-                <span className={styles.variantLabel}>{variant.label}</span>
-                <p>{variant.text}</p>
+                <span className={styles.variantIcon} aria-hidden="true">
+                  {variantIcon(variant.key)}
+                </span>
+                <div className={styles.variantCopy}>
+                  <span className={styles.variantLabel}>{variant.label}</span>
+                  <p>{variant.text}</p>
+                  {variant.key === "standard" ? (
+                    <span className={styles.variantNote}>
+                      <StarIcon />
+                      最自然、最常用的表达
+                    </span>
+                  ) : null}
+                </div>
                 <button
                   type="button"
                   className={styles.variantAudioButton}
                   aria-label={`\u64ad\u653e${variant.label}`}
                   onClick={() => speakEnglish(variant.text)}
                 >
-                  <span aria-hidden="true">\u25b6</span>
-                </button>
-                <button
-                  type="button"
-                  className={styles.variantSlowButton}
-                  onClick={() => speakEnglish(variant.text, 0.75)}
-                >
-                  0.75x
+                  <SpeakerIcon />
                 </button>
               </article>
             ))}
