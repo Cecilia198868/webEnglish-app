@@ -2,14 +2,26 @@
   min-height: 100dvh;
   overflow-x: hidden;
   background:
-    linear-gradient(rgba(107, 85, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(107, 85, 255, 0.045) 1px, transparent 1px),
-    radial-gradient(circle at 12% 8%, rgba(232, 223, 255, 0.86), transparent 28%),
-    radial-gradient(circle at 88% 10%, rgba(214, 231, 255, 0.78), transparent 30%),
+    linear-gradient(rgba(107, 85, 255, 0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(107, 85, 255, 0.022) 1px, transparent 1px),
+    radial-gradient(circle at 12% 8%, rgba(232, 223, 255, 0.58), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(214, 231, 255, 0.5), transparent 30%),
     linear-gradient(180deg, #fbfbff 0%, #f8f9ff 48%, #ffffff 100%);
   background-size: 42px 42px, 42px 42px, auto, auto, auto;
   color: #0b1040;
-  font-family: var(--sf-font-zh);
+  font-family: var(--sf-font-zh), var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.page,
+.page * {
+  box-sizing: border-box;
+}
+
+.page svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .topbar,
@@ -17,13 +29,13 @@
 .valueGrid,
 .plansSection,
 .workflow {
-  width: min(100% - 64px, 1200px);
+  width: min(100% - 64px, 1240px);
   margin: 0 auto;
 }
 
 .topbar {
   display: flex;
-  min-height: 92px;
+  min-height: 72px;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
@@ -35,16 +47,26 @@
   gap: 12px;
   color: #080d3b;
   font-family: var(--font-sora), var(--sf-font-zh);
-  font-size: 1.34rem;
+  font-size: 18px;
   font-weight: 900;
   text-decoration: none;
 }
 
 .brandIcon {
-  width: 42px;
-  height: 42px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
   border-radius: 12px;
+  background: linear-gradient(135deg, #765cff, #3f72ff);
+  color: #ffffff;
   box-shadow: 0 14px 28px rgba(97, 87, 219, 0.16);
+}
+
+.brandIcon svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 2.5;
 }
 
 .topnav {
@@ -59,7 +81,7 @@
   align-items: center;
   border-radius: 8px;
   color: #4f5676;
-  font-size: 0.98rem;
+  font-size: 16px;
   font-weight: 850;
   padding: 0 14px;
   text-decoration: none;
@@ -73,9 +95,10 @@
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(380px, 0.62fr);
-  align-items: end;
-  gap: 56px;
-  padding: 74px 0 42px;
+  height: 386px;
+  align-items: center;
+  gap: 42px;
+  padding: 22px 0;
 }
 
 .heroCopy {
@@ -85,36 +108,36 @@
 .eyebrow {
   margin: 0;
   color: #6548f3;
-  font-size: 1rem;
+  font-size: 18px;
   font-weight: 950;
   letter-spacing: 0;
 }
 
 .heroCopy h1 {
   max-width: 780px;
-  margin: 16px 0 0;
+  margin: 14px 0 0;
   color: #14103f;
-  font-size: clamp(3.2rem, 6vw, 5.4rem);
+  font-size: clamp(56px, 3.9vw, 64px);
   font-weight: 950;
   letter-spacing: 0;
-  line-height: 1.04;
+  line-height: 1.08;
 }
 
 .heroCopy p {
-  max-width: 720px;
-  margin: 24px 0 0;
+  max-width: 680px;
+  margin: 14px 0 0;
   color: #535a77;
-  font-size: 1.16rem;
+  font-size: 20px;
   font-weight: 720;
   letter-spacing: 0;
-  line-height: 1.82;
+  line-height: 1.55;
 }
 
 .heroActions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .heroActions a,
@@ -122,13 +145,13 @@
 .statusPanel button,
 .planAction {
   display: inline-flex;
-  min-height: 46px;
+  height: 52px;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-family: var(--sf-font-zh);
-  font-size: 0.96rem;
+  font-size: 16px;
   font-weight: 950;
   text-decoration: none;
 }
@@ -138,7 +161,7 @@
   border: 0;
   background: linear-gradient(135deg, #775cff 0%, #3f72ff 100%);
   color: #ffffff;
-  padding: 0 18px;
+  padding: 0 20px;
   box-shadow: 0 16px 32px rgba(103, 85, 255, 0.22);
 }
 
@@ -148,14 +171,14 @@
   background: rgba(255, 255, 255, 0.78);
   color: #2a285c;
   cursor: pointer;
-  padding: 0 18px;
+  padding: 0 20px;
 }
 
 .statusPanel {
   border: 1px solid rgba(209, 216, 244, 0.96);
-  border-radius: 8px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.9);
-  padding: 28px;
+  padding: 24px;
   box-shadow: 0 24px 70px rgba(61, 68, 122, 0.11);
 }
 
@@ -163,7 +186,7 @@
   display: inline-flex;
   min-height: 34px;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 999px;
   background: rgba(101, 72, 243, 0.12);
   color: #5d42dd;
   font-size: 0.88rem;
@@ -172,9 +195,9 @@
 }
 
 .statusPanel h2 {
-  margin: 18px 0 0;
+  margin: 16px 0 0;
   color: #12113d;
-  font-size: 1.64rem;
+  font-size: 25px;
   font-weight: 950;
   letter-spacing: 0;
   line-height: 1.24;
@@ -190,12 +213,12 @@
 
 .statusPanel p {
   margin: 12px 0 0;
-  font-size: 0.98rem;
+  font-size: 16px;
 }
 
 .statusPanel small {
   margin-top: 12px;
-  font-size: 0.88rem;
+  font-size: 14px;
 }
 
 .statusPanel button {
@@ -213,10 +236,10 @@
 .message {
   margin-top: 16px;
   border: 1px solid rgba(101, 72, 243, 0.16);
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(247, 245, 255, 0.86);
   color: #3f3572;
-  font-size: 0.92rem;
+  font-size: 14px;
   font-weight: 800;
   line-height: 1.55;
   padding: 12px;
@@ -224,9 +247,9 @@
 
 .valueGrid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 16px;
-  padding: 20px 0;
+  grid-template-columns: minmax(250px, 1.35fr) repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .valueIntro,
@@ -234,19 +257,20 @@
 .plansSection,
 .workflow {
   border: 1px solid rgba(209, 216, 244, 0.96);
-  border-radius: 8px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.88);
   box-shadow: 0 18px 48px rgba(61, 68, 122, 0.08);
 }
 
 .valueIntro {
-  grid-column: span 2;
-  padding: 26px;
+  height: 170px;
+  overflow: hidden;
+  padding: 16px;
 }
 
 .valueIntro svg {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   color: #6548f3;
   fill: none;
   stroke: currentColor;
@@ -258,35 +282,36 @@
 .valueIntro h2,
 .plansHeader h2,
 .workflow h2 {
-  margin: 14px 0 0;
+  margin: 8px 0 0;
   color: #12113d;
-  font-size: 1.78rem;
+  font-size: 30px;
   font-weight: 950;
   letter-spacing: 0;
-  line-height: 1.22;
+  line-height: 1.16;
 }
 
 .valueIntro p,
 .plansHeader span {
   display: block;
-  margin-top: 12px;
+  margin-top: 7px;
   color: #5b6382;
-  font-size: 0.98rem;
+  font-size: 16px;
   font-weight: 720;
-  line-height: 1.65;
+  line-height: 1.48;
 }
 
 .valueCard {
-  min-height: 210px;
-  padding: 22px;
+  height: 170px;
+  overflow: hidden;
+  padding: 16px;
 }
 
 .valueCard span {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   place-items: center;
-  border-radius: 8px;
+  border-radius: 12px;
   background: rgba(101, 72, 243, 0.12);
   color: #6548f3;
 }
@@ -304,52 +329,52 @@
 }
 
 .valueCard h3 {
-  margin: 18px 0 0;
+  margin: 10px 0 0;
   color: #15133e;
-  font-size: 1.08rem;
+  font-size: 19px;
   font-weight: 950;
   letter-spacing: 0;
 }
 
 .valueCard p {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   color: #5e6683;
-  font-size: 0.92rem;
+  font-size: 15px;
   font-weight: 700;
-  line-height: 1.62;
+  line-height: 1.48;
 }
 
 .plansSection {
-  margin-top: 18px;
-  padding: 30px;
+  margin-top: 34px;
+  padding: 26px;
 }
 
 .plansHeader p,
 .workflow > div p {
   margin: 0;
   color: #6548f3;
-  font-size: 0.96rem;
+  font-size: 18px;
   font-weight: 950;
 }
 
 .planGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 24px;
+  gap: 16px;
+  margin-top: 20px;
 }
 
 .planCard {
   display: grid;
-  gap: 14px;
-  min-height: 310px;
+  gap: 12px;
+  height: 286px;
   border: 1px solid rgba(207, 214, 240, 0.96);
-  border-radius: 8px;
+  border-radius: 16px;
   background: rgba(248, 250, 255, 0.88);
   color: inherit;
   cursor: pointer;
   font-family: var(--sf-font-zh);
-  padding: 26px;
+  padding: 22px;
   text-align: left;
 }
 
@@ -370,15 +395,15 @@
 
 .planTop strong {
   color: #12113d;
-  font-size: 1.34rem;
+  font-size: 24px;
   font-weight: 950;
 }
 
 .planTop em {
-  border-radius: 8px;
+  border-radius: 999px;
   background: #6548f3;
   color: #ffffff;
-  font-size: 0.82rem;
+  font-size: 13px;
   font-style: normal;
   font-weight: 950;
   padding: 7px 10px;
@@ -387,7 +412,7 @@
 .planSummary,
 .planDescription {
   color: #5c6582;
-  font-size: 0.98rem;
+  font-size: 16px;
   font-weight: 740;
   line-height: 1.62;
 }
@@ -395,7 +420,7 @@
 .planPrice {
   color: #12113d;
   font-family: var(--font-sora), var(--sf-font-zh);
-  font-size: 3.2rem;
+  font-size: 58px;
   font-weight: 950;
   line-height: 1;
 }
@@ -403,13 +428,13 @@
 .planPrice small {
   color: #6a7190;
   font-family: var(--sf-font-zh);
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 850;
 }
 
 .planAction {
   width: fit-content;
-  min-height: 48px;
+  min-height: 50px;
   margin-top: auto;
   background: linear-gradient(135deg, #775cff 0%, #3f72ff 100%);
   color: #ffffff;
@@ -420,9 +445,9 @@
   display: grid;
   grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1fr);
   gap: 24px;
-  margin-top: 18px;
-  margin-bottom: 88px;
-  padding: 30px;
+  margin-top: 52px;
+  margin-bottom: 64px;
+  padding: 26px;
 }
 
 .workflow ol {

@@ -1,8 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   getNativeFlowSentence,
@@ -20,101 +19,68 @@ import {
 } from "@/lib/nativeFlowProgress";
 import styles from "./NativeFlowWebPage.module.css";
 
-type NavHotspot = {
-  href: string;
-  label: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  kind?: "nav" | "button" | "card" | "control" | "row";
-};
-
-type ActionHotspot = Omit<NavHotspot, "href"> & {
-  levelId: NativeFlowLevelId;
-  sentenceId: number;
-};
-
-const PAGE_ART_WIDTH = 1083;
-const PAGE_ART_HEIGHT = 1652;
-const PAGE_ART_SRC =
-  "/image3/%E5%9C%B0%E9%81%93%E8%AF%AD%E6%84%9F.png";
-
-const learningMenuHotspot: Omit<NavHotspot, "href"> = {
-  height: 52,
-  kind: "nav",
-  label: "Start learning menu",
-  width: 104,
-  x: 318,
-  y: 24,
+type LevelDisplay = {
+  badge: string;
+  description: string;
+  title: string;
 };
 
 const learningLinks = [
-  {
-    href: "/ai-guided-expression",
-    label: "\u0041\u0049\u5f15\u5bfc\u8868\u8fbe",
-  },
-  { href: "/free-study", label: "\u81ea\u7531\u5b66\u4e60" },
-  {
-    href: "/classic-scenes",
-    label: "\u7ecf\u5178\u573a\u666f\u53e3\u8bed\u7ec3\u4e60",
-  },
-  {
-    href: "/sentence-patterns",
-    label: "\u0031\u0030\u0030\u4e2a\u53e3\u8bed\u53e5\u578b\u7ec3\u4e60",
-  },
-  {
-    href: "/native-flow",
-    label: "\u5730\u9053\u8bed\u611f\u7ec3\u4e60",
-  },
+  { href: "/ai-guided-expression", label: "AI引导表达" },
+  { href: "/free-study", label: "自由学习" },
+  { href: "/classic-scenes", label: "经典场景口语练习" },
+  { href: "/sentence-patterns", label: "100个口语句型练习" },
+  { href: "/native-flow", label: "地道语感训练" },
 ];
 
-const navHotspots: NavHotspot[] = [
-  { href: "/", label: "SpeakFlow home", x: 38, y: 22, width: 175, height: 54, kind: "nav" },
-  { href: "/", label: "Home", x: 252, y: 22, width: 56, height: 54, kind: "nav" },
-  { href: "/new-expressions", label: "My expressions", x: 431, y: 22, width: 80, height: 54, kind: "nav" },
-  { href: "/create-course", label: "Create course", x: 523, y: 22, width: 82, height: 54, kind: "nav" },
-  { href: "/menu?panel=about", label: "About", x: 612, y: 22, width: 72, height: 54, kind: "nav" },
-  { href: "/menu?panel=help", label: "Contact", x: 704, y: 22, width: 88, height: 54, kind: "nav" },
-  { href: "/account", label: "Upgrade", x: 811, y: 20, width: 83, height: 58, kind: "nav" },
-  { href: "/notifications", label: "Notifications", x: 900, y: 20, width: 42, height: 58, kind: "nav" },
-  { href: "/languages", label: "Language", x: 948, y: 20, width: 117, height: 58, kind: "nav" },
-];
-
-const levelCardPositions: Record<
-  NativeFlowLevelId,
-  Pick<NavHotspot, "x" | "y" | "width" | "height">
-> = {
-  everyday: { height: 124, width: 354, x: 54, y: 534 },
-  natural: { height: 124, width: 354, x: 54, y: 668 },
-  native: { height: 124, width: 354, x: 54, y: 802 },
-};
-
-const progressRowPositions: Record<
-  NativeFlowLevelId,
-  Pick<NavHotspot, "x" | "y" | "width" | "height">
-> = {
-  everyday: { height: 62, width: 630, x: 234, y: 1264 },
-  natural: { height: 62, width: 630, x: 234, y: 1343 },
-  native: { height: 62, width: 630, x: 234, y: 1422 },
+const levelDisplayMap: Record<NativeFlowLevelId, LevelDisplay> = {
+  everyday: {
+    badge: "初级",
+    description: "从生活短句开始，建立语感基础",
+    title: "日常语感",
+  },
+  natural: {
+    badge: "中级",
+    description: "练习更完整的句子，让表达更自然顺滑",
+    title: "自然表达",
+  },
+  native: {
+    badge: "高级",
+    description: "训练连读、节奏和长句，让英语更像母语者",
+    title: "地道语流",
+  },
 };
 
 const progressColors: Record<NativeFlowLevelId, string> = {
-  everyday: "#20bfae",
-  natural: "#3e7bf4",
-  native: "#7657f4",
+  everyday: "#18a987",
+  natural: "#3478f6",
+  native: "#7057f5",
 };
 
-function hotspotStyle(
-  hotspot: Pick<NavHotspot, "x" | "y" | "width" | "height">
-): CSSProperties {
-  return {
-    height: `${(hotspot.height / PAGE_ART_HEIGHT) * 100}%`,
-    left: `${(hotspot.x / PAGE_ART_WIDTH) * 100}%`,
-    top: `${(hotspot.y / PAGE_ART_HEIGHT) * 100}%`,
-    width: `${(hotspot.width / PAGE_ART_WIDTH) * 100}%`,
-  };
-}
+const chineseFallbacks: Partial<Record<NativeFlowLevelId, Record<number, string>>> = {
+  everyday: {
+    1: "嘿，你今天过得怎么样？",
+    2: "我一整个早上都在忙来忙去，现在终于能喘口气了。",
+    3: "最近事情挺忙的，不过我还应付得来。",
+    4: "你这周都在忙些什么？",
+    5: "我一直在努力平衡工作和在家放松的时间。",
+    6: "最近感觉日子过得特别快。",
+    7: "我一直在想你，也想知道你那边一切怎么样。",
+    8: "生活里有一些好时光，也有一些小挑战，你懂的。",
+    9: "我真的很期待周末，这样就能好好充电。",
+    10: "你上次提到的那件事后来怎么样了？",
+    11: "我一直在努力保持专注，而不是担心所有事情。",
+    12: "今天天气很好，让我想坐在外面放松一下。",
+    13: "今天就是那种什么事情都比预想更花时间的日子。",
+    14: "最近我和一些老朋友联系了一下，感觉真的很好。",
+    15: "有时候我只是需要一个没有任何安排的安静夜晚。",
+    16: "你现在对这一切感觉怎么样？",
+    17: "我最近有点按固定节奏生活，但也愿意尝试一些新东西。",
+    18: "我们有一阵子没有聊轻松的话题了。",
+    19: "在忙碌的一周里，我很感激这些小小的安静时刻。",
+    20: "我们尽量多保持联系吧，因为我很喜欢和你聊天。",
+  },
+};
 
 function createProgressSnapshotFromRows(
   rows: NativeFlowProgressRow[],
@@ -159,6 +125,189 @@ function normalizeProgressRowsForDisplay(
   });
 }
 
+function getLevelDisplay(level: NativeFlowLevel) {
+  return levelDisplayMap[level.id];
+}
+
+function getProgressRow(
+  rows: NativeFlowProgressRowSnapshot[],
+  level: NativeFlowLevel
+) {
+  return rows.find((row) => row.levelId === level.id) || {
+    completed: 0,
+    levelId: level.id,
+    percent: 0,
+    totalSentences: level.totalSentences,
+  };
+}
+
+function getNextSentenceIdForLevel(
+  rows: NativeFlowProgressRowSnapshot[],
+  level: NativeFlowLevel
+) {
+  const row = getProgressRow(rows, level);
+  return Math.min(Math.max(row.completed + 1, 1), level.totalSentences);
+}
+
+function isReadableChinese(value: string) {
+  const text = value.trim();
+  if (!text) return false;
+  if (/[�€�]/.test(text)) return false;
+  if (/(鍦|璇|绋|紝|锛|銆|鐨|浣|瀛|鏃|鎴|鍒)/.test(text)) return false;
+
+  return /[\u4e00-\u9fff]/.test(text);
+}
+
+function getChineseSentence(levelId: NativeFlowLevelId, sentence: NativeFlowSentence) {
+  if (isReadableChinese(sentence.chinese)) return sentence.chinese.trim();
+
+  return (
+    chineseFallbacks[levelId]?.[sentence.id] ||
+    "中文理解：先听原声抓住意思，再模仿语调、重音和停顿，把这句话自然说出来。"
+  );
+}
+
+function BrandIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 12v.01M8 8v8M12 5v14M16 8v8M20 12v.01" />
+    </svg>
+  );
+}
+
+function ChevronIcon({ direction = "right" }: { direction?: "right" | "left" | "up" }) {
+  return (
+    <svg
+      className={
+        direction === "left"
+          ? styles.iconLeft
+          : direction === "up"
+            ? styles.iconUp
+            : undefined
+      }
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="m9 5 7 7-7 7" />
+    </svg>
+  );
+}
+
+function LevelIcon({ levelId }: { levelId: NativeFlowLevelId }) {
+  if (levelId === "everyday") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 20V9" />
+        <path d="M11 10C7 5 4 6 3 6.5c.7 4.2 4 6 8 4.3Z" />
+        <path d="M13 10c3.8-5.3 7-4.3 8-3.8-.4 4.1-3.1 6.2-8 4.6Z" />
+      </svg>
+    );
+  }
+
+  if (levelId === "natural") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M4 15c4-7 10-7 14 0" />
+        <path d="M7 15c3.2-4.5 7.8-4.5 10.2 0" />
+        <path d="M12 9v10" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 4v16" />
+      <path d="M12 4h7l-2 3 2 3h-7" />
+      <path d="m4 20 5-8 3 5 3-5 5 8H4Z" />
+    </svg>
+  );
+}
+
+function HeadphonesIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 13v-2a8 8 0 0 1 16 0v2" />
+      <path d="M4 13h4v7H6a2 2 0 0 1-2-2v-5ZM20 13h-4v7h2a2 2 0 0 0 2-2v-5Z" />
+    </svg>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M8 5v14l11-7L8 5Z" />
+    </svg>
+  );
+}
+
+function RepeatIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M7 7a7 7 0 0 1 10 0l1 1" />
+      <path d="M18 4v4h-4" />
+      <path d="M17 17a7 7 0 0 1-10 0l-1-1" />
+      <path d="M6 20v-4h4" />
+    </svg>
+  );
+}
+
+function SlowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 14c4 2 8 1 10-4 1.5 5 4.5 7 9 5" />
+      <path d="M8 11a5 5 0 0 1 10 0" />
+      <path d="M6 19h12" />
+    </svg>
+  );
+}
+
+function ChartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 19h16" />
+      <path d="M7 16v-5M12 16V7M17 16V9" />
+    </svg>
+  );
+}
+
+function FlameIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 21c-4.2 0-7-2.8-7-6.4 0-2.7 1.7-5.1 4.8-7.5-.2 2.3 1 3.7 2.3 4.3.5-3.3 2.2-5.8 5-7.3-.3 3.2.7 4.9 1.7 6.5.8 1.2 1.2 2.4 1.2 3.9 0 3.7-3 6.5-8 6.5Z" />
+    </svg>
+  );
+}
+
+function GlobeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="8" />
+      <path d="M4 12h16" />
+      <path d="M12 4a12 12 0 0 1 0 16" />
+      <path d="M12 4a12 12 0 0 0 0 16" />
+    </svg>
+  );
+}
+
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M6 9a6 6 0 0 1 12 0v4.5l1.5 3H4.5l1.5-3V9Z" />
+      <path d="M10 19a2 2 0 0 0 4 0" />
+    </svg>
+  );
+}
+
+function CrownIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m4 8 4.5 4L12 6l3.5 6L20 8l-1.4 9H5.4L4 8Z" />
+      <path d="M6 20h12" />
+    </svg>
+  );
+}
+
 export function NativeFlowWebPage({
   initialLevel,
   initialSentence,
@@ -190,6 +339,7 @@ export function NativeFlowWebPage({
   };
   const activeLevel = activeResult.level;
   const activeSentence = activeResult.sentence;
+  const activeLevelDisplay = getLevelDisplay(activeLevel);
   const currentSentenceId = activeSentence.id;
   const previousSentenceId = Math.max(1, currentSentenceId - 1);
   const nextSentenceId = Math.min(activeLevel.totalSentences, currentSentenceId + 1);
@@ -201,45 +351,25 @@ export function NativeFlowWebPage({
     progressSnapshot,
     levels
   );
-  const levelHotspots: ActionHotspot[] = levels
-    .flatMap((level) => {
-      const position = levelCardPositions[level.id];
-      if (!position) return [];
+  const activeProgressRow = getProgressRow(progressRowsForDisplay, activeLevel);
+  const progressPercent = Math.max(
+    1,
+    Math.round((currentSentenceId / Math.max(activeLevel.totalSentences, 1)) * 100)
+  );
+  const totalCompleted = progressRowsForDisplay.reduce(
+    (sum, row) => sum + row.completed,
+    0
+  );
+  const chineseSentence = getChineseSentence(activeLevel.id, activeSentence);
 
-      return [{
-        ...position,
-        kind: "card",
-        label: `${level.englishTitle} training`,
-        levelId: level.id,
-        sentenceId: 1,
-      }];
-    });
-  const progressHotspots: ActionHotspot[] = progressRowsForDisplay
-    .flatMap((row) => {
-      const position = progressRowPositions[row.levelId];
-      const level = levels.find((item) => item.id === row.levelId);
-      if (!position) return [];
-
-      return [{
-        ...position,
-        kind: "row",
-        label: `Native flow progress ${row.percent}%`,
-        levelId: row.levelId,
-        sentenceId: Math.min(
-          Math.max(row.completed + 1, 1),
-          level?.totalSentences || 600
-        ),
-      }];
-    });
-
-  function applyProgressSnapshot(snapshot: NativeFlowProgressSnapshot | null) {
+  const applyProgressSnapshot = useCallback((snapshot: NativeFlowProgressSnapshot | null) => {
     if (!snapshot) return;
 
     setProgressSnapshot({
       continueProgress: snapshot.continueProgress,
       rows: normalizeProgressRowsForDisplay(snapshot, levels),
     });
-  }
+  }, [levels]);
 
   function applyOptimisticProgress({
     completed,
@@ -372,6 +502,21 @@ export function NativeFlowWebPage({
     void audio.play().catch(() => undefined);
   }
 
+  function repeatAudio() {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    syncProgress({
+      completed: true,
+      levelId: activeLevel.id,
+      saveContinue: true,
+      sentenceId: currentSentenceId,
+      totalSentences: activeLevel.totalSentences,
+    });
+    audio.currentTime = 0;
+    void audio.play().catch(() => undefined);
+  }
+
   function goToSentence(sentenceId: number) {
     syncProgress({
       completed: true,
@@ -394,7 +539,7 @@ export function NativeFlowWebPage({
     return () => {
       isCurrent = false;
     };
-  }, []);
+  }, [applyProgressSnapshot]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -406,154 +551,274 @@ export function NativeFlowWebPage({
 
   return (
     <main className={styles.page}>
-      <h1 className={styles.srOnly}>SpeakFlow native flow training</h1>
-      <div className={styles.artboard} aria-label="Native flow training page">
-        <Image
-          alt="\u5730\u9053\u8bed\u611f\u8bad\u7ec3\u5b66\u4e60\u754c\u9762"
-          className={styles.pageArt}
-          height={PAGE_ART_HEIGHT}
-          priority
-          src={PAGE_ART_SRC}
-          unoptimized
-          width={PAGE_ART_WIDTH}
-        />
-        <audio aria-hidden="true" preload="metadata" ref={audioRef} src={activeSentence.audioSrc} />
-
-        <nav className={styles.hotspots} aria-label="Native flow navigation">
-          <div className={styles.learningMenu} style={hotspotStyle(learningMenuHotspot)}>
-            <button
-              type="button"
-              aria-haspopup="menu"
-              className={styles.learningTrigger}
-            >
-              <span className={styles.srOnly}>{learningMenuHotspot.label}</span>
+      <header className={styles.topbar}>
+        <Link className={styles.brand} href="/">
+          <span className={styles.brandMark}>
+            <BrandIcon />
+          </span>
+          <strong>SpeakFlow</strong>
+        </Link>
+        <nav className={styles.nav} aria-label="主导航">
+          <Link href="/">首页</Link>
+          <div className={styles.navMenu}>
+            <button type="button">
+              开始学习
+              <ChevronIcon />
             </button>
-            <div className={styles.learningDropdown} role="menu">
+            <div className={styles.navDropdown}>
               {learningLinks.map((item) => (
-                <Link
-                  className={styles.learningDropdownItem}
-                  href={item.href}
-                  key={item.href}
-                  role="menuitem"
-                >
+                <Link href={item.href} key={item.href}>
                   {item.label}
                 </Link>
               ))}
             </div>
           </div>
-
-          {navHotspots.map((hotspot) => (
-            <Link
-              aria-label={hotspot.label}
-              className={styles.hotspot}
-              data-kind={hotspot.kind}
-              href={hotspot.href}
-              key={`${hotspot.href}-${hotspot.label}-${hotspot.x}-${hotspot.y}`}
-              style={hotspotStyle(hotspot)}
-            >
-              <span className={styles.srOnly}>{hotspot.label}</span>
-            </Link>
-          ))}
-
-          {[...levelHotspots, ...progressHotspots].map((hotspot) => (
-            <button
-              type="button"
-              aria-label={hotspot.label}
-              className={styles.hotspot}
-              data-kind={hotspot.kind}
-              key={`${hotspot.levelId}-${hotspot.sentenceId}-${hotspot.label}-${hotspot.x}-${hotspot.y}`}
-              onClick={() => chooseSentence(hotspot.levelId, hotspot.sentenceId)}
-              style={hotspotStyle(hotspot)}
-            >
-              <span className={styles.srOnly}>{hotspot.label}</span>
-            </button>
-          ))}
-
-          <button
-            type="button"
-            aria-label="\u7ee7\u7eed\u5b66\u4e60\u5730\u9053\u8bed\u611f\u8bad\u7ec3"
-            className={`${styles.hotspot} ${styles.continueHotspot}`}
-            data-kind="button"
-            onClick={continueLearning}
-          >
-            <span className={styles.srOnly}>Continue native flow training</span>
-          </button>
-
-          <button
-            type="button"
-            aria-label="\u64ad\u653e\u5f53\u524d\u82f1\u6587\u53e5\u5b50"
-            className={`${styles.audioAction} ${styles.playAction}`}
-            onClick={() => playAudio()}
-          />
-          <button
-            type="button"
-            aria-label="\u0030\u002e\u0037\u0035\u500d\u901f\u6162\u901f\u64ad\u653e"
-            className={`${styles.audioAction} ${styles.slowAction}`}
-            onClick={() => playAudio(0.75)}
-          />
-          <button
-            type="button"
-            aria-label="\u91cd\u590d\u64ad\u653e\u5f53\u524d\u53e5\u5b50"
-            className={`${styles.audioAction} ${styles.repeatAction}`}
-            onClick={() => playAudio()}
-          />
-
-          <button
-            type="button"
-            aria-label="\u4e0a\u4e00\u53e5"
-            className={`${styles.hotspot} ${styles.previousAction}`}
-            data-kind="control"
-            onClick={() => goToSentence(previousSentenceId)}
-          />
-          <button
-            type="button"
-            aria-label="\u8df3\u8f6c\u5230\u5f53\u5929\u8bad\u7ec3"
-            className={`${styles.hotspot} ${styles.jumpAction}`}
-            data-kind="control"
-            onClick={() => goToSentence(jumpSentenceId)}
-          />
-          <button
-            type="button"
-            aria-label="\u4e0b\u4e00\u53e5"
-            className={`${styles.hotspot} ${styles.nextAction}`}
-            data-kind="control"
-            onClick={() => goToSentence(nextSentenceId)}
-          />
-          <Link
-            aria-label="\u67e5\u770b\u5168\u90e8\u5b66\u4e60\u8bb0\u5f55"
-            className={`${styles.hotspot} ${styles.recordsAction}`}
-            data-kind="control"
-            href="/native-flow/records"
-          />
+          <Link href="/new-expressions">我的表达</Link>
+          <Link href="/create-course">创建课程</Link>
+          <Link href="/about">关于我们</Link>
+          <Link href="/contact">联系我们</Link>
         </nav>
+        <div className={styles.topActions}>
+          <Link href="/subscription" className={styles.upgrade}>
+            <CrownIcon />
+            会员版
+          </Link>
+          <Link href="/notifications" className={styles.iconLink} aria-label="通知">
+            <BellIcon />
+          </Link>
+          <Link href="/account" className={styles.profile}>
+            <span>
+              <GlobeIcon />
+            </span>
+            <strong>English Learner</strong>
+          </Link>
+        </div>
+      </header>
 
-        <section className={styles.sentenceLayer} aria-label="\u5f53\u524d\u5730\u9053\u8bed\u611f\u53e5\u5b50">
-          <p className={styles.englishSentence}>{activeSentence.english}</p>
-          {activeSentence.chinese ? (
-            <p className={styles.chineseSentence}>{activeSentence.chinese}</p>
-          ) : null}
-          <span className={styles.jumpCopy}>
-            {activeSentence.daySentence} / {activeLevel.dailySentences}
+      <div className={styles.shell}>
+        <section className={styles.hero} aria-labelledby="native-flow-title">
+          <span className={styles.heroIcon}>
+            <HeadphonesIcon />
           </span>
+          <div>
+            <p>1800句跟读模仿训练</p>
+            <h1 id="native-flow-title">地道语感训练</h1>
+            <span>从听到说，培养地道语感</span>
+          </div>
+          <div className={styles.heroStats}>
+            <span>30 天课程</span>
+            <span>每日 20 句</span>
+            <span>三档训练</span>
+          </div>
         </section>
 
-        <section className={styles.progressLayer} aria-label="\u5730\u9053\u8bed\u611f\u771f\u5b9e\u5b66\u4e60\u8fdb\u5ea6">
-          {progressRowsForDisplay.map((row) => (
-            <div
-              className={styles.progressOverlayRow}
-              data-level={row.levelId}
-              key={row.levelId}
-              style={{ "--progress-color": progressColors[row.levelId] } as CSSProperties}
-            >
-              <span className={styles.progressCount}>
-                {row.completed} / {row.totalSentences} \u53e5
-              </span>
-              <span className={styles.progressPercent}>{row.percent}%</span>
-              <span className={styles.progressTrack}>
-                <i style={{ width: `${row.percent}%` }} />
-              </span>
+        <aside className={styles.levelRail} aria-label="训练级别">
+          <header className={styles.railHeader}>
+            <span>训练级别</span>
+            <h2>选择语感路线</h2>
+          </header>
+          <div className={styles.levelList}>
+            {levels.map((level) => {
+              const display = getLevelDisplay(level);
+              const row = getProgressRow(progressRowsForDisplay, level);
+
+              return (
+                <button
+                  className={styles.levelCard}
+                  data-active={level.id === activeLevel.id}
+                  data-tone={level.tone}
+                  key={level.id}
+                  onClick={() =>
+                    chooseSentence(
+                      level.id,
+                      getNextSentenceIdForLevel(progressRowsForDisplay, level)
+                    )
+                  }
+                  type="button"
+                >
+                  <span className={styles.levelIcon}>
+                    <LevelIcon levelId={level.id} />
+                  </span>
+                  <span className={styles.levelCopy}>
+                    <small>{display.badge}</small>
+                    <strong>
+                      {display.title}
+                      <em>{level.englishTitle}</em>
+                    </strong>
+                    <span>{display.description}</span>
+                  </span>
+                  <span className={styles.levelProgress}>
+                    <b>{row.completed} / {level.totalSentences} 句</b>
+                    <i>
+                      <span style={{ width: `${row.percent}%` }} />
+                    </i>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <section className={styles.railSummary}>
+            <ChartIcon />
+            <div>
+              <strong>各级别学习进度</strong>
+              <span>总计完成 {totalCompleted} / 1800 句</span>
             </div>
-          ))}
+          </section>
+        </aside>
+
+        <section className={styles.studyArea} aria-label="地道语感训练学习区">
+          <section className={styles.continueCard}>
+            <span className={styles.continueIcon}>
+              <RepeatIcon />
+            </span>
+            <div>
+              <span>继续学习</span>
+              <strong>
+                {activeLevelDisplay.title} / {activeLevel.englishTitle}
+              </strong>
+              <p>
+                上次练到第 {activeProgressRow.completed || currentSentenceId} /{" "}
+                {activeLevel.totalSentences} 句
+              </p>
+            </div>
+            <button type="button" onClick={continueLearning}>
+              继续学习
+              <ChevronIcon />
+            </button>
+          </section>
+
+          <article className={styles.sentenceCard}>
+            <header className={styles.sentenceHeader}>
+              <div>
+                <span>
+                  Day {activeSentence.day} · 第 {activeSentence.daySentence} 句
+                </span>
+                <h2>
+                  {activeLevelDisplay.title} / {activeLevel.englishTitle}
+                </h2>
+              </div>
+              <strong>{progressPercent}%</strong>
+            </header>
+            <span className={styles.mainProgress}>
+              <i style={{ width: `${progressPercent}%` }} />
+            </span>
+            <section className={styles.englishBox}>
+              <span>英文句子</span>
+              <p>{activeSentence.english}</p>
+            </section>
+            <section className={styles.chineseBox}>
+              <span>中文句子</span>
+              <p>{chineseSentence}</p>
+            </section>
+          </article>
+
+          <audio
+            aria-hidden="true"
+            preload="metadata"
+            ref={audioRef}
+            src={activeSentence.audioSrc}
+          />
+
+          <section className={styles.audioControls} aria-label="播放控制">
+            <button type="button" onClick={() => playAudio()}>
+              <span>
+                <PlayIcon />
+              </span>
+              播放
+            </button>
+            <button type="button" onClick={() => playAudio(0.75)}>
+              <span>
+                <SlowIcon />
+              </span>
+              慢速播放
+              <small>0.75x</small>
+            </button>
+            <button type="button" onClick={repeatAudio}>
+              <span>
+                <RepeatIcon />
+              </span>
+              重复
+            </button>
+          </section>
+
+          <nav className={styles.sentenceNav} aria-label="句子导航">
+            <button type="button" onClick={() => goToSentence(previousSentenceId)}>
+              <ChevronIcon direction="left" />
+              上一句
+            </button>
+            <button type="button" onClick={() => goToSentence(jumpSentenceId)}>
+              跳转
+              <small>
+                {activeSentence.daySentence} / {activeLevel.dailySentences}
+              </small>
+              <ChevronIcon direction="up" />
+            </button>
+            <button type="button" onClick={() => goToSentence(nextSentenceId)}>
+              下一句
+              <ChevronIcon />
+            </button>
+          </nav>
+
+          <section className={styles.insightGrid}>
+            <article className={styles.progressPanel}>
+              <header>
+                <span>
+                  <ChartIcon />
+                </span>
+                <h2>各级别学习进度</h2>
+              </header>
+              <div>
+                {levels.map((level) => {
+                  const display = getLevelDisplay(level);
+                  const row = getProgressRow(progressRowsForDisplay, level);
+
+                  return (
+                    <button
+                      className={styles.progressRow}
+                      data-tone={level.tone}
+                      key={level.id}
+                      onClick={() =>
+                        chooseSentence(
+                          level.id,
+                          getNextSentenceIdForLevel(progressRowsForDisplay, level)
+                        )
+                      }
+                      style={{ "--flow-color": progressColors[level.id] } as CSSProperties}
+                      type="button"
+                    >
+                      <strong>{display.title}</strong>
+                      <span>{level.englishTitle}</span>
+                      <em>{row.completed} / {level.totalSentences} 句</em>
+                      <i>
+                        <b style={{ width: `${row.percent}%` }} />
+                      </i>
+                    </button>
+                  );
+                })}
+              </div>
+            </article>
+
+            <article className={styles.streakPanel}>
+              <header>
+                <span>
+                  <FlameIcon />
+                </span>
+                <h2>连续学习记录</h2>
+              </header>
+              <div className={styles.streakNumber}>
+                <strong>7</strong>
+                <span>天连续学习</span>
+              </div>
+              <p>今日已练 {activeSentence.daySentence} / {activeLevel.dailySentences} 句</p>
+              <div className={styles.streakDots} aria-label="本周学习打卡">
+                {["一", "二", "三", "四", "五", "六", "日"].map((day, index) => (
+                  <span data-done={index < 5} key={day}>
+                    {day}
+                  </span>
+                ))}
+              </div>
+            </article>
+          </section>
         </section>
       </div>
     </main>

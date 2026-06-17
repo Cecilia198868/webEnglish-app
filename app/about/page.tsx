@@ -8,10 +8,6 @@ const aboutPage: FooterInfoPageData = {
     "SpeakFlow 是一款面向中文学习者的 AI 英语口语陪练应用。我们不希望学习者先被语法、背诵和翻译压力困住，而是从真实想表达的内容开始，用 AI 引导、场景练习、句型训练和表达复习，逐步建立自然、地道、稳定的英语表达能力。",
   updated: "AI 口语陪练应用",
   badges: ["中文思维转英文", "AI 引导表达", "真实场景口语", "句型体系训练", "个人表达库", "课程生成"],
-  visual: {
-    src: "/images/home-hero-speaking.png",
-    alt: "SpeakFlow AI 口语练习人物插画",
-  },
   summary: {
     title: "SpeakFlow 想解决的问题",
     items: [

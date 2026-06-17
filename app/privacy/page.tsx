@@ -8,10 +8,6 @@ const privacyPage: FooterInfoPageData = {
     "本隐私政策说明 SpeakFlow 在提供英语口语练习、AI 引导表达、课程生成、表达库、学习记录和账号服务时，如何处理与你相关的信息。",
   updated: "最后更新：2026 年 6 月 17 日",
   badges: ["学习内容", "语音处理", "账号信息", "本地存储", "用户权利"],
-  visual: {
-    src: "/images/home-proof-feedback.png",
-    alt: "SpeakFlow 用户学习反馈展示",
-  },
   summary: {
     title: "隐私保护重点",
     items: [

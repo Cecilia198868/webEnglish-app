@@ -3826,7 +3826,8 @@
   padding: 18px;
 }
 
-.createPracticePanel button {
+.createPracticePanel button,
+.createPracticeCta {
   display: inline-flex;
   width: 100%;
   min-height: 42px;
@@ -3840,10 +3841,23 @@
   color: #fff;
   font-size: 0.72rem;
   font-weight: 950;
+  line-height: 1;
+  text-decoration: none;
   box-shadow: 0 14px 28px rgba(101, 70, 239, 0.2);
 }
 
-.createPracticePanel button svg {
+.page .createPracticeCta,
+.page .createPracticeCta:link,
+.page .createPracticeCta:visited,
+.page .createPracticeCta:hover,
+.page .createPracticeCta:focus-visible,
+.page .createPracticeCta * {
+  color: #fff !important;
+  font-weight: 950 !important;
+}
+
+.createPracticePanel button svg,
+.createPracticeCta svg {
   width: 16px;
   height: 16px;
 }
@@ -4276,6 +4290,16 @@
 .page .featureButton * {
   color: #fff;
   font-weight: 900;
+}
+
+.page .featureButton,
+.page .featureButton:link,
+.page .featureButton:visited,
+.page .featureButton:hover,
+.page .featureButton:focus-visible,
+.page .featureButton svg {
+  color: #fff !important;
+  font-weight: 950 !important;
 }
 
 .mockButton svg {

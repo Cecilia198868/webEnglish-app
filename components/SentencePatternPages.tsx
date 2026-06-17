@@ -1,17 +1,17 @@
 "use client";
 
-import type { CSSProperties, KeyboardEvent, MouseEvent } from "react";
+import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import InteractiveExpressionText from "@/components/InteractiveExpressionText";
 import { playSpeakFlowTts, stopSpeakFlowTts } from "@/lib/speakFlowTtsClient";
 import {
   SPEAKFLOW_DEFAULT_VOICE_ID,
   SPEAKFLOW_VOICES,
 } from "@/lib/voiceSettings";
 import { recordSentencePatternProgress } from "@/lib/sentencePatternProgress";
+import { sentencePatternLevels } from "@/data/sentencePatterns";
 import type {
   SentencePatternLevel,
   SentencePatternPractice,
@@ -54,31 +54,6 @@ type SentencePatternProgressApiPayload = SentencePatternProgressSnapshot & {
 
 const FINISH_AFTER_SILENCE_MS = 2000;
 const RESTART_AFTER_NO_SPEECH_MS = 240;
-
-function isInteractiveCardTarget(
-  target: EventTarget | null,
-  currentTarget: HTMLElement
-) {
-  if (!(target instanceof HTMLElement)) return false;
-
-  const interactiveTarget = target.closest(
-    "button, a, input, select, textarea, [role='button']"
-  );
-  return Boolean(interactiveTarget && interactiveTarget !== currentTarget);
-}
-
-function playFromCardClick(event: MouseEvent<HTMLElement>, play: () => void) {
-  if (isInteractiveCardTarget(event.target, event.currentTarget)) return;
-  play();
-}
-
-function playFromCardKey(event: KeyboardEvent<HTMLElement>, play: () => void) {
-  if (isInteractiveCardTarget(event.target, event.currentTarget)) return;
-  if (event.key !== "Enter" && event.key !== " ") return;
-
-  event.preventDefault();
-  play();
-}
 
 function sessionKey(levelId: string, patternId: number, practiceId: number) {
   return `sentence-pattern:${levelId}:${patternId}:${practiceId}:transcript`;
@@ -880,6 +855,207 @@ function speak(text: string, rate = NORMAL_READ_RATE) {
   });
 }
 
+const sentencePatternLearningLinks = [
+  { href: "/ai-guided-expression", label: "AI引导表达" },
+  { href: "/free-study", label: "自由学习" },
+  { href: "/classic-scenes", label: "经典场景口语练习" },
+  { href: "/sentence-patterns", label: "100个口语句型练习" },
+  { href: "/native-flow", label: "地道语感训练" },
+];
+
+type SentencePatternVariant = {
+  icon: "car" | "plusChat" | "star" | "utensils";
+  label: string;
+  text: string;
+  tone: "blue" | "featured" | "green" | "orange";
+};
+
+function getFirstPatternHref(level: SentencePatternLevel) {
+  const firstPattern = level.sections[0]?.patterns[0];
+  return firstPattern
+    ? `/sentence-patterns/${level.id}/${firstPattern.id}`
+    : `/sentence-patterns/${level.id}`;
+}
+
+function getLevelToneClass(level: SentencePatternLevel) {
+  if (level.tone === "green") return styles.spWebLevelGreen;
+  if (level.tone === "orange") return styles.spWebLevelOrange;
+  return styles.spWebLevelPurple;
+}
+
+function SentencePatternBrandIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 9.5h14" />
+      <path d="M7 6h10" />
+      <path d="M7 13h6" />
+      <path d="M5 5.5A2.5 2.5 0 0 1 7.5 3h9A2.5 2.5 0 0 1 19 5.5v10.2a2.8 2.8 0 0 1-2.8 2.8H12l-4.3 2.6v-2.6h-.2A2.5 2.5 0 0 1 5 16V5.5Z" />
+    </svg>
+  );
+}
+
+function ChevronDownSmallIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
+function CrownSmallIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m4 8 4.5 4L12 6l3.5 6L20 8l-1.4 9H5.4L4 8Z" />
+      <path d="M6 20h12" />
+    </svg>
+  );
+}
+
+function BellSmallIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M6 9a6 6 0 0 1 12 0v4.7l1.6 2.8H4.4L6 13.7V9Z" />
+      <path d="M10 19a2 2 0 0 0 4 0" />
+    </svg>
+  );
+}
+
+function GlobeSmallIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="8" />
+      <path d="M4 12h16" />
+      <path d="M12 4a12 12 0 0 1 0 16" />
+      <path d="M12 4a12 12 0 0 0 0 16" />
+    </svg>
+  );
+}
+
+function SentencePatternWebTopbar() {
+  return (
+    <header className={styles.spWebTopbar}>
+      <Link className={styles.spWebBrand} href="/">
+        <span className={styles.spWebBrandMark}>
+          <SentencePatternBrandIcon />
+        </span>
+        <span>SpeakFlow</span>
+      </Link>
+      <nav className={styles.spWebNav} aria-label="主导航">
+        <Link href="/">首页</Link>
+        <div className={styles.spWebNavMenu}>
+          <button type="button">
+            开始学习
+            <ChevronDownSmallIcon />
+          </button>
+          <div className={styles.spWebNavDropdown}>
+            {sentencePatternLearningLinks.map((item) => (
+              <Link href={item.href} key={item.href}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <Link href="/new-expressions">我的表达</Link>
+        <Link href="/create-course">创建课程</Link>
+        <Link href="/about">关于我们</Link>
+        <Link href="/contact">联系我们</Link>
+      </nav>
+      <div className={styles.spWebTopActions}>
+        <Link href="/subscription" className={styles.spWebUpgrade}>
+          <CrownSmallIcon />
+          会员版
+        </Link>
+        <Link href="/notifications" className={styles.spWebIconLink} aria-label="通知">
+          <BellSmallIcon />
+        </Link>
+        <Link href="/account" className={styles.spWebProfile}>
+          <span>
+            <GlobeSmallIcon />
+          </span>
+          <strong>English Learner</strong>
+        </Link>
+      </div>
+    </header>
+  );
+}
+
+function SentencePatternWebSidebar({
+  activeLevel,
+}: {
+  activeLevel: SentencePatternLevel;
+}) {
+  return (
+    <aside className={styles.spWebSidebar} aria-label="100个口语句型课程">
+      <div className={styles.spWebSidebarHeader}>
+        <span>课程级别</span>
+        <strong>从初级到高级</strong>
+      </div>
+      <div className={styles.spWebLevelList}>
+        {sentencePatternLevels.map((item) => (
+          <Link
+            className={`${styles.spWebLevelCard} ${getLevelToneClass(item)} ${
+              item.id === activeLevel.id ? styles.spWebLevelActive : ""
+            }`}
+            href={getFirstPatternHref(item)}
+            key={item.id}
+          >
+            <span className={styles.spWebLevelIcon}>
+              <PatternIcon icon={item.icon} />
+            </span>
+            <span className={styles.spWebLevelText}>
+              <small>{item.badge}</small>
+              <strong>{item.cardTitle}</strong>
+              <em>{item.subtitle}</em>
+            </span>
+            <ChevronIcon />
+          </Link>
+        ))}
+      </div>
+      <div className={styles.spWebDataNote}>
+        <StatIcon type="target" />
+        <span>每个级别包含 100 个句型与 2000 个替换例句，覆盖日常表达。</span>
+      </div>
+    </aside>
+  );
+}
+
+function SentencePatternVariantRows({
+  onPlay,
+  variants,
+}: {
+  onPlay: (text: string, rate?: number) => void;
+  variants: SentencePatternVariant[];
+}) {
+  return (
+    <div className={styles.spWebVariantList}>
+      {variants.map((variant, index) => (
+        <article
+          className={`${styles.spWebVariantCard} ${
+            index === 0 ? styles.spWebVariantFeatured : ""
+          }`}
+          data-tone={variant.tone}
+          key={variant.label}
+        >
+          <span className={styles.spWebVariantIcon}>
+            <StatIcon type={variant.icon} />
+          </span>
+          <div className={styles.spWebVariantCopy}>
+            <strong>{variant.label}</strong>
+            <p>{variant.text}</p>
+          </div>
+          <button
+            type="button"
+            aria-label={`播放${variant.label}`}
+            onClick={() => onPlay(variant.text)}
+          >
+            <StatIcon type="speaker" />
+          </button>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export function SentencePatternStudyPage({ level, patternId, section }: StudyProps) {
   const router = useRouter();
   const { pattern, practiceCount } = getPractice(level, patternId, 1);
@@ -895,19 +1071,34 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   const progress = Math.round((practiceId / practiceCount) * 100);
   const nextPractice = practiceId >= practiceCount ? practiceId : practiceId + 1;
   const previousPractice = practiceId <= 1 ? practiceId : practiceId - 1;
-  const patterns = level.sections.flatMap((item) => item.patterns);
-  const currentPatternIndex = patterns.findIndex((item) => item.id === patternId);
-  const nextPattern = currentPatternIndex >= 0 ? patterns[currentPatternIndex + 1] : undefined;
-  const nextPatternHref = nextPattern
-    ? `/sentence-patterns/${level.id}/${nextPattern.id}`
-    : `/sentence-patterns/${level.id}/${patternId}`;
   const currentPatternText = pattern?.text || practice.targetEnglish;
   const completedPracticeCount = Math.max(practiceId - 1, 0);
-  const remainingPracticeCount = Math.max(practiceCount - completedPracticeCount, 0);
-  const completedProgress = Math.min(
-    100,
-    Math.round((completedPracticeCount / Math.max(practiceCount, 1)) * 100)
-  );
+  const variants: SentencePatternVariant[] = [
+    {
+      icon: "star",
+      label: "推荐表达",
+      text: practice.recommended,
+      tone: "featured",
+    },
+    {
+      icon: "utensils",
+      label: "更地道",
+      text: practice.idiomatic,
+      tone: "orange",
+    },
+    {
+      icon: "car",
+      label: "更简单",
+      text: practice.simple,
+      tone: "blue",
+    },
+    {
+      icon: "plusChat",
+      label: "更自然",
+      text: practice.natural,
+      tone: "green",
+    },
+  ];
 
   function clearFinishAfterSilenceTimer() {
     if (finishAfterSilenceTimerRef.current === null) return;
@@ -1103,118 +1294,126 @@ export function SentencePatternStudyPage({ level, patternId, section }: StudyPro
   }
 
   return (
-    <main className={styles.studyPage} style={getToneStyle(level.tone)}>
-      <section className={`${styles.studyPhone} ${styles.studyPracticePhone}`}>
-        <header className={styles.studyTopBar}>
-          <Link
-            href={`/sentence-patterns/${level.id}`}
-            className={styles.studyBackButton}
-            aria-label="返回100个句型二级菜单"
-          >
-            <ChevronIcon direction="left" />
-          </Link>
-          <Link
-            href={`/sentence-patterns/${level.id}`}
-            className={styles.studyCourseHeader}
-            aria-label="返回当前句型菜单"
-          >
-            <span>
+    <main className={styles.spWebPage} style={getToneStyle(level.tone)}>
+      <SentencePatternWebTopbar />
+      <div className={styles.spWebShell}>
+        <SentencePatternWebSidebar activeLevel={level} />
+        <section className={styles.spWebMain} aria-label="100个口语句型学习">
+          <section className={styles.spWebHero}>
+            <span className={styles.spWebHeroIcon}>
               <PatternIcon icon={level.icon} />
             </span>
-            <strong>{level.menuTitle}</strong>
-            <ChevronIcon />
-            <small>{section.title}（{section.englishTitle}）</small>
-          </Link>
-          <span aria-hidden="true" />
-        </header>
+            <div>
+              <h1>100个口语句型</h1>
+              <p>300个高频句型，覆盖日常表达</p>
+            </div>
+            <div className={styles.spWebHeroPills}>
+              <span>初级</span>
+              <span>中级</span>
+              <span>高级</span>
+            </div>
+          </section>
 
-        <section className={styles.studyCard}>
-          <div className={styles.studyTitleRow}>
-            <span className={styles.practicePill}>{practiceId} / {practiceCount}</span>
-            <h1>
-              <InteractiveExpressionText
-                sourceSentence={practice.targetEnglish}
-                text={currentPatternText}
-              />
-            </h1>
-            <Link
-              href={nextPatternHref}
-              aria-label="下一句型"
-            >
+          <section className={styles.spWebContinue}>
+            <span className={styles.spWebContinueIcon}>
+              <StatIcon type="target" />
+            </span>
+            <div>
+              <strong>继续上次练习</strong>
+              <span>{level.menuTitle} / {section.title}</span>
+              <small>
+                已完成 {completedPracticeCount} 句，当前第 {practiceId} / {practiceCount} 句
+              </small>
+            </div>
+            <Link href={`/sentence-patterns/${level.id}/${patternId}?practice=${practiceId}`}>
+              继续练习
               <ChevronIcon />
             </Link>
-          </div>
+          </section>
 
-          <div className={styles.progressRow}>
-            <span>进度：第 {practiceId} / {practiceCount} 句</span>
-            <strong>{progress}% 完成</strong>
-          </div>
-          <div className={styles.progressTrack}>
-            <span style={{ width: `${progress}%` }} />
-          </div>
+          <section className={styles.spWebLearningGrid}>
+            <div className={styles.spWebStudyColumn}>
+              <article className={styles.spWebPatternCard}>
+                <header className={styles.spWebPanelHeader}>
+                  <div>
+                    <span>当前句型标题</span>
+                    <h2>{currentPatternText}</h2>
+                  </div>
+                  <strong>{practiceId} / {practiceCount}</strong>
+                </header>
+                <div className={styles.spWebProgressRow}>
+                  <span>进度：第 {practiceId} / {practiceCount} 句</span>
+                  <em>{progress}% 完成</em>
+                </div>
+                <div className={styles.spWebProgressTrack}>
+                  <span style={{ width: `${progress}%` }} />
+                </div>
+                <div className={styles.spWebChineseBox}>
+                  <span>中文句子</span>
+                  <p>{practice.chinese}</p>
+                </div>
+              </article>
+              <button
+                type="button"
+                className={styles.spWebRecordButton}
+                data-recording={isRecording}
+                onClick={startRecording}
+              >
+                <StatIcon type="mic" />
+                {isRecording ? "正在录音..." : "点我，录制英语"}
+              </button>
+              <div className={styles.spWebControls}>
+                <Link href={`/sentence-patterns/${level.id}/${patternId}?practice=${previousPractice}`}>
+                  <ChevronIcon direction="left" />
+                  上一句
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => speak(practice.recommended, SLOW_READ_RATE)}
+                >
+                  <StatIcon type="headphones" />
+                  慢速朗读
+                </button>
+                <Link href={`/sentence-patterns/${level.id}/${patternId}?practice=${nextPractice}`}>
+                  下一句
+                  <ChevronIcon />
+                </Link>
+              </div>
+              <section className={styles.spWebUserExpression}>
+                <div>
+                  <span>
+                    <StatIcon type="mic" />
+                    你的表达
+                  </span>
+                  <button
+                    type="button"
+                    aria-label="播放示例表达"
+                    onClick={() => speak(practice.targetEnglish)}
+                  >
+                    <StatIcon type="speaker" />
+                  </button>
+                </div>
+                <p>
+                  {isRecording
+                    ? "正在听你说英语，停顿 2 秒后会自动生成反馈。"
+                    : "录音结束后，这里会显示你的英语表达。"}
+                </p>
+              </section>
+            </div>
 
-          <div className={styles.promptCard}>
-            <span className={styles.quoteLeft}>“</span>
-            <p>{practice.chinese}</p>
-            <span className={styles.quoteRight}>”</span>
-            <i className={styles.roomArt} aria-hidden="true" />
-          </div>
-
-          <div className={styles.promptTip}>
-            <StatIcon type="star" />
-            小贴士：看着中文，尝试用英语表达出来，提升你的口语流利度！
-          </div>
+            <article className={styles.spWebRecommendationPanel}>
+              <header className={styles.spWebPanelHeader}>
+                <div>
+                  <span>AI 优化结果</span>
+                  <h2>推荐表达</h2>
+                </div>
+                <small>选择词组或单词，可以收藏进表达库中</small>
+              </header>
+              <SentencePatternVariantRows variants={variants} onPlay={speak} />
+            </article>
+          </section>
         </section>
-
-        <section className={styles.recordCard}>
-          <p>
-            <StatIcon type="mic" />
-            {isRecording ? "正在录音，停顿 2 秒后会自动进入下一步" : "点击麦克风，开始录制你的英文表达"}
-          </p>
-          <small>慢慢想，停顿 2 秒后会自动进入下一页</small>
-          <button
-            type="button"
-            className={styles.bigMic}
-            data-recording={isRecording}
-            onClick={startRecording}
-            aria-label={isRecording ? "结束录音" : "开始录音"}
-          >
-            <StatIcon type="mic" />
-          </button>
-          <Link
-            href={`/sentence-patterns/${level.id}/${patternId}?practice=${previousPractice}`}
-            className={styles.prevButton}
-          >
-            ← 上一句
-          </Link>
-          <Link
-            href={`/sentence-patterns/${level.id}/${patternId}?practice=${nextPractice}`}
-            className={styles.skipButton}
-          >
-            跳过 →
-          </Link>
-        </section>
-
-        <div className={styles.bottomTip}>
-          <span>
-            <StatIcon type="star" />
-          </span>
-          <strong>学习小贴士</strong>
-          <p>大胆开口，不用担心语法错误，先表达出来才是进步的第一步！</p>
-        </div>
-
-        <div className={styles.studyBottomProgress} aria-label="句型学习进度">
-          <span>已完成 {completedPracticeCount} 句</span>
-          <span className={styles.studyBottomTrack}>
-            <i style={{ width: `${completedProgress}%` }} />
-          </span>
-          <span className={styles.studyBottomRemaining}>
-            <StatIcon type="target" />
-            还剩 {remainingPracticeCount} 句
-          </span>
-        </div>
-        <SentencePatternBottomNav />
-      </section>
+      </div>
     </main>
   );
 }
@@ -1232,44 +1431,34 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
   const nextPractice = practiceId >= practiceCount ? practiceId : practiceId + 1;
   const previousPractice = practiceId <= 1 ? practiceId : practiceId - 1;
   const progress = Math.round((practiceId / practiceCount) * 100);
-  const patterns = level.sections.flatMap((item) => item.patterns);
-  const currentPatternIndex = patterns.findIndex((item) => item.id === patternId);
-  const nextPattern = currentPatternIndex >= 0 ? patterns[currentPatternIndex + 1] : undefined;
-  const nextPatternHref = nextPattern
-    ? `/sentence-patterns/${level.id}/${nextPattern.id}`
-    : `/sentence-patterns/${level.id}/${patternId}`;
   const currentPatternText = pattern?.text || practice.targetEnglish;
 
-  const variants = [
+  const variants: SentencePatternVariant[] = [
     {
-      audioKey: "recommended",
       icon: "star",
       label: "推荐表达",
       text: practice.recommended,
       tone: "featured",
     },
     {
-      audioKey: "idiomatic",
       icon: "utensils",
       label: "更地道",
       text: practice.idiomatic,
       tone: "orange",
     },
     {
-      audioKey: "simple",
       icon: "car",
       label: "更简单",
       text: practice.simple,
       tone: "blue",
     },
     {
-      audioKey: "natural",
       icon: "plusChat",
       label: "更自然",
       text: practice.natural,
       tone: "green",
     },
-  ] as const;
+  ];
 
   function playPatternAudio(text: string, rate = NORMAL_READ_RATE) {
     speak(text, rate);
@@ -1303,129 +1492,121 @@ export function SentencePatternResultPage({ level, patternId, section }: StudyPr
   }, []);
 
   return (
-    <main className={styles.studyPage} style={getToneStyle(level.tone)}>
-      <section className={styles.studyPhone}>
-        <section className={styles.resultIntro}>
-          <div className={styles.resultTopRow}>
-            <Link
-              href={`/sentence-patterns/${level.id}/${patternId}?practice=${practiceId}`}
-              className={styles.resultBackButton}
-              aria-label="返回上一页"
-            >
-              <ChevronIcon direction="left" />
-            </Link>
-            <h1>
-              <InteractiveExpressionText
-                sourceSentence={practice.targetEnglish}
-                text={currentPatternText}
-              />
-            </h1>
-            <Link
-              href={nextPatternHref}
-              className={styles.resultNextButton}
-              aria-label="下一句型"
-            >
+    <main className={styles.spWebPage} style={getToneStyle(level.tone)}>
+      <SentencePatternWebTopbar />
+      <div className={styles.spWebShell}>
+        <SentencePatternWebSidebar activeLevel={level} />
+        <section className={styles.spWebMain} aria-label="100个口语句型学习结果">
+          <section className={styles.spWebHero}>
+            <span className={styles.spWebHeroIcon}>
+              <PatternIcon icon={level.icon} />
+            </span>
+            <div>
+              <h1>100个口语句型</h1>
+              <p>300个高频句型，覆盖日常表达</p>
+            </div>
+            <div className={styles.spWebHeroPills}>
+              <span>初级</span>
+              <span>中级</span>
+              <span>高级</span>
+            </div>
+          </section>
+
+          <section className={styles.spWebContinue}>
+            <span className={styles.spWebContinueIcon}>
+              <StatIcon type="target" />
+            </span>
+            <div>
+              <strong>继续上次练习</strong>
+              <span>{level.menuTitle} / {section.title}</span>
+              <small>当前第 {practiceId} / {practiceCount} 句，已完成 {progress}%</small>
+            </div>
+            <Link href={`/sentence-patterns/${level.id}/${patternId}?practice=${practiceId}`}>
+              重新录制
               <ChevronIcon />
             </Link>
-          </div>
-          <div className={styles.progressRow}>
-            <span>进度：第 {practiceId} / {practiceCount} 句</span>
-            <strong>{progress}% 完成</strong>
-          </div>
-          <div className={styles.progressTrack}>
-            <span style={{ width: `${progress}%` }} />
-          </div>
-        </section>
+          </section>
 
-        <section className={styles.expressionStack}>
-          <div
-            aria-label="播放你的表达"
-            className={styles.userExpression}
-            onClick={(event) => playFromCardClick(event, () => speak(userExpression))}
-            onKeyDown={(event) => playFromCardKey(event, () => speak(userExpression))}
-            role="button"
-            tabIndex={0}
-          >
-            <span className={styles.expressionLabel}>
-              <StatIcon type="mic" />
-              你的表达
-            </span>
-            <p>
-              <InteractiveExpressionText
-                sourceSentence={practice.chinese}
-                text={userExpression}
-              />
-            </p>
-            <button type="button" onClick={() => speak(userExpression)} aria-label="播放你的表达">
-              <StatIcon type="speaker" />
-            </button>
-            <small>点击播放你的录音</small>
-          </div>
-
-          {variants.map((variant) => (
-            <article
-              aria-label={`播放${variant.label}`}
-              className={styles.variantCard}
-              data-tone={variant.tone}
-              key={variant.label}
-              onClick={(event) =>
-                playFromCardClick(event, () => playPatternAudio(variant.text))
-              }
-              onKeyDown={(event) =>
-                playFromCardKey(event, () => playPatternAudio(variant.text))
-              }
-              role="button"
-              tabIndex={0}
-            >
-              <span className={styles.variantIcon}>
-                <StatIcon type={variant.icon} />
-              </span>
-              <div>
-                <strong>{variant.label}</strong>
-                <p>
-                  <InteractiveExpressionText
-                    sourceSentence={practice.chinese}
-                    text={variant.text}
-                  />
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => playPatternAudio(variant.text)}
-                aria-label={`播放${variant.label}`}
+          <section className={styles.spWebLearningGrid}>
+            <div className={styles.spWebStudyColumn}>
+              <article className={styles.spWebPatternCard}>
+                <header className={styles.spWebPanelHeader}>
+                  <div>
+                    <span>当前句型标题</span>
+                    <h2>{currentPatternText}</h2>
+                  </div>
+                  <strong>{practiceId} / {practiceCount}</strong>
+                </header>
+                <div className={styles.spWebProgressRow}>
+                  <span>进度：第 {practiceId} / {practiceCount} 句</span>
+                  <em>{progress}% 完成</em>
+                </div>
+                <div className={styles.spWebProgressTrack}>
+                  <span style={{ width: `${progress}%` }} />
+                </div>
+                <div className={styles.spWebChineseBox}>
+                  <span>中文句子</span>
+                  <p>{practice.chinese}</p>
+                </div>
+              </article>
+              <Link
+                className={styles.spWebRecordButton}
+                href={`/sentence-patterns/${level.id}/${patternId}?practice=${practiceId}`}
               >
-                <StatIcon type="speaker" />
-              </button>
-            </article>
-          ))}
-        </section>
+                <StatIcon type="mic" />
+                点我，录制英语
+              </Link>
+              <div className={styles.spWebControls}>
+                <Link href={`/sentence-patterns/${level.id}/${patternId}?practice=${previousPractice}`}>
+                  <ChevronIcon direction="left" />
+                  上一句
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => playPatternAudio(practice.recommended, SLOW_READ_RATE)}
+                >
+                  <StatIcon type="headphones" />
+                  慢速朗读
+                </button>
+                <Link href={`/sentence-patterns/${level.id}/${patternId}?practice=${nextPractice}`}>
+                  下一句
+                  <ChevronIcon />
+                </Link>
+              </div>
+              <section className={styles.spWebUserExpression}>
+                <div>
+                  <span>
+                    <StatIcon type="mic" />
+                    你的表达
+                  </span>
+                  <button
+                    type="button"
+                    aria-label="播放你的表达"
+                    onClick={() => speak(userExpression)}
+                  >
+                    <StatIcon type="speaker" />
+                  </button>
+                </div>
+                <p>{userExpression}</p>
+              </section>
+            </div>
 
-        <section className={styles.followCard} aria-label="句型练习底部操作栏">
-          <Link
-            href={`/sentence-patterns/${level.id}/${patternId}?practice=${previousPractice}`}
-            className={styles.prevButton}
-          >
-            <ChevronIcon direction="left" />
-            <span>上一句</span>
-          </Link>
-          <button
-            type="button"
-            className={styles.slowReadButton}
-            onClick={() => playPatternAudio(practice.recommended, SLOW_READ_RATE)}
-          >
-            <StatIcon type="headphones" />
-            <span>慢速朗读</span>
-          </button>
-          <Link
-            href={`/sentence-patterns/${level.id}/${patternId}?practice=${nextPractice}`}
-            className={styles.skipButton}
-          >
-            <span>下一句</span>
-            <ChevronIcon />
-          </Link>
+            <article className={styles.spWebRecommendationPanel}>
+              <header className={styles.spWebPanelHeader}>
+                <div>
+                  <span>AI 优化结果</span>
+                  <h2>推荐表达</h2>
+                </div>
+                <small>选择词组或单词，可以收藏进表达库中</small>
+              </header>
+              <SentencePatternVariantRows
+                variants={variants}
+                onPlay={playPatternAudio}
+              />
+            </article>
+          </section>
         </section>
-        <SentencePatternBottomNav />
-      </section>
+      </div>
     </main>
   );
 }

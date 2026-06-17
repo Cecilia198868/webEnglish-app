@@ -553,11 +553,35 @@ export default function FreeStudyPageFiveTop({
         .sf-free-result-section-title {
           display: flex;
           align-items: center;
-          gap: .48rem;
+          justify-content: space-between;
+          gap: .84rem;
           margin: clamp(.9rem, 3.1dvh, 1.12rem) 0 .6rem;
           color: #101342;
           font-size: clamp(1.28rem, 5.6vw, 1.72rem);
           font-weight: 950;
+        }
+
+        .sf-free-result-section-title-main {
+          display: inline-flex;
+          min-width: 0;
+          align-items: center;
+          gap: .48rem;
+          white-space: nowrap;
+        }
+
+        .sf-free-result-save-hint {
+          min-width: 0;
+          flex: 1 1 auto;
+          color: #606886;
+          filter: none;
+          font-size: .86rem;
+          font-weight: 850;
+          line-height: 1.2;
+          opacity: 1;
+          text-align: right;
+          text-shadow: none;
+          white-space: nowrap;
+          -webkit-font-smoothing: antialiased;
         }
 
         .sf-free-result-section-title svg {
@@ -987,6 +1011,15 @@ export default function FreeStudyPageFiveTop({
           font-weight: 850 !important;
         }
 
+        .sf-free-result-save-hint {
+          color: #5c6383 !important;
+          filter: none !important;
+          font-size: .86rem !important;
+          font-weight: 850 !important;
+          opacity: 1 !important;
+          text-shadow: none !important;
+        }
+
         .sf-free-result-list {
           gap: .78rem !important;
         }
@@ -1179,6 +1212,15 @@ export default function FreeStudyPageFiveTop({
           margin-top: .72rem !important;
         }
 
+        .sf-free-result-section-title-main {
+          flex: 0 0 auto !important;
+        }
+
+        .sf-free-result-save-hint {
+          margin-left: auto !important;
+          transform: none !important;
+        }
+
         .sf-free-result-expression-card {
           min-height: clamp(6.45rem, 20.5dvh, 8.6rem) !important;
           padding: .86rem .98rem .98rem !important;
@@ -1235,6 +1277,19 @@ export default function FreeStudyPageFiveTop({
             min-height: 2.34rem !important;
             padding-inline: .46rem !important;
             font-size: .76rem !important;
+          }
+
+          .sf-free-result-section-title {
+            gap: .42rem !important;
+            font-size: .96rem !important;
+          }
+
+          .sf-free-result-section-title-main {
+            gap: .32rem !important;
+          }
+
+          .sf-free-result-save-hint {
+            font-size: .7rem !important;
           }
         }
 
@@ -1368,8 +1423,13 @@ export default function FreeStudyPageFiveTop({
         </section>
 
         <h2 className="sf-free-result-section-title">
-          <SparklesGlyph />
-          推荐表达
+          <span className="sf-free-result-section-title-main">
+            <SparklesGlyph />
+            推荐表达
+          </span>
+          <span className="sf-free-result-save-hint">
+            选择词组或单词，可以收藏进表达库中
+          </span>
         </h2>
 
         <section className="sf-free-result-list">

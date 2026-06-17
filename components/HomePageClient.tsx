@@ -1795,10 +1795,10 @@ function CreateCourseSection() {
               <br />
               过会儿再去散步吧。
             </div>
-            <button type="button">
+            <Link className={styles.createPracticeCta} href="/create-course">
               <Icon name="mic" />
               点我，录制英语
-            </button>
+            </Link>
             <div className={styles.createEnglishCard}>
               <small>你的英文表达</small>
               <p>Let&apos;s have a rest, and then we can go to hiking.</p>

@@ -118,8 +118,8 @@ export default function LoginPageClient({
         <BackMark />
       </Link>
       <section className={styles.card} aria-label="登录 SpeakFlow">
-        <h1>欢迎使用 SpeakFlow <span aria-hidden="true">👋</span></h1>
-        <p>选择一种继续方式</p>
+        <h1>登录 SpeakFlow</h1>
+        <p>选择一种登录方式，继续保存练习记录、表达库和订阅状态。</p>
 
         <div className={styles.oauthStack}>
           {isGoogleEnabled ? (
@@ -184,7 +184,7 @@ export default function LoginPageClient({
           )}
         </div>
 
-        <div className={styles.moreDivider}>更多方式</div>
+        <div className={styles.moreDivider}>其他登录方式</div>
 
         <div className={styles.moreGrid}>
           <Link href={withCallback("/login/email")} className={styles.moreItem}>

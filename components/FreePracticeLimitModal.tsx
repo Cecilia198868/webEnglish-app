@@ -71,25 +71,25 @@ export default function FreePracticeLimitModal({
 
   return (
     <div
-      className="fixed inset-0 z-[120] flex items-center justify-center bg-[var(--overlay-bg)] p-3 text-[var(--text-primary)] backdrop-blur-[10px]"
+      className="fixed inset-0 z-[120] flex items-center justify-center bg-[rgba(11,16,64,0.42)] p-4 text-[var(--text-primary)]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="free-practice-limit-title"
     >
-      <div className="w-full max-w-[392px] rounded-[30px] border border-[var(--border-color)] bg-[var(--card-bg-solid)] px-6 py-7 text-center shadow-[0_28px_80px_var(--shadow-color)] sm:max-w-[420px] sm:px-7">
+      <div className="w-full max-w-[520px] rounded-[8px] border border-[var(--border-color)] bg-[var(--card-bg-solid)] px-7 py-7 text-center shadow-[0_28px_80px_var(--shadow-color)]">
         <h2
           id="free-practice-limit-title"
-          className="text-[clamp(1.65rem,7vw,2.12rem)] font-black leading-tight text-[var(--text-primary)]"
+          className="text-[2rem] font-black leading-tight text-[var(--text-primary)]"
         >
           今天的学习试用已用完
         </h2>
-        <p className="mx-auto mt-4 max-w-[20rem] text-[clamp(1.02rem,4.6vw,1.28rem)] font-semibold leading-8 text-[var(--text-secondary)]">
+        <p className="mx-auto mt-3 max-w-[28rem] text-[1rem] font-semibold leading-7 text-[var(--text-secondary)]">
           {isSignedIn
             ? "订阅 SpeakFlow Pro 后，可以继续无限练习和复习表达。"
             : "登录后可保存你的练习记录，随时继续学习。"}
         </p>
 
-        <div className="mt-7 grid grid-cols-[0.9fr_1.15fr] items-center gap-3 text-left">
+        <div className="mt-5 grid grid-cols-[0.8fr_1.2fr] items-center gap-3 text-left">
           <div className="relative grid min-h-[6.5rem] place-items-center text-[#7754ff]">
             <span className="absolute left-[10%] top-[9%] text-[1.35rem] text-[#a693ff]">
               ✦
@@ -104,7 +104,7 @@ export default function FreePracticeLimitModal({
             {benefits.map((benefit) => (
               <div
                 key={benefit}
-                className="flex items-center gap-3 text-[clamp(1rem,4.2vw,1.18rem)] font-bold leading-6 text-[var(--text-primary)]"
+                className="flex items-center gap-3 text-[1rem] font-bold leading-6 text-[var(--text-primary)]"
               >
                 <CheckIcon />
                 <span>{benefit}</span>
@@ -113,17 +113,17 @@ export default function FreePracticeLimitModal({
           </div>
         </div>
 
-        <div className="mt-8 grid gap-4">
+        <div className="mt-6 grid gap-3">
           <button
             type="button"
             onClick={isSignedIn ? onUnlockPro : onLogin}
-            className="sf-free-practice-limit-primary flex min-h-[74px] items-center justify-center gap-4 rounded-[24px] bg-[linear-gradient(135deg,#6f55ff_0%,#944eff_55%,#c854ff_100%)] px-5 text-left text-white shadow-[0_18px_38px_rgba(126,92,255,0.32)]"
+            className="sf-free-practice-limit-primary flex min-h-[52px] items-center justify-center gap-3 rounded-[8px] bg-[linear-gradient(135deg,#6f55ff_0%,#944eff_55%,#c854ff_100%)] px-5 text-left text-white shadow-[0_18px_38px_rgba(126,92,255,0.32)]"
           >
             <span className="grid h-11 w-11 shrink-0 place-items-center text-white">
               {isSignedIn ? <CrownIcon /> : <UserIcon />}
             </span>
             <span className="min-w-0">
-              <span className="block text-[clamp(1.18rem,5.2vw,1.48rem)] font-black leading-tight text-white">
+              <span className="block text-[1.05rem] font-black leading-tight text-white">
                 {isSignedIn ? "订阅 Pro，继续无限练" : "注册/登录，保存记录"}
               </span>
               <span className="mt-1 block text-[0.88rem] font-bold leading-5 text-white/82">
@@ -138,13 +138,13 @@ export default function FreePracticeLimitModal({
             <button
               type="button"
               onClick={onUnlockPro}
-              className="flex min-h-[70px] items-center justify-center gap-4 rounded-[23px] border border-[var(--border-color)] bg-[var(--button-bg)] px-5 text-left text-[var(--button-text)] shadow-[inset_0_1px_0_var(--theme-inset)]"
+              className="flex min-h-[52px] items-center justify-center gap-3 rounded-[8px] border border-[var(--border-color)] bg-[var(--button-bg)] px-5 text-left text-[var(--button-text)] shadow-[inset_0_1px_0_var(--theme-inset)]"
             >
               <span className="grid h-10 w-10 shrink-0 place-items-center text-[#7a55ff]">
                 <CrownIcon />
               </span>
               <span className="min-w-0">
-                <span className="block text-[clamp(1.08rem,4.7vw,1.35rem)] font-black leading-tight">
+                <span className="block text-[1.02rem] font-black leading-tight">
                   订阅 Pro，继续无限练
                 </span>
                 <span className="mt-1 block text-[0.86rem] font-bold leading-5 text-[#7d7899]">
@@ -157,7 +157,7 @@ export default function FreePracticeLimitModal({
           <button
             type="button"
             onClick={onDismiss}
-            className="min-h-11 rounded-[16px] px-4 text-[clamp(1rem,4.3vw,1.12rem)] font-black text-[#77738e] hover:bg-[#efeaff]"
+            className="min-h-11 rounded-[8px] px-4 text-[1rem] font-black text-[#77738e] hover:bg-[#efeaff]"
           >
             稍后再说
           </button>

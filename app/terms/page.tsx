@@ -8,10 +8,6 @@ const termsPage: FooterInfoPageData = {
     "本服务条款说明你使用 SpeakFlow 时需要遵守的规则，包括口语练习、AI 生成内容、课程创建、表达库、账号、订阅和学习记录等功能。",
   updated: "最后更新：2026 年 6 月 17 日",
   badges: ["学习用途", "AI 内容", "账号安全", "订阅规则", "合理使用"],
-  visual: {
-    src: "/images/home-classic-scenes-card-bg.png",
-    alt: "SpeakFlow 经典场景练习背景",
-  },
   summary: {
     title: "使用前请了解",
     items: [

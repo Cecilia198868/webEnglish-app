@@ -5091,3 +5091,1047 @@
     min-width: 5.9rem !important;
   }
 }
+
+/* Desktop web learning page for 100 sentence patterns. */
+.spWebPage {
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 9% 12%, color-mix(in srgb, var(--pattern-accent) 11%, transparent), transparent 28%),
+    radial-gradient(circle at 90% 18%, rgba(54, 120, 255, 0.08), transparent 30%),
+    linear-gradient(180deg, #fbfaff 0%, #ffffff 46%, #f8f6ff 100%);
+  color: #10163b;
+  font-family: var(--sf-font-zh), var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+.spWebPage,
+.spWebPage * {
+  box-sizing: border-box;
+}
+
+.spWebPage svg {
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.spWebTopbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  height: 72px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  border-bottom: 1px solid rgba(37, 31, 92, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0 clamp(24px, 4vw, 58px);
+  backdrop-filter: blur(16px);
+}
+
+.spWebTopbar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.spWebBrand {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 12px;
+  color: #10163b;
+  font-size: 26px;
+  font-weight: 950;
+}
+
+.spWebBrandMark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #7b5dff, #5c3ef0);
+  box-shadow: 0 14px 28px rgba(105, 78, 225, 0.22);
+  color: #fff;
+}
+
+.spWebBrandMark svg {
+  width: 24px;
+  height: 24px;
+}
+
+.spWebNav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 2vw, 30px);
+  color: #24244f;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.spWebNav a {
+  white-space: nowrap;
+}
+
+.spWebNav a:hover,
+.spWebNavMenu > button:hover {
+  color: var(--pattern-accent);
+}
+
+.spWebNavMenu {
+  position: relative;
+}
+
+.spWebNavMenu > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+  color: #24244f;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 850;
+}
+
+.spWebNavMenu > button svg {
+  width: 15px;
+  height: 15px;
+}
+
+.spWebNavDropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  z-index: 30;
+  display: none;
+  min-width: 230px;
+  overflow: hidden;
+  transform: translateX(-50%);
+  border: 1px solid rgba(118, 87, 255, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 24px 70px rgba(80, 60, 160, 0.15);
+  padding: 8px;
+}
+
+.spWebNavMenu:hover .spWebNavDropdown,
+.spWebNavMenu:focus-within .spWebNavDropdown {
+  display: grid;
+}
+
+.spWebNavDropdown a {
+  border-radius: 12px;
+  color: #24244f;
+  padding: 11px 13px;
+}
+
+.spWebNavDropdown a:hover {
+  background: #f3efff;
+  color: #6847ee;
+}
+
+.spWebTopActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  gap: 12px;
+}
+
+.spWebUpgrade,
+.spWebIconLink,
+.spWebProfile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.spWebUpgrade {
+  gap: 7px;
+  color: #f4a221;
+}
+
+.spWebUpgrade svg {
+  width: 18px;
+  height: 18px;
+}
+
+.spWebIconLink {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #f4f0ff;
+  color: #292951;
+}
+
+.spWebProfile {
+  gap: 9px;
+  color: #1b1d43;
+}
+
+.spWebProfile span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 999px;
+  background: #ebe5ff;
+  color: #6f50f8;
+}
+
+.spWebProfile svg {
+  width: 19px;
+  height: 19px;
+}
+
+.spWebShell {
+  display: grid;
+  width: min(1240px, calc(100% - 48px));
+  grid-template-columns: 286px minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
+  margin: 16px auto 18px;
+}
+
+.spWebSidebar {
+  position: sticky;
+  top: 92px;
+  max-height: calc(100dvh - 112px);
+  overflow: auto;
+  border: 1px solid rgba(118, 87, 255, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 20px 60px rgba(82, 68, 150, 0.09);
+  padding: 14px;
+}
+
+.spWebSidebarHeader {
+  display: grid;
+  gap: 4px;
+  padding: 6px 4px 12px;
+}
+
+.spWebSidebarHeader span,
+.spWebPanelHeader span {
+  color: var(--pattern-accent);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.spWebSidebarHeader strong {
+  color: #141640;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.spWebLevelList {
+  display: grid;
+  gap: 10px;
+}
+
+.spWebLevelCard {
+  display: grid;
+  min-height: 122px;
+  grid-template-columns: 50px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(118, 87, 255, 0.11);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #17183d;
+  text-decoration: none;
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    background 0.16s ease;
+}
+
+.spWebLevelCard:hover,
+.spWebLevelActive {
+  transform: translateY(-1px);
+  border-color: rgba(118, 87, 255, 0.3);
+  background: #f8f5ff;
+  box-shadow: 0 16px 36px rgba(105, 78, 225, 0.12);
+}
+
+.spWebLevelCard > svg {
+  width: 17px;
+  height: 17px;
+  justify-self: end;
+  color: #7b7894;
+}
+
+.spWebLevelIcon {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  border-radius: 16px;
+}
+
+.spWebLevelIcon svg {
+  width: 27px;
+  height: 27px;
+}
+
+.spWebLevelGreen .spWebLevelIcon {
+  background: #e8f8ee;
+  color: #2fba72;
+}
+
+.spWebLevelPurple .spWebLevelIcon {
+  background: #efe9ff;
+  color: #7657ff;
+}
+
+.spWebLevelOrange .spWebLevelIcon {
+  background: #fff1e5;
+  color: #f49a21;
+}
+
+.spWebLevelText {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+.spWebLevelText small {
+  width: fit-content;
+  border-radius: 999px;
+  background: #f4f0ff;
+  color: var(--pattern-accent);
+  font-size: 12px;
+  font-weight: 900;
+  padding: 5px 8px;
+}
+
+.spWebLevelText strong {
+  overflow: hidden;
+  color: #15163d;
+  font-size: 19px;
+  font-weight: 950;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spWebLevelText em {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: #68708e;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.spWebDataNote {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+  border: 1px solid rgba(118, 87, 255, 0.1);
+  border-radius: 18px;
+  background: #f8f6ff;
+  color: #68708e;
+  font-size: 13px;
+  font-weight: 780;
+  line-height: 1.45;
+  padding: 12px;
+}
+
+.spWebDataNote svg {
+  width: 24px;
+  height: 24px;
+  color: var(--pattern-accent);
+}
+
+.spWebMain {
+  display: grid;
+  min-width: 0;
+  gap: 14px;
+}
+
+.spWebHero {
+  display: grid;
+  min-height: 136px;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(118, 87, 255, 0.12);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 80% 28%, rgba(118, 87, 255, 0.12), transparent 32%),
+    linear-gradient(135deg, #fff 0%, #f5f1ff 100%);
+  box-shadow: 0 22px 60px rgba(82, 68, 150, 0.08);
+  padding: 20px 26px;
+}
+
+.spWebHeroIcon {
+  display: grid;
+  width: 76px;
+  height: 76px;
+  place-items: center;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #8869ff, #6042e8);
+  box-shadow: 0 20px 38px rgba(105, 78, 225, 0.24);
+  color: #fff;
+}
+
+.spWebHeroIcon svg {
+  width: 42px;
+  height: 42px;
+}
+
+.spWebHero h1 {
+  margin: 0;
+  color: #11143d;
+  font-size: clamp(36px, 4vw, 42px);
+  font-weight: 950;
+  line-height: 1.04;
+}
+
+.spWebHero p {
+  margin: 10px 0 0;
+  color: var(--pattern-accent);
+  font-size: 20px;
+  font-weight: 950;
+}
+
+.spWebHeroPills {
+  display: flex;
+  max-width: 230px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.spWebHeroPills span {
+  border: 1px solid rgba(118, 87, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #53506d;
+  font-size: 13px;
+  font-weight: 880;
+  padding: 8px 13px;
+}
+
+.spWebContinue {
+  display: grid;
+  height: 88px;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  border: 1px solid rgba(82, 189, 128, 0.16);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(246, 253, 249, 0.95), rgba(255, 255, 255, 0.92));
+  box-shadow: 0 16px 44px rgba(79, 112, 130, 0.06);
+  padding: 10px 16px;
+}
+
+.spWebContinueIcon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 17px;
+  background: #eaf8ee;
+  color: #25a567;
+}
+
+.spWebContinueIcon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.spWebContinue div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.spWebContinue strong {
+  color: #1f8b5b;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.spWebContinue span,
+.spWebContinue small {
+  overflow: hidden;
+  color: #4e5876;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spWebContinue a {
+  display: inline-flex;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 999px;
+  background: #26934f;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 950;
+  padding: 0 18px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.spWebContinue a svg {
+  width: 17px;
+  height: 17px;
+}
+
+.spWebLearningGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.98fr) minmax(424px, 1.02fr);
+  align-items: stretch;
+  gap: 14px;
+}
+
+.spWebStudyColumn {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 10px;
+}
+
+.spWebPatternCard,
+.spWebRecommendationPanel {
+  min-width: 0;
+  border: 1px solid rgba(118, 87, 255, 0.11);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 54px rgba(82, 68, 150, 0.07);
+}
+
+.spWebPatternCard {
+  display: grid;
+  height: 288px;
+  align-content: start;
+  gap: 9px;
+  padding: 16px;
+}
+
+.spWebRecommendationPanel {
+  display: grid;
+  min-height: 500px;
+  grid-template-rows: auto 1fr;
+  gap: 12px;
+  padding: 18px;
+}
+
+.spWebPanelHeader {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.spWebPanelHeader h2 {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 3px 0 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: #11143d;
+  font-size: 24px;
+  font-weight: 950;
+  line-height: 1.16;
+}
+
+.spWebPanelHeader strong {
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  border-radius: 999px;
+  background: #f1ecff;
+  color: var(--pattern-accent);
+  font-size: 16px;
+  font-weight: 950;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
+.spWebPanelHeader small {
+  max-width: 246px;
+  color: #8589a5;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.spWebProgressRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #626b8a;
+  font-size: 13px;
+  font-weight: 820;
+}
+
+.spWebProgressRow em {
+  color: var(--pattern-accent);
+  font-style: normal;
+  font-weight: 950;
+}
+
+.spWebProgressTrack {
+  overflow: hidden;
+  height: 7px;
+  border-radius: 999px;
+  background: #e5e0f6;
+}
+
+.spWebProgressTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--pattern-accent), #9b86ff);
+}
+
+.spWebChineseBox {
+  display: grid;
+  min-height: 132px;
+  max-height: 152px;
+  align-content: center;
+  gap: 9px;
+  overflow: auto;
+  border: 1px solid rgba(118, 87, 255, 0.18);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 90% 80%, rgba(118, 87, 255, 0.08), transparent 32%),
+    #fff;
+  color: #11183d;
+  padding: 16px 18px;
+}
+
+.spWebChineseBox span {
+  color: var(--pattern-accent);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.spWebChineseBox p {
+  margin: 0;
+  color: #11183d;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.34;
+}
+
+.spWebRecordButton {
+  display: inline-flex;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7657ff, #5638e8);
+  box-shadow: 0 18px 38px rgba(105, 78, 225, 0.22);
+  color: #fff !important;
+  cursor: pointer;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 950;
+  text-decoration: none;
+}
+
+.spWebRecordButton *,
+.spWebRecordButton svg {
+  color: #fff !important;
+}
+
+.spWebRecordButton[data-recording="true"] {
+  background: linear-gradient(135deg, #20bd80, #0f9b69);
+}
+
+.spWebRecordButton svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.5;
+}
+
+.spWebControls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.spWebControls a,
+.spWebControls button {
+  display: inline-flex;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(118, 87, 255, 0.14);
+  border-radius: 16px;
+  background: #fff;
+  color: #5f42e8;
+  cursor: pointer;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.spWebControls svg {
+  width: 18px;
+  height: 18px;
+}
+
+.spWebUserExpression {
+  display: grid;
+  min-height: 98px;
+  align-content: start;
+  gap: 8px;
+  border: 1px solid rgba(118, 87, 255, 0.1);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fbfaff, #fff);
+  padding: 13px 15px;
+}
+
+.spWebUserExpression > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.spWebUserExpression span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--pattern-accent);
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.spWebUserExpression span svg {
+  width: 18px;
+  height: 18px;
+}
+
+.spWebUserExpression button {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: #f1ecff;
+  color: var(--pattern-accent);
+  cursor: pointer;
+}
+
+.spWebUserExpression p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: #15183d;
+  font-size: 19px;
+  font-weight: 760;
+  line-height: 1.32;
+}
+
+.spWebVariantList {
+  display: grid;
+  gap: 9px;
+}
+
+.spWebVariantCard {
+  display: grid;
+  height: 74px;
+  grid-template-columns: 42px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(38, 43, 92, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  padding: 8px 12px;
+}
+
+.spWebVariantFeatured {
+  height: 104px;
+  border-color: rgba(118, 87, 255, 0.36);
+  background:
+    radial-gradient(circle at 96% 0%, rgba(118, 87, 255, 0.12), transparent 26%),
+    linear-gradient(135deg, #fff, #fbf8ff);
+}
+
+.spWebVariantIcon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 15px;
+}
+
+.spWebVariantIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.spWebVariantCard[data-tone="featured"] .spWebVariantIcon {
+  background: #eee8ff;
+  color: #7657ff;
+}
+
+.spWebVariantCard[data-tone="orange"] {
+  background: linear-gradient(135deg, #fff, #fff8f0);
+}
+
+.spWebVariantCard[data-tone="orange"] .spWebVariantIcon {
+  background: #fff0e1;
+  color: #f48a1f;
+}
+
+.spWebVariantCard[data-tone="blue"] {
+  background: linear-gradient(135deg, #fff, #f4fbff);
+}
+
+.spWebVariantCard[data-tone="blue"] .spWebVariantIcon {
+  background: #e8f4ff;
+  color: #3189d8;
+}
+
+.spWebVariantCard[data-tone="green"] {
+  background: linear-gradient(135deg, #fff, #f4fbf2);
+}
+
+.spWebVariantCard[data-tone="green"] .spWebVariantIcon {
+  background: #e8f8ee;
+  color: #36a653;
+}
+
+.spWebVariantCopy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.spWebVariantCopy strong {
+  overflow: hidden;
+  color: var(--pattern-accent);
+  font-size: 13px;
+  font-weight: 950;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spWebVariantCard[data-tone="orange"] .spWebVariantCopy strong {
+  color: #f37e1e;
+}
+
+.spWebVariantCard[data-tone="blue"] .spWebVariantCopy strong {
+  color: #2b84cf;
+}
+
+.spWebVariantCard[data-tone="green"] .spWebVariantCopy strong {
+  color: #359f4e;
+}
+
+.spWebVariantCopy p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: #10163b;
+  font-size: 18px;
+  font-weight: 860;
+  line-height: 1.16;
+}
+
+.spWebVariantFeatured .spWebVariantCopy p {
+  font-size: 21px;
+  line-height: 1.18;
+}
+
+.spWebVariantCard > button {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid rgba(118, 87, 255, 0.12);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(80, 70, 140, 0.08);
+  color: var(--pattern-accent);
+  cursor: pointer;
+}
+
+.spWebVariantCard > button svg {
+  width: 19px;
+  height: 19px;
+}
+
+.spWebBrand:focus-visible,
+.spWebNav a:focus-visible,
+.spWebNavMenu > button:focus-visible,
+.spWebUpgrade:focus-visible,
+.spWebIconLink:focus-visible,
+.spWebProfile:focus-visible,
+.spWebLevelCard:focus-visible,
+.spWebContinue a:focus-visible,
+.spWebRecordButton:focus-visible,
+.spWebControls a:focus-visible,
+.spWebControls button:focus-visible,
+.spWebUserExpression button:focus-visible,
+.spWebVariantCard > button:focus-visible {
+  outline: 3px solid rgba(118, 87, 255, 0.34);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1180px) {
+  .spWebNav {
+    gap: 16px;
+    font-size: 15px;
+  }
+
+  .spWebTopActions {
+    gap: 8px;
+  }
+
+  .spWebProfile strong {
+    display: none;
+  }
+
+  .spWebLearningGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .spWebPatternCard,
+  .spWebRecommendationPanel {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 980px) {
+  .spWebTopbar {
+    height: auto;
+    flex-wrap: wrap;
+    padding-block: 14px;
+  }
+
+  .spWebNav {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .spWebShell {
+    grid-template-columns: 1fr;
+  }
+
+  .spWebSidebar {
+    position: static;
+    max-height: none;
+  }
+
+  .spWebLevelList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .spWebHero {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .spWebHeroPills {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .spWebShell {
+    width: min(100% - 24px, 1240px);
+    margin-top: 14px;
+  }
+
+  .spWebBrand {
+    font-size: 22px;
+  }
+
+  .spWebTopActions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .spWebLevelList {
+    grid-template-columns: 1fr;
+  }
+
+  .spWebHero {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .spWebHeroIcon {
+    width: 62px;
+    height: 62px;
+  }
+
+  .spWebHero h1 {
+    font-size: 32px;
+  }
+
+  .spWebContinue {
+    height: auto;
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+
+  .spWebContinue a {
+    grid-column: 1 / -1;
+  }
+
+  .spWebControls {
+    grid-template-columns: 1fr;
+  }
+
+  .spWebVariantCard {
+    height: auto;
+    min-height: 74px;
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .spWebVariantFeatured {
+    min-height: 104px;
+  }
+
+  .spWebVariantCard > button {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
-import { NativeFlowLearningPage } from "@/components/NativeFlowPages";
+import { NativeFlowWebPage } from "@/components/NativeFlowWebPage";
 import {
   getNativeFlowSentence,
   nativeFlowLevelIds,
+  nativeFlowLevels,
+  nativeFlowProgressRows,
 } from "@/data/nativeFlow/courseData";
 
 export function generateStaticParams() {
@@ -30,9 +32,11 @@ export default async function Page({
   }
 
   return (
-    <NativeFlowLearningPage
-      level={result.level}
-      sentence={result.sentence}
+    <NativeFlowWebPage
+      initialLevel={result.level}
+      initialSentence={result.sentence}
+      levels={nativeFlowLevels}
+      progressRows={nativeFlowProgressRows}
     />
   );
 }

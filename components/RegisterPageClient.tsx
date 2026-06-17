@@ -65,8 +65,7 @@ export default function RegisterPageClient({
           active: "Invite link detected. Your account will receive 7 days of Pro after registration.",
         }
       : {
-          active:
-            "\u5df2\u8bc6\u522b\u9080\u8bf7\u94fe\u63a5\uff0c\u6ce8\u518c\u540e\u5c06\u81ea\u52a8\u83b7\u5f97 7 \u5929 Pro\u3002",
+          active: "已识别邀请链接，注册后将自动获得 7 天 Pro。",
         };
 
   useEffect(() => {
@@ -144,8 +143,8 @@ export default function RegisterPageClient({
     <main className="responsive-page-shell sf-brand-page relative min-h-[100dvh] overflow-x-hidden">
       <div className="relative mx-auto flex min-h-[100dvh] max-w-5xl items-start justify-center px-6 py-6 sm:items-center sm:py-10">
         <section className="sf-brand-glass w-full max-w-[560px] rounded-[34px] px-6 py-8 text-center sm:px-10 sm:py-12">
-          <p className="font-[var(--font-sora)] text-xs font-semibold uppercase tracking-[0.28em] text-[#6d55ef]">
-            New Account
+          <p className="font-[var(--sf-font-zh)] text-sm font-black text-[#6d55ef]">
+            创建账号
           </p>
           <h1 className="mt-6 font-[var(--font-sora)] text-4xl font-semibold tracking-[-0.04em] text-[#201833] sm:text-5xl">
             {t("registerTitle")}

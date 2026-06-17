@@ -1,15 +1,9 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import styles from "./AiGuidedExpressionWebPage.module.css";
 
-const PAGE_ART_WIDTH = 1713;
-const PAGE_ART_HEIGHT = 2240;
-const PAGE_ART_SRC =
-  "/image3/%41%49%E5%BC%95%E5%AF%BC%E8%A1%A8%E8%BE%BE.png";
 const DEFAULT_CHINESE_TEXT =
   "\u90a3\u6211\u4eec\u4f11\u606f\u4e00\u4e0b\uff0c\u8fc7\u4f1a\u513f\u518d\u53bb\u6563\u6b65\u5427\u3002";
 const DEFAULT_ENGLISH_TEXT = "Let's take a break, and then go for a walk later.";
@@ -65,25 +59,6 @@ type GuidedTurn = {
 
 type FollowupResponse = {
   suggestion?: string;
-};
-
-type Hotspot = {
-  href: string;
-  label: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  kind?: "nav" | "button";
-};
-
-const learningMenuHotspot: Omit<Hotspot, "href"> = {
-  label: "Start learning menu",
-  x: 505,
-  y: 48,
-  width: 154,
-  height: 62,
-  kind: "nav",
 };
 
 const learningLinks = [
@@ -374,85 +349,6 @@ function isNextChineseRelevant(currentChinese: string, suggestion: string) {
   return true;
 }
 
-const hotspots: Hotspot[] = [
-  { href: "/", label: "SpeakFlow home", x: 50, y: 34, width: 265, height: 82, kind: "nav" },
-  { href: "/", label: "Home", x: 390, y: 50, width: 82, height: 60, kind: "nav" },
-  {
-    href: "/new-expressions",
-    label: "My expressions",
-    x: 680,
-    y: 50,
-    width: 125,
-    height: 60,
-    kind: "nav",
-  },
-  {
-    href: "/create-course",
-    label: "Create course",
-    x: 824,
-    y: 50,
-    width: 125,
-    height: 60,
-    kind: "nav",
-  },
-  {
-    href: "/menu?panel=about",
-    label: "About",
-    x: 982,
-    y: 50,
-    width: 120,
-    height: 60,
-    kind: "nav",
-  },
-  {
-    href: "/menu?panel=help",
-    label: "Contact",
-    x: 1122,
-    y: 50,
-    width: 130,
-    height: 60,
-    kind: "nav",
-  },
-  {
-    href: "/account",
-    label: "Upgrade",
-    x: 1320,
-    y: 45,
-    width: 118,
-    height: 66,
-    kind: "nav",
-  },
-  {
-    href: "/notifications",
-    label: "Notifications",
-    x: 1450,
-    y: 45,
-    width: 60,
-    height: 66,
-    kind: "nav",
-  },
-  {
-    href: "/languages",
-    label: "Language",
-    x: 1514,
-    y: 40,
-    width: 170,
-    height: 76,
-    kind: "nav",
-  },
-];
-
-function hotspotStyle(
-  hotspot: Pick<Hotspot, "x" | "y" | "width" | "height">
-): CSSProperties {
-  return {
-    height: `${(hotspot.height / PAGE_ART_HEIGHT) * 100}%`,
-    left: `${(hotspot.x / PAGE_ART_WIDTH) * 100}%`,
-    top: `${(hotspot.y / PAGE_ART_HEIGHT) * 100}%`,
-    width: `${(hotspot.width / PAGE_ART_WIDTH) * 100}%`,
-  };
-}
-
 function getSpeechRecognitionConstructor() {
   if (typeof window === "undefined") return null;
 
@@ -474,46 +370,6 @@ function readTranscript(
   }
 
   return parts.join(separator).trim();
-}
-
-function renderVariantIcon(key: ExpressionVariantKey) {
-  if (key === "standard") {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M6 4.8A2.8 2.8 0 0 1 8.8 2h6.4A2.8 2.8 0 0 1 18 4.8V22l-6-3.8L6 22V4.8Z" />
-        <path d="m12 6.4 1.05 2.12 2.35.34-1.7 1.66.4 2.34L12 11.75l-2.1 1.11.4-2.34-1.7-1.66 2.35-.34L12 6.4Z" />
-      </svg>
-    );
-  }
-
-  if (key === "idiomatic") {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M5.2 18.8c7.2.2 12.6-4.7 13.5-13.5-8.4.6-13.6 5.7-13.5 13.5Z" />
-        <path d="M5.4 18.6 14.7 9" />
-        <path d="M9.6 14.4c-1.7-2.9-4.1-4.8-7-5.5.5 3 2.2 5.4 5.2 7.1" />
-      </svg>
-    );
-  }
-
-  if (key === "simple") {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M20.8 3.2c-6.6.8-11.6 4.4-15 10.9l4.1 4.1c6.5-3.4 10.1-8.4 10.9-15Z" />
-        <path d="M7.1 16.9 3.5 20.5" />
-        <path d="m13.3 6.9 3.8 3.8" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M4 5.8A3.8 3.8 0 0 1 7.8 2h8.4A3.8 3.8 0 0 1 20 5.8v6.5a3.8 3.8 0 0 1-3.8 3.8H11l-5.6 4.2v-4.2A3.5 3.5 0 0 1 4 13.3V5.8Z" />
-      <path d="M8 9h.01" />
-      <path d="M12 9h.01" />
-      <path d="M16 9h.01" />
-    </svg>
-  );
 }
 
 export default function AiGuidedExpressionWebPage() {
@@ -1035,29 +891,24 @@ export default function AiGuidedExpressionWebPage() {
 
   return (
     <main className={styles.page}>
-      <h1 className={styles.srOnly}>SpeakFlow AI guided expression</h1>
-      <div className={styles.artboard} aria-label="SpeakFlow AI guided expression">
-        <Image
-          src={PAGE_ART_SRC}
-          alt="SpeakFlow AI guided expression design"
-          width={PAGE_ART_WIDTH}
-          height={PAGE_ART_HEIGHT}
-          sizes="(max-width: 1713px) 100vw, 1713px"
-          priority
-          unoptimized
-          className={styles.pageArt}
-        />
-        <nav className={styles.hotspots} aria-label="AI expression page navigation">
-          <div
-            className={styles.learningMenu}
-            style={hotspotStyle(learningMenuHotspot)}
-          >
-            <button
-              type="button"
-              className={styles.learningTrigger}
-              aria-haspopup="menu"
-            >
-              <span className={styles.srOnly}>{learningMenuHotspot.label}</span>
+      <header className={styles.topbar} aria-label="SpeakFlow 顶部导航">
+        <Link href="/" className={styles.brand} aria-label="返回 SpeakFlow 首页">
+          <span className={styles.brandMark} aria-hidden="true">
+            <svg viewBox="0 0 40 40" focusable="false">
+              <circle cx="20" cy="20" r="20" />
+              <path d="M12 21v-4M17 26V13M22 29V10M27 25V15M32 21v-4" />
+            </svg>
+          </span>
+          <span>SpeakFlow</span>
+        </Link>
+        <nav className={styles.nav} aria-label="主要导航">
+          <Link href="/">首页</Link>
+          <div className={styles.learningMenu}>
+            <button type="button" className={styles.learningButton} aria-haspopup="menu">
+              开始学习
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path d="m5 8 5 5 5-5" />
+              </svg>
             </button>
             <div className={styles.learningDropdown} role="menu">
               {learningLinks.map((item) => (
@@ -1072,212 +923,291 @@ export default function AiGuidedExpressionWebPage() {
               ))}
             </div>
           </div>
-          {hotspots.map((hotspot) => (
-            <Link
-              aria-label={hotspot.label}
-              className={styles.hotspot}
-              data-kind={hotspot.kind}
-              href={hotspot.href}
-              key={`${hotspot.href}-${hotspot.label}-${hotspot.x}-${hotspot.y}`}
-              style={hotspotStyle(hotspot)}
-            >
-              <span className={styles.srOnly}>{hotspot.label}</span>
-            </Link>
-          ))}
+          <Link href="/new-expressions">我的表达</Link>
+          <Link href="/create-course">创建课程</Link>
+          <Link href="/about">关于我们</Link>
+          <Link href="/contact">联系我们</Link>
         </nav>
-        <button
-          type="button"
-          className={`${styles.recordButton} ${
-            isChineseListening ? styles.isListening : ""
-          }`}
-          onClick={startChineseRecording}
-          aria-label={RECORD_BUTTON_LABEL}
-          aria-pressed={isChineseListening}
-        >
-          {isChineseListening ? (
-            <span className={styles.recordButtonState}>{LISTENING_LABEL}</span>
-          ) : (
-            <span className={styles.srOnly}>{RECORD_BUTTON_LABEL}</span>
-          )}
-        </button>
-        <section className={styles.chineseBox} aria-label={RECORD_BUTTON_LABEL}>
-          {isEditing ? (
-            <textarea
-              ref={textareaRef}
-              className={styles.chineseTextarea}
-              value={chineseText}
-              onChange={(event) => {
-                const nextChineseText = event.target.value;
-                setChineseText(nextChineseText);
-                chineseTextRef.current = nextChineseText;
-                currentPracticeChineseRef.current = nextChineseText;
-              }}
-              aria-label={EDIT_BUTTON_LABEL}
-            />
-          ) : (
-            <p className={styles.chineseText}>{chineseText}</p>
-          )}
-          {statusText ? (
-            <span className={styles.statusText} aria-live="polite">
-              {statusText}
-            </span>
-          ) : null}
-          <button
-            type="button"
-            className={styles.editChineseButton}
-            onClick={toggleEditing}
-            aria-label={isEditing ? DONE_BUTTON_LABEL : EDIT_BUTTON_LABEL}
-          >
+        <div className={styles.topActions}>
+          <Link href="/subscription" className={styles.upgradeLink}>
+            <span aria-hidden="true">✦</span>
+            会员版
+          </Link>
+          <Link href="/notifications" className={styles.iconLink} aria-label="通知">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M12 20h9" />
-              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z" />
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
-            <span>{isEditing ? DONE_BUTTON_LABEL : EDIT_BUTTON_LABEL}</span>
-          </button>
-        </section>
-        <button
-          type="button"
-          className={`${styles.englishRecordButton} ${
-            isEnglishListening ? styles.isListening : ""
-          }`}
-          onClick={() => startEnglishRecording({ sourceChinese: chineseText })}
-          aria-label={ENGLISH_RECORD_BUTTON_LABEL}
-          aria-pressed={isEnglishListening}
-        >
-          {isEnglishListening ? (
-            <span className={styles.recordButtonState}>{LISTENING_LABEL}</span>
-          ) : (
-            <span className={styles.srOnly}>{ENGLISH_RECORD_BUTTON_LABEL}</span>
-          )}
-        </button>
-        <section className={styles.englishBox} aria-label={ENGLISH_RECORD_BUTTON_LABEL}>
-          <p
-            className={`${styles.englishText} ${
-              englishText ? "" : styles.englishPlaceholder
-            }`}
-          >
-            {englishText || ENGLISH_EMPTY_HINT}
-          </p>
-          {englishStatusText ? (
-            <span className={styles.englishStatusText} aria-live="polite">
-              {englishStatusText}
-            </span>
-          ) : null}
-          {isEnglishListening ? (
-            <span className={styles.englishListeningStatus} aria-live="polite">
-              {LISTENING_LABEL}
-            </span>
-          ) : null}
-          <button
-            type="button"
-            className={styles.retryEnglishButton}
-            onClick={retryEnglishRecording}
-            aria-label={RETRY_ENGLISH_LABEL}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M20 11a8 8 0 0 0-14.6-4.5L4 8" />
-              <path d="M4 4v4h4" />
-              <path d="M4 13a8 8 0 0 0 14.6 4.5L20 16" />
-              <path d="M20 20v-4h-4" />
-            </svg>
-            <span>{RETRY_ENGLISH_LABEL}</span>
-          </button>
-        </section>
-        <p className={styles.variantSaveHint}>{VARIANTS_SAVE_HINT}</p>
-        <section className={styles.variantPanel} aria-label="AI expression variants">
-          {isLoadingExpressionVariants ? (
-            <div className={styles.variantLoading} aria-live="polite">
-              {VARIANTS_LOADING_LABEL}
-            </div>
-          ) : null}
-          {expressionVariantError ? (
-            <div className={styles.variantError} aria-live="polite">
-              {expressionVariantError}
-            </div>
-          ) : null}
-          {!isLoadingExpressionVariants && !expressionVariants.length ? (
-            <div className={styles.variantEmpty}>{VARIANTS_EMPTY_LABEL}</div>
-          ) : null}
-          <div className={styles.variantList}>
-            {expressionVariants.map((variant) => (
-              <article
-                className={styles.variantCard}
-                data-variant={variant.key}
-                key={variant.key}
-              >
-                <span className={styles.variantIcon} aria-hidden="true">
-                  {renderVariantIcon(variant.key)}
-                </span>
-                <span className={styles.variantCopy}>
-                  <span className={styles.variantLabel}>{variant.label}</span>
-                  <strong>{variant.text}</strong>
-                </span>
-                <button
-                  type="button"
-                  className={styles.variantPlayButton}
-                  onClick={() => playExpression(variant.text)}
-                  aria-label={`Play ${variant.label}`}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M8 5v14l11-7-11-7Z" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  className={styles.variantSlowButton}
-                  onClick={() => playExpression(variant.text, 0.75)}
-                  aria-label={`Play ${variant.label} at 0.75 speed`}
-                >
-                  0.75x
-                </button>
-              </article>
-            ))}
+          </Link>
+          <Link href="/account" className={styles.profileLink}>
+            <span>EN</span>
+            <strong>English Learner</strong>
+          </Link>
+        </div>
+      </header>
+
+      <section className={styles.workspace} aria-label="AI 引导表达工作台">
+        <section className={styles.hero}>
+          <div>
+            <p className={styles.eyebrow}>AI 引导表达</p>
+            <h1>不知道说什么？让 AI 帮你接下一句</h1>
+            <p>
+              先确认中文想法，再说英文。AI 会给你可直接开口练的表达，并根据语境继续引导下一句。
+            </p>
+          </div>
+          <div className={styles.flowSummary} aria-label="学习流程">
+            <span>1 确认中文</span>
+            <span>2 说英文</span>
+            <span>3 优化表达</span>
+            <span>4 接下一句</span>
           </div>
         </section>
-        <section className={styles.nextPromptPanel} aria-label={NEXT_PROMPT_KICKER_LABEL}>
-          <span className={styles.nextPromptKicker}>{NEXT_PROMPT_KICKER_LABEL}</span>
-          <p className={styles.nextPromptText}>{nextChinese}</p>
-          {isLoadingNextChinese ? (
-            <span className={styles.nextPromptStatus} aria-live="polite">
-              {NEXT_LOADING_LABEL}
-            </span>
-          ) : null}
-          {nextChineseError ? (
-            <span className={styles.nextPromptError} aria-live="polite">
-              {nextChineseError}
-            </span>
-          ) : null}
-          <button
-            type="button"
-            className={styles.useNextButton}
-            onClick={useNextChineseForPractice}
-            aria-label={USE_NEXT_LABEL}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z" />
-              <path d="M19 11a7 7 0 0 1-14 0" />
-              <path d="M12 18v4" />
-              <path d="M8 22h8" />
-            </svg>
-            <span>{USE_NEXT_LABEL}</span>
-          </button>
-          <button
-            type="button"
-            className={styles.changeNextButton}
-            onClick={changeNextChinese}
-            disabled={isLoadingNextChinese}
-            aria-label={CHANGE_NEXT_LABEL}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M20 11a8 8 0 0 0-14.6-4.5L4 8" />
-              <path d="M4 4v4h4" />
-              <path d="M4 13a8 8 0 0 0 14.6 4.5L20 16" />
-              <path d="M20 20v-4h-4" />
-            </svg>
-            <span>{CHANGE_NEXT_LABEL}</span>
-          </button>
+
+        <section className={styles.topGrid} aria-label="第一步和第二步">
+          <article className={styles.panel}>
+            <header className={styles.panelHeader}>
+              <div>
+                <span className={styles.stepLabel}>第一步</span>
+                <h2>用户输入 / 中文确认</h2>
+              </div>
+              <button
+                type="button"
+                className={`${styles.primaryButton} ${
+                  isChineseListening ? styles.isListening : ""
+                }`}
+                onClick={startChineseRecording}
+                aria-label={RECORD_BUTTON_LABEL}
+                aria-pressed={isChineseListening}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <path d="M12 19v3" />
+                </svg>
+                <span>{isChineseListening ? LISTENING_LABEL : RECORD_BUTTON_LABEL}</span>
+              </button>
+            </header>
+
+            <div className={styles.textSurface}>
+              {isEditing ? (
+                <textarea
+                  ref={textareaRef}
+                  className={styles.chineseTextarea}
+                  value={chineseText}
+                  onChange={(event) => {
+                    const nextChineseText = event.target.value;
+                    setChineseText(nextChineseText);
+                    chineseTextRef.current = nextChineseText;
+                    currentPracticeChineseRef.current = nextChineseText;
+                  }}
+                  aria-label={EDIT_BUTTON_LABEL}
+                />
+              ) : (
+                <p className={styles.chineseText}>{chineseText}</p>
+              )}
+            </div>
+
+            <footer className={styles.panelFooter}>
+              <button
+                type="button"
+                className={styles.ghostButton}
+                onClick={toggleEditing}
+                aria-label={isEditing ? DONE_BUTTON_LABEL : EDIT_BUTTON_LABEL}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z" />
+                </svg>
+                <span>{isEditing ? DONE_BUTTON_LABEL : EDIT_BUTTON_LABEL}</span>
+              </button>
+              {statusText ? (
+                <span className={styles.statusText} aria-live="polite">
+                  {statusText}
+                </span>
+              ) : null}
+            </footer>
+          </article>
+
+          <article className={styles.panel}>
+            <header className={styles.panelHeader}>
+              <div>
+                <span className={styles.stepLabel}>第二步</span>
+                <h2>AI 引导话题 / 英文表达</h2>
+              </div>
+              <button
+                type="button"
+                className={`${styles.primaryButton} ${
+                  isEnglishListening ? styles.isListening : ""
+                }`}
+                onClick={() => startEnglishRecording({ sourceChinese: chineseText })}
+                aria-label={ENGLISH_RECORD_BUTTON_LABEL}
+                aria-pressed={isEnglishListening}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <path d="M12 19v3" />
+                </svg>
+                <span>
+                  {isEnglishListening ? LISTENING_LABEL : ENGLISH_RECORD_BUTTON_LABEL}
+                </span>
+              </button>
+            </header>
+
+            <div className={styles.textSurface}>
+              <p
+                className={`${styles.englishText} ${
+                  englishText ? "" : styles.englishPlaceholder
+                }`}
+              >
+                {englishText || ENGLISH_EMPTY_HINT}
+              </p>
+            </div>
+
+            <footer className={styles.panelFooter}>
+              <button
+                type="button"
+                className={styles.ghostButton}
+                onClick={retryEnglishRecording}
+                aria-label={RETRY_ENGLISH_LABEL}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M20 11a8 8 0 0 0-14.6-4.5L4 8" />
+                  <path d="M4 4v4h4" />
+                  <path d="M4 13a8 8 0 0 0 14.6 4.5L20 16" />
+                  <path d="M20 20v-4h-4" />
+                </svg>
+                <span>{RETRY_ENGLISH_LABEL}</span>
+              </button>
+              {englishStatusText ? (
+                <span className={styles.statusText} aria-live="polite">
+                  {englishStatusText}
+                </span>
+              ) : null}
+              {isEnglishListening ? (
+                <span className={styles.statusText} aria-live="polite">
+                  {LISTENING_LABEL}
+                </span>
+              ) : null}
+            </footer>
+          </article>
         </section>
-      </div>
+
+        <section className={styles.bottomGrid} aria-label="第三步和第四步">
+          <article className={styles.variantsPanel}>
+            <header className={styles.variantsHeader}>
+              <div>
+                <span className={styles.stepLabel}>第三步</span>
+                <h2>推荐表达 <em>AI 优化结果</em></h2>
+              </div>
+              <p>{VARIANTS_SAVE_HINT}</p>
+            </header>
+
+            <div className={styles.variantStateStack}>
+              {isLoadingExpressionVariants ? (
+                <div className={styles.variantLoading} aria-live="polite">
+                  {VARIANTS_LOADING_LABEL}
+                </div>
+              ) : null}
+              {expressionVariantError ? (
+                <div className={styles.variantError} aria-live="polite">
+                  {expressionVariantError}
+                </div>
+              ) : null}
+              {!isLoadingExpressionVariants && !expressionVariants.length ? (
+                <div className={styles.variantEmpty}>{VARIANTS_EMPTY_LABEL}</div>
+              ) : null}
+            </div>
+
+            <div className={styles.variantList}>
+              {expressionVariants.map((variant) => (
+                <article
+                  className={styles.variantCard}
+                  data-variant={variant.key}
+                  key={variant.key}
+                >
+                  <span className={styles.variantLabel}>{variant.label}</span>
+                  <strong>{variant.text}</strong>
+                  <div className={styles.variantActions}>
+                    <button
+                      type="button"
+                      className={styles.variantPlayButton}
+                      onClick={() => playExpression(variant.text)}
+                      aria-label={`播放 ${variant.label}`}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M8 5v14l11-7-11-7Z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.variantSlowButton}
+                      onClick={() => playExpression(variant.text, 0.75)}
+                      aria-label={`慢速播放 ${variant.label}`}
+                    >
+                      0.75x
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </article>
+
+          <article className={styles.nextPanel} aria-label={NEXT_PROMPT_KICKER_LABEL}>
+            <header className={styles.panelHeader}>
+              <div>
+                <span className={styles.stepLabel}>第四步</span>
+                <h2>用这句练习 / 换一句</h2>
+              </div>
+            </header>
+            <div className={styles.nextTextSurface}>
+              <span className={styles.nextPromptKicker}>{NEXT_PROMPT_KICKER_LABEL}</span>
+              <p className={styles.nextPromptText}>{nextChinese}</p>
+              {isLoadingNextChinese ? (
+                <span className={styles.statusText} aria-live="polite">
+                  {NEXT_LOADING_LABEL}
+                </span>
+              ) : null}
+              {nextChineseError ? (
+                <span className={styles.statusText} aria-live="polite">
+                  {nextChineseError}
+                </span>
+              ) : null}
+            </div>
+            <footer className={styles.nextActions}>
+              <button
+                type="button"
+                className={styles.useNextButton}
+                onClick={useNextChineseForPractice}
+                aria-label={USE_NEXT_LABEL}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z" />
+                  <path d="M19 11a7 7 0 0 1-14 0" />
+                  <path d="M12 18v4" />
+                  <path d="M8 22h8" />
+                </svg>
+                <span>{USE_NEXT_LABEL}</span>
+              </button>
+              <button
+                type="button"
+                className={styles.changeNextButton}
+                onClick={changeNextChinese}
+                disabled={isLoadingNextChinese}
+                aria-label={CHANGE_NEXT_LABEL}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M20 11a8 8 0 0 0-14.6-4.5L4 8" />
+                  <path d="M4 4v4h4" />
+                  <path d="M4 13a8 8 0 0 0 14.6 4.5L20 16" />
+                  <path d="M20 20v-4h-4" />
+                </svg>
+                <span>{CHANGE_NEXT_LABEL}</span>
+              </button>
+            </footer>
+          </article>
+        </section>
+      </section>
     </main>
   );
 }

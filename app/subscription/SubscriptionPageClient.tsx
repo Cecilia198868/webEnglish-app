@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createLoginUrl } from "@/lib/loginRedirect";
@@ -320,14 +319,9 @@ export default function SubscriptionPageClient({
     <main className={styles.page}>
       <header className={styles.topbar}>
         <Link href="/" className={styles.brand} aria-label="返回 SpeakFlow 首页">
-          <Image
-            alt=""
-            className={styles.brandIcon}
-            height={48}
-            priority
-            src="/brand/speakflow-app-icon.png"
-            width={48}
-          />
+          <span className={styles.brandIcon}>
+            <SparkIcon />
+          </span>
           <span>SpeakFlow</span>
         </Link>
         <nav className={styles.topnav} aria-label="订阅页面导航">

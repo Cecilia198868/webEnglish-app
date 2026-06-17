@@ -377,6 +377,156 @@ function getCourseVisual(index: number) {
   return visuals[index % visuals.length];
 }
 
+function BrandIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 9.5h14" />
+      <path d="M8 6v7" />
+      <path d="M12 4v12" />
+      <path d="M16 7v6" />
+      <path d="M7 18h10" />
+    </svg>
+  );
+}
+
+function ChevronIcon({ direction = "right" }: { direction?: "right" | "left" }) {
+  return (
+    <svg
+      className={direction === "left" ? styles.iconLeft : undefined}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  );
+}
+
+function UploadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 16V5" />
+      <path d="m7 10 5-5 5 5" />
+      <path d="M5 19h14" />
+    </svg>
+  );
+}
+
+function FileTextIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M7 3h7l4 4v14H7z" />
+      <path d="M14 3v5h5" />
+      <path d="M9 13h6" />
+      <path d="M9 17h5" />
+    </svg>
+  );
+}
+
+function AudioIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9 18V6" />
+      <path d="M13 16V8" />
+      <path d="M17 14v-4" />
+      <path d="M5 14v-4" />
+    </svg>
+  );
+}
+
+function SparkleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3 9.6 9.6 3 12l6.6 2.4L12 21l2.4-6.6L21 12l-6.6-2.4L12 3Z" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m16 16 4 4" />
+    </svg>
+  );
+}
+
+function MoreIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M6 12h.01M12 12h.01M18 12h.01" />
+    </svg>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 7h16" />
+      <path d="M6 7l1 14h10l1-14" />
+      <path d="M9 7V4h6v3" />
+    </svg>
+  );
+}
+
+function ChartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 19V9" />
+      <path d="M12 19V5" />
+      <path d="M19 19v-7" />
+    </svg>
+  );
+}
+
+function MicIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="9" y="3" width="6" height="11" rx="3" />
+      <path d="M5 11a7 7 0 0 0 14 0" />
+      <path d="M12 18v3" />
+    </svg>
+  );
+}
+
+function RefreshIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 12a8 8 0 1 1-2.34-5.66" />
+      <path d="M20 4v6h-6" />
+    </svg>
+  );
+}
+
+function CrownIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m4 8 4.5 4L12 6l3.5 6L20 8l-1.4 9H5.4L4 8Z" />
+      <path d="M6 20h12" />
+    </svg>
+  );
+}
+
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M6 9a6 6 0 0 1 12 0v4.5l1.5 3H4.5l1.5-3V9Z" />
+      <path d="M10 19a2 2 0 0 0 4 0" />
+    </svg>
+  );
+}
+
+function GlobeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="8" />
+      <path d="M4 12h16" />
+      <path d="M12 4a12 12 0 0 1 0 16" />
+      <path d="M12 4a12 12 0 0 0 0 16" />
+    </svg>
+  );
+}
+
 export function CreateCourseWebPage() {
   const router = useRouter();
   const [courses, setCourses] = useState<StoredCourse[]>([]);
@@ -826,42 +976,50 @@ export function CreateCourseWebPage() {
   return (
     <main className={styles.page}>
       <header className={styles.topbar}>
-        <Link href="/" className={styles.brand} aria-label="LangCourse home">
-          <span className={styles.brandIcon}>▱</span>
-          <span>LangCourse</span>
+        <Link href="/" className={styles.brand} aria-label="SpeakFlow 首页">
+          <span className={styles.brandIcon}>
+            <BrandIcon />
+          </span>
+          <span>SpeakFlow</span>
         </Link>
         <nav className={styles.nav} aria-label="主导航">
           <Link href="/">首页</Link>
-          <Link href="/dashboard">我的课程</Link>
+          <Link href="/free-study">开始学习</Link>
+          <Link href="/new-expressions">我的表达</Link>
           <Link href="/create-course" className={styles.activeNav}>
             创建课程
           </Link>
-          <Link href="/start">学习中心</Link>
-          <Link href="/menu?panel=resources">资源库</Link>
+          <Link href="/about">关于我们</Link>
+          <Link href="/contact">联系我们</Link>
         </nav>
         <div className={styles.topActions}>
-          <Link href="/account" className={styles.upgrade}>
-            ♛ 升级会员
+          <Link href="/subscription" className={styles.upgrade}>
+            <CrownIcon />
+            会员版
           </Link>
           <Link href="/notifications" aria-label="通知" className={styles.iconLink}>
-            ♢
+            <BellIcon />
           </Link>
-          <Link href="/languages" className={styles.language}>
-            <span>EN</span>
+          <Link href="/account" className={styles.language}>
+            <span>
+              <GlobeIcon />
+            </span>
             English Learner
           </Link>
         </div>
       </header>
 
-      <section className={styles.hero}>
-        <div>
+      <section className={styles.hero} aria-labelledby="create-course-title">
+        <span className={styles.heroIcon}>
+          <SparkleIcon />
+        </span>
+        <div className={styles.heroCopy}>
           <h1>创建你的专属课程</h1>
           <p>上传你的学习材料，AI 将为你自动生成结构化课程内容</p>
         </div>
-        <div className={styles.heroArt} aria-hidden="true">
-          <span className={styles.heroWindow} />
-          <span className={styles.heroAudio} />
-          <span className={styles.heroAa}>Aa</span>
+        <div className={styles.heroStats}>
+          <span>已创建 {courses.length} 门</span>
+          <span>{selectedPairs.length || 0} 句预览</span>
         </div>
       </section>
 
@@ -882,8 +1040,20 @@ export function CreateCourseWebPage() {
 
       <div className={styles.workspace}>
         <section className={styles.leftColumn}>
-          <section className={styles.panel}>
-            <h2>上传学习材料</h2>
+          <section
+            className={`${styles.panel} ${styles.uploadPanel}`}
+            aria-labelledby="upload-material-title"
+          >
+            <header className={styles.panelHeader}>
+              <span>
+                <UploadIcon />
+              </span>
+              <div>
+                <p>上传内容</p>
+                <h2 id="upload-material-title">上传学习材料</h2>
+              </div>
+            </header>
+
             <div className={styles.uploadTabs}>
               <button
                 type="button"
@@ -893,7 +1063,8 @@ export function CreateCourseWebPage() {
                   setSelectedFile(null);
                 }}
               >
-                ▣ 上传文字
+                <FileTextIcon />
+                上传文字
               </button>
               <button
                 type="button"
@@ -903,7 +1074,8 @@ export function CreateCourseWebPage() {
                   setSelectedFile(null);
                 }}
               >
-                ♫ 上传音频
+                <AudioIcon />
+                上传音频
               </button>
             </div>
 
@@ -929,7 +1101,9 @@ export function CreateCourseWebPage() {
               onDragOver={(event) => event.preventDefault()}
               onDrop={handleDrop}
             >
-              <span className={styles.fileIcon}>▧</span>
+              <span className={styles.fileIcon}>
+                {uploadMode === "audio" ? <AudioIcon /> : <UploadIcon />}
+              </span>
               <strong>
                 {selectedFile
                   ? selectedFile.name
@@ -972,7 +1146,7 @@ export function CreateCourseWebPage() {
               disabled={isGenerating}
               onClick={generateCourse}
             >
-              <span>ϟ</span>
+              <SparkleIcon />
               {isGenerating ? "正在生成课程" : "一键生成课程"}
             </button>
 
@@ -981,13 +1155,16 @@ export function CreateCourseWebPage() {
 
           <section className={`${styles.panel} ${styles.coursePanel}`}>
             <div className={styles.courseHeader}>
-              <h2>学习自己创建的课程</h2>
+              <div>
+                <p>课程列表</p>
+                <h2>学习自己创建的课程</h2>
+              </div>
               <span>{filteredCourses.length} 门</span>
             </div>
 
             <div className={styles.courseControls}>
               <label className={styles.searchBox}>
-                <span>⌕</span>
+                <SearchIcon />
                 <input
                   value={query}
                   onChange={(event) => {
@@ -1029,7 +1206,7 @@ export function CreateCourseWebPage() {
                         aria-label={`预览 ${course.title}`}
                         onClick={() => selectCourse(course)}
                       >
-                        {course.sourceType === "audio" ? "◌" : "Aa"}
+                        {course.sourceType === "audio" ? <AudioIcon /> : <FileTextIcon />}
                       </button>
 
                       <button
@@ -1043,8 +1220,8 @@ export function CreateCourseWebPage() {
                         </span>
                         <small>{course.description || createDescription(pairs.length, "text")}</small>
                         <i>
-                          <span>▣ {Math.max(1, Math.ceil(pairs.length / 12))} 章节</span>
-                          <span>◷ {estimateMinutes(pairs.length)} 分钟</span>
+                          <span>{Math.max(1, Math.ceil(pairs.length / 12))} 个章节</span>
+                          <span>{estimateMinutes(pairs.length)} 分钟</span>
                         </i>
                       </button>
 
@@ -1076,35 +1253,37 @@ export function CreateCourseWebPage() {
                           <button
                             type="button"
                             aria-label={`${course.title} 更多操作`}
-                            className={styles.moreButton}
-                            onClick={() =>
-                              setOpenMenuId((current) =>
-                                current === course.id ? "" : course.id
-                              )
-                            }
-                          >
-                            ⋮
-                          </button>
-                          {openMenuId === course.id ? (
-                            <div className={styles.courseMenu}>
-                              <button
-                                type="button"
+                          className={styles.moreButton}
+                          onClick={() =>
+                            setOpenMenuId((current) =>
+                              current === course.id ? "" : course.id
+                            )
+                          }
+                        >
+                            <MoreIcon />
+                        </button>
+                        {openMenuId === course.id ? (
+                          <div className={styles.courseMenu}>
+                            <button
+                              type="button"
                                 onClick={() => {
                                   setRecordCourseId(course.id);
-                                  setOpenMenuId("");
-                                }}
-                              >
-                                📊 学习记录
-                              </button>
-                              <button
-                                type="button"
-                                className={styles.deleteMenuItem}
-                                onClick={() => deleteCourse(course.id)}
-                              >
-                                🗑 删除课程
-                              </button>
-                            </div>
-                          ) : null}
+                                setOpenMenuId("");
+                              }}
+                            >
+                              <ChartIcon />
+                              学习记录
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.deleteMenuItem}
+                              onClick={() => deleteCourse(course.id)}
+                            >
+                              <TrashIcon />
+                              删除课程
+                            </button>
+                          </div>
+                        ) : null}
                         </div>
                       </div>
                     </article>
@@ -1124,15 +1303,24 @@ export function CreateCourseWebPage() {
                 className={styles.showAllButton}
                 onClick={() => setShowAllCourses((current) => !current)}
               >
-                {showAllCourses ? "收起课程" : "查看全部课程"} →
+                {showAllCourses ? "收起课程" : "查看全部课程"}
+                <ChevronIcon />
               </button>
             ) : null}
           </section>
         </section>
 
         <aside className={styles.practicePanel}>
-          <section className={styles.previewCard}>
-            <h2>看看中文说英文</h2>
+          <section className={styles.previewCard} aria-labelledby="preview-title">
+            <header className={styles.panelHeader}>
+              <span>
+                <MicIcon />
+              </span>
+              <div>
+                <p>学习预览</p>
+                <h2 id="preview-title">看看中文说英文</h2>
+              </div>
+            </header>
             <div className={styles.chineseBox}>
               {currentPair?.chinese || "点击左侧课程卡片，第一句中文会出现在这里。"}
             </div>
@@ -1142,33 +1330,38 @@ export function CreateCourseWebPage() {
               onClick={handleRecordButton}
               disabled={!currentPair}
             >
-              <span>♩</span>
+              <MicIcon />
               {isRecording ? "再次点击，停止录音" : "点我，录制英语"}
             </button>
           </section>
 
           <section className={styles.recordCard}>
-            <h2>你的英文录音</h2>
+            <div className={styles.sectionTitleRow}>
+              <h2>你的英文录音</h2>
+              <button
+                type="button"
+                className={styles.retryButton}
+                onClick={handleRetryRecording}
+                disabled={!currentPair || isRecording}
+              >
+                <RefreshIcon />
+                重新说
+              </button>
+            </div>
             <div className={styles.englishBox}>
               {practiceTranscript || "录制完成后，用户说的英文会出现在这里。"}
             </div>
-            <button
-              type="button"
-              className={styles.retryButton}
-              onClick={handleRetryRecording}
-              disabled={!currentPair || isRecording}
-            >
-              ↻ 重新说
-            </button>
           </section>
 
           <section className={styles.recommendPanel}>
-            <h2>推荐表达 <span>AI 优化结果</span></h2>
+            <h2>
+              推荐表达 <span>AI 优化结果</span>
+            </h2>
             <div className={styles.variantList}>
               {currentPair?.english ? (
                 <>
                   <div className={styles.variantCard} data-tone="blue">
-                    <strong>最自然地道</strong>
+                    <strong>推荐表达</strong>
                     <p>{currentPair.english}</p>
                   </div>
                   <div className={styles.variantCard} data-tone="green">
@@ -1190,7 +1383,8 @@ export function CreateCourseWebPage() {
 
           <div className={styles.practiceNavigation}>
             <button type="button" onClick={goPreviousSentence} disabled={currentIndex <= 0}>
-              ← 上一句
+              <ChevronIcon direction="left" />
+              上一句
             </button>
             <span>
               {selectedPairs.length ? currentIndex + 1 : 0} / {selectedPairs.length || 0}
@@ -1200,7 +1394,8 @@ export function CreateCourseWebPage() {
               onClick={goNextSentence}
               disabled={!selectedPairs.length || currentIndex >= selectedPairs.length - 1}
             >
-              下一句 →
+              下一句
+              <ChevronIcon />
             </button>
           </div>
         </aside>
@@ -1215,7 +1410,7 @@ export function CreateCourseWebPage() {
               onClick={() => setRecordCourseId("")}
               aria-label="关闭学习记录"
             >
-              ×
+              关闭
             </button>
             <h2>学习记录</h2>
             <p className={styles.modalCourseTitle}>{recordCourse.title}</p>

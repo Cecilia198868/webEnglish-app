@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import styles from "./FooterInfoPage.module.css";
 
@@ -26,11 +25,18 @@ export type FooterInfoPageData = {
   title: string;
   tone?: InfoTone;
   updated?: string;
-  visual: {
-    alt: string;
-    src: string;
-  };
 };
+
+function BrandMark() {
+  return (
+    <span className={styles.brandIcon} aria-hidden="true">
+      <svg viewBox="0 0 48 48" focusable="false">
+        <path d="M24 6c9.9 0 18 7 18 15.8 0 5.5-3.2 10.4-8.1 13.2l.8 6.2-6.5-3.2c-1.4.3-2.8.5-4.2.5-9.9 0-18-7-18-15.8S14.1 6 24 6Z" />
+        <path d="M17 22v5M22 17v15M27 20v9M32 23v3" />
+      </svg>
+    </span>
+  );
+}
 
 function ArrowIcon() {
   return (
@@ -40,19 +46,35 @@ function ArrowIcon() {
   );
 }
 
+function InfoVisual({ data }: { data: FooterInfoPageData }) {
+  return (
+    <aside className={styles.visualCard} aria-label={`${data.title}概要`}>
+      <div className={styles.visualHeader}>
+        <span className={styles.visualIcon} aria-hidden="true">
+          <svg viewBox="0 0 32 32" focusable="false">
+            <path d="M16 4 19.4 12.6 28 16l-8.6 3.4L16 28l-3.4-8.6L4 16l8.6-3.4L16 4Z" />
+          </svg>
+        </span>
+        <div>
+          <p>{data.eyebrow}</p>
+          <h2>{data.summary.title}</h2>
+        </div>
+      </div>
+      <ul>
+        {data.summary.items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </aside>
+  );
+}
+
 export default function FooterInfoPage({ data }: { data: FooterInfoPageData }) {
   return (
     <main className={styles.page} data-tone={data.tone ?? "violet"}>
       <header className={styles.topbar}>
         <Link href="/" className={styles.brand} aria-label="返回 SpeakFlow 首页">
-          <Image
-            alt=""
-            className={styles.brandIcon}
-            height={48}
-            priority
-            src="/brand/speakflow-app-icon.png"
-            width={48}
-          />
+          <BrandMark />
           <span>SpeakFlow</span>
         </Link>
         <nav className={styles.topnav} aria-label="页脚信息页导航">
@@ -74,26 +96,7 @@ export default function FooterInfoPage({ data }: { data: FooterInfoPageData }) {
             ))}
           </div>
         </div>
-        <div className={styles.heroVisual}>
-          <div className={styles.visualFrame}>
-            <Image
-              alt={data.visual.alt}
-              className={styles.visualImage}
-              fill
-              priority
-              sizes="(max-width: 900px) 90vw, 520px"
-              src={data.visual.src}
-            />
-          </div>
-          <div className={styles.summaryPanel}>
-            <h2>{data.summary.title}</h2>
-            <ul>
-              {data.summary.items.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        <InfoVisual data={data} />
       </section>
 
       <section className={styles.content} aria-label={`${data.title}内容`}>
