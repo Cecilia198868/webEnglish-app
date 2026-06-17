@@ -618,7 +618,6 @@ export function CreateCourseWebPage() {
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [showAllCourses, setShowAllCourses] = useState(false);
   const [openMenuId, setOpenMenuId] = useState("");
   const [recordCourseId, setRecordCourseId] = useState("");
   const [spokenEnglish, setSpokenEnglish] = useState("");
@@ -673,10 +672,6 @@ export function CreateCourseWebPage() {
       return searchable.includes(normalizedQuery);
     });
   }, [courses, query, statusFilter]);
-
-  const visibleCourses = showAllCourses
-    ? filteredCourses
-    : filteredCourses.slice(0, 4);
 
   const recordCourse =
     courses.find((course) => course.id === recordCourseId) || null;
@@ -1282,7 +1277,6 @@ export function CreateCourseWebPage() {
                   value={query}
                   onChange={(event) => {
                     setQuery(event.target.value);
-                    setShowAllCourses(false);
                   }}
                   placeholder="搜索课程名称"
                 />
@@ -1292,7 +1286,6 @@ export function CreateCourseWebPage() {
                   value={statusFilter}
                   onChange={(event) => {
                     setStatusFilter(event.target.value as StatusFilter);
-                    setShowAllCourses(false);
                   }}
                 >
                   {statusOptions.map((option) => (
@@ -1305,8 +1298,8 @@ export function CreateCourseWebPage() {
             </div>
 
             <div className={styles.courseList}>
-              {visibleCourses.length ? (
-                visibleCourses.map((course, index) => {
+              {filteredCourses.length ? (
+                filteredCourses.map((course, index) => {
                   const pairs = getPairs(course);
                   const status = normalizeStatus(course.status);
                   const canStudy = status === "published" && pairs.length > 0;
@@ -1409,17 +1402,6 @@ export function CreateCourseWebPage() {
                 </div>
               )}
             </div>
-
-            {filteredCourses.length > 4 ? (
-              <button
-                type="button"
-                className={styles.showAllButton}
-                onClick={() => setShowAllCourses((current) => !current)}
-              >
-                {showAllCourses ? "收起课程" : "查看全部课程"}
-                <ChevronIcon />
-              </button>
-            ) : null}
           </section>
         </section>
 

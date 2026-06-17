@@ -2057,6 +2057,7 @@
   max-height: none;
   gap: 12px;
   margin-top: 18px;
+  overflow: visible;
   padding-right: 0;
 }
 
