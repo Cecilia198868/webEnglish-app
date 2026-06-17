@@ -87,6 +87,22 @@ const methodCards = [
   { icon: "5", label: "发布课程", text: "发布并分享课程" },
 ];
 
+const recommendationTones = [
+  { label: "最自然地道", tone: "blue" },
+  { label: "更地道", tone: "green" },
+  { label: "更简单", tone: "cyan" },
+  { label: "更口语", tone: "purple" },
+];
+
+const sampleChinesePrompt = "那我们休息一下，过会儿再去散步吧。";
+const sampleSpokenEnglish = "Let's have a rest, and then we can go hiking.";
+const sampleRecommendations = [
+  "That's why I'm looking for a better job.",
+  "That's why I'm searching for a better job.",
+  "So I want to find a better job.",
+  "That's why I'm trying to find a better job.",
+];
+
 function normalizeStatus(status?: string): CourseStatus {
   if (
     status === "draft" ||
@@ -423,11 +439,9 @@ function getCourseVisual(index: number) {
 function BrandIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M5 9.5h14" />
-      <path d="M8 6v7" />
-      <path d="M12 4v12" />
-      <path d="M16 7v6" />
-      <path d="M7 18h10" />
+      <path d="M4 5.5c1.9-1 4.3-1 7 0v13c-2.7-1-5.1-1-7 0v-13Z" />
+      <path d="M20 5.5c-1.9-1-4.3-1-7 0v13c2.7-1 5.1-1 7 0v-13Z" />
+      <path d="M12 5.5v13" />
     </svg>
   );
 }
@@ -559,14 +573,36 @@ function BellIcon() {
   );
 }
 
-function GlobeIcon() {
+function PlayIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <circle cx="12" cy="12" r="8" />
-      <path d="M4 12h16" />
-      <path d="M12 4a12 12 0 0 1 0 16" />
-      <path d="M12 4a12 12 0 0 0 0 16" />
+      <path d="M8 5.5v13l11-6.5-11-6.5Z" />
     </svg>
+  );
+}
+
+function HeroIllustration() {
+  return (
+    <div className={styles.heroIllustration} aria-hidden="true">
+      <div className={styles.mockBrowser}>
+        <span />
+        <span />
+        <span />
+        <div />
+        <div />
+        <div />
+      </div>
+      <div className={styles.audioTile}>
+        <AudioIcon />
+      </div>
+      <div className={styles.textTile}>Aa</div>
+      <span className={styles.heroSparkleOne}>
+        <SparkleIcon />
+      </span>
+      <span className={styles.heroSparkleTwo}>
+        <SparkleIcon />
+      </span>
+    </div>
   );
 }
 
@@ -1037,68 +1073,76 @@ export function CreateCourseWebPage() {
   }
 
   const practiceTranscript = isRecording && liveTranscript ? liveTranscript : spokenEnglish;
+  const displayedChinesePrompt = currentPair?.chinese || sampleChinesePrompt;
+  const displayedSpokenEnglish =
+    practiceTranscript || currentPair?.english || sampleSpokenEnglish;
+  const recommendationTexts =
+    currentPair?.english && currentPair.english.trim()
+      ? [
+          currentPair.english,
+          currentPair.english,
+          currentPair.english,
+          currentPair.english,
+        ]
+      : sampleRecommendations;
 
   return (
     <main className={styles.page}>
       <header className={styles.topbar}>
-        <Link href="/" className={styles.brand} aria-label="SpeakFlow 首页">
+        <Link href="/" className={styles.brand} aria-label="LangCourse 首页">
           <span className={styles.brandIcon}>
             <BrandIcon />
           </span>
-          <span>SpeakFlow</span>
+          <span>LangCourse</span>
         </Link>
         <nav className={styles.nav} aria-label="主导航">
           <Link href="/">首页</Link>
-          <Link href="/free-study">开始学习</Link>
-          <Link href="/new-expressions">我的表达</Link>
+          <Link href="/dashboard">我的课程</Link>
           <Link href="/create-course" className={styles.activeNav}>
             创建课程
           </Link>
-          <Link href="/about">关于我们</Link>
-          <Link href="/contact">联系我们</Link>
+          <Link href="/free-study">学习中心</Link>
+          <Link href="/classic-scenes">资源库</Link>
         </nav>
         <div className={styles.topActions}>
           <Link href="/subscription" className={styles.upgrade}>
             <CrownIcon />
-            会员版
+            升级会员
           </Link>
           <Link href="/notifications" aria-label="通知" className={styles.iconLink}>
             <BellIcon />
           </Link>
           <Link href="/account" className={styles.language}>
-            <span>
-              <GlobeIcon />
-            </span>
+            <span>EN</span>
             English Learner
+            <ChevronIcon />
           </Link>
         </div>
       </header>
 
       <section className={styles.hero} aria-labelledby="create-course-title">
-        <span className={styles.heroIcon}>
-          <SparkleIcon />
-        </span>
         <div className={styles.heroCopy}>
           <h1>创建你的专属课程</h1>
           <p>上传你的学习材料，AI 将为你自动生成结构化课程内容</p>
         </div>
-        <div className={styles.heroStats}>
-          <span>已创建 {courses.length} 门</span>
-          <span>{selectedPairs.length || 0} 句预览</span>
-        </div>
+        <HeroIllustration />
       </section>
 
       <section className={styles.steps} aria-label="创建课程步骤">
         {methodCards.map((card, index) => (
-          <div
-            className={`${styles.step} ${index === 0 ? styles.stepActive : ""}`}
-            key={card.label}
-          >
-            <span>{card.icon}</span>
-            <div>
-              <strong>{card.label}</strong>
-              <p>{card.text}</p>
+          <div className={styles.stepWrap} key={card.label}>
+            <div className={`${styles.step} ${index === 0 ? styles.stepActive : ""}`}>
+              <span>{card.icon}</span>
+              <div>
+                <strong>{card.label}</strong>
+                <p>{card.text}</p>
+              </div>
             </div>
+            {index < methodCards.length - 1 ? (
+              <span className={styles.stepArrow}>
+                <ChevronIcon />
+              </span>
+            ) : null}
           </div>
         ))}
       </section>
@@ -1381,23 +1425,16 @@ export function CreateCourseWebPage() {
 
         <aside className={styles.practicePanel}>
           <section className={styles.previewCard} aria-labelledby="preview-title">
-            <header className={styles.panelHeader}>
-              <span>
-                <MicIcon />
-              </span>
-              <div>
-                <p>学习预览</p>
-                <h2 id="preview-title">看看中文说英文</h2>
-              </div>
-            </header>
+            <h2 id="preview-title" className={styles.practiceTitle}>
+              看看中文说英文
+            </h2>
             <div className={styles.chineseBox}>
-              {currentPair?.chinese || "点击左侧课程卡片，第一句中文会出现在这里。"}
+              {displayedChinesePrompt}
             </div>
             <button
               type="button"
               className={`${styles.recordButton} ${isRecording ? styles.recording : ""}`}
               onClick={handleRecordButton}
-              disabled={!currentPair}
             >
               <MicIcon />
               {isRecording ? "再次点击，停止录音" : "点我，录制英语"}
@@ -1411,42 +1448,51 @@ export function CreateCourseWebPage() {
                 type="button"
                 className={styles.retryButton}
                 onClick={handleRetryRecording}
-                disabled={!currentPair || isRecording}
+                disabled={isRecording}
               >
                 <RefreshIcon />
                 重新说
               </button>
             </div>
             <div className={styles.englishBox}>
-              {practiceTranscript || "录制完成后，用户说的英文会出现在这里。"}
+              {displayedSpokenEnglish}
             </div>
           </section>
 
           <section className={styles.recommendPanel}>
             <h2>
-              推荐表达 <span>AI 优化结果</span>
+              <SparkleIcon />
+              推荐表达 <span>（AI 优化结果）</span>
+              <small>AI 为你优化的多种表达方式</small>
             </h2>
             <div className={styles.variantList}>
-              {currentPair?.english ? (
-                <>
-                  <div className={styles.variantCard} data-tone="blue">
-                    <strong>推荐表达</strong>
-                    <p>{currentPair.english}</p>
-                  </div>
-                  <div className={styles.variantCard} data-tone="green">
-                    <strong>更简单</strong>
-                    <p>{currentPair.english}</p>
-                  </div>
-                  <div className={styles.variantCard} data-tone="purple">
-                    <strong>更口语</strong>
-                    <p>{currentPair.english}</p>
-                  </div>
-                </>
-              ) : (
-                <div className={styles.emptyRecommendation}>
-                  选择课程后，这里会显示这句中文对应的正确英文表达。
-                </div>
-              )}
+              {recommendationTexts.map((text, index) => {
+                const tone = recommendationTones[index] || recommendationTones[0];
+                const VariantIcon =
+                  index === 0
+                    ? SparkleIcon
+                    : index === 1
+                      ? FileTextIcon
+                      : index === 2
+                        ? AudioIcon
+                        : MoreIcon;
+
+                return (
+                  <article className={styles.variantCard} data-tone={tone.tone} key={tone.label}>
+                    <span className={styles.variantIcon}>
+                      <VariantIcon />
+                    </span>
+                    <div className={styles.variantCopy}>
+                      <strong>{tone.label}</strong>
+                      <p>{text}</p>
+                    </div>
+                    <button type="button" className={styles.playButton} aria-label="播放表达">
+                      <PlayIcon />
+                    </button>
+                    <span className={styles.speedChip}>0.75x</span>
+                  </article>
+                );
+              })}
             </div>
           </section>
 
