@@ -360,6 +360,172 @@
   content: "";
 }
 
+@media (min-width: 760px) {
+  .page {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 0;
+    background:
+      radial-gradient(circle at 18% 8%, rgba(233, 226, 255, 0.9), transparent 30%),
+      radial-gradient(circle at 88% 16%, rgba(218, 231, 255, 0.82), transparent 28%),
+      linear-gradient(180deg, #fbfdff 0%, #f7f8ff 100%);
+  }
+
+  .phone {
+    width: min(calc(100% - 64px), 1120px);
+    min-height: auto;
+    overflow: visible;
+    padding: 0 !important;
+  }
+
+  .phone:has(.panel) {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.78fr) minmax(0, 1.22fr);
+    align-items: stretch;
+    gap: 32px;
+  }
+
+  .hero {
+    min-height: 300px;
+    overflow: hidden;
+    border: 1px solid rgba(224, 226, 244, 0.92);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.86);
+    padding: 42px 46px;
+    box-shadow:
+      0 22px 58px rgba(65, 74, 132, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.94);
+  }
+
+  .hero::before {
+    right: -4.5rem;
+    bottom: -5.2rem;
+    width: 21rem;
+    height: 21rem;
+  }
+
+  .hero::after {
+    right: 4.6rem;
+    bottom: 4.4rem;
+    width: 9rem;
+    height: 5.1rem;
+  }
+
+  .brandIcon,
+  .brandIcon img {
+    width: 4.65rem;
+    height: 4.65rem;
+    border-radius: 1.35rem;
+  }
+
+  .brandText {
+    font-size: 3.1rem;
+  }
+
+  .heroCopy {
+    max-width: 470px;
+    margin-top: 2.65rem;
+  }
+
+  .heroCopy h1 {
+    font-size: 2.35rem;
+    line-height: 1.12;
+  }
+
+  .heroCopy p {
+    max-width: 390px;
+    font-size: 1.18rem;
+  }
+
+  .bubbleDots {
+    right: 6.45rem;
+    bottom: 6.18rem;
+  }
+
+  .decorDot {
+    right: 15.5rem;
+    bottom: 9.9rem;
+  }
+
+  .decorDotSmall {
+    right: 13.9rem;
+    bottom: 7.78rem;
+  }
+
+  .menuList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 28px;
+  }
+
+  .menuRow {
+    min-height: 8rem;
+    grid-template-columns: 4.9rem minmax(0, 1fr) 1.5rem;
+    border-radius: 18px;
+    padding: 1rem 1.4rem;
+  }
+
+  .rowIcon {
+    width: 3.72rem;
+    height: 3.72rem;
+    border-radius: 1.1rem;
+  }
+
+  .rowCopy strong {
+    font-size: 1.5rem;
+  }
+
+  .rowCopy small {
+    font-size: 1rem;
+  }
+
+  .panel {
+    align-self: stretch;
+    gap: 1.35rem;
+    margin-top: 0;
+    border-radius: 24px;
+    padding: 32px 36px 36px;
+    box-shadow:
+      0 22px 58px rgba(65, 74, 132, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.98);
+  }
+
+  .panelBack {
+    font-size: 1.08rem;
+  }
+
+  .panelHeader {
+    grid-template-columns: 5.1rem minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .panelHeader h2 {
+    font-size: 2.25rem;
+  }
+
+  .panelHeader p {
+    max-width: 620px;
+    font-size: 1.13rem;
+  }
+
+  .panelList {
+    gap: 0.9rem;
+  }
+
+  .panelList li {
+    min-height: 4.7rem;
+    border-radius: 1rem;
+    padding: 1.1rem 1.2rem 1.1rem 2.7rem;
+    font-size: 1.03rem;
+  }
+
+  .panelList li::before {
+    top: 1.45rem;
+    left: 1.12rem;
+  }
+}
+
 @media (max-width: 390px) {
   .phone {
     padding-right: 0.92rem;

@@ -15,6 +15,19 @@ function isCheckoutPlan(value: unknown): value is CheckoutPlan {
   return value === "monthly" || value === "yearly";
 }
 
+function getSafeReturnPath(value: unknown) {
+  if (
+    typeof value === "string" &&
+    value.startsWith("/") &&
+    !value.startsWith("//") &&
+    !value.includes("\\")
+  ) {
+    return value;
+  }
+
+  return "/account";
+}
+
 async function getReusableStripeCustomer(stripe: Stripe, email: string) {
   const profile = await findProfileByEmail(email);
   const storedStripeCustomerId = profile?.stripeCustomerId?.trim();
@@ -57,8 +70,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = (await req.json()) as { plan?: unknown };
+    const body = (await req.json()) as { plan?: unknown; returnPath?: unknown };
     const plan = body.plan;
+    const returnPath = getSafeReturnPath(body.returnPath);
 
     if (!isCheckoutPlan(plan)) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
@@ -93,7 +107,7 @@ export async function POST(req: Request) {
     await upsertProfileStripeCustomerByEmail(email, stripeCustomer.id);
 
     const session = await stripe.checkout.sessions.create({
-      cancel_url: `${appUrl}/account?checkout=cancel`,
+      cancel_url: `${appUrl}${returnPath}?checkout=cancel`,
       client_reference_id: email,
       customer: stripeCustomer.id,
       line_items: [
@@ -108,7 +122,7 @@ export async function POST(req: Request) {
         plan,
       },
       payment_method_types: ["card"],
-      success_url: `${appUrl}/account?checkout=success`,
+      success_url: `${appUrl}${returnPath}?checkout=success`,
     });
 
     if (!session.url) {

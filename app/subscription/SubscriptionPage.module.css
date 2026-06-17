@@ -1,0 +1,550 @@
+.page {
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background:
+    linear-gradient(rgba(107, 85, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(107, 85, 255, 0.045) 1px, transparent 1px),
+    radial-gradient(circle at 12% 8%, rgba(232, 223, 255, 0.86), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(214, 231, 255, 0.78), transparent 30%),
+    linear-gradient(180deg, #fbfbff 0%, #f8f9ff 48%, #ffffff 100%);
+  background-size: 42px 42px, 42px 42px, auto, auto, auto;
+  color: #0b1040;
+  font-family: var(--sf-font-zh);
+}
+
+.topbar,
+.hero,
+.valueGrid,
+.plansSection,
+.workflow {
+  width: min(100% - 64px, 1200px);
+  margin: 0 auto;
+}
+
+.topbar {
+  display: flex;
+  min-height: 92px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #080d3b;
+  font-family: var(--font-sora), var(--sf-font-zh);
+  font-size: 1.34rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.brandIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  box-shadow: 0 14px 28px rgba(97, 87, 219, 0.16);
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topnav a {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  border-radius: 8px;
+  color: #4f5676;
+  font-size: 0.98rem;
+  font-weight: 850;
+  padding: 0 14px;
+  text-decoration: none;
+}
+
+.topnav a:hover {
+  background: rgba(255, 255, 255, 0.72);
+  color: #6548f3;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 0.62fr);
+  align-items: end;
+  gap: 56px;
+  padding: 74px 0 42px;
+}
+
+.heroCopy {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #6548f3;
+  font-size: 1rem;
+  font-weight: 950;
+  letter-spacing: 0;
+}
+
+.heroCopy h1 {
+  max-width: 780px;
+  margin: 16px 0 0;
+  color: #14103f;
+  font-size: clamp(3.2rem, 6vw, 5.4rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.04;
+}
+
+.heroCopy p {
+  max-width: 720px;
+  margin: 24px 0 0;
+  color: #535a77;
+  font-size: 1.16rem;
+  font-weight: 720;
+  letter-spacing: 0;
+  line-height: 1.82;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.heroActions a,
+.heroActions button,
+.statusPanel button,
+.planAction {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 8px;
+  font-family: var(--sf-font-zh);
+  font-size: 0.96rem;
+  font-weight: 950;
+  text-decoration: none;
+}
+
+.heroActions a:first-child,
+.statusPanel button {
+  border: 0;
+  background: linear-gradient(135deg, #775cff 0%, #3f72ff 100%);
+  color: #ffffff;
+  padding: 0 18px;
+  box-shadow: 0 16px 32px rgba(103, 85, 255, 0.22);
+}
+
+.heroActions a:not(:first-child),
+.heroActions button {
+  border: 1px solid rgba(110, 92, 226, 0.18);
+  background: rgba(255, 255, 255, 0.78);
+  color: #2a285c;
+  cursor: pointer;
+  padding: 0 18px;
+}
+
+.statusPanel {
+  border: 1px solid rgba(209, 216, 244, 0.96);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 28px;
+  box-shadow: 0 24px 70px rgba(61, 68, 122, 0.11);
+}
+
+.statusBadge {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  border-radius: 8px;
+  background: rgba(101, 72, 243, 0.12);
+  color: #5d42dd;
+  font-size: 0.88rem;
+  font-weight: 950;
+  padding: 0 12px;
+}
+
+.statusPanel h2 {
+  margin: 18px 0 0;
+  color: #12113d;
+  font-size: 1.64rem;
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.24;
+}
+
+.statusPanel p,
+.statusPanel small {
+  display: block;
+  color: #5a6383;
+  font-weight: 720;
+  line-height: 1.68;
+}
+
+.statusPanel p {
+  margin: 12px 0 0;
+  font-size: 0.98rem;
+}
+
+.statusPanel small {
+  margin-top: 12px;
+  font-size: 0.88rem;
+}
+
+.statusPanel button {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.statusPanel button:disabled,
+.heroActions button:disabled,
+.planCard:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.message {
+  margin-top: 16px;
+  border: 1px solid rgba(101, 72, 243, 0.16);
+  border-radius: 8px;
+  background: rgba(247, 245, 255, 0.86);
+  color: #3f3572;
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.55;
+  padding: 12px;
+}
+
+.valueGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  padding: 20px 0;
+}
+
+.valueIntro,
+.valueCard,
+.plansSection,
+.workflow {
+  border: 1px solid rgba(209, 216, 244, 0.96);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 18px 48px rgba(61, 68, 122, 0.08);
+}
+
+.valueIntro {
+  grid-column: span 2;
+  padding: 26px;
+}
+
+.valueIntro svg {
+  width: 34px;
+  height: 34px;
+  color: #6548f3;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+}
+
+.valueIntro h2,
+.plansHeader h2,
+.workflow h2 {
+  margin: 14px 0 0;
+  color: #12113d;
+  font-size: 1.78rem;
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1.22;
+}
+
+.valueIntro p,
+.plansHeader span {
+  display: block;
+  margin-top: 12px;
+  color: #5b6382;
+  font-size: 0.98rem;
+  font-weight: 720;
+  line-height: 1.65;
+}
+
+.valueCard {
+  min-height: 210px;
+  padding: 22px;
+}
+
+.valueCard span {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(101, 72, 243, 0.12);
+  color: #6548f3;
+}
+
+.valueCard svg,
+.statusPanel svg,
+.planAction svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.7;
+}
+
+.valueCard h3 {
+  margin: 18px 0 0;
+  color: #15133e;
+  font-size: 1.08rem;
+  font-weight: 950;
+  letter-spacing: 0;
+}
+
+.valueCard p {
+  margin: 10px 0 0;
+  color: #5e6683;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.62;
+}
+
+.plansSection {
+  margin-top: 18px;
+  padding: 30px;
+}
+
+.plansHeader p,
+.workflow > div p {
+  margin: 0;
+  color: #6548f3;
+  font-size: 0.96rem;
+  font-weight: 950;
+}
+
+.planGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.planCard {
+  display: grid;
+  gap: 14px;
+  min-height: 310px;
+  border: 1px solid rgba(207, 214, 240, 0.96);
+  border-radius: 8px;
+  background: rgba(248, 250, 255, 0.88);
+  color: inherit;
+  cursor: pointer;
+  font-family: var(--sf-font-zh);
+  padding: 26px;
+  text-align: left;
+}
+
+.planCard[data-featured="true"] {
+  border-color: rgba(101, 72, 243, 0.52);
+  background:
+    radial-gradient(circle at 92% 6%, rgba(118, 92, 255, 0.2), transparent 28%),
+    rgba(255, 255, 255, 0.96);
+  box-shadow: 0 24px 56px rgba(101, 72, 243, 0.14);
+}
+
+.planTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.planTop strong {
+  color: #12113d;
+  font-size: 1.34rem;
+  font-weight: 950;
+}
+
+.planTop em {
+  border-radius: 8px;
+  background: #6548f3;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 950;
+  padding: 7px 10px;
+}
+
+.planSummary,
+.planDescription {
+  color: #5c6582;
+  font-size: 0.98rem;
+  font-weight: 740;
+  line-height: 1.62;
+}
+
+.planPrice {
+  color: #12113d;
+  font-family: var(--font-sora), var(--sf-font-zh);
+  font-size: 3.2rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.planPrice small {
+  color: #6a7190;
+  font-family: var(--sf-font-zh);
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+.planAction {
+  width: fit-content;
+  min-height: 48px;
+  margin-top: auto;
+  background: linear-gradient(135deg, #775cff 0%, #3f72ff 100%);
+  color: #ffffff;
+  padding: 0 18px;
+}
+
+.workflow {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 18px;
+  margin-bottom: 88px;
+  padding: 30px;
+}
+
+.workflow ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  counter-reset: flow;
+  list-style: none;
+}
+
+.workflow li {
+  position: relative;
+  min-height: 112px;
+  border: 1px solid rgba(209, 216, 244, 0.92);
+  border-radius: 8px;
+  background: rgba(248, 250, 255, 0.88);
+  color: #171541;
+  font-size: 0.98rem;
+  font-weight: 900;
+  line-height: 1.42;
+  padding: 52px 16px 16px;
+  counter-increment: flow;
+}
+
+.workflow li::before {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(101, 72, 243, 0.12);
+  color: #6548f3;
+  content: counter(flow);
+  font-size: 0.88rem;
+  font-weight: 950;
+}
+
+@media (max-width: 980px) {
+  .topbar,
+  .hero,
+  .valueGrid,
+  .plansSection,
+  .workflow {
+    width: min(100% - 32px, 720px);
+  }
+
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px 0 0;
+  }
+
+  .topnav {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .topnav a {
+    padding: 0 10px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 44px 0 28px;
+  }
+
+  .heroCopy h1 {
+    font-size: clamp(2.35rem, 12vw, 3.8rem);
+  }
+
+  .valueGrid,
+  .planGrid,
+  .workflow,
+  .workflow ol {
+    grid-template-columns: 1fr;
+  }
+
+  .valueIntro {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .brand span {
+    font-size: 1.12rem;
+  }
+
+  .brandIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .heroCopy h1 {
+    font-size: 2.34rem;
+  }
+
+  .heroCopy p {
+    font-size: 1rem;
+  }
+
+  .heroActions a,
+  .heroActions button {
+    width: 100%;
+  }
+
+  .statusPanel,
+  .valueIntro,
+  .valueCard,
+  .plansSection,
+  .planCard,
+  .workflow {
+    padding: 20px;
+  }
+
+  .planPrice {
+    font-size: 2.7rem;
+  }
+}

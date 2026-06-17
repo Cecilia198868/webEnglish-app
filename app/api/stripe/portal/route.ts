@@ -8,7 +8,20 @@ import Stripe from "stripe";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export async function POST() {
+function getSafeReturnPath(value: unknown) {
+  if (
+    typeof value === "string" &&
+    value.startsWith("/") &&
+    !value.startsWith("//") &&
+    !value.includes("\\")
+  ) {
+    return value;
+  }
+
+  return "/account";
+}
+
+export async function POST(req: Request) {
   try {
     const authSession = await getServerSession(authOptions);
     const email = authSession?.user?.email?.trim().toLowerCase();
@@ -28,6 +41,11 @@ export async function POST() {
       throw new Error("Missing NEXT_PUBLIC_APP_URL");
     }
 
+    const body = (await req.json().catch(() => ({}))) as {
+      returnPath?: unknown;
+    };
+    const returnPath = getSafeReturnPath(body.returnPath);
+
     const profile = await findProfileByEmail(email);
     let stripeCustomerId = profile?.stripeCustomerId?.trim() || "";
 
@@ -46,7 +64,7 @@ export async function POST() {
     const stripe = new Stripe(stripeSecretKey);
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: stripeCustomerId,
-      return_url: `${appUrl}/account`,
+      return_url: `${appUrl}${returnPath}`,
     });
 
     if (!portalSession.url) {

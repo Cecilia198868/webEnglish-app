@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useLanguage } from "@/components/LanguageProvider";
+import { createLoginUrl } from "@/lib/loginRedirect";
+import styles from "./NotificationsPage.module.css";
 
 type NotificationType =
   | "subscription"
@@ -21,98 +22,120 @@ type UserNotification = {
   userEmail: string;
 };
 
-const notificationPageCopy = {
-  en: {
-    back: "Back",
-    emptyBody:
-      "Subscription changes, invite reward messages, learning reminders, account safety messages, and replies from SpeakFlow will appear here.",
-    emptyTitle: "No notifications yet",
-    error: "Unable to load notifications. Please try again later.",
-    loading: "Loading notifications...",
-    read: "Read",
-    subtitle:
-      "System messages, subscription updates, and invite reward messages from SpeakFlow are collected here, like an inbox.",
-    title: "Notifications",
-    typeLabels: {
-      account: "Account",
-      learning: "Learning",
-      referral: "Referral",
-      subscription: "Subscription",
-      system: "System",
-    },
-    unread: "Unread",
-  },
-  "zh-CN": {
-    back: "返回",
-    emptyBody:
-      "订阅变化、邀请奖励、学习提醒、账号安全消息和 SpeakFlow 的回复都会出现在这里。",
-    emptyTitle: "暂时没有通知",
-    error: "通知加载失败，请稍后再试。",
-    loading: "正在加载通知...",
-    read: "已读",
-    subtitle: "SpeakFlow 发给你的系统消息、订阅更新和邀请奖励会集中显示在这里，就像收件箱。",
-    title: "通知",
-    typeLabels: {
-      account: "账号",
-      learning: "学习",
-      referral: "邀请奖励",
-      subscription: "订阅",
-      system: "系统",
-    },
-    unread: "未读",
-  },
-} as const;
+type FilterId = "all" | "unread" | NotificationType;
+type PageStatus = "loading" | "ready" | "error" | "unauthorized";
 
-function formatNotificationTime(value: string, language: "en" | "zh-CN") {
+const typeLabels: Record<NotificationType, string> = {
+  account: "账号消息",
+  learning: "学习提醒",
+  referral: "邀请奖励",
+  subscription: "订阅消息",
+  system: "系统通知",
+};
+
+const filterTabs: Array<{ id: FilterId; label: string }> = [
+  { id: "all", label: "全部消息" },
+  { id: "unread", label: "未读消息" },
+  { id: "subscription", label: "订阅消息" },
+  { id: "referral", label: "邀请奖励" },
+  { id: "learning", label: "学习提醒" },
+  { id: "account", label: "账号消息" },
+  { id: "system", label: "系统通知" },
+];
+
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path d="M9 23h14l-1.5-2.4V15a5.5 5.5 0 0 0-11 0v5.6L9 23Z" />
+      <path d="M13.4 25a3 3 0 0 0 5.2 0" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m5 12 4.2 4.2L19 6.8" />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
+}
+
+function formatNotificationTime(value: string) {
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
+  if (Number.isNaN(date.getTime())) return "时间未知";
 
-  return date.toLocaleString(language === "en" ? "en-US" : "zh-CN", {
+  return date.toLocaleString("zh-CN", {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-    month: "short",
+    month: "long",
     year: "numeric",
   });
 }
 
-function getTypeTone(type: NotificationType) {
+function typeDescription(type: NotificationType) {
   if (type === "subscription") {
-    return "bg-[#fff2db] text-[#b45d05] ring-[#ffd99a]";
+    return "会员开通、续订、取消和恢复购买等订阅状态变化都会显示在这里。";
   }
 
   if (type === "referral") {
-    return "bg-[#f0ebff] text-[#7460e8] ring-[#e2d8ff]";
+    return "好友邀请、奖励到账和推荐活动相关消息会显示在这里。";
   }
 
   if (type === "learning") {
-    return "bg-[#ecfff7] text-[#14845f] ring-[#c8f3df]";
+    return "学习提醒、课程进度和练习建议会显示在这里。";
   }
 
   if (type === "account") {
-    return "bg-[#eef6ff] text-[#3b6ed6] ring-[#d6e7ff]";
+    return "登录、账号安全、资料同步和账号管理相关消息会显示在这里。";
   }
 
-  return "bg-[#f0ebff] text-[#7460e8] ring-[#e2d8ff]";
+  return "SpeakFlow 的系统更新、客服回复和重要说明会显示在这里。";
 }
 
 export default function NotificationsPage() {
-  const { language } = useLanguage();
-  const copy = notificationPageCopy[language];
   const [notifications, setNotifications] = useState<UserNotification[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState<PageStatus>("loading");
   const [notice, setNotice] = useState("");
+  const [activeFilter, setActiveFilter] = useState<FilterId>("all");
 
   const unreadCount = useMemo(
     () => notifications.filter((notification) => !notification.isRead).length,
     [notifications]
   );
 
+  const filteredNotifications = useMemo(() => {
+    if (activeFilter === "all") return notifications;
+    if (activeFilter === "unread") {
+      return notifications.filter((notification) => !notification.isRead);
+    }
+
+    return notifications.filter((notification) => notification.type === activeFilter);
+  }, [activeFilter, notifications]);
+
+  const selectedNotification = filteredNotifications[0] || notifications[0] || null;
+  const summaryStatusLabel =
+    status === "ready"
+      ? "已同步"
+      : status === "loading"
+        ? "读取中"
+        : status === "unauthorized"
+          ? "待登录"
+          : "需重试";
+
   useEffect(() => {
     let cancelled = false;
 
     async function loadNotifications() {
-      setIsLoading(true);
+      setStatus("loading");
       setNotice("");
 
       try {
@@ -123,20 +146,26 @@ export default function NotificationsPage() {
           notifications?: UserNotification[];
         };
 
+        if (response.status === 401) {
+          if (!cancelled) {
+            setNotifications([]);
+            setStatus("unauthorized");
+          }
+          return;
+        }
+
         if (!response.ok || !Array.isArray(data.notifications)) {
-          throw new Error(copy.error);
+          throw new Error("通知加载失败");
         }
 
         if (!cancelled) {
           setNotifications(data.notifications);
+          setStatus("ready");
         }
       } catch {
         if (!cancelled) {
-          setNotice(copy.error);
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
+          setNotice("通知加载失败，请稍后再试。");
+          setStatus("error");
         }
       }
     }
@@ -146,7 +175,7 @@ export default function NotificationsPage() {
     return () => {
       cancelled = true;
     };
-  }, [copy.error]);
+  }, []);
 
   async function markAsRead(notificationId: string) {
     const current = notifications.find(
@@ -171,7 +200,7 @@ export default function NotificationsPage() {
       );
 
       if (!response.ok) {
-        throw new Error(copy.error);
+        throw new Error("通知状态更新失败");
       }
     } catch {
       setNotifications((items) =>
@@ -179,125 +208,168 @@ export default function NotificationsPage() {
           item.id === notificationId ? { ...item, isRead: false } : item
         )
       );
-      setNotice(copy.error);
+      setNotice("通知状态更新失败，请稍后再试。");
+      setStatus("error");
     }
   }
 
   return (
-    <main className="responsive-page-shell min-h-[100dvh] bg-[image:var(--app-bg-gradient)] px-4 py-5 font-[var(--font-sora)] text-[var(--text-primary)]">
-      <div className="mx-auto flex min-h-[calc(100dvh-2.5rem)] w-full max-w-[520px] flex-col rounded-[34px] border border-white/60 bg-[#f2edff]/72 px-5 pb-8 pt-5 shadow-[0_30px_80px_rgba(84,72,146,0.18)]">
-        <header className="grid grid-cols-[3rem_1fr_3rem] items-center gap-3">
-          <Link
-            href="/account"
-            aria-label={copy.back}
-            className="grid h-11 w-11 place-items-center rounded-[18px] bg-[#efeaff] text-[1.45rem] font-black text-[#201833] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
-          >
-            ‹
-          </Link>
-          <div className="min-w-0 text-center">
-            <h1 className="truncate text-[1.35rem] font-black leading-7">
-              {copy.title}
-            </h1>
-            <p className="mt-1 text-[0.78rem] font-extrabold text-[#7f7896]">
-              {unreadCount ? `${copy.unread} ${unreadCount}` : copy.read}
-            </p>
-          </div>
-          <span />
-        </header>
+    <main className={styles.page}>
+      <header className={styles.topbar}>
+        <Link href="/" className={styles.brand} aria-label="返回 SpeakFlow 首页">
+          <span className={styles.brandIcon}>
+            <BellIcon />
+          </span>
+          <span>SpeakFlow 通知中心</span>
+        </Link>
+        <nav className={styles.topnav} aria-label="通知中心导航">
+          <Link href="/">首页</Link>
+          <Link href="/subscription">会员版</Link>
+          <Link href="/contact">联系我们</Link>
+        </nav>
+      </header>
 
-        <section className="mt-6 rounded-[28px] bg-white/78 px-5 py-5 shadow-[0_20px_54px_rgba(84,72,146,0.12)] ring-1 ring-white/88">
-          <div className="flex items-start gap-3">
-            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[18px] bg-[#efeaff] text-[#7460e8] shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
-              <svg
-                aria-hidden="true"
-                className="h-8 w-8"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2.2"
-                viewBox="0 0 32 32"
+      <section className={styles.hero}>
+        <div className={styles.heroCopy}>
+          <p>消息收件箱</p>
+          <h1>查看 SpeakFlow 发给你的重要通知</h1>
+          <span>
+            订阅变化、邀请奖励、学习提醒、账号安全消息和客服回复都会集中显示在这里。
+          </span>
+        </div>
+        <aside className={styles.summaryPanel} aria-label="通知概览">
+          <div>
+            <strong>{notifications.length}</strong>
+            <span>全部消息</span>
+          </div>
+          <div>
+            <strong>{unreadCount}</strong>
+            <span>未读消息</span>
+          </div>
+          <div>
+            <strong>{summaryStatusLabel}</strong>
+            <span>当前状态</span>
+          </div>
+        </aside>
+      </section>
+
+      <section className={styles.workspace} aria-label="通知列表">
+        <aside className={styles.sidebar}>
+          <h2>消息分类</h2>
+          <div className={styles.filterList}>
+            {filterTabs.map((tab) => (
+              <button
+                aria-pressed={activeFilter === tab.id}
+                data-active={activeFilter === tab.id}
+                key={tab.id}
+                onClick={() => setActiveFilter(tab.id)}
+                type="button"
               >
-                <path d="M9 23h14l-1.5-2.4V15a5.5 5.5 0 0 0-11 0v5.6L9 23Z" />
-                <path d="M13.4 25a3 3 0 0 0 5.2 0" />
-              </svg>
-            </span>
-            <div>
-              <h2 className="text-[1.2rem] font-black leading-7">
-                {copy.title}
-              </h2>
-              <p className="mt-2 text-[0.94rem] font-bold leading-7 text-[#4b4267]">
-                {copy.subtitle}
-              </p>
-            </div>
+                <span>{tab.label}</span>
+                <small>
+                  {tab.id === "all"
+                    ? notifications.length
+                    : tab.id === "unread"
+                      ? unreadCount
+                      : notifications.filter((item) => item.type === tab.id).length}
+                </small>
+              </button>
+            ))}
           </div>
-        </section>
+        </aside>
 
-        <section className="mt-5 min-h-0 flex-1">
-          {isLoading ? (
-            <p className="rounded-[24px] bg-white/70 px-5 py-6 text-center text-[0.96rem] font-extrabold text-[#7f7896] ring-1 ring-white/85">
-              {copy.loading}
-            </p>
+        <div className={styles.inbox}>
+          {status === "loading" ? (
+            <div className={styles.stateCard}>
+              <BellIcon />
+              <h2>正在加载通知</h2>
+              <p>请稍等，我们正在读取你的消息收件箱。</p>
+            </div>
+          ) : status === "unauthorized" ? (
+            <div className={styles.stateCard}>
+              <BellIcon />
+              <h2>登录后查看通知</h2>
+              <p>
+                通知会绑定到你的 SpeakFlow 账号。登录后可以查看订阅、奖励、学习提醒和客服回复。
+              </p>
+              <Link href={createLoginUrl("/notifications")}>
+                登录查看
+                <ArrowIcon />
+              </Link>
+            </div>
           ) : notice ? (
-            <p className="rounded-[24px] bg-white/70 px-5 py-6 text-center text-[0.96rem] font-extrabold text-[#d33b46] ring-1 ring-white/85">
-              {notice}
-            </p>
-          ) : notifications.length ? (
-            <div className="overflow-hidden rounded-[26px] bg-white/82 shadow-[0_18px_50px_rgba(84,72,146,0.1)] ring-1 ring-white/88">
-              {notifications.map((notification, index) => {
-                const toneClass = getTypeTone(notification.type);
-
-                return (
-                  <button
-                    key={notification.id}
-                    type="button"
-                    onClick={() => void markAsRead(notification.id)}
-                    className={`flex w-full items-start gap-3 px-5 py-5 text-left transition hover:bg-[#fbf9ff] ${
-                      index ? "border-t border-[#ece8f6]" : ""
-                    }`}
-                  >
-                    <span
-                      className={`mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-[16px] text-[0.82rem] font-black ring-1 ${toneClass}`}
-                    >
-                      {notification.isRead ? "✓" : "•"}
+            <div className={styles.stateCard} data-state="error">
+              <BellIcon />
+              <h2>{notice}</h2>
+              <p>你可以刷新页面，或稍后重新打开通知中心。</p>
+            </div>
+          ) : filteredNotifications.length ? (
+            <div className={styles.notificationList}>
+              {filteredNotifications.map((notification) => (
+                <button
+                  className={styles.notificationCard}
+                  data-read={notification.isRead}
+                  data-type={notification.type}
+                  key={notification.id}
+                  onClick={() => void markAsRead(notification.id)}
+                  type="button"
+                >
+                  <span className={styles.notificationIcon}>
+                    {notification.isRead ? <CheckIcon /> : <BellIcon />}
+                  </span>
+                  <span className={styles.notificationCopy}>
+                    <span className={styles.notificationMeta}>
+                      <em>{typeLabels[notification.type]}</em>
+                      <small>
+                        {notification.isRead ? "已读" : "未读"} ·{" "}
+                        {formatNotificationTime(notification.createdAt)}
+                      </small>
                     </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex flex-wrap items-center gap-2">
-                        <span
-                          className={`rounded-full px-2.5 py-1 text-[0.68rem] font-extrabold leading-none ${toneClass}`}
-                        >
-                          {copy.typeLabels[notification.type]}
-                        </span>
-                        {!notification.isRead ? (
-                          <span className="rounded-full bg-[#fff2db] px-2.5 py-1 text-[0.68rem] font-extrabold leading-none text-[#b45d05]">
-                            {copy.unread}
-                          </span>
-                        ) : null}
-                      </span>
-                      <span className="mt-2 block text-[1.04rem] font-black leading-6 text-[#201833]">
-                        {notification.title}
-                      </span>
-                      <span className="mt-2 block text-[0.9rem] font-bold leading-6 text-[#5f5680]">
-                        {notification.message}
-                      </span>
-                      <span className="mt-3 block text-[0.76rem] font-extrabold text-[#9a91ad]">
-                        {formatNotificationTime(notification.createdAt, language)}
-                      </span>
-                    </span>
-                  </button>
-                );
-              })}
+                    <strong>{notification.title}</strong>
+                    <span>{notification.message}</span>
+                  </span>
+                </button>
+              ))}
             </div>
           ) : (
-            <div className="rounded-[26px] bg-white/78 px-5 py-8 text-center shadow-[0_16px_38px_rgba(84,72,146,0.1)] ring-1 ring-white/85">
-              <p className="text-[1.08rem] font-black">{copy.emptyTitle}</p>
-              <p className="mt-2 text-[0.9rem] font-bold leading-6 text-[#7f7896]">
-                {copy.emptyBody}
+            <div className={styles.stateCard}>
+              <BellIcon />
+              <h2>暂时没有通知</h2>
+              <p>
+                订阅更新、邀请奖励、学习提醒、账号安全和客服回复会出现在这里。
               </p>
             </div>
           )}
-        </section>
-      </div>
+        </div>
+
+        <aside className={styles.detailPanel} aria-label="消息说明">
+          <h2>消息详情</h2>
+          {selectedNotification ? (
+            <>
+              <span className={styles.detailType}>
+                {typeLabels[selectedNotification.type]}
+              </span>
+              <h3>{selectedNotification.title}</h3>
+              <p>{selectedNotification.message}</p>
+              <small>{formatNotificationTime(selectedNotification.createdAt)}</small>
+              <div className={styles.detailHint}>
+                {typeDescription(selectedNotification.type)}
+              </div>
+            </>
+          ) : (
+            <>
+              <span className={styles.detailType}>说明</span>
+              <h3>这里会显示选中消息的内容</h3>
+              <p>
+                当你收到订阅、邀请、学习、账号或系统消息后，可以在这里快速查看详情。
+              </p>
+              <div className={styles.detailHint}>
+                如果你需要人工帮助，可以从“联系我们”提交站内留言并留下邮箱。
+              </div>
+            </>
+          )}
+        </aside>
+      </section>
     </main>
   );
 }

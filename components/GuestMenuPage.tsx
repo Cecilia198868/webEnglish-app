@@ -145,7 +145,7 @@ export default function GuestMenuPage({
                 <Image
                   alt=""
                   height={64}
-                  priority
+                  preload
                   sizes="50px"
                   src="/brand/speakflow-app-icon.png"
                   width={64}

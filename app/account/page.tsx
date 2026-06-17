@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import AccountPageClient from "@/components/AccountPageClient";
+import { createLoginUrl } from "@/lib/loginRedirect";
 import { DEFAULT_ADMIN_EMAIL, normalizeUserEmail } from "@/lib/userRoles";
 
 function getStringParam(value: string | string[] | undefined) {
@@ -16,7 +17,7 @@ export default async function AccountPage({
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
-    redirect("/");
+    redirect(createLoginUrl("/account"));
   }
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
