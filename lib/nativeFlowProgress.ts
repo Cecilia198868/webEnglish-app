@@ -36,7 +36,12 @@ export function createNativeFlowLearnHref(
 }
 
 export function isNativeFlowLevelId(value: unknown): value is NativeFlowLevelId {
-  return value === "everyday" || value === "natural" || value === "native";
+  return (
+    value === "everyday" ||
+    value === "simple-life" ||
+    value === "natural" ||
+    value === "native"
+  );
 }
 
 export function normalizeNativeFlowSentenceId(

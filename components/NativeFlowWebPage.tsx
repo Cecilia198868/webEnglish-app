@@ -39,6 +39,11 @@ const levelDisplayMap: Record<NativeFlowLevelId, LevelDisplay> = {
     description: "从生活短句开始，建立语感基础",
     title: "日常语感",
   },
+  "simple-life": {
+    badge: "初级",
+    description: "围绕日常生活场景，轻松提升语感",
+    title: "简单生活语感",
+  },
   natural: {
     badge: "中级",
     description: "练习更完整的句子，让表达更自然顺滑",
@@ -53,6 +58,7 @@ const levelDisplayMap: Record<NativeFlowLevelId, LevelDisplay> = {
 
 const progressColors: Record<NativeFlowLevelId, string> = {
   everyday: "#18a987",
+  "simple-life": "#18bfa7",
   natural: "#3478f6",
   native: "#7057f5",
 };
@@ -195,6 +201,17 @@ function ChevronIcon({ direction = "right" }: { direction?: "right" | "left" | "
 }
 
 function LevelIcon({ levelId }: { levelId: NativeFlowLevelId }) {
+  if (levelId === "simple-life") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M4 11.5 12 5l8 6.5V20H4v-8.5Z" />
+        <path d="M9 20v-6h6v6" />
+        <path d="M7.5 9.5c-2.7-3.2-4.9-2.4-5.6-2 1 3.5 3.2 4.6 5.6 2Z" />
+        <path d="M16.5 9.5c2.7-3.2 4.9-2.4 5.6-2-1 3.5-3.2 4.6-5.6 2Z" />
+      </svg>
+    );
+  }
+
   if (levelId === "everyday") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -360,6 +377,11 @@ export function NativeFlowWebPage({
     (sum, row) => sum + row.completed,
     0
   );
+  const totalSentenceCount = levels.reduce(
+    (sum, level) => sum + level.totalSentences,
+    0
+  );
+  const routeCountLabel = `${levels.length}条路线`;
   const chineseSentence = getChineseSentence(activeLevel.id, activeSentence);
 
   const applyProgressSnapshot = useCallback((snapshot: NativeFlowProgressSnapshot | null) => {
@@ -601,14 +623,14 @@ export function NativeFlowWebPage({
             <HeadphonesIcon />
           </span>
           <div>
-            <p>1800句跟读模仿训练</p>
+            <p>{totalSentenceCount}句跟读模仿训练</p>
             <h1 id="native-flow-title">地道语感训练</h1>
             <span>从听到说，培养地道语感</span>
           </div>
           <div className={styles.heroStats}>
             <span>30 天课程</span>
             <span>每日 20 句</span>
-            <span>三档训练</span>
+            <span>{routeCountLabel}</span>
           </div>
         </section>
 
@@ -661,7 +683,7 @@ export function NativeFlowWebPage({
             <ChartIcon />
             <div>
               <strong>各级别学习进度</strong>
-              <span>总计完成 {totalCompleted} / 1800 句</span>
+              <span>总计完成 {totalCompleted} / {totalSentenceCount} 句</span>
             </div>
           </section>
         </aside>

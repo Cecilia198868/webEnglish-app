@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import OpenAI from "openai";
 
-const LEVEL_IDS = ["everyday", "natural", "native"];
+const LEVEL_IDS = ["everyday", "simple-life", "natural", "native"];
 const BATCH_SIZE = 40;
 const courseDataPath = path.join(process.cwd(), "data", "nativeFlow", "courseData.ts");
 const outputPath = path.join(

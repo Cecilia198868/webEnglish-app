@@ -250,6 +250,8 @@ function MenuBottomNav() {
 }
 
 export function NativeFlowMenuPage({ levels }: { levels: NativeFlowLevel[] }) {
+  const totalSentences = levels.reduce((sum, level) => sum + level.totalSentences, 0);
+
   return (
     <PageShell className={styles.menuPhone} label="地道语感训练级别选择页">
       <header className={styles.menuHeader}>
@@ -341,7 +343,7 @@ export function NativeFlowMenuPage({ levels }: { levels: NativeFlowLevel[] }) {
           <HeadphonesIcon />
         </span>
         <div>
-          <strong>总计 600+ 真实美语长句</strong>
+          <strong>总计 {totalSentences}+ 真实美语长句</strong>
           <p>坚持练习，英语会更自然地流出来！</p>
         </div>
         <MiniIcon type="chart" />

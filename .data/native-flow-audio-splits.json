@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-15T20:29:17.872Z",
+  "generatedAt": "2026-06-17T23:08:52.458Z",
   "outputRoot": "public\\native-flow-audio",
   "sources": [
     {
@@ -270,6 +270,156 @@
       "levelId": "everyday",
       "source": "public\\images 2\\地道语感训练\\初级\\A30.mp3",
       "totalDuration": 82.599,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 85,
+      "cost": 12.6106,
+      "firstDay": 1,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\q.mp3",
+      "totalDuration": 112.849,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 78,
+      "cost": 17.2406,
+      "firstDay": 3,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\2.mp3",
+      "totalDuration": 110.602,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 81,
+      "cost": 14.7957,
+      "firstDay": 5,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\3.mp3",
+      "totalDuration": 108.042,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 80,
+      "cost": 16.6157,
+      "firstDay": 7,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\4.mp3",
+      "totalDuration": 97.071,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 75,
+      "cost": 29.701,
+      "firstDay": 9,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\5.mp3",
+      "totalDuration": 99.553,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 84,
+      "cost": 14.1484,
+      "firstDay": 11,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\6.mp3",
+      "totalDuration": 104.829,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 75,
+      "cost": 12.6287,
+      "firstDay": 13,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\7.mp3",
+      "totalDuration": 92.186,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 77,
+      "cost": 15.7507,
+      "firstDay": 15,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\8.mp3",
+      "totalDuration": 87.484,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 81,
+      "cost": 17.3613,
+      "firstDay": 17,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\9.mp3",
+      "totalDuration": 98.508,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 75,
+      "cost": 11.42,
+      "firstDay": 19,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\10.mp3",
+      "totalDuration": 93.231,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 79,
+      "cost": 37.7356,
+      "firstDay": 21,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\11.mp3",
+      "totalDuration": 70.844,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 77,
+      "cost": 63.0201,
+      "firstDay": 23,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\12.mp3",
+      "totalDuration": 58.906,
+      "virtualCuts": 1
+    },
+    {
+      "candidateCount": 85,
+      "cost": 16.717,
+      "firstDay": 25,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\13.mp3",
+      "totalDuration": 79.804,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 77,
+      "cost": 12.1196,
+      "firstDay": 27,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\14.mp3",
+      "totalDuration": 84.193,
+      "virtualCuts": 0
+    },
+    {
+      "candidateCount": 79,
+      "cost": 11.0086,
+      "firstDay": 29,
+      "levelId": "simple-life",
+      "sentenceCount": 40,
+      "source": "public\\images 2\\地道语感训练\\简单\\15.mp3",
+      "totalDuration": 89.887,
       "virtualCuts": 0
     },
     {

@@ -4,7 +4,6 @@ import path from "node:path";
 import ffmpegPath from "ffmpeg-static";
 import ffprobeStatic from "ffprobe-static";
 
-const DAILY_SENTENCES = 20;
 const COURSE_ROOT = path.join(process.cwd(), "public", "images 2", "地道语感训练");
 const OUTPUT_ROOT = path.join(process.cwd(), "public", "native-flow-audio");
 const META_FILE = path.join(process.cwd(), ".data", "native-flow-audio-splits.json");
@@ -217,12 +216,44 @@ function sourcePathFor(sentence) {
   return path.join(COURSE_ROOT, ...sentence.sourceAudio.split("/"));
 }
 
-function clipPathFor(levelId, sentenceId) {
-  return path.join(OUTPUT_ROOT, levelId, `${String(sentenceId).padStart(3, "0")}.mp3`);
+function sourceMetaKey(levelId, source) {
+  return `${levelId}|${path.relative(process.cwd(), source)}`;
 }
 
-function clipUrlFor(levelId, sentenceId) {
-  return `/native-flow-audio/${levelId}/${String(sentenceId).padStart(3, "0")}.mp3`;
+function clipPathFor(levelId, sentence) {
+  return path.join(
+    OUTPUT_ROOT,
+    levelId,
+    `day-${String(sentence.day).padStart(2, "0")}`,
+    `sentence-${String(sentence.daySentence).padStart(2, "0")}.mp3`,
+  );
+}
+
+function clipUrlFor(levelId, sentence) {
+  return `/native-flow-audio/${levelId}/day-${String(sentence.day).padStart(2, "0")}/sentence-${String(sentence.daySentence).padStart(2, "0")}.mp3`;
+}
+
+async function sourceNeedsSplitting(levelId, sentences) {
+  if (force || dryRun) return true;
+
+  for (const sentence of sentences) {
+    try {
+      const stat = await fs.stat(clipPathFor(levelId, sentence));
+      if (stat.size <= 1000) return true;
+    } catch {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+async function readPreviousMetadata() {
+  try {
+    return JSON.parse(await fs.readFile(META_FILE, "utf8"));
+  } catch {
+    return null;
+  }
 }
 
 async function splitClip({ end, source, start, target }) {
@@ -258,6 +289,15 @@ async function splitClip({ end, source, start, target }) {
 }
 
 const sentencesByLevel = await readSentencesByLevel();
+const previousMetadata = await readPreviousMetadata();
+const previousSourcesByKey = new Map(
+  Array.isArray(previousMetadata?.sources)
+    ? previousMetadata.sources.map((source) => [
+        `${source.levelId}|${source.source}`,
+        source,
+      ])
+    : [],
+);
 const metadata = {
   generatedAt: new Date().toISOString(),
   outputRoot: path.relative(process.cwd(), OUTPUT_ROOT),
@@ -265,27 +305,35 @@ const metadata = {
 };
 
 for (const [levelId, sentences] of Object.entries(sentencesByLevel)) {
-  const days = new Map();
+  const sources = new Map();
   for (const sentence of sentences) {
-    if (!days.has(sentence.day)) days.set(sentence.day, []);
-    days.get(sentence.day).push(sentence);
+    if (!sources.has(sentence.sourceAudio)) sources.set(sentence.sourceAudio, []);
+    sources.get(sentence.sourceAudio).push(sentence);
   }
 
-  for (const [day, daySentences] of [...days.entries()].sort((a, b) => a[0] - b[0])) {
-    if (daySentences.length !== DAILY_SENTENCES) {
-      throw new Error(`${levelId} day ${day} has ${daySentences.length} sentences`);
+  for (const [sourceKey, sourceSentences] of [...sources.entries()].sort((a, b) => {
+    return a[1][0].id - b[1][0].id;
+  })) {
+    const orderedSentences = sourceSentences.sort((a, b) => a.id - b.id);
+    const source = sourcePathFor(orderedSentences[0]);
+
+    if (!(await sourceNeedsSplitting(levelId, orderedSentences))) {
+      const previousSourceMeta = previousSourcesByKey.get(sourceMetaKey(levelId, source));
+      if (previousSourceMeta) metadata.sources.push(previousSourceMeta);
+      console.log(`Skipping ${levelId} ${sourceKey}: clips already exist`);
+      continue;
     }
 
-    const source = sourcePathFor(daySentences[0]);
     const totalDuration = getDuration(source);
     const silences = detectSilences(source);
-    const candidates = createCandidates(silences, totalDuration, daySentences);
-    const plan = chooseCuts(candidates, totalDuration, daySentences);
+    const candidates = createCandidates(silences, totalDuration, orderedSentences);
+    const plan = chooseCuts(candidates, totalDuration, orderedSentences);
     const sourceMeta = {
       candidateCount: candidates.length,
       cost: Number(plan.cost.toFixed(4)),
-      day,
+      firstDay: orderedSentences[0].day,
       levelId,
+      sentenceCount: orderedSentences.length,
       source: path.relative(process.cwd(), source),
       totalDuration: Number(totalDuration.toFixed(3)),
       virtualCuts: plan.virtualCuts,
@@ -293,22 +341,22 @@ for (const [levelId, sentences] of Object.entries(sentencesByLevel)) {
     metadata.sources.push(sourceMeta);
 
     console.log(
-      `${dryRun ? "Checked" : "Splitting"} ${levelId} day ${day}: ${daySentences.length} clips, ${sourceMeta.candidateCount} candidates, ${sourceMeta.virtualCuts} virtual cuts`,
+      `${dryRun ? "Checked" : "Splitting"} ${levelId} ${sourceKey}: ${orderedSentences.length} clips, ${sourceMeta.candidateCount} candidates, ${sourceMeta.virtualCuts} virtual cuts`,
     );
 
     if (dryRun) continue;
 
-    for (let index = 0; index < daySentences.length; index += 1) {
-      const sentence = daySentences[index];
+    for (let index = 0; index < orderedSentences.length; index += 1) {
+      const sentence = orderedSentences[index];
       const start = Math.max(0, plan.boundaries[index] - 0.02);
       const end = Math.min(totalDuration, plan.boundaries[index + 1] + 0.02);
       await splitClip({
         end,
         source,
         start,
-        target: clipPathFor(levelId, sentence.id),
+        target: clipPathFor(levelId, sentence),
       });
-      sentence.audioSrc = clipUrlFor(levelId, sentence.id);
+      sentence.audioSrc = clipUrlFor(levelId, sentence);
     }
   }
 }
