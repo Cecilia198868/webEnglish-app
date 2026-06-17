@@ -306,55 +306,87 @@
   transform: translateY(1px);
 }
 
+.variantSaveHint {
+  position: absolute;
+  top: 58.02%;
+  left: 31.15%;
+  z-index: 6;
+  width: 21.4%;
+  margin: 0;
+  color: rgba(92, 96, 135, 0.58);
+  font-family: var(--sf-font-zh), var(--font-geist-sans), sans-serif;
+  font-size: clamp(0.68rem, 0.94vw, 1.08rem);
+  font-weight: 850;
+  letter-spacing: 0;
+  line-height: 1.2;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 .variantPanel {
   position: absolute;
-  top: 62%;
-  left: 5.85%;
+  top: 61.55%;
+  left: 5.65%;
   z-index: 5;
   display: flex;
-  width: 46.35%;
-  height: 33.25%;
+  width: 47.15%;
+  height: 33.55%;
   flex-direction: column;
-  gap: 1.35%;
   overflow: hidden;
   line-height: 1.2;
 }
 
+.variantPanel::before {
+  position: absolute;
+  inset: -1.8% -1.1%;
+  z-index: 0;
+  border-radius: 18px;
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    #f8fbff
+  );
+  content: "";
+}
+
 .variantList {
+  position: relative;
+  z-index: 1;
   display: grid;
+  height: 100%;
   flex: 1 1 auto;
+  grid-template-rows: repeat(4, minmax(0, 1fr));
   min-height: 0;
-  gap: 1.1%;
+  gap: 1.45%;
 }
 
 .variantCard {
   position: relative;
   display: grid;
-  grid-template-columns: 10.5% minmax(0, 1fr);
+  grid-template-columns: 12.3% minmax(0, 1fr) 7.8% 10.1%;
   min-height: 0;
   align-items: center;
-  gap: 2.4%;
+  gap: 1.45%;
   border: 1px solid rgba(229, 236, 255, 0.96);
-  border-radius: 18px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.98);
   box-shadow:
-    0 14px 30px rgba(62, 111, 201, 0.08),
+    0 13px 28px rgba(62, 111, 201, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.96);
-  padding: 1.8% 14.5% 1.8% 2.5%;
+  padding: 1.55% 1.8% 1.55% 2.2%;
 }
 
 .variantIcon {
   display: grid;
   aspect-ratio: 1;
+  width: min(82%, 4.1rem);
   min-width: 0;
   place-items: center;
   border-radius: 999px;
   background: linear-gradient(135deg, #f0f6ff, #dceaff);
   color: #1e76ff;
-  font-family: var(--font-geist-sans), sans-serif;
-  font-size: clamp(0.86rem, 1.4vw, 1.5rem);
-  font-weight: 950;
   line-height: 1;
+  justify-self: center;
 }
 
 .variantCard[data-variant="standard"] .variantIcon {
@@ -377,10 +409,30 @@
   color: #6d45df;
 }
 
+.variantIcon svg {
+  width: 56%;
+  height: 56%;
+  overflow: visible;
+}
+
+.variantIcon svg path {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.65;
+}
+
+.variantCard[data-variant="standard"] .variantIcon svg path + path {
+  fill: #ffffff;
+  stroke: #ffffff;
+}
+
 .variantCopy {
   display: grid;
   min-width: 0;
-  gap: 0.34rem;
+  align-content: center;
+  gap: 0.36rem;
 }
 
 .variantLabel {
@@ -388,16 +440,21 @@
   border-radius: 999px;
   background: rgba(72, 130, 255, 0.11);
   color: #2676ff;
-  font-size: clamp(0.66rem, 0.86vw, 0.88rem);
+  font-size: clamp(0.62rem, 0.78vw, 0.84rem);
   font-weight: 900;
   line-height: 1;
-  padding: 0.28rem 0.58rem;
+  padding: 0.24rem 0.56rem;
   white-space: nowrap;
 }
 
 .variantCard[data-variant="idiomatic"] .variantLabel {
   background: rgba(43, 193, 88, 0.12);
   color: #15a43d;
+}
+
+.variantCard[data-variant="simple"] .variantLabel {
+  background: rgba(55, 139, 255, 0.12);
+  color: #257cff;
 }
 
 .variantCard[data-variant="natural"] .variantLabel {
@@ -409,16 +466,73 @@
   min-width: 0;
   color: #111735;
   font-family: var(--font-geist-sans), Arial, sans-serif;
-  font-size: clamp(0.9rem, 1.72vw, 1.86rem);
+  font-size: clamp(0.86rem, 1.36vw, 1.52rem);
   font-weight: 900;
   letter-spacing: 0;
-  line-height: 1.16;
+  line-height: 1.14;
   overflow-wrap: anywhere;
+}
+
+.variantPlayButton,
+.variantSlowButton {
+  display: inline-grid;
+  min-width: 0;
+  min-height: 0;
+  height: clamp(2.25rem, 3.6vw, 3.9rem);
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow:
+    0 10px 24px rgba(50, 83, 150, 0.1),
+    inset 0 0 0 1px rgba(226, 232, 248, 0.96);
+  color: #081146;
+  cursor: pointer;
+  outline: 0;
+  align-self: start;
+  margin-top: 8%;
+}
+
+.variantPlayButton {
+  aspect-ratio: 1;
+  justify-self: center;
+}
+
+.variantPlayButton svg {
+  width: 44%;
+  height: 44%;
+  fill: currentColor;
+}
+
+.variantSlowButton {
+  color: #257cff;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-size: clamp(0.66rem, 0.9vw, 1rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 1;
+  padding: 0 0.32rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.variantPlayButton:focus-visible,
+.variantSlowButton:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.96),
+    0 0 0 6px rgba(45, 96, 255, 0.7);
+}
+
+.variantPlayButton:active,
+.variantSlowButton:active {
+  transform: translateY(1px);
 }
 
 .variantLoading,
 .variantError,
 .variantEmpty {
+  position: relative;
+  z-index: 2;
   border: 1px solid rgba(224, 226, 244, 0.92);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.96);
@@ -518,6 +632,17 @@
   background: linear-gradient(180deg, #348fff, #0d63f5);
   box-shadow: 0 12px 24px rgba(28, 106, 244, 0.26);
   color: #ffffff;
+  font-weight: 950;
+}
+
+.useNextButton span {
+  color: #ffffff;
+  font-weight: 950;
+}
+
+.useNextButton svg {
+  color: #ffffff;
+  stroke: #ffffff;
 }
 
 .changeNextButton {

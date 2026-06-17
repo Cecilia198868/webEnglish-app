@@ -12,9 +12,9 @@ const PAGE_ART_SRC =
   "/image3/%41%49%E5%BC%95%E5%AF%BC%E8%A1%A8%E8%BE%BE.png";
 const DEFAULT_CHINESE_TEXT =
   "\u90a3\u6211\u4eec\u4f11\u606f\u4e00\u4e0b\uff0c\u8fc7\u4f1a\u513f\u518d\u53bb\u6563\u6b65\u5427\u3002";
-const DEFAULT_ENGLISH_TEXT = "Let's have a rest, and then we can go hiking.";
+const DEFAULT_ENGLISH_TEXT = "Let's take a break, and then go for a walk later.";
 const DEFAULT_NEXT_CHINESE =
-  "\u8fd0\u52a8\u8ba9\u6211\u611f\u89c9\u7cbe\u795e\u5145\u6c9b\uff0c\u665a\u4e0a\u7761\u5f97\u7279\u522b\u597d\u3002";
+  "\u4f11\u606f\u4e4b\u540e\uff0c\u6211\u4eec\u53ef\u4ee5\u53bb\u9644\u8fd1\u6563\u6563\u6b65\u3002";
 const RECORD_BUTTON_LABEL = "\u70b9\u6211\uff0c\u8bf4\u4e2d\u6587";
 const ENGLISH_RECORD_BUTTON_LABEL = "\u70b9\u6211\uff0c\u8bf4\u82f1\u6587";
 const RETRY_ENGLISH_LABEL = "\u91cd\u65b0\u8bf4";
@@ -33,13 +33,11 @@ const ENGLISH_RECORDING_ERROR_MESSAGE =
   "\u6ca1\u6709\u542c\u6e05\u82f1\u6587\uff0c\u8bf7\u91cd\u65b0\u8bf4\u4e00\u6b21";
 const ENGLISH_EMPTY_HINT = "\u70b9\u51fb\u4e0a\u65b9\u6309\u94ae\u5f00\u59cb\u8bf4\u82f1\u6587";
 const VARIANTS_LOADING_LABEL = "\u0041\u0049 \u6b63\u5728\u751f\u6210\u6b63\u786e\u8868\u8fbe\u2026";
-const VARIANTS_ERROR_LABEL =
-  "\u0041\u0049 \u751f\u6210\u5931\u8d25\uff0c\u8bf7\u91cd\u65b0\u8bf4\u82f1\u6587\u540e\u518d\u8bd5";
 const VARIANTS_EMPTY_LABEL =
   "\u8bf4\u5b8c\u82f1\u6587\u540e\uff0c\u8fd9\u91cc\u4f1a\u6839\u636e\u5de6\u4fa7\u4e2d\u6587\u751f\u6210\u6b63\u786e\u8868\u8fbe";
+const VARIANTS_SAVE_HINT =
+  "\u9009\u62e9\u8bcd\u7ec4\u6216\u5355\u8bcd\uff0c\u53ef\u4ee5\u6536\u85cf\u8fdb\u8868\u8fbe\u5e93\u4e2d";
 const NEXT_LOADING_LABEL = "\u0041\u0049 \u6b63\u5728\u60f3\u4e0b\u4e00\u53e5\u2026";
-const NEXT_ERROR_LABEL =
-  "\u6ca1\u60f3\u5230\u65b0\u53e5\u5b50\uff0c\u518d\u70b9\u4e00\u6b21\u8bd5\u8bd5";
 const SILENCE_END_DELAY_MS = 2000;
 
 type ActiveRecorder = "chinese" | "english" | null;
@@ -118,14 +116,262 @@ const expressionVariantLabels: Array<{
   { key: "natural", label: "\u66f4\u53e3\u8bed" },
 ];
 
-function createFallbackExpressionVariants(standardEnglish: string): ExpressionVariant[] {
-  const fallbackText = standardEnglish || DEFAULT_ENGLISH_TEXT;
+function createFallbackEnglish(chinese: string) {
+  const normalizedChinese = chinese.replace(/\s+/g, "");
+  const hasConcert = /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50|\u770b\u6f14\u51fa/.test(
+    normalizedChinese
+  );
+  const hasTuesday = /\u661f\u671f\u4e8c|\u5468\u4e8c|\u793c\u62dc\u4e8c/.test(
+    normalizedChinese
+  );
+  const hasCentralPark = /\u4e2d\u592e\u516c\u56ed|centralpark/i.test(
+    normalizedChinese
+  );
+  const hasWe = /\u6211\u4eec|\u54b1\u4eec/.test(normalizedChinese);
+
+  if (hasConcert && hasCentralPark) {
+    const subject = hasWe ? "we're" : "I'm";
+    const subjectFull = hasWe ? "We're" : "I'm";
+
+    if (hasTuesday) {
+      return `Today is Tuesday, and ${subject} going to Central Park to see a concert.`;
+    }
+
+    return `${subjectFull} going to Central Park to see a concert today.`;
+  }
+
+  if (hasTuesday && hasConcert) {
+    return hasWe
+      ? "Today is Tuesday, and we're going to a concert."
+      : "Today is Tuesday, and I'm going to a concert.";
+  }
+
+  if (hasConcert) {
+    return hasWe
+      ? "We're going to a concert today."
+      : "I'm going to a concert today.";
+  }
+
+  if (hasTuesday) {
+    return "Today is Tuesday.";
+  }
+
+  if (/\u4f11\u606f|\u6563\u6b65/.test(normalizedChinese)) {
+    return "Let's take a break, and then go for a walk later.";
+  }
+
+  if (/\u8fd0\u52a8|\u953b\u70bc|\u7cbe\u795e|\u7761/.test(normalizedChinese)) {
+    return "Exercise makes me feel energized, and I sleep really well at night.";
+  }
+
+  if (/\u6237\u5916|\u5929\u6c14|\u592a\u9633/.test(normalizedChinese)) {
+    return "I want to stay outside a little longer and enjoy the weather.";
+  }
+
+  if (/\u5f00\u5fc3|\u559c\u6b22|\u4eab\u53d7|\u9ad8\u5174/.test(normalizedChinese)) {
+    return "This feeling makes me happy for the whole day.";
+  }
+
+  if (/\u5403|\u997f|\u5496\u5561|\u8336|\u559d/.test(normalizedChinese)) {
+    return "I want to get something nice to eat in a little while.";
+  }
+
+  return "I want to say a little more about this.";
+}
+
+function isEnglishRelevantToChinese(chinese: string, english: string) {
+  const normalizedChinese = chinese.replace(/\s+/g, "");
+  const normalizedEnglish = english.toLowerCase();
+
+  if (
+    /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50|\u770b\u6f14\u51fa/.test(
+      normalizedChinese
+    ) &&
+    !/(concert|gig|recital|live music|music show|performance)/.test(
+      normalizedEnglish
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    /\u4e2d\u592e\u516c\u56ed|centralpark/i.test(normalizedChinese) &&
+    !/central park/.test(normalizedEnglish)
+  ) {
+    return false;
+  }
+
+  if (
+    /\u661f\u671f\u4e8c|\u5468\u4e8c|\u793c\u62dc\u4e8c/.test(normalizedChinese) &&
+    !/tuesday/.test(normalizedEnglish)
+  ) {
+    return false;
+  }
+
+  if (
+    /\u4f11\u606f|\u6563\u6b65/.test(normalizedChinese) &&
+    !/(break|rest|walk|stroll)/.test(normalizedEnglish)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function createFallbackExpressionVariants(
+  standardEnglish = "",
+  chinese = DEFAULT_CHINESE_TEXT
+): ExpressionVariant[] {
+  const normalizedChinese = chinese.replace(/\s+/g, "");
+  const hasConcert = /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50|\u770b\u6f14\u51fa/.test(
+    normalizedChinese
+  );
+  const hasTuesday = /\u661f\u671f\u4e8c|\u5468\u4e8c|\u793c\u62dc\u4e8c/.test(
+    normalizedChinese
+  );
+  const hasCentralPark = /\u4e2d\u592e\u516c\u56ed|centralpark/i.test(
+    normalizedChinese
+  );
+  const hasWe = /\u6211\u4eec|\u54b1\u4eec/.test(normalizedChinese);
+
+  if (hasConcert && hasCentralPark) {
+    const fallbackVariants: Record<ExpressionVariantKey, string> = hasWe
+      ? {
+          standard:
+            standardEnglish ||
+            (hasTuesday
+              ? "Today is Tuesday, and we're going to Central Park to see a concert."
+              : "We're going to Central Park to see a concert today."),
+          idiomatic: hasTuesday
+            ? "It's Tuesday today, and we're heading to Central Park for a concert."
+            : "We're heading to Central Park for a concert today.",
+          simple: hasTuesday
+            ? "Today is Tuesday. We're going to Central Park to see a concert."
+            : "We're going to Central Park to see a concert today.",
+          natural: hasTuesday
+            ? "It's Tuesday, and we're going to Central Park for a concert later."
+            : "We're going to Central Park for a concert later today.",
+        }
+      : {
+          standard:
+            standardEnglish ||
+            (hasTuesday
+              ? "Today is Tuesday, and I'm going to Central Park to see a concert."
+              : "I'm going to Central Park to see a concert today."),
+          idiomatic: hasTuesday
+            ? "It's Tuesday today, and I'm heading to Central Park for a concert."
+            : "I'm heading to Central Park for a concert today.",
+          simple: hasTuesday
+            ? "Today is Tuesday. I'm going to Central Park to see a concert."
+            : "I'm going to Central Park to see a concert today.",
+          natural: hasTuesday
+            ? "It's Tuesday, and I'm going to Central Park for a concert later."
+            : "I'm going to Central Park for a concert later today.",
+        };
+
+    return expressionVariantLabels.map(({ key, label }) => ({
+      key,
+      label,
+      text: fallbackVariants[key],
+    }));
+  }
+
+  if (hasTuesday && hasConcert) {
+    const fallbackVariants: Record<ExpressionVariantKey, string> = hasWe
+      ? {
+          standard: standardEnglish || "Today is Tuesday, and we're going to a concert.",
+          idiomatic: "It's Tuesday today, and we're going to a concert.",
+          simple: "Today is Tuesday. We're going to a concert.",
+          natural: "It's Tuesday, and we're going to a concert later.",
+        }
+      : {
+          standard: standardEnglish || "Today is Tuesday, and I'm going to a concert.",
+          idiomatic: "It's Tuesday today, and I'm going to a concert.",
+          simple: "Today is Tuesday. I'm going to a concert.",
+          natural: "It's Tuesday, and I'm going to a concert later.",
+        };
+
+    return expressionVariantLabels.map(({ key, label }) => ({
+      key,
+      label,
+      text: fallbackVariants[key],
+    }));
+  }
+
+  if (/\u4f11\u606f|\u6563\u6b65/.test(normalizedChinese)) {
+    const fallbackVariants: Record<ExpressionVariantKey, string> = {
+      standard: "Let's take a break, and then go for a walk later.",
+      idiomatic: "Let's take a break first, then go for a walk later.",
+      simple: "Let's rest first, and then take a walk later.",
+      natural: "Let's take a break, and we can go for a walk in a while.",
+    };
+
+    return expressionVariantLabels.map(({ key, label }) => ({
+      key,
+      label,
+      text: fallbackVariants[key],
+    }));
+  }
+
+  const fallbackText = standardEnglish || createFallbackEnglish(chinese);
 
   return expressionVariantLabels.map(({ key, label }) => ({
     key,
     label,
     text: fallbackText,
   }));
+}
+
+function createFallbackNextChinese(currentChinese: string) {
+  const normalizedChinese = currentChinese.replace(/\s+/g, "");
+  const hasConcert = /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50|\u770b\u6f14\u51fa/.test(
+    normalizedChinese
+  );
+  const hasCentralPark = /\u4e2d\u592e\u516c\u56ed|centralpark/i.test(
+    normalizedChinese
+  );
+
+  if (hasConcert && hasCentralPark) {
+    return "\u97f3\u4e50\u4f1a\u5f00\u59cb\u524d\uff0c\u6211\u4eec\u53ef\u4ee5\u5728\u516c\u56ed\u91cc\u6563\u6563\u6b65\u3002";
+  }
+
+  if (hasConcert) {
+    return "\u770b\u5b8c\u97f3\u4e50\u4f1a\u540e\uff0c\u6211\u4eec\u53ef\u4ee5\u804a\u804a\u6700\u559c\u6b22\u7684\u6b4c\u66f2\u3002";
+  }
+
+  if (/\u4f11\u606f|\u6563\u6b65/.test(normalizedChinese)) {
+    return "\u4f11\u606f\u4e4b\u540e\uff0c\u6211\u4eec\u53ef\u4ee5\u53bb\u9644\u8fd1\u6563\u6563\u6b65\u3002";
+  }
+
+  if (/\u8fd0\u52a8|\u953b\u70bc|\u7cbe\u795e|\u7761/.test(normalizedChinese)) {
+    return "\u6211\u60f3\u6bcf\u5929\u90fd\u62bd\u70b9\u65f6\u95f4\u953b\u70bc\u3002";
+  }
+
+  if (/\u5929\u6c14|\u592a\u9633|\u6237\u5916/.test(normalizedChinese)) {
+    return "\u6211\u4eec\u53ef\u4ee5\u8fb9\u6563\u6b65\u8fb9\u804a\u5929\u3002";
+  }
+
+  return "\u6211\u8fd8\u60f3\u8865\u5145\u4e00\u4e2a\u76f8\u5173\u7684\u7ec6\u8282\u3002";
+}
+
+function isNextChineseRelevant(currentChinese: string, suggestion: string) {
+  const normalizedChinese = currentChinese.replace(/\s+/g, "");
+
+  if (
+    /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50|\u770b\u6f14\u51fa/.test(
+      normalizedChinese
+    )
+  ) {
+    return /\u97f3\u4e50\u4f1a|\u6f14\u51fa|\u516c\u56ed|\u6b4c\u66f2|\u73b0\u573a|\u51fa\u53d1|\u6563\u6b65/.test(
+      suggestion
+    );
+  }
+
+  if (/\u4f11\u606f|\u6563\u6b65/.test(normalizedChinese)) {
+    return /\u4f11\u606f|\u6563\u6b65|\u653e\u677e|\u9644\u8fd1/.test(suggestion);
+  }
+
+  return true;
 }
 
 const hotspots: Hotspot[] = [
@@ -230,6 +476,46 @@ function readTranscript(
   return parts.join(separator).trim();
 }
 
+function renderVariantIcon(key: ExpressionVariantKey) {
+  if (key === "standard") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 4.8A2.8 2.8 0 0 1 8.8 2h6.4A2.8 2.8 0 0 1 18 4.8V22l-6-3.8L6 22V4.8Z" />
+        <path d="m12 6.4 1.05 2.12 2.35.34-1.7 1.66.4 2.34L12 11.75l-2.1 1.11.4-2.34-1.7-1.66 2.35-.34L12 6.4Z" />
+      </svg>
+    );
+  }
+
+  if (key === "idiomatic") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M5.2 18.8c7.2.2 12.6-4.7 13.5-13.5-8.4.6-13.6 5.7-13.5 13.5Z" />
+        <path d="M5.4 18.6 14.7 9" />
+        <path d="M9.6 14.4c-1.7-2.9-4.1-4.8-7-5.5.5 3 2.2 5.4 5.2 7.1" />
+      </svg>
+    );
+  }
+
+  if (key === "simple") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M20.8 3.2c-6.6.8-11.6 4.4-15 10.9l4.1 4.1c6.5-3.4 10.1-8.4 10.9-15Z" />
+        <path d="M7.1 16.9 3.5 20.5" />
+        <path d="m13.3 6.9 3.8 3.8" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 5.8A3.8 3.8 0 0 1 7.8 2h8.4A3.8 3.8 0 0 1 20 5.8v6.5a3.8 3.8 0 0 1-3.8 3.8H11l-5.6 4.2v-4.2A3.5 3.5 0 0 1 4 13.3V5.8Z" />
+      <path d="M8 9h.01" />
+      <path d="M12 9h.01" />
+      <path d="M16 9h.01" />
+    </svg>
+  );
+}
+
 export default function AiGuidedExpressionWebPage() {
   const [chineseText, setChineseText] = useState(DEFAULT_CHINESE_TEXT);
   const [englishText, setEnglishText] = useState(DEFAULT_ENGLISH_TEXT);
@@ -253,6 +539,8 @@ export default function AiGuidedExpressionWebPage() {
   const englishTextRef = useRef(englishText);
   const currentPracticeChineseRef = useRef(DEFAULT_CHINESE_TEXT);
   const nextChineseRef = useRef(nextChinese);
+  const expressionRequestRef = useRef(0);
+  const nextChineseRequestRef = useRef(0);
   const turnsRef = useRef<GuidedTurn[]>([]);
   const isChineseListening = activeRecorder === "chinese";
   const isEnglishListening = activeRecorder === "english";
@@ -272,6 +560,9 @@ export default function AiGuidedExpressionWebPage() {
   useEffect(() => {
     return () => {
       clearSilenceTimer();
+      if (typeof window !== "undefined") {
+        window.speechSynthesis?.cancel();
+      }
       recognitionRef.current?.abort();
       recognitionRef.current = null;
     };
@@ -291,13 +582,20 @@ export default function AiGuidedExpressionWebPage() {
   }
 
   function stopListening() {
+    const recorder = activeRecorder;
     clearSilenceTimer();
     recognitionRef.current?.stop();
     recognitionRef.current = null;
     setActiveRecorder(null);
+
+    if (recorder === "chinese") {
+      void refreshChinesePractice(chineseTextRef.current);
+    }
   }
 
   async function loadAccurateEnglish(chinese: string) {
+    const fallbackEnglish = createFallbackEnglish(chinese);
+
     try {
       const response = await fetch("/api/accurate-sentence", {
         method: "POST",
@@ -305,31 +603,48 @@ export default function AiGuidedExpressionWebPage() {
         body: JSON.stringify({ chinese }),
       });
       const data = (await response.json()) as AccurateSentenceResponse;
+      const english =
+        response.ok && typeof data.english === "string"
+          ? data.english.trim()
+          : "";
 
-      return response.ok && typeof data.english === "string"
-        ? data.english.trim()
-        : "";
+      return english && isEnglishRelevantToChinese(chinese, english)
+        ? english
+        : fallbackEnglish;
     } catch {
-      return "";
+      return fallbackEnglish;
     }
   }
 
-  async function generateExpressionVariants(
-    userEnglish: string,
-    sourceChinese = currentPracticeChineseRef.current
-  ) {
+  async function refreshExpressionVariants(sourceChinese: string, userEnglish = "") {
     const chinese = sourceChinese.trim();
     const learnerEnglish = userEnglish.trim();
 
-    if (!chinese || !learnerEnglish) {
+    if (!chinese) {
       return "";
     }
 
+    const requestId = expressionRequestRef.current + 1;
+    expressionRequestRef.current = requestId;
+    currentPracticeChineseRef.current = chinese;
     setIsLoadingExpressionVariants(true);
     setExpressionVariantError("");
 
     const standardEnglish = await loadAccurateEnglish(chinese);
-    const fallbackVariants = createFallbackExpressionVariants(standardEnglish);
+    const authoritativeEnglish = standardEnglish || createFallbackEnglish(chinese);
+    const fallbackVariants = createFallbackExpressionVariants(
+      authoritativeEnglish,
+      chinese
+    );
+
+    if (expressionRequestRef.current !== requestId) {
+      return "";
+    }
+
+    if (!learnerEnglish) {
+      setEnglishText(authoritativeEnglish);
+      englishTextRef.current = authoritativeEnglish;
+    }
 
     try {
       const response = await fetch("/api/expression-variants", {
@@ -337,42 +652,92 @@ export default function AiGuidedExpressionWebPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chinese,
-          userEnglish: learnerEnglish,
-          standardEnglish,
+          userEnglish: learnerEnglish || authoritativeEnglish,
+          standardEnglish: authoritativeEnglish,
         }),
       });
       const data = (await response.json()) as ExpressionVariantsResponse;
 
-      if (!response.ok || !data.variants) {
-        setExpressionVariants(fallbackVariants);
-        setExpressionVariantError(VARIANTS_ERROR_LABEL);
-        return fallbackVariants[0]?.text || standardEnglish || DEFAULT_ENGLISH_TEXT;
+      if (expressionRequestRef.current !== requestId) {
+        return "";
       }
 
-      const nextVariants = expressionVariantLabels.map(({ key, label }) => ({
-        key,
-        label,
-        text:
+      if (!response.ok || !data.variants) {
+        setExpressionVariants(fallbackVariants);
+        setExpressionVariantError("");
+        return fallbackVariants[0]?.text || authoritativeEnglish;
+      }
+
+      const nextVariants = expressionVariantLabels.map(({ key, label }) => {
+        const fallbackText =
+          fallbackVariants.find((variant) => variant.key === key)?.text ||
+          authoritativeEnglish;
+        const responseText =
           typeof data.variants?.[key] === "string" &&
           data.variants[key]?.trim()
             ? data.variants[key]!.trim()
-            : fallbackVariants.find((variant) => variant.key === key)?.text || "",
-      }));
+            : "";
+
+        return {
+          key,
+          label,
+          text:
+            responseText && isEnglishRelevantToChinese(chinese, responseText)
+              ? responseText
+              : fallbackText,
+        };
+      });
 
       setExpressionVariants(nextVariants);
-      return (
-        nextVariants[0]?.text ||
-        fallbackVariants[0]?.text ||
-        standardEnglish ||
-        DEFAULT_ENGLISH_TEXT
-      );
+      return nextVariants[0]?.text || fallbackVariants[0]?.text || authoritativeEnglish;
     } catch {
-      setExpressionVariants(fallbackVariants);
-      setExpressionVariantError(VARIANTS_ERROR_LABEL);
-      return fallbackVariants[0]?.text || standardEnglish || DEFAULT_ENGLISH_TEXT;
+      if (expressionRequestRef.current === requestId) {
+        setExpressionVariants(fallbackVariants);
+        setExpressionVariantError("");
+      }
+
+      return fallbackVariants[0]?.text || authoritativeEnglish;
     } finally {
-      setIsLoadingExpressionVariants(false);
+      if (expressionRequestRef.current === requestId) {
+        setIsLoadingExpressionVariants(false);
+      }
     }
+  }
+
+  async function generateExpressionVariants(
+    userEnglish: string,
+    sourceChinese = currentPracticeChineseRef.current
+  ) {
+    return refreshExpressionVariants(sourceChinese, userEnglish);
+  }
+
+  async function refreshChinesePractice(sourceChinese: string) {
+    const chinese = sourceChinese.trim();
+
+    if (!chinese) {
+      return;
+    }
+
+    const recommendedEnglish = await refreshExpressionVariants(chinese);
+    await loadNextChineseSuggestion({
+      sourceChinese: chinese,
+      userEnglish: "",
+      recommendedEnglish,
+    });
+  }
+
+  function playExpression(text: string, rate = 1) {
+    if (typeof window === "undefined" || !window.speechSynthesis) {
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    utterance.rate = rate;
+    utterance.pitch = 1;
+    window.speechSynthesis.speak(utterance);
   }
 
   async function loadNextChineseSuggestion({
@@ -390,8 +755,11 @@ export default function AiGuidedExpressionWebPage() {
       return;
     }
 
+    const requestId = nextChineseRequestRef.current + 1;
+    nextChineseRequestRef.current = requestId;
     setIsLoadingNextChinese(true);
     setNextChineseError("");
+    const fallbackSuggestion = createFallbackNextChinese(currentChinese);
 
     try {
       const response = await fetch("/api/expression-followup", {
@@ -410,17 +778,28 @@ export default function AiGuidedExpressionWebPage() {
           ? data.suggestion.trim()
           : "";
 
-      if (suggestion) {
+      if (nextChineseRequestRef.current !== requestId) {
+        return;
+      }
+
+      if (suggestion && isNextChineseRelevant(currentChinese, suggestion)) {
         setNextChinese(suggestion);
         nextChineseRef.current = suggestion;
         return;
       }
 
-      setNextChineseError(NEXT_ERROR_LABEL);
+      setNextChinese(fallbackSuggestion);
+      nextChineseRef.current = fallbackSuggestion;
     } catch {
-      setNextChineseError(NEXT_ERROR_LABEL);
+      if (nextChineseRequestRef.current === requestId) {
+        setNextChinese(fallbackSuggestion);
+        nextChineseRef.current = fallbackSuggestion;
+        setNextChineseError("");
+      }
     } finally {
-      setIsLoadingNextChinese(false);
+      if (nextChineseRequestRef.current === requestId) {
+        setIsLoadingNextChinese(false);
+      }
     }
   }
 
@@ -491,6 +870,8 @@ export default function AiGuidedExpressionWebPage() {
 
         if (transcript) {
           setChineseText(transcript);
+          chineseTextRef.current = transcript;
+          currentPracticeChineseRef.current = transcript;
         }
       };
 
@@ -502,7 +883,11 @@ export default function AiGuidedExpressionWebPage() {
 
       recognition.onend = () => {
         setActiveRecorder(null);
-        recognitionRef.current = null;
+
+        if (recognitionRef.current === recognition) {
+          recognitionRef.current = null;
+          void refreshChinesePractice(chineseTextRef.current);
+        }
       };
 
       recognitionRef.current = recognition;
@@ -604,7 +989,16 @@ export default function AiGuidedExpressionWebPage() {
     }
 
     setStatusText("");
-    setIsEditing((current) => !current);
+
+    if (isEditing) {
+      setIsEditing(false);
+      chineseTextRef.current = chineseText;
+      currentPracticeChineseRef.current = chineseText;
+      void refreshChinesePractice(chineseText);
+      return;
+    }
+
+    setIsEditing(true);
   }
 
   function retryEnglishRecording() {
@@ -712,7 +1106,12 @@ export default function AiGuidedExpressionWebPage() {
               ref={textareaRef}
               className={styles.chineseTextarea}
               value={chineseText}
-              onChange={(event) => setChineseText(event.target.value)}
+              onChange={(event) => {
+                const nextChineseText = event.target.value;
+                setChineseText(nextChineseText);
+                chineseTextRef.current = nextChineseText;
+                currentPracticeChineseRef.current = nextChineseText;
+              }}
               aria-label={EDIT_BUTTON_LABEL}
             />
           ) : (
@@ -784,6 +1183,7 @@ export default function AiGuidedExpressionWebPage() {
             <span>{RETRY_ENGLISH_LABEL}</span>
           </button>
         </section>
+        <p className={styles.variantSaveHint}>{VARIANTS_SAVE_HINT}</p>
         <section className={styles.variantPanel} aria-label="AI expression variants">
           {isLoadingExpressionVariants ? (
             <div className={styles.variantLoading} aria-live="polite">
@@ -799,19 +1199,37 @@ export default function AiGuidedExpressionWebPage() {
             <div className={styles.variantEmpty}>{VARIANTS_EMPTY_LABEL}</div>
           ) : null}
           <div className={styles.variantList}>
-            {expressionVariants.map((variant, index) => (
+            {expressionVariants.map((variant) => (
               <article
                 className={styles.variantCard}
                 data-variant={variant.key}
                 key={variant.key}
               >
                 <span className={styles.variantIcon} aria-hidden="true">
-                  {index + 1}
+                  {renderVariantIcon(variant.key)}
                 </span>
                 <span className={styles.variantCopy}>
                   <span className={styles.variantLabel}>{variant.label}</span>
                   <strong>{variant.text}</strong>
                 </span>
+                <button
+                  type="button"
+                  className={styles.variantPlayButton}
+                  onClick={() => playExpression(variant.text)}
+                  aria-label={`Play ${variant.label}`}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M8 5v14l11-7-11-7Z" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className={styles.variantSlowButton}
+                  onClick={() => playExpression(variant.text, 0.75)}
+                  aria-label={`Play ${variant.label} at 0.75 speed`}
+                >
+                  0.75x
+                </button>
               </article>
             ))}
           </div>

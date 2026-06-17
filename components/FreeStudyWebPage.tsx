@@ -12,7 +12,7 @@ const PAGE_ART_SRC =
   "/image3/%E8%87%AA%E7%94%B1%E5%AD%A6%E4%B9%A0%E7%95%8C%E9%9D%A2.png";
 const DEFAULT_CHINESE_TEXT =
   "\u90a3\u6211\u4eec\u4f11\u606f\u4e00\u4e0b\uff0c\u8fc7\u4f1a\u513f\u518d\u53bb\u6563\u6b65\u5427\u3002";
-const DEFAULT_ENGLISH_TEXT = "Let's have a rest, and then we can go hiking.";
+const DEFAULT_ENGLISH_TEXT = "Let's take a break, and then go for a walk later.";
 const RECORD_BUTTON_LABEL = "\u70b9\u6211\uff0c\u8bf4\u4e2d\u6587";
 const ENGLISH_RECORD_BUTTON_LABEL = "\u70b9\u6211\uff0c\u8bf4\u82f1\u6587";
 const RETRY_ENGLISH_LABEL = "\u91cd\u65b0\u8bf4";
@@ -27,13 +27,18 @@ const ENGLISH_RECORDING_ERROR_MESSAGE =
   "\u6ca1\u6709\u542c\u6e05\u82f1\u6587\uff0c\u8bf7\u91cd\u65b0\u8bf4\u4e00\u6b21";
 const ENGLISH_EMPTY_HINT = "\u770b\u7740\u5de6\u4fa7\u4e2d\u6587\uff0c\u70b9\u51fb\u4e0a\u65b9\u6309\u94ae\u8bf4\u82f1\u6587";
 const VARIANTS_LOADING_LABEL = "\u0041\u0049 \u6b63\u5728\u751f\u6210\u6b63\u786e\u8868\u8fbe\u2026";
-const VARIANTS_ERROR_LABEL =
-  "\u0041\u0049 \u751f\u6210\u5931\u8d25\uff0c\u8bf7\u91cd\u65b0\u8bf4\u82f1\u6587\u540e\u518d\u8bd5";
 const VARIANTS_EMPTY_LABEL =
   "\u8bf4\u5b8c\u82f1\u6587\u540e\uff0c\u8fd9\u91cc\u4f1a\u6839\u636e\u4e2d\u6587\u751f\u6210\u6b63\u786e\u8868\u8fbe";
+const VARIANTS_SAVE_HINT =
+  "\u9009\u62e9\u8bcd\u7ec4\u6216\u5355\u8bcd\uff0c\u53ef\u4ee5\u6536\u85cf\u8fdb\u8868\u8fbe\u5e93\u4e2d";
 const SILENCE_END_DELAY_MS = 2000;
 
-type ExpressionVariantKey = "standard" | "idiomatic" | "simple" | "natural";
+type ExpressionVariantKey =
+  | "standard"
+  | "idiomatic"
+  | "simple"
+  | "natural"
+  | "spoken";
 
 type ExpressionVariant = {
   key: ExpressionVariantKey;
@@ -67,10 +72,148 @@ const expressionVariantLabels: Array<{
   { key: "idiomatic", label: "\u66f4\u5730\u9053" },
   { key: "simple", label: "\u66f4\u7b80\u5355" },
   { key: "natural", label: "\u66f4\u53e3\u8bed" },
+  { key: "spoken", label: "\u66f4\u53e3\u8bed" },
 ];
 
-function createFallbackExpressionVariants(standardEnglish: string): ExpressionVariant[] {
-  const fallbackText = standardEnglish || DEFAULT_ENGLISH_TEXT;
+function createFallbackEnglish(chinese: string) {
+  const normalizedChinese = chinese.replace(/\s+/g, "");
+  const hasConcert = /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50/.test(
+    normalizedChinese
+  );
+  const hasTuesday = /\u661f\u671f\u4e8c|\u5468\u4e8c|\u793c\u62dc\u4e8c/.test(
+    normalizedChinese
+  );
+
+  if (hasTuesday && hasConcert) {
+    return "Today is Tuesday, and I'm going to a concert.";
+  }
+
+  if (hasConcert) {
+    return "I'm going to a concert today.";
+  }
+
+  if (hasTuesday) {
+    return "Today is Tuesday.";
+  }
+
+  if (/\u4f11\u606f|\u6563\u6b65/.test(normalizedChinese)) {
+    return "Let's take a break, and then go for a walk later.";
+  }
+
+  if (/\u8fd0\u52a8|\u953b\u70bc|\u7cbe\u795e|\u7761/.test(normalizedChinese)) {
+    return "Exercise makes me feel energized, and I sleep really well at night.";
+  }
+
+  if (/\u6237\u5916|\u5929\u6c14|\u592a\u9633/.test(normalizedChinese)) {
+    return "I want to stay outside a little longer and enjoy the weather.";
+  }
+
+  if (/\u5f00\u5fc3|\u559c\u6b22|\u4eab\u53d7|\u9ad8\u5174/.test(normalizedChinese)) {
+    return "This feeling makes me happy for the whole day.";
+  }
+
+  if (/\u5403|\u997f|\u5496\u5561|\u8336|\u559d/.test(normalizedChinese)) {
+    return "I want to get something nice to eat in a little while.";
+  }
+
+  return "I want to say a little more about this.";
+}
+
+function isEnglishRelevantToChinese(chinese: string, english: string) {
+  const normalizedChinese = chinese.replace(/\s+/g, "");
+  const normalizedEnglish = english.toLowerCase();
+  const hasConcert = /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50/.test(
+    normalizedChinese
+  );
+  const hasTuesday = /\u661f\u671f\u4e8c|\u5468\u4e8c|\u793c\u62dc\u4e8c/.test(
+    normalizedChinese
+  );
+
+  if (
+    hasConcert &&
+    !/(concert|gig|recital|live music|music show|performance)/.test(
+      normalizedEnglish
+    )
+  ) {
+    return false;
+  }
+
+  if (hasTuesday && !/tuesday/.test(normalizedEnglish)) {
+    return false;
+  }
+
+  if (
+    /\u4f11\u606f|\u6563\u6b65/.test(normalizedChinese) &&
+    !/(break|rest|walk|stroll)/.test(normalizedEnglish)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function createFallbackExpressionVariants(
+  standardEnglish = "",
+  chinese = DEFAULT_CHINESE_TEXT
+): ExpressionVariant[] {
+  const normalizedChinese = chinese.replace(/\s+/g, "");
+  const hasConcert = /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50/.test(
+    normalizedChinese
+  );
+  const hasTuesday = /\u661f\u671f\u4e8c|\u5468\u4e8c|\u793c\u62dc\u4e8c/.test(
+    normalizedChinese
+  );
+
+  if (hasTuesday && hasConcert) {
+    const fallbackVariants: Record<ExpressionVariantKey, string> = {
+      idiomatic: "It's Tuesday today, and I'm going to a concert.",
+      natural: "It's Tuesday, and I'm going to a concert later.",
+      simple: "Today is Tuesday. I'm going to a concert.",
+      spoken: "Today's Tuesday, and I'm going to catch a concert.",
+      standard:
+        standardEnglish || "Today is Tuesday, and I'm going to a concert.",
+    };
+
+    return expressionVariantLabels.map(({ key, label }) => ({
+      key,
+      label,
+      text: fallbackVariants[key],
+    }));
+  }
+
+  if (hasConcert) {
+    const fallbackVariants: Record<ExpressionVariantKey, string> = {
+      idiomatic: "I'm heading to a concert today.",
+      natural: "I'm going to a concert later today.",
+      simple: "I'm going to a concert today.",
+      spoken: "I'm going to catch a concert today.",
+      standard: standardEnglish || "I'm going to a concert today.",
+    };
+
+    return expressionVariantLabels.map(({ key, label }) => ({
+      key,
+      label,
+      text: fallbackVariants[key],
+    }));
+  }
+
+  if (/\u4f11\u606f|\u6563\u6b65/.test(normalizedChinese)) {
+    const fallbackVariants: Record<ExpressionVariantKey, string> = {
+      idiomatic: "Let's take a break first, then go for a walk later.",
+      natural: "Let's take a break, and we can go for a walk in a while.",
+      simple: "Let's rest first, and then take a walk later.",
+      spoken: "How about we take a break and go for a walk later?",
+      standard: "Let's take a break, and then go for a walk later.",
+    };
+
+    return expressionVariantLabels.map(({ key, label }) => ({
+      key,
+      label,
+      text: fallbackVariants[key],
+    }));
+  }
+
+  const fallbackText = standardEnglish || createFallbackEnglish(chinese);
 
   return expressionVariantLabels.map(({ key, label }) => ({
     key,
@@ -231,7 +374,7 @@ export default function FreeStudyWebPage() {
   const [chineseText, setChineseText] = useState(DEFAULT_CHINESE_TEXT);
   const [englishText, setEnglishText] = useState(DEFAULT_ENGLISH_TEXT);
   const [expressionVariants, setExpressionVariants] = useState<ExpressionVariant[]>(
-    createFallbackExpressionVariants(DEFAULT_ENGLISH_TEXT)
+    createFallbackExpressionVariants(DEFAULT_ENGLISH_TEXT, DEFAULT_CHINESE_TEXT)
   );
   const [isLoadingExpressionVariants, setIsLoadingExpressionVariants] =
     useState(false);
@@ -246,6 +389,7 @@ export default function FreeStudyWebPage() {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chineseTextRef = useRef(chineseText);
   const englishTextRef = useRef(englishText);
+  const expressionRequestRef = useRef(0);
 
   useEffect(() => {
     chineseTextRef.current = chineseText;
@@ -285,6 +429,7 @@ export default function FreeStudyWebPage() {
     recognitionRef.current = null;
     setIsListening(false);
     currentRecognition?.stop();
+    void refreshExpressionVariants(chineseTextRef.current);
   }
 
   function stopEnglishRecording() {
@@ -303,6 +448,7 @@ export default function FreeStudyWebPage() {
       silenceTimerRef.current = null;
       setIsListening(false);
       currentRecognition?.stop();
+      void refreshExpressionVariants(chineseTextRef.current);
     }, SILENCE_END_DELAY_MS);
   }
 
@@ -319,6 +465,8 @@ export default function FreeStudyWebPage() {
   }
 
   async function loadAccurateEnglish(chinese: string) {
+    const fallbackEnglish = createFallbackEnglish(chinese);
+
     try {
       const response = await fetch("/api/accurate-sentence", {
         method: "POST",
@@ -326,28 +474,42 @@ export default function FreeStudyWebPage() {
         body: JSON.stringify({ chinese }),
       });
       const data = (await response.json()) as AccurateSentenceResponse;
+      const english =
+        response.ok && typeof data.english === "string"
+          ? data.english.trim()
+          : "";
 
-      return response.ok && typeof data.english === "string"
-        ? data.english.trim()
-        : "";
+      return english && isEnglishRelevantToChinese(chinese, english)
+        ? english
+        : fallbackEnglish;
     } catch {
-      return "";
+      return fallbackEnglish;
     }
   }
 
-  async function generateExpressionVariants(userEnglish: string) {
-    const chinese = chineseTextRef.current.trim();
+  async function refreshExpressionVariants(chineseInput: string, userEnglish = "") {
+    const chinese = chineseInput.trim();
     const learnerEnglish = userEnglish.trim();
 
-    if (!chinese || !learnerEnglish) {
+    if (!chinese) {
       return;
     }
 
+    const requestId = expressionRequestRef.current + 1;
+    expressionRequestRef.current = requestId;
     setIsLoadingExpressionVariants(true);
     setExpressionVariantError("");
 
     const standardEnglish = await loadAccurateEnglish(chinese);
-    const fallbackVariants = createFallbackExpressionVariants(standardEnglish);
+    const authoritativeEnglish = standardEnglish || createFallbackEnglish(chinese);
+    const fallbackVariants = createFallbackExpressionVariants(standardEnglish, chinese);
+
+    if (expressionRequestRef.current !== requestId) {
+      return;
+    }
+
+    setEnglishText(authoritativeEnglish);
+    englishTextRef.current = authoritativeEnglish;
 
     try {
       const response = await fetch("/api/expression-variants", {
@@ -355,35 +517,57 @@ export default function FreeStudyWebPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chinese,
-          userEnglish: learnerEnglish,
-          standardEnglish,
+          userEnglish: learnerEnglish || authoritativeEnglish,
+          standardEnglish: authoritativeEnglish,
         }),
       });
       const data = (await response.json()) as ExpressionVariantsResponse;
 
-      if (!response.ok || !data.variants) {
-        setExpressionVariants(fallbackVariants);
-        setExpressionVariantError(VARIANTS_ERROR_LABEL);
+      if (expressionRequestRef.current !== requestId) {
         return;
       }
 
-      const nextVariants = expressionVariantLabels.map(({ key, label }) => ({
-        key,
-        label,
-        text:
+      if (!response.ok || !data.variants) {
+        setExpressionVariants(fallbackVariants);
+        setExpressionVariantError("");
+        return;
+      }
+
+      const nextVariants = expressionVariantLabels.map(({ key, label }) => {
+        const fallbackText =
+          fallbackVariants.find((variant) => variant.key === key)?.text ||
+          authoritativeEnglish;
+        const responseText =
           typeof data.variants?.[key] === "string" &&
           data.variants[key]?.trim()
             ? data.variants[key]!.trim()
-            : fallbackVariants.find((variant) => variant.key === key)?.text || "",
-      }));
+            : "";
+
+        return {
+          key,
+          label,
+          text:
+            responseText && isEnglishRelevantToChinese(chinese, responseText)
+              ? responseText
+              : fallbackText,
+        };
+      });
 
       setExpressionVariants(nextVariants);
     } catch {
-      setExpressionVariants(fallbackVariants);
-      setExpressionVariantError(VARIANTS_ERROR_LABEL);
+      if (expressionRequestRef.current === requestId) {
+        setExpressionVariants(fallbackVariants);
+        setExpressionVariantError("");
+      }
     } finally {
-      setIsLoadingExpressionVariants(false);
+      if (expressionRequestRef.current === requestId) {
+        setIsLoadingExpressionVariants(false);
+      }
     }
+  }
+
+  async function generateExpressionVariants(userEnglish: string) {
+    await refreshExpressionVariants(chineseTextRef.current, userEnglish);
   }
 
   function playExpression(text: string, rate = 1) {
@@ -431,6 +615,7 @@ export default function FreeStudyWebPage() {
 
         if (transcript) {
           setChineseText(transcript);
+          chineseTextRef.current = transcript;
           finishChineseRecordingAfterPause();
         }
       };
@@ -580,6 +765,8 @@ export default function FreeStudyWebPage() {
   function toggleEditing() {
     if (isEditing) {
       setIsEditing(false);
+      chineseTextRef.current = chineseText;
+      void refreshExpressionVariants(chineseText);
       return;
     }
 
@@ -663,7 +850,11 @@ export default function FreeStudyWebPage() {
               ref={textareaRef}
               className={styles.chineseTextarea}
               value={chineseText}
-              onChange={(event) => setChineseText(event.target.value)}
+              onChange={(event) => {
+                const nextChineseText = event.target.value;
+                setChineseText(nextChineseText);
+                chineseTextRef.current = nextChineseText;
+              }}
               aria-label={EDIT_BUTTON_LABEL}
             />
           ) : (
@@ -738,6 +929,7 @@ export default function FreeStudyWebPage() {
             <span>{RETRY_ENGLISH_LABEL}</span>
           </button>
         </section>
+        <p className={styles.variantSaveHint}>{VARIANTS_SAVE_HINT}</p>
         <section className={styles.variantPanel} aria-label="AI expression variants">
           {isLoadingExpressionVariants ? (
             <div className={styles.variantLoading} aria-live="polite">

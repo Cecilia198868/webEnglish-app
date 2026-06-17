@@ -17,6 +17,15 @@ type FollowupResponse = {
 
 const fallbackSuggestionGroups = [
   {
+    pattern:
+      /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50|\u770b\u6f14\u51fa|\u4e2d\u592e\u516c\u56ed/,
+    suggestions: [
+      "\u97f3\u4e50\u4f1a\u5f00\u59cb\u524d\uff0c\u6211\u4eec\u53ef\u4ee5\u5728\u516c\u56ed\u91cc\u6563\u6563\u6b65\u3002",
+      "\u6211\u4eec\u53ef\u4ee5\u65e9\u70b9\u51fa\u53d1\uff0c\u5148\u5728\u516c\u56ed\u9644\u8fd1\u8d70\u4e00\u8d70\u3002",
+      "\u770b\u5b8c\u97f3\u4e50\u4f1a\u540e\uff0c\u6211\u4eec\u53ef\u4ee5\u804a\u804a\u6700\u559c\u6b22\u7684\u6b4c\u66f2\u3002",
+    ],
+  },
+  {
     pattern: /\u5929\u6c14|\u592a\u9633|\u8212\u670d|\u540e\u9662|\u6237\u5916/,
     suggestions: [
       "\u6211\u60f3\u5728\u6237\u5916\u591a\u5f85\u4e00\u4f1a\u513f\u3002",
@@ -98,6 +107,30 @@ function createFallbackSuggestion(currentChinese: string, usedChinese: string[])
   );
 }
 
+function shouldUseDeterministicFallback(currentChinese: string) {
+  return /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50|\u770b\u6f14\u51fa|\u4e2d\u592e\u516c\u56ed/.test(
+    currentChinese
+  );
+}
+
+function isSuggestionRelevant(currentChinese: string, suggestion: string) {
+  if (
+    /\u97f3\u4e50\u4f1a|\u6f14\u5531\u4f1a|\u542c\u97f3\u4e50|\u770b\u6f14\u51fa|\u4e2d\u592e\u516c\u56ed/.test(
+      currentChinese
+    )
+  ) {
+    return /\u97f3\u4e50\u4f1a|\u6f14\u51fa|\u516c\u56ed|\u6b4c\u66f2|\u73b0\u573a|\u51fa\u53d1|\u6563\u6b65/.test(
+      suggestion
+    );
+  }
+
+  if (/\u4f11\u606f|\u6563\u6b65/.test(currentChinese)) {
+    return /\u4f11\u606f|\u6563\u6b65|\u653e\u677e|\u9644\u8fd1/.test(suggestion);
+  }
+
+  return true;
+}
+
 export async function POST(req: Request) {
   let fallbackChinese = defaultSuggestions[0];
   let usedChinese: string[] = [];
@@ -131,7 +164,7 @@ export async function POST(req: Request) {
 
     fallbackChinese = createFallbackSuggestion(currentChinese, usedChinese);
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.OPENAI_API_KEY || shouldUseDeterministicFallback(currentChinese)) {
       return NextResponse.json({
         suggestion: fallbackChinese,
         source: "fallback",
@@ -164,7 +197,10 @@ export async function POST(req: Request) {
     const suggestion = cleanText(parsed.suggestion);
 
     return NextResponse.json({
-      suggestion: suggestion || fallbackChinese,
+      suggestion:
+        suggestion && isSuggestionRelevant(currentChinese, suggestion)
+          ? suggestion
+          : fallbackChinese,
     });
   } catch {
     return NextResponse.json({
