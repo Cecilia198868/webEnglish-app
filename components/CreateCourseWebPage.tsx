@@ -1,9 +1,14 @@
 "use client";
 
 import type { ChangeEvent, DragEvent } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  createFallbackVariants,
+  type FreePracticeExpressionVariants,
+} from "@/lib/freePracticeEnglishFallback";
+import { playSpeakFlowTts, stopSpeakFlowTts } from "@/lib/speakFlowTtsClient";
 import {
   createFallbackTrainingItemsFromText,
   parseTrainingContent,
@@ -53,6 +58,19 @@ type ExtractTextResponse = {
   message?: string;
 };
 
+type RecommendationVariantKey = "standard" | "idiomatic" | "simple" | "spoken";
+
+type RecommendationVariant = {
+  key: RecommendationVariantKey;
+  label: string;
+  text: string;
+  tone: string;
+};
+
+type ExpressionVariantsResponse = {
+  variants?: Partial<FreePracticeExpressionVariants>;
+};
+
 const LESSONS_STORAGE_KEY = "english-app-lessons";
 const LAST_STUDY_PROGRESS_KEY = "lastStudyProgress";
 const RECORDING_SILENCE_DELAY_MS = 2000;
@@ -87,21 +105,38 @@ const methodCards = [
   { icon: "5", label: "发布课程", text: "发布并分享课程" },
 ];
 
-const recommendationTones = [
-  { label: "最自然地道", tone: "blue" },
-  { label: "更地道", tone: "green" },
-  { label: "更简单", tone: "cyan" },
-  { label: "更口语", tone: "purple" },
+const recommendationTones: Array<{
+  key: RecommendationVariantKey;
+  label: string;
+  tone: string;
+}> = [
+  { key: "standard", label: "最自然地道", tone: "blue" },
+  { key: "idiomatic", label: "更地道", tone: "green" },
+  { key: "simple", label: "更简单", tone: "cyan" },
+  { key: "spoken", label: "更口语", tone: "purple" },
 ];
 
 const sampleChinesePrompt = "那我们休息一下，过会儿再去散步吧。";
 const sampleSpokenEnglish = "Let's have a rest, and then we can go hiking.";
-const sampleRecommendations = [
-  "That's why I'm looking for a better job.",
-  "That's why I'm searching for a better job.",
-  "So I want to find a better job.",
-  "That's why I'm trying to find a better job.",
-];
+
+function buildRecommendationVariants(
+  chinese: string,
+  standardEnglish: string,
+  variantMap?: Partial<FreePracticeExpressionVariants>
+): RecommendationVariant[] {
+  const fallbackVariants = createFallbackVariants(chinese, standardEnglish);
+
+  return recommendationTones.map(({ key, label, tone }) => ({
+    key,
+    label,
+    text:
+      variantMap?.[key]?.trim() ||
+      fallbackVariants[key]?.trim() ||
+      standardEnglish.trim() ||
+      sampleSpokenEnglish,
+    tone,
+  }));
+}
 
 function normalizeStatus(status?: string): CourseStatus {
   if (
@@ -623,12 +658,18 @@ export function CreateCourseWebPage() {
   const [spokenEnglish, setSpokenEnglish] = useState("");
   const [liveTranscript, setLiveTranscript] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [expressionVariants, setExpressionVariants] = useState<
+    RecommendationVariant[]
+  >(() => buildRecommendationVariants(sampleChinesePrompt, sampleSpokenEnglish));
+  const [isLoadingExpressionVariants, setIsLoadingExpressionVariants] =
+    useState(false);
 
   const textFileInputRef = useRef<HTMLInputElement | null>(null);
   const audioFileInputRef = useRef<HTMLInputElement | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
   const speechSilenceTimerRef = useRef<number | null>(null);
   const finalTranscriptRef = useRef("");
+  const expressionRequestRef = useRef(0);
 
   useEffect(() => {
     const { courses: storedCourses } = readCourseStorage();
@@ -649,6 +690,86 @@ export function CreateCourseWebPage() {
     [selectedCourse]
   );
   const currentPair = selectedPairs[currentIndex] || null;
+  const currentChinesePrompt = currentPair?.chinese?.trim() || sampleChinesePrompt;
+  const currentStandardEnglish =
+    currentPair?.english?.trim() || (currentPair ? "" : sampleSpokenEnglish);
+
+  const refreshExpressionVariants = useCallback(
+    async (
+      chineseInput: string,
+      standardEnglishInput: string,
+      userEnglishInput = ""
+    ) => {
+      const chinese = chineseInput.trim() || sampleChinesePrompt;
+      const standardEnglish = standardEnglishInput.trim();
+      const fallbackVariants = buildRecommendationVariants(
+        chinese,
+        standardEnglish
+      );
+      const requestId = expressionRequestRef.current + 1;
+
+      expressionRequestRef.current = requestId;
+      setExpressionVariants(fallbackVariants);
+      setIsLoadingExpressionVariants(true);
+
+      try {
+        const response = await fetch("/api/expression-variants", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chinese,
+            standardEnglish,
+            userEnglish: userEnglishInput.trim(),
+          }),
+        });
+        const data = (await response.json()) as ExpressionVariantsResponse;
+
+        if (expressionRequestRef.current !== requestId) return;
+        if (!response.ok || !data.variants) return;
+
+        setExpressionVariants(
+          buildRecommendationVariants(chinese, standardEnglish, data.variants)
+        );
+      } catch {
+        if (expressionRequestRef.current === requestId) {
+          setExpressionVariants(fallbackVariants);
+        }
+      } finally {
+        if (expressionRequestRef.current === requestId) {
+          setIsLoadingExpressionVariants(false);
+        }
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!currentPair) {
+      expressionRequestRef.current += 1;
+      setExpressionVariants(
+        buildRecommendationVariants(sampleChinesePrompt, sampleSpokenEnglish)
+      );
+      setIsLoadingExpressionVariants(false);
+      return;
+    }
+
+    void refreshExpressionVariants(
+      currentChinesePrompt,
+      currentStandardEnglish,
+      ""
+    );
+  }, [
+    currentPair,
+    currentChinesePrompt,
+    currentStandardEnglish,
+    refreshExpressionVariants,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      stopSpeakFlowTts();
+    };
+  }, []);
 
   const filteredCourses = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -876,6 +997,13 @@ export function CreateCourseWebPage() {
     router.push(`/study/${course.id}`);
   }
 
+  function playRecommendation(text: string, rate = 1) {
+    void playSpeakFlowTts({
+      rate,
+      text,
+    });
+  }
+
   function deleteCourse(courseId: string) {
     const course = courses.find((item) => item.id === courseId);
     const confirmed = window.confirm(`删除课程“${course?.title || "未命名课程"}”？`);
@@ -1023,6 +1151,11 @@ export function CreateCourseWebPage() {
       if (finalTranscript) {
         setSpokenEnglish(finalTranscript);
         savePracticeRecord(finalTranscript);
+        void refreshExpressionVariants(
+          currentChinesePrompt,
+          currentStandardEnglish,
+          finalTranscript
+        );
         setMessage("录音已保存。");
       } else {
         setMessage("没有听清，请再试一次。");
@@ -1068,18 +1201,9 @@ export function CreateCourseWebPage() {
   }
 
   const practiceTranscript = isRecording && liveTranscript ? liveTranscript : spokenEnglish;
-  const displayedChinesePrompt = currentPair?.chinese || sampleChinesePrompt;
+  const displayedChinesePrompt = currentChinesePrompt;
   const displayedSpokenEnglish =
-    practiceTranscript || currentPair?.english || sampleSpokenEnglish;
-  const recommendationTexts =
-    currentPair?.english && currentPair.english.trim()
-      ? [
-          currentPair.english,
-          currentPair.english,
-          currentPair.english,
-          currentPair.english,
-        ]
-      : sampleRecommendations;
+    practiceTranscript || currentStandardEnglish || sampleSpokenEnglish;
 
   return (
     <main className={styles.page}>
@@ -1445,11 +1569,14 @@ export function CreateCourseWebPage() {
             <h2>
               <SparkleIcon />
               推荐表达 <span>（AI 优化结果）</span>
-              <small>AI 为你优化的多种表达方式</small>
+              <small>
+                {isLoadingExpressionVariants
+                  ? "AI 正在优化表达..."
+                  : "AI 为你优化的多种表达方式"}
+              </small>
             </h2>
             <div className={styles.variantList}>
-              {recommendationTexts.map((text, index) => {
-                const tone = recommendationTones[index] || recommendationTones[0];
+              {expressionVariants.map((variant, index) => {
                 const VariantIcon =
                   index === 0
                     ? SparkleIcon
@@ -1460,18 +1587,34 @@ export function CreateCourseWebPage() {
                         : MoreIcon;
 
                 return (
-                  <article className={styles.variantCard} data-tone={tone.tone} key={tone.label}>
+                  <article
+                    className={styles.variantCard}
+                    data-tone={variant.tone}
+                    key={variant.key}
+                  >
                     <span className={styles.variantIcon}>
                       <VariantIcon />
                     </span>
                     <div className={styles.variantCopy}>
-                      <strong>{tone.label}</strong>
-                      <p>{text}</p>
+                      <strong>{variant.label}</strong>
+                      <p>{variant.text}</p>
                     </div>
-                    <button type="button" className={styles.playButton} aria-label="播放表达">
+                    <button
+                      type="button"
+                      className={styles.playButton}
+                      aria-label={`播放 ${variant.label}`}
+                      onClick={() => playRecommendation(variant.text)}
+                    >
                       <PlayIcon />
                     </button>
-                    <span className={styles.speedChip}>0.75x</span>
+                    <button
+                      type="button"
+                      className={styles.speedChip}
+                      aria-label={`慢速播放 ${variant.label}`}
+                      onClick={() => playRecommendation(variant.text, 0.75)}
+                    >
+                      0.75x
+                    </button>
                   </article>
                 );
               })}

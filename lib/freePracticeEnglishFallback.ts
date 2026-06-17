@@ -28,6 +28,8 @@ const veryPattern =
 const tuesdayPattern = /\u661f\u671f\u4e8c|\u5468\u4e8c|\u793c\u62dc\u4e8c/;
 const todayPattern = /\u4eca\u5929/;
 const wePattern = /\u6211\u4eec|\u54b1\u4eec/;
+const jobPattern = /\u5de5\u4f5c|\u804c\u4f4d|\u6c42\u804c|\u627e\u5de5\u4f5c|job|work/i;
+const betterPattern = /\u66f4\u597d|\u66f4\u4f73|\u7406\u60f3|\u6ee1\u610f|better/i;
 const futurePattern =
   /\u660e\u5929|\u540e\u5929|\u4e0b\u5468|\u4e0b\u4e2a|\u7b49\u4f1a|\u5f85\u4f1a|\u4e00\u4f1a|\u8981|\u4f1a(?:\u53bb|\u6765|\u770b|\u542c|\u53c2\u52a0|\u89c9\u5f97|\u611f\u5230|\u5f88|\u975e\u5e38|\u66f4|\u8ba9)|\u6253\u7b97|\u51c6\u5907|\u60f3\u53bb|\u5c06|soon|later/i;
 const pastPattern =
@@ -134,6 +136,10 @@ export function createFallbackEnglish(chinese: string) {
 
   if (/\u4f11\u606f|\u6563\u6b65/.test(normalizedChinese)) {
     return "Let's take a short break, and then we can go for a walk later.";
+  }
+
+  if (jobPattern.test(normalizedChinese) && betterPattern.test(normalizedChinese)) {
+    return "That's why I'm looking for a better job.";
   }
 
   if (/\u6237\u5916|\u5929\u6c14|\u592a\u9633/.test(normalizedChinese)) {
@@ -300,6 +306,16 @@ export function createFallbackVariants(
       simple: "Let's rest first, and then take a walk later.",
       natural: "Let's take a break, and we can go for a walk in a while.",
       spoken: "How about we take a break and go for a walk later?",
+    };
+  }
+
+  if (jobPattern.test(normalizedChinese) && betterPattern.test(normalizedChinese)) {
+    return {
+      standard: standard || "That's why I'm looking for a better job.",
+      idiomatic: "That's why I'm searching for a better job.",
+      simple: "So I want to find a better job.",
+      natural: "I'm trying to find a better job that fits me better.",
+      spoken: "That's why I'm trying to find a better job.",
     };
   }
 
