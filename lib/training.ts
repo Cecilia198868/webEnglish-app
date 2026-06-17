@@ -559,6 +559,92 @@ export function generateTrainingFromEnglishSubtitles(rawText: string) {
   );
 }
 
+function detectFallbackPrimaryLanguage(text: string) {
+  const chineseChars = (text.match(/[\u4e00-\u9fff]/g) || []).length;
+  const englishWords = (text.match(/[A-Za-z]+(?:'[A-Za-z]+)?/g) || []).length;
+
+  if (chineseChars === 0 && englishWords === 0) return "unknown";
+  return chineseChars >= englishWords ? "zh" : "en";
+}
+
+function cleanFallbackUnit(text: string) {
+  return normalizeWhitespace(text)
+    .replace(/^[\s"'“”‘’「」『』【】()（）[\]{}，、。！？；：,.!?;:]+/, "")
+    .replace(/[\s"'“”‘’「」『』【】()[\]{}，、。！？；：,.!?;:]+$/, "")
+    .trim();
+}
+
+function createFallbackItem(unit: string, primaryLanguage: string): TrainingItem {
+  const hasChinese = /[\u4e00-\u9fff]/.test(unit);
+  const hasEnglish = /[A-Za-z]/.test(unit);
+
+  if (hasChinese && primaryLanguage !== "en") {
+    return { zh: unit, en: "" };
+  }
+
+  if (hasEnglish && !hasChinese) {
+    return {
+      zh: `请表达：${unit.replace(/[.?!;]+$/, "")}`,
+      en: tidyEnglishPart(unit),
+    };
+  }
+
+  if (hasChinese) {
+    return { zh: unit, en: "" };
+  }
+
+  return { zh: unit, en: "" };
+}
+
+export function createFallbackTrainingItemsFromText(rawText: string) {
+  const normalized = rawText.trim();
+  if (!normalized) return [];
+
+  const primaryLanguage = detectFallbackPrimaryLanguage(normalized);
+  const rawLines = normalized.includes("-->")
+    ? parseSrtLines(normalized)
+    : parseTxtLines(normalized);
+  const lines = rawLines.length ? rawLines : [normalized];
+
+  const units = lines
+    .flatMap((line) => {
+      const hasChinese = /[\u4e00-\u9fff]/.test(line);
+      const hasEnglish = /[A-Za-z]/.test(line);
+
+      if (hasChinese && primaryLanguage !== "en") {
+        return splitChineseText(line);
+      }
+
+      if (hasEnglish) {
+        return splitEnglishText(line);
+      }
+
+      return splitByPunctuationMarks(line, [
+        ...CHINESE_SENTENCE_PUNCTUATION,
+        ...ENGLISH_SENTENCE_PUNCTUATION,
+        ...CHINESE_CLAUSE_PUNCTUATION,
+        ...ENGLISH_CLAUSE_PUNCTUATION,
+      ]);
+    })
+    .map(cleanFallbackUnit)
+    .filter(Boolean);
+
+  const deduped: string[] = [];
+  const seen = new Set<string>();
+
+  for (const unit of units) {
+    const key = unit.toLocaleLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(unit);
+    if (deduped.length >= 120) break;
+  }
+
+  return normalizeToShortTrainingItems(
+    deduped.map((unit) => createFallbackItem(unit, primaryLanguage))
+  ).filter((item) => item.zh || item.en);
+}
+
 function sanitizeTrainingItems(items: TrainingItem[]) {
   return items
     .map((item) => ({

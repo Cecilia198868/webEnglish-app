@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  createFallbackTrainingItemsFromText,
   parseTrainingContent,
   serializeTrainingItems,
   type TrainingItem,
@@ -48,13 +49,6 @@ type GeneratedPair = {
 type ExtractTextResponse = {
   text?: string;
   fileName?: string;
-  error?: string;
-  message?: string;
-};
-
-type AudioTrainingResponse = {
-  pairs?: GeneratedPair[];
-  title?: string;
   error?: string;
   message?: string;
 };
@@ -185,6 +179,10 @@ function normalizeTrainingPairs(data: unknown): TrainingItem[] {
         data !== null &&
         Array.isArray((data as { pairs?: unknown[] }).pairs)
       ? (data as { pairs: unknown[] }).pairs
+      : typeof data === "object" &&
+          data !== null &&
+          Array.isArray((data as { items?: unknown[] }).items)
+        ? (data as { items: unknown[] }).items
       : [];
 
   return rawItems
@@ -211,37 +209,63 @@ function normalizeTrainingPairs(data: unknown): TrainingItem[] {
     .filter((item) => item.zh || item.en);
 }
 
-async function readJsonError(response: Response) {
+async function readResponsePayload(response: Response) {
+  const responseText = await response.text();
+
+  if (!responseText.trim()) return null;
+
   try {
-    const data = (await response.json()) as {
-      error?: unknown;
-      message?: unknown;
-    };
-    return (
-      (typeof data.message === "string" && data.message) ||
-      (typeof data.error === "string" && data.error) ||
-      "请求失败"
-    );
+    return JSON.parse(responseText) as unknown;
   } catch {
-    return "请求失败";
+    return {
+      message: responseText.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
+    };
   }
 }
 
-async function requestTrainingFromText(text: string) {
-  const response = await fetch("/api/generate-training", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
-  });
+function getPayloadErrorMessage(data: unknown) {
+  const payload = data as { error?: unknown; message?: unknown } | null;
 
-  if (!response.ok) {
-    throw new Error(await readJsonError(response));
+  return (
+    (typeof payload?.message === "string" && payload.message.slice(0, 160)) ||
+    (typeof payload?.error === "string" && payload.error.slice(0, 160)) ||
+    "请求失败"
+  );
+}
+
+function fallbackItemsFromText(text: string, fallbackTitle = "学习材料") {
+  const items = createFallbackTrainingItemsFromText(text);
+  return items.length ? items : createFallbackTrainingItemsFromText(fallbackTitle);
+}
+
+async function requestTrainingFromText(text: string) {
+  let data: unknown = null;
+
+  try {
+    const response = await fetch("/api/generate-training", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+
+    data = await readResponsePayload(response);
+
+    if (!response.ok) {
+      const fallbackItems = fallbackItemsFromText(text);
+      if (fallbackItems.length > 0) return fallbackItems;
+      throw new Error(getPayloadErrorMessage(data));
+    }
+  } catch (error) {
+    const fallbackItems = fallbackItemsFromText(text);
+    if (fallbackItems.length > 0) return fallbackItems;
+    throw error;
   }
 
-  const data = await response.json();
   const items = normalizeTrainingPairs(data);
 
   if (items.length === 0) {
+    const fallbackItems = fallbackItemsFromText(text);
+    if (fallbackItems.length > 0) return fallbackItems;
     throw new Error("没有生成可学习的句子，请换一段更完整的内容。");
   }
 
@@ -257,13 +281,20 @@ async function requestTextFromFile(file: File) {
     body: formData,
   });
 
-  const data = (await response.json()) as ExtractTextResponse;
+  const data = (await readResponsePayload(response)) as ExtractTextResponse | null;
 
   if (!response.ok) {
-    throw new Error(data.message || data.error || "文件文字读取失败");
+    const canReadInBrowser =
+      /\.(txt|text|srt)$/i.test(file.name) || file.type.startsWith("text/");
+    if (canReadInBrowser) {
+      const fallbackText = await file.text();
+      if (fallbackText.trim()) return fallbackText.trim();
+    }
+
+    throw new Error(data?.message || data?.error || "文件文字读取失败");
   }
 
-  if (!data.text?.trim()) {
+  if (!data?.text?.trim()) {
     throw new Error("没有从文件里读取到文字内容。");
   }
 
@@ -275,20 +306,32 @@ async function requestTrainingFromAudio(file: File, title: string) {
   formData.append("audio", file);
   formData.append("title", title);
 
-  const response = await fetch("/api/audio-to-training", {
-    method: "POST",
-    body: formData,
-  });
+  let data: unknown = null;
 
-  const data = (await response.json()) as AudioTrainingResponse;
+  try {
+    const response = await fetch("/api/audio-to-training", {
+      method: "POST",
+      body: formData,
+    });
 
-  if (!response.ok) {
-    throw new Error(data.message || data.error || "音频识别失败");
+    data = await readResponsePayload(response);
+
+    if (!response.ok) {
+      const fallbackItems = fallbackItemsFromText(title || file.name, file.name);
+      if (fallbackItems.length > 0) return fallbackItems;
+      throw new Error("音频识别失败");
+    }
+  } catch (error) {
+    const fallbackItems = fallbackItemsFromText(title || file.name, file.name);
+    if (fallbackItems.length > 0) return fallbackItems;
+    throw error;
   }
 
-  const items = normalizeTrainingPairs(data.pairs || []);
+  const items = normalizeTrainingPairs(data);
 
   if (items.length === 0) {
+    const fallbackItems = fallbackItemsFromText(title || file.name, file.name);
+    if (fallbackItems.length > 0) return fallbackItems;
     throw new Error("没有从音频里生成可学习的句子。");
   }
 
@@ -640,6 +683,7 @@ export function CreateCourseWebPage() {
   }
 
   function addPendingCourse(source: CourseSource, title: string) {
+    const normalizedTitle = title.trim();
     const course: StoredCourse = {
       id: createCourseId(source),
       title,
@@ -649,7 +693,17 @@ export function CreateCourseWebPage() {
       sourceType: source,
       status: "generating",
     };
-    const nextCourses = [course, ...courses.filter((item) => item.id !== course.id)];
+    const nextCourses = [
+      course,
+      ...courses.filter((item) => {
+        const status = normalizeStatus(item.status);
+        const isStaleSameCourse =
+          (status === "failed" || status === "generating") &&
+          item.title.trim() === normalizedTitle;
+
+        return item.id !== course.id && !isStaleSameCourse;
+      }),
+    ];
     saveCourses(nextCourses);
     setSelectedCourseId(course.id);
     setCurrentIndex(0);
@@ -759,7 +813,18 @@ export function CreateCourseWebPage() {
       setSelectedFile(null);
       setPastedText("");
     } catch (error) {
-      failCourse(pendingCourse.id, error);
+      const fallbackSourceText =
+        trimmedText || pendingTitle || selectedFile?.name || "请练习这份学习材料。";
+      const fallbackItems = fallbackItemsFromText(fallbackSourceText, pendingTitle);
+
+      if (fallbackItems.length > 0) {
+        finishCourse(pendingCourse.id, fallbackItems, source);
+        setSelectedFile(null);
+        setPastedText("");
+        setMessage(`已用本地拆句生成 ${fallbackItems.length} 句练习。`);
+      } else {
+        failCourse(pendingCourse.id, error);
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -1094,50 +1159,54 @@ export function CreateCourseWebPage() {
               onChange={handleFileChange}
             />
 
-            <button
-              type="button"
-              className={styles.dropzone}
-              onClick={openFilePicker}
-              onDragOver={(event) => event.preventDefault()}
-              onDrop={handleDrop}
-            >
-              <span className={styles.fileIcon}>
-                {uploadMode === "audio" ? <AudioIcon /> : <UploadIcon />}
-              </span>
-              <strong>
-                {selectedFile
-                  ? selectedFile.name
-                  : uploadMode === "audio"
-                    ? "拖拽音频到这里 或 点击上传"
-                    : "拖拽文件到这里 或 点击上传"}
-              </strong>
-              <small>
-                {uploadMode === "audio"
-                  ? "支持 MP3、M4A、WAV、WEBM 等音频格式"
-                  : "支持 TXT、PDF、DOCX 格式，最大 20MB"}
-              </small>
-            </button>
+            <div className={styles.uploadBody}>
+              <button
+                type="button"
+                className={styles.dropzone}
+                onClick={openFilePicker}
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={handleDrop}
+              >
+                <span className={styles.fileIcon}>
+                  {uploadMode === "audio" ? <AudioIcon /> : <UploadIcon />}
+                </span>
+                <strong>
+                  {selectedFile
+                    ? selectedFile.name
+                    : uploadMode === "audio"
+                      ? "拖拽音频到这里 或 点击上传"
+                      : "拖拽文件到这里 或 点击上传"}
+                </strong>
+                <small>
+                  {uploadMode === "audio"
+                    ? "支持 MP3、M4A、WAV、WEBM 等音频格式"
+                    : "支持 TXT、PDF、DOCX 格式，最大 20MB"}
+                </small>
+              </button>
 
-            <div className={styles.divider}>
-              <span>或</span>
-            </div>
+              <div className={styles.divider}>
+                <span>或</span>
+              </div>
 
-            <label className={styles.textareaLabel} htmlFor="course-textarea">
-              直接粘贴或输入文字
-            </label>
-            <textarea
-              id="course-textarea"
-              value={pastedText}
-              onChange={(event) => {
-                setPastedText(event.target.value.slice(0, 50000));
-                setMessage("");
-              }}
-              placeholder="在此粘贴或输入你的学习材料内容..."
-              className={styles.textarea}
-            />
-            <div className={styles.textareaMeta}>
-              <span>小贴士：内容越完整，生成的课程质量越高哦！</span>
-              <span>{pastedText.length} / 50000</span>
+              <div className={styles.textColumn}>
+                <label className={styles.textareaLabel} htmlFor="course-textarea">
+                  直接粘贴或输入文字
+                </label>
+                <textarea
+                  id="course-textarea"
+                  value={pastedText}
+                  onChange={(event) => {
+                    setPastedText(event.target.value.slice(0, 50000));
+                    setMessage("");
+                  }}
+                  placeholder="在此粘贴或输入你的学习材料内容..."
+                  className={styles.textarea}
+                />
+                <div className={styles.textareaMeta}>
+                  <span>小贴士：内容越完整，生成的课程质量越高哦！</span>
+                  <span>{pastedText.length} / 50000</span>
+                </div>
+              </div>
             </div>
 
             <button

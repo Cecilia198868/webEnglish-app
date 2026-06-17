@@ -1,5 +1,8 @@
 import OpenAI from "openai";
-import { normalizeToShortTrainingItems } from "@/lib/training";
+import {
+  createFallbackTrainingItemsFromText,
+  normalizeToShortTrainingItems,
+} from "@/lib/training";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -20,18 +23,57 @@ type WhisperSegment = {
   text?: string;
 };
 
-export async function POST(req: Request) {
-  try {
-    if (!process.env.OPENAI_API_KEY) {
-      return Response.json(
-        {
-          error: "NO_API_KEY",
-          message: "缺少 OPENAI_API_KEY，请先在 .env.local 中配置。",
-        },
-        { status: 500 }
-      );
-    }
+function titleFromFormValue(title: FormDataEntryValue | null, audio?: File) {
+  if (typeof title === "string" && title.trim()) return title.trim();
+  return audio?.name?.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").trim() || "音频课程";
+}
 
+function fallbackPairsFromText(text: string, segments: WhisperSegment[] = []) {
+  const items = createFallbackTrainingItemsFromText(text);
+
+  return items.map((item, index) => {
+    const segment = segments[index];
+
+    return {
+      chinese: item.zh,
+      english: item.en,
+      startTime: typeof segment?.start === "number" ? segment.start : 0,
+      endTime: typeof segment?.end === "number" ? segment.end : 0,
+    };
+  });
+}
+
+function fallbackAudioResponse(title: string, transcript = "", segments: WhisperSegment[] = []) {
+  const fallbackSource =
+    transcript.trim() ||
+    title.trim() ||
+    "请练习复述这段音频内容。";
+  const pairs = fallbackPairsFromText(fallbackSource, segments);
+
+  return Response.json({
+    title,
+    transcript,
+    segments,
+    pairs:
+      pairs.length > 0
+        ? pairs
+        : [
+            {
+              chinese: "请练习复述这段音频内容。",
+              english: "",
+              startTime: 0,
+              endTime: 0,
+            },
+          ],
+  });
+}
+
+export async function POST(req: Request) {
+  let fallbackTitle = "音频课程";
+  let fallbackTranscript = "";
+  let fallbackSegments: WhisperSegment[] = [];
+
+  try {
     const formData = await req.formData();
     const audio = formData.get("audio");
     const title = formData.get("title");
@@ -46,6 +88,8 @@ export async function POST(req: Request) {
       );
     }
 
+    fallbackTitle = titleFromFormValue(title, audio);
+
     if (audio.size > MAX_AUDIO_SIZE_BYTES) {
       return Response.json(
         {
@@ -56,6 +100,10 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!process.env.OPENAI_API_KEY) {
+      return fallbackAudioResponse(fallbackTitle);
+    }
+
     const transcriptResult = await openai.audio.transcriptions.create({
       file: audio,
       model: "whisper-1",
@@ -64,6 +112,7 @@ export async function POST(req: Request) {
     });
 
     const transcript = transcriptResult.text?.trim() || "";
+    fallbackTranscript = transcript;
     const segments = Array.isArray(transcriptResult.segments)
       ? transcriptResult.segments
           .map((segment) => ({
@@ -80,24 +129,22 @@ export async function POST(req: Request) {
               segment.text
           )
       : [];
+    fallbackSegments = segments;
 
     if (!transcript) {
-      return Response.json(
-        {
-          error: "EMPTY_TRANSCRIPT",
-          message: "音频转写结果为空。",
-        },
-        { status: 500 }
-      );
+      return fallbackAudioResponse(fallbackTitle);
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: `请把下面带时间戳的英文转写 segments 整理成英语学习训练句。
+    let raw = "";
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: `请把下面带时间戳的英文转写 segments 整理成英语学习训练句。
 要求：
 1. 只保留有学习价值的日常口语句子，删除无意义重复、背景噪音、嗯啊、破碎词
 2. 只要输出某一句，就必须保留原始 segment 对应的 startTime 和 endTime
@@ -116,37 +163,34 @@ export async function POST(req: Request) {
   ]
 }
 不要输出 Markdown，不要解释。`,
-        },
-        {
-          role: "user",
-          content: JSON.stringify(
-            {
-              title: typeof title === "string" ? title : "",
-              transcript,
-              segments,
-            },
-            null,
-            2
-          ),
-        },
-      ],
-    });
+          },
+          {
+            role: "user",
+            content: JSON.stringify(
+              {
+                title: fallbackTitle,
+                transcript,
+                segments,
+              },
+              null,
+              2
+            ),
+          },
+        ],
+      });
 
-    const raw = completion.choices[0]?.message?.content ?? "";
+      raw = completion.choices[0]?.message?.content ?? "";
+    } catch (error) {
+      console.error("audio training format fallback:", error);
+      return fallbackAudioResponse(fallbackTitle, transcript, segments);
+    }
 
     let parsed: { pairs?: AudioTrainingPair[] };
 
     try {
       parsed = JSON.parse(raw) as { pairs?: AudioTrainingPair[] };
     } catch {
-      return Response.json(
-        {
-          error: "BAD_JSON",
-          message: "文本整理模型返回的 JSON 无法解析。",
-          raw,
-        },
-        { status: 500 }
-      );
+      return fallbackAudioResponse(fallbackTitle, transcript, segments);
     }
 
     const pairs = Array.isArray(parsed.pairs)
@@ -174,19 +218,11 @@ export async function POST(req: Request) {
       : [];
 
     if (pairs.length === 0) {
-      return Response.json(
-        {
-          error: "NO_PAIRS",
-          message: "没有生成可用的训练句，请检查音频内容。",
-          transcript,
-        },
-        { status: 500 }
-      );
+      return fallbackAudioResponse(fallbackTitle, transcript, segments);
     }
 
     return Response.json({
-      title:
-        (typeof title === "string" && title.trim()) || audio.name || "音频课程",
+      title: fallbackTitle,
       transcript,
       segments: segments as WhisperSegment[],
       pairs,
@@ -194,12 +230,10 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("audio-to-training error:", error);
 
-    return Response.json(
-      {
-        error: "SERVER_ERROR",
-        message: error instanceof Error ? error.message : String(error),
-      },
-      { status: 500 }
+    return fallbackAudioResponse(
+      fallbackTitle,
+      fallbackTranscript,
+      fallbackSegments
     );
   }
 }

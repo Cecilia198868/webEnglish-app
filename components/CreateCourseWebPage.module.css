@@ -292,16 +292,16 @@
 
 .workspace {
   display: grid;
+  width: min(920px, calc(100% - 36px));
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 20px;
   align-items: start;
-  margin-top: 8px;
+  margin-top: 14px;
   margin-bottom: 22px;
 }
 
 .leftColumn {
-  display: grid;
-  gap: 12px;
+  display: contents;
 }
 
 .panel,
@@ -317,17 +317,57 @@
 }
 
 .uploadPanel {
+  grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr);
-  gap: 10px 12px;
-  align-items: stretch;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  overflow: hidden;
+  padding: 24px 22px 14px;
+  border-radius: 30px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.99), rgba(253, 254, 255, 0.96)),
+    #ffffff;
+  box-shadow:
+    0 28px 80px rgba(52, 69, 130, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
 }
 
 .uploadPanel .panelHeader,
 .uploadPanel .uploadTabs,
+.uploadPanel .uploadBody,
 .uploadPanel .generateButton,
 .uploadPanel .message {
   grid-column: 1 / -1;
+}
+
+.uploadPanel .panelHeader {
+  gap: 18px;
+  min-height: 70px;
+  margin-bottom: 14px;
+}
+
+.uploadPanel .panelHeader > span {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: #eff4ff;
+  color: #276ef1;
+}
+
+.uploadPanel .panelHeader svg {
+  width: 28px;
+  height: 28px;
+}
+
+.uploadPanel .panelHeader p {
+  font-size: 17px;
+  line-height: 1.05;
+}
+
+.uploadPanel .panelHeader h2 {
+  margin-top: 5px;
+  font-size: 34px;
+  line-height: 1.05;
 }
 
 .panelHeader,
@@ -390,29 +430,29 @@
 .uploadTabs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 14px;
+  gap: 12px;
+  margin-top: 0;
 }
 
 .uploadTabs button {
   display: flex;
-  height: 38px;
+  height: 52px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   border: 0;
-  border-radius: 14px;
+  border-radius: 18px;
   background: #f4f6ff;
-  color: #5e6682;
+  color: #07113f;
   font: inherit;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 950;
   cursor: pointer;
 }
 
 .uploadTabs svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 .uploadTabs .tabActive {
@@ -424,16 +464,23 @@
   display: none;
 }
 
+.uploadBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
 .dropzone {
   display: grid;
-  grid-column: 1;
-  grid-row: 3 / span 3;
+  align-self: start;
   width: 100%;
-  height: 160px;
+  height: 216px;
+  min-height: 216px;
   place-items: center;
   margin-top: 0;
-  padding: 18px;
-  border: 1.5px dashed rgba(47, 112, 247, 0.34);
+  padding: 24px 28px;
+  border: 2px dashed rgba(47, 112, 247, 0.34);
   border-radius: 18px;
   background: linear-gradient(180deg, #ffffff, #f8faff);
   color: #202849;
@@ -443,39 +490,43 @@
 
 .dropzone strong {
   display: block;
-  margin-top: 8px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  margin-top: 14px;
   color: #11163a;
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 950;
+  line-height: 1.2;
+  white-space: normal;
 }
 
 .dropzone small {
   display: block;
-  margin-top: 6px;
+  max-width: 290px;
+  margin-top: 12px;
   color: #707890;
-  font-size: 13px;
-  font-weight: 760;
+  font-size: 18px;
+  font-weight: 850;
+  line-height: 1.35;
 }
 
 .fileIcon {
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   place-items: center;
-  border-radius: 16px;
+  border-radius: 20px;
   background: #eef3ff;
   color: #276ef1;
 }
 
 .fileIcon svg {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
 }
 
 .divider {
   display: flex;
-  grid-column: 2;
-  grid-row: 3 / span 3;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -489,37 +540,41 @@
 .divider::before,
 .divider::after {
   width: 1px;
-  min-height: 44px;
+  min-height: 72px;
   flex: 1;
   background: #edf0f7;
   content: "";
 }
 
+.textColumn {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: auto 1fr auto;
+  align-content: start;
+}
+
 .textareaLabel {
-  grid-column: 3;
-  grid-row: 3;
   display: block;
-  margin-bottom: 0;
+  margin-bottom: 22px;
   color: #171b42;
-  font-size: 15px;
+  font-size: 20px;
+  line-height: 1.12;
   font-weight: 950;
 }
 
 .textarea {
-  grid-column: 3;
-  grid-row: 4;
   width: 100%;
-  height: 150px;
+  min-height: 202px;
   resize: vertical;
   border: 1px solid rgba(115, 123, 160, 0.2);
   border-radius: 18px;
   background: #ffffff;
   color: #202849;
-  padding: 14px;
+  padding: 20px;
   font: inherit;
-  font-size: 15px;
-  font-weight: 760;
-  line-height: 1.55;
+  font-size: 20px;
+  font-weight: 850;
+  line-height: 1.6;
   outline: none;
 }
 
@@ -531,31 +586,39 @@
 }
 
 .textareaMeta {
-  grid-column: 3;
-  grid-row: 5;
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  margin-top: 8px;
+  gap: 18px;
+  margin-top: 24px;
   color: #707890;
-  font-size: 12px;
-  font-weight: 760;
+  font-size: 16px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.textareaMeta span:first-child {
+  max-width: 270px;
+}
+
+.textareaMeta span:last-child {
+  flex: 0 0 auto;
+  text-align: right;
 }
 
 .generateButton {
   display: flex;
   width: 100%;
-  height: 56px;
+  height: 76px;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 14px;
   margin-top: 0;
   border: 0;
-  border-radius: 18px;
+  border-radius: 22px;
   background: linear-gradient(135deg, #2f7bf7, #6c54f7);
   color: #ffffff !important;
   font: inherit;
-  font-size: 17px;
+  font-size: 23px;
   font-weight: 950;
   box-shadow: 0 16px 34px rgba(56, 95, 236, 0.24);
   cursor: pointer;
@@ -566,8 +629,8 @@
 }
 
 .generateButton svg {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
 }
 
 .generateButton:disabled {
@@ -1320,7 +1383,7 @@
   .hero,
   .steps,
   .workspace {
-    width: min(100% - 28px, 760px);
+    width: min(100% - 28px, 920px);
   }
 
   .hero {
@@ -1344,6 +1407,10 @@
 
   .workspace {
     grid-template-columns: 1fr;
+  }
+
+  .uploadPanel {
+    grid-column: auto;
   }
 
   .courseList {
@@ -1372,6 +1439,69 @@
 
   .steps {
     grid-template-columns: 1fr;
+  }
+
+  .uploadPanel {
+    gap: 12px;
+    padding: 22px;
+    border-radius: 28px;
+  }
+
+  .uploadPanel .panelHeader {
+    gap: 14px;
+    min-height: auto;
+  }
+
+  .uploadPanel .panelHeader > span {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+  }
+
+  .uploadPanel .panelHeader h2 {
+    font-size: 30px;
+  }
+
+  .uploadTabs {
+    gap: 10px;
+  }
+
+  .uploadTabs button {
+    height: 50px;
+    font-size: 18px;
+  }
+
+  .uploadBody {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .dropzone {
+    min-height: 198px;
+  }
+
+  .divider {
+    flex-direction: row;
+  }
+
+  .divider::before,
+  .divider::after {
+    width: auto;
+    height: 1px;
+    min-height: 1px;
+  }
+
+  .textarea {
+    min-height: 190px;
+  }
+
+  .textareaMeta {
+    flex-wrap: wrap;
+  }
+
+  .generateButton {
+    height: 68px;
+    font-size: 21px;
   }
 
   .courseControls,

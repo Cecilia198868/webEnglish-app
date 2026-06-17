@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import mammoth from "mammoth";
-import { PDFParse } from "pdf-parse";
 
 export const runtime = "nodejs";
 
@@ -28,6 +27,23 @@ function isSupportedImage(file: File, lowerName: string) {
     file.type.startsWith("image/") ||
     supportedImageExtensions.some((extension) => lowerName.endsWith(extension))
   );
+}
+
+type PDFParser = {
+  getText: () => Promise<{ text?: string }>;
+  destroy: () => Promise<void> | void;
+};
+
+type PDFParseConstructor = new (options: { data: Buffer }) => PDFParser;
+
+async function createPdfParser(data: Buffer) {
+  const { createRequire } = await import("node:module");
+  const nodeRequire = createRequire(import.meta.url);
+  const { PDFParse } = nodeRequire("pdf" + "-parse") as {
+    PDFParse: PDFParseConstructor;
+  };
+
+  return new PDFParse({ data });
 }
 
 async function extractTextFromImage(file: File, lowerName: string) {
@@ -137,7 +153,7 @@ export async function POST(request: Request) {
       extractedText = result.value || "";
     } else if (lowerName.endsWith(".pdf")) {
       const arrayBuffer = await file.arrayBuffer();
-      const parser = new PDFParse({ data: Buffer.from(arrayBuffer) });
+      const parser = await createPdfParser(Buffer.from(arrayBuffer));
       try {
         const result = await parser.getText();
         extractedText = result.text || "";

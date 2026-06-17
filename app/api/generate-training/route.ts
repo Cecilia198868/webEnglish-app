@@ -1,6 +1,10 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
-import { normalizeToShortTrainingItems, type TrainingItem } from "@/lib/training";
+import {
+  createFallbackTrainingItemsFromText,
+  normalizeToShortTrainingItems,
+  type TrainingItem,
+} from "@/lib/training";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -32,7 +36,22 @@ function normalizeTrainingItems(items: unknown): TrainingItem[] {
     .filter((item) => item.zh && item.en);
 }
 
+function fallbackTrainingResponse(text: string) {
+  const fallbackItems = createFallbackTrainingItemsFromText(text);
+
+  if (fallbackItems.length > 0) {
+    return NextResponse.json(fallbackItems);
+  }
+
+  return NextResponse.json(
+    { error: "NO_TRAINING_ITEMS" },
+    { status: 400 }
+  );
+}
+
 export async function POST(req: Request) {
+  let trimmedText = "";
+
   try {
     const { text } = (await req.json()) as { text?: unknown };
 
@@ -40,16 +59,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "NO_TEXT" }, { status: 400 });
     }
 
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: "Missing OPENAI_API_KEY" },
-        { status: 500 }
-      );
-    }
-
-    const trimmedText = text.trim();
+    trimmedText = text.trim();
     if (!trimmedText) {
       return NextResponse.json({ error: "NO_TEXT" }, { status: 400 });
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+      return fallbackTrainingResponse(trimmedText);
     }
 
     const primaryLanguage = detectPrimaryLanguage(trimmedText);
@@ -173,10 +189,7 @@ ${trimmedText}`,
       parsed = JSON.parse(content);
     } catch {
       console.error("JSON parse failed:", content);
-      return NextResponse.json(
-        { error: "BAD_AI_JSON", raw: content },
-        { status: 500 }
-      );
+      return fallbackTrainingResponse(trimmedText);
     }
 
     let items: unknown[];
@@ -210,10 +223,7 @@ ${trimmedText}`,
       items = [parsed];
     } else {
       console.error("Invalid AI response format:", parsed);
-      return NextResponse.json(
-        { error: "Invalid AI response format", raw: content },
-        { status: 500 }
-      );
+      return fallbackTrainingResponse(trimmedText);
     }
 
     const normalizedItems = normalizeToShortTrainingItems(
@@ -221,15 +231,16 @@ ${trimmedText}`,
     ).filter((item) => item.zh && item.en);
 
     if (normalizedItems.length === 0) {
-      return NextResponse.json(
-        { error: "BAD_AI_JSON", raw: content },
-        { status: 500 }
-      );
+      return fallbackTrainingResponse(trimmedText);
     }
 
     return NextResponse.json(normalizedItems);
   } catch (error) {
     console.error("generate-training error:", error);
+
+    if (trimmedText) {
+      return fallbackTrainingResponse(trimmedText);
+    }
 
     return NextResponse.json(
       {
