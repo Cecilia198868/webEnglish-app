@@ -5,9 +5,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  createFallbackVariants,
-  type FreePracticeExpressionVariants,
-} from "@/lib/freePracticeEnglishFallback";
+  cleanExpressionText,
+  EXPRESSION_VARIANTS_ERROR_MESSAGE,
+  RECOMMENDATION_VARIANT_KEYS,
+  type RecommendationVariantKey,
+  validateExpressionVariantMap,
+} from "@/lib/expressionVariantValidation";
 import { playSpeakFlowTts, stopSpeakFlowTts } from "@/lib/speakFlowTtsClient";
 import {
   createFallbackTrainingItemsFromText,
@@ -58,8 +61,6 @@ type ExtractTextResponse = {
   message?: string;
 };
 
-type RecommendationVariantKey = "standard" | "idiomatic" | "simple" | "spoken";
-
 type RecommendationVariant = {
   key: RecommendationVariantKey;
   label: string;
@@ -68,7 +69,10 @@ type RecommendationVariant = {
 };
 
 type ExpressionVariantsResponse = {
-  variants?: Partial<FreePracticeExpressionVariants>;
+  error?: string;
+  message?: string;
+  source?: string;
+  variants?: Partial<Record<RecommendationVariantKey, string>>;
 };
 
 const LESSONS_STORAGE_KEY = "english-app-lessons";
@@ -119,23 +123,42 @@ const recommendationTones: Array<{
 const sampleChinesePrompt = "那我们休息一下，过会儿再去散步吧。";
 const sampleSpokenEnglish = "Let's have a rest, and then we can go hiking.";
 
-function buildRecommendationVariants(
-  chinese: string,
-  standardEnglish: string,
-  variantMap?: Partial<FreePracticeExpressionVariants>
-): RecommendationVariant[] {
-  const fallbackVariants = createFallbackVariants(chinese, standardEnglish);
+const sampleRecommendationTexts: Record<RecommendationVariantKey, string> = {
+  idiomatic: "Let's take a quick break, then go for a walk in a bit.",
+  simple: "Let's rest first, and then take a walk later.",
+  spoken: "How about we take a break and go for a walk later?",
+  standard: "Let's take a break, and then go for a walk later.",
+};
 
+function buildRecommendationVariants(
+  variantMap: Partial<Record<RecommendationVariantKey, unknown>>
+): RecommendationVariant[] {
   return recommendationTones.map(({ key, label, tone }) => ({
     key,
     label,
-    text:
-      variantMap?.[key]?.trim() ||
-      fallbackVariants[key]?.trim() ||
-      standardEnglish.trim() ||
-      sampleSpokenEnglish,
+    text: cleanExpressionText(variantMap[key]),
     tone,
   }));
+}
+
+function buildSampleRecommendationVariants() {
+  return buildRecommendationVariants(sampleRecommendationTexts);
+}
+
+function buildValidatedRecommendationVariants(
+  chinese: string,
+  variantMap?: Partial<Record<RecommendationVariantKey, unknown>>
+) {
+  if (
+    !variantMap ||
+    !validateExpressionVariantMap(variantMap, RECOMMENDATION_VARIANT_KEYS, {
+      chinese,
+    })
+  ) {
+    return null;
+  }
+
+  return buildRecommendationVariants(variantMap);
 }
 
 function normalizeStatus(status?: string): CourseStatus {
@@ -660,9 +683,10 @@ export function CreateCourseWebPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [expressionVariants, setExpressionVariants] = useState<
     RecommendationVariant[]
-  >(() => buildRecommendationVariants(sampleChinesePrompt, sampleSpokenEnglish));
+  >(() => buildSampleRecommendationVariants());
   const [isLoadingExpressionVariants, setIsLoadingExpressionVariants] =
     useState(false);
+  const [expressionVariantError, setExpressionVariantError] = useState("");
 
   const textFileInputRef = useRef<HTMLInputElement | null>(null);
   const audioFileInputRef = useRef<HTMLInputElement | null>(null);
@@ -700,16 +724,18 @@ export function CreateCourseWebPage() {
       standardEnglishInput: string,
       userEnglishInput = ""
     ) => {
-      const chinese = chineseInput.trim() || sampleChinesePrompt;
+      const chinese = chineseInput.trim();
       const standardEnglish = standardEnglishInput.trim();
-      const fallbackVariants = buildRecommendationVariants(
-        chinese,
-        standardEnglish
-      );
+
+      if (!chinese) {
+        return;
+      }
+
       const requestId = expressionRequestRef.current + 1;
 
       expressionRequestRef.current = requestId;
-      setExpressionVariants(fallbackVariants);
+      setExpressionVariants([]);
+      setExpressionVariantError("");
       setIsLoadingExpressionVariants(true);
 
       try {
@@ -725,14 +751,21 @@ export function CreateCourseWebPage() {
         const data = (await response.json()) as ExpressionVariantsResponse;
 
         if (expressionRequestRef.current !== requestId) return;
-        if (!response.ok || !data.variants) return;
 
-        setExpressionVariants(
-          buildRecommendationVariants(chinese, standardEnglish, data.variants)
+        const nextVariants = buildValidatedRecommendationVariants(
+          chinese,
+          data.variants
         );
+
+        if (!response.ok || data.source === "fallback" || !nextVariants) {
+          throw new Error(data.message || EXPRESSION_VARIANTS_ERROR_MESSAGE);
+        }
+
+        setExpressionVariants(nextVariants);
       } catch {
         if (expressionRequestRef.current === requestId) {
-          setExpressionVariants(fallbackVariants);
+          setExpressionVariants([]);
+          setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
         }
       } finally {
         if (expressionRequestRef.current === requestId) {
@@ -746,9 +779,8 @@ export function CreateCourseWebPage() {
   useEffect(() => {
     if (!currentPair) {
       expressionRequestRef.current += 1;
-      setExpressionVariants(
-        buildRecommendationVariants(sampleChinesePrompt, sampleSpokenEnglish)
-      );
+      setExpressionVariants(buildSampleRecommendationVariants());
+      setExpressionVariantError("");
       setIsLoadingExpressionVariants(false);
       return;
     }
@@ -1575,8 +1607,13 @@ export function CreateCourseWebPage() {
                   : "AI 为你优化的多种表达方式"}
               </small>
             </h2>
+            {expressionVariantError ? (
+              <div className={styles.variantError} aria-live="polite">
+                {expressionVariantError}
+              </div>
+            ) : null}
             <div className={styles.variantList}>
-              {expressionVariants.map((variant, index) => {
+              {!expressionVariantError && expressionVariants.map((variant, index) => {
                 const VariantIcon =
                   index === 0
                     ? SparkleIcon

@@ -2,6 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import {
+  EXPRESSION_VARIANTS_ERROR_MESSAGE,
+  preservesRequiredLiteralTerms,
+  validateExpressionVariantMap,
+} from "@/lib/expressionVariantValidation";
 import styles from "./FreeStudyWebPage.module.css";
 
 const DEFAULT_CHINESE_TEXT =
@@ -41,6 +46,8 @@ type ExpressionVariant = {
 };
 
 type ExpressionVariantsResponse = {
+  message?: string;
+  source?: string;
   variants?: Partial<Record<ExpressionVariantKey, string>>;
 };
 
@@ -344,8 +351,6 @@ export default function FreeStudyWebPage() {
   }
 
   async function loadAccurateEnglish(chinese: string) {
-    const fallbackEnglish = createFallbackEnglish(chinese);
-
     try {
       const response = await fetch("/api/accurate-sentence", {
         method: "POST",
@@ -359,10 +364,11 @@ export default function FreeStudyWebPage() {
           : "";
 
       return english && isEnglishRelevantToChinese(chinese, english)
+        && preservesRequiredLiteralTerms(chinese, english)
         ? english
-        : fallbackEnglish;
+        : "";
     } catch {
-      return fallbackEnglish;
+      return "";
     }
   }
 
@@ -379,16 +385,16 @@ export default function FreeStudyWebPage() {
     setIsLoadingExpressionVariants(true);
     setExpressionVariantError("");
 
-    const standardEnglish = await loadAccurateEnglish(chinese);
-    const authoritativeEnglish = standardEnglish || createFallbackEnglish(chinese);
-    const fallbackVariants = createFallbackExpressionVariants(standardEnglish, chinese);
+    const authoritativeEnglish = await loadAccurateEnglish(chinese);
 
     if (expressionRequestRef.current !== requestId) {
       return;
     }
 
-    setEnglishText(authoritativeEnglish);
-    englishTextRef.current = authoritativeEnglish;
+    if (!learnerEnglish) {
+      setEnglishText(authoritativeEnglish);
+      englishTextRef.current = authoritativeEnglish;
+    }
 
     try {
       const response = await fetch("/api/expression-variants", {
@@ -406,16 +412,23 @@ export default function FreeStudyWebPage() {
         return;
       }
 
-      if (!response.ok || !data.variants) {
-        setExpressionVariants(fallbackVariants);
-        setExpressionVariantError("");
+      if (
+        !response.ok ||
+        data.source === "fallback" ||
+        !validateExpressionVariantMap(
+          data.variants || {},
+          expressionVariantLabels.map(({ key }) => key),
+          { chinese }
+        )
+      ) {
+        setExpressionVariants([]);
+        setExpressionVariantError(
+          data.message || EXPRESSION_VARIANTS_ERROR_MESSAGE
+        );
         return;
       }
 
       const nextVariants = expressionVariantLabels.map(({ key, label }) => {
-        const fallbackText =
-          fallbackVariants.find((variant) => variant.key === key)?.text ||
-          authoritativeEnglish;
         const responseText =
           typeof data.variants?.[key] === "string" &&
           data.variants[key]?.trim()
@@ -426,17 +439,25 @@ export default function FreeStudyWebPage() {
           key,
           label,
           text:
-            responseText && isEnglishRelevantToChinese(chinese, responseText)
+            responseText &&
+            isEnglishRelevantToChinese(chinese, responseText) &&
+            preservesRequiredLiteralTerms(chinese, responseText)
               ? responseText
-              : fallbackText,
+              : "",
         };
       });
+
+      if (nextVariants.some((variant) => !variant.text)) {
+        setExpressionVariants([]);
+        setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
+        return;
+      }
 
       setExpressionVariants(nextVariants);
     } catch {
       if (expressionRequestRef.current === requestId) {
-        setExpressionVariants(fallbackVariants);
-        setExpressionVariantError("");
+        setExpressionVariants([]);
+        setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
       }
     } finally {
       if (expressionRequestRef.current === requestId) {

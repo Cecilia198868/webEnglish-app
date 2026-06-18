@@ -48,6 +48,10 @@ import {
   type HighlightedExpression,
 } from "@/lib/expressionHighlights";
 import {
+  EXPRESSION_VARIANTS_ERROR_MESSAGE,
+  validateExpressionVariantMap,
+} from "@/lib/expressionVariantValidation";
+import {
   FREE_PRACTICE_DAILY_LIMIT,
   getFreePracticeUsage,
   hasFreePracticeCompletion,
@@ -530,14 +534,6 @@ function normalizeSpeechRate(rate: number) {
 
 const SLOW_READ_RATE = 0.5;
 
-function createFallbackExpressionVariants(standardEnglish: string) {
-  return expressionVariantLabels.map(({ key, label }) => ({
-    key,
-    label,
-    text: standardEnglish || "This sentence is still being prepared.",
-  }));
-}
-
 function ArrowLeftIcon() {
   return (
     <svg aria-hidden="true" focusable="false" viewBox="0 0 32 32">
@@ -790,6 +786,7 @@ export default function StudyPage() {
   const [selectedExpressionIndex, setSelectedExpressionIndex] = useState(0);
   const [isLoadingExpressionVariants, setIsLoadingExpressionVariants] =
     useState(false);
+  const [expressionVariantError, setExpressionVariantError] = useState("");
   const [pendingExpression, setPendingExpression] = useState<{
     phrase: string;
     meaning: string;
@@ -1678,14 +1675,10 @@ export default function StudyPage() {
     if (!spokenEnglish || isListening) return;
 
     let cancelled = false;
-    const fallbackVariants = createFallbackExpressionVariants(
-      currentPair.english || ""
-    );
     const prebuiltVariants = prebuiltClassicExpressionSet?.variants || [];
 
-    setExpressionVariants(
-      prebuiltVariants.length ? prebuiltVariants : fallbackVariants
-    );
+    setExpressionVariants(prebuiltVariants);
+    setExpressionVariantError("");
     setSelectedExpressionIndex(0);
     setIsLoadingExpressionVariants(false);
 
@@ -1707,27 +1700,40 @@ export default function StudyPage() {
           }),
         });
         const data = (await response.json()) as {
+          message?: string;
+          source?: string;
           variants?: Partial<Record<ExpressionVariantKey, string>>;
         };
 
-        if (!response.ok || !data.variants || cancelled) return;
+        if (cancelled) return;
+
+        if (
+          !response.ok ||
+          data.source === "fallback" ||
+          !validateExpressionVariantMap(
+            data.variants || {},
+            expressionVariantLabels.map(({ key }) => key),
+            { chinese: currentPair.chinese }
+          )
+        ) {
+          setExpressionVariants([]);
+          setExpressionVariantError(
+            data.message || EXPRESSION_VARIANTS_ERROR_MESSAGE
+          );
+          return;
+        }
 
         const nextVariants = expressionVariantLabels.map(({ key, label }) => ({
           key,
           label,
-          text:
-            typeof data.variants?.[key] === "string" &&
-            data.variants[key]?.trim()
-              ? data.variants[key]!.trim()
-              : fallbackVariants.find((variant) => variant.key === key)?.text ||
-                currentPair.english ||
-                "",
+          text: data.variants?.[key]?.trim() || "",
         }));
 
         setExpressionVariants(nextVariants);
       } catch {
         if (!cancelled) {
-          setExpressionVariants(fallbackVariants);
+          setExpressionVariants([]);
+          setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
         }
       } finally {
         if (!cancelled) {
@@ -2242,13 +2248,13 @@ export default function StudyPage() {
   const showStudyListeningPrompt = hasLoadedLesson && isListening;
   const showStudyVoiceOnlyPrompt = showStudyPrompt || showStudyListeningPrompt;
   const showExpressionFeedback = Boolean(spokenDisplay) && !showStudyListeningPrompt;
-  const expressionVariantsForDisplay = expressionVariants.length
-    ? expressionVariants
-    : createFallbackExpressionVariants(currentPair.english || "");
+  const expressionVariantsForDisplay = expressionVariantError
+    ? [{ key: "standard" as const, label: "推荐表达", text: expressionVariantError }]
+    : expressionVariants;
   const selectedExpression =
     expressionVariantsForDisplay[
       Math.min(selectedExpressionIndex, expressionVariantsForDisplay.length - 1)
-    ] || expressionVariantsForDisplay[0];
+    ] || { key: "standard" as const, label: "推荐表达", text: "" };
 
   useEffect(() => {
     const sentence = selectedExpression.text?.trim();

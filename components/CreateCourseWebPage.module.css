@@ -2227,6 +2227,17 @@
   margin-top: 18px;
 }
 
+.variantError {
+  margin-top: 18px;
+  border: 1px solid rgba(225, 72, 86, 0.18);
+  border-radius: 16px;
+  background: #fff5f6;
+  color: #bf2436;
+  padding: 16px 18px;
+  font-size: 17px;
+  font-weight: 920;
+}
+
 .variantCard {
   display: grid;
   min-height: 92px;

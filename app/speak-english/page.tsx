@@ -47,6 +47,10 @@ import {
   type HighlightedExpression,
 } from "@/lib/expressionHighlights";
 import {
+  EXPRESSION_VARIANTS_ERROR_MESSAGE,
+  validateExpressionVariantMap,
+} from "@/lib/expressionVariantValidation";
+import {
   FREE_PRACTICE_DAILY_LIMIT,
   type FreePracticeScope,
   getFreePracticeUsage,
@@ -2925,14 +2929,6 @@ function unique(values: string[]) {
   return Array.from(new Set(values));
 }
 
-function createFallbackExpressionVariants(standardEnglish: string) {
-  return expressionVariantLabels.map(({ key, label }) => ({
-    key,
-    label,
-    text: standardEnglish || "This sentence is still being prepared.",
-  }));
-}
-
 function normalizeSpeechRate(rate: number) {
   return Math.min(Math.max(rate, 0.5), 1.15);
 }
@@ -3094,6 +3090,7 @@ function SpeakEnglishClient() {
   const [selectedExpressionIndex, setSelectedExpressionIndex] = useState(0);
   const [isLoadingExpressionVariants, setIsLoadingExpressionVariants] =
     useState(false);
+  const [expressionVariantError, setExpressionVariantError] = useState("");
   const [pendingExpression, setPendingExpression] = useState<{
     phrase: string;
     meaning: string;
@@ -3345,14 +3342,16 @@ function SpeakEnglishClient() {
     !showListeningPrompt &&
     !showFreeConversationAnswerPrompt;
   const showAiGuidedNudge = hasEnglishAttempt && !isAiGuidedMode;
-  const expressionVariantsForDisplay = expressionVariants.length
-    ? expressionVariants
-    : createFallbackExpressionVariants(standardEnglish);
+  const expressionVariantsForDisplay = expressionVariantError
+    ? []
+    : expressionVariants;
   const selectedExpression =
     expressionVariantsForDisplay[
       Math.min(selectedExpressionIndex, expressionVariantsForDisplay.length - 1)
-    ] || expressionVariantsForDisplay[0];
-  const referenceResultVariantTexts = expressionVariantLabels.map((_, index) => {
+    ] || { key: "standard", label: "推荐表达", text: "" };
+  const referenceResultVariantTexts = expressionVariantError
+    ? [expressionVariantError]
+    : expressionVariantLabels.map((_, index) => {
     const variantText = expressionVariantsForDisplay[index]?.text?.trim() || "";
     const fallbackText =
       standardEnglish.trim() ||
@@ -5681,11 +5680,9 @@ function SpeakEnglishClient() {
     if (isFreeConversationMode || !hasEnglishAttempt || !nativeSpeech) return;
 
     let cancelled = false;
-    const fallbackVariants = authoritativeEnglish
-      ? createFallbackExpressionVariants(authoritativeEnglish)
-      : [];
     setExpressionVariants([]);
     setSelectedExpressionIndex(0);
+    setExpressionVariantError("");
     setIsLoadingExpressionVariants(true);
 
     async function loadExpressionVariants() {
@@ -5700,13 +5697,24 @@ function SpeakEnglishClient() {
           }),
         });
         const data = (await response.json()) as {
+          message?: string;
+          source?: string;
           variants?: Partial<Record<ExpressionVariantKey, string>>;
         };
 
         if (cancelled) return;
 
-        if (!response.ok || !data.variants) {
-          setExpressionVariants(fallbackVariants);
+        if (
+          !response.ok ||
+          data.source === "fallback" ||
+          !validateExpressionVariantMap(
+            data.variants || {},
+            expressionVariantLabels.map(({ key }) => key),
+            { chinese: nativeSpeech }
+          )
+        ) {
+          setExpressionVariants([]);
+          setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
           setStandardEnglish(authoritativeEnglish);
           return;
         }
@@ -5714,18 +5722,15 @@ function SpeakEnglishClient() {
         const nextVariants = expressionVariantLabels.map(({ key, label }) => ({
           key,
           label,
-          text:
-            typeof data.variants?.[key] === "string" &&
-            data.variants[key]?.trim()
-              ? data.variants[key]!.trim()
-              : "",
+          text: data.variants?.[key]?.trim() || "",
         }));
 
         setExpressionVariants(nextVariants);
         setStandardEnglish(nextVariants[0]?.text || authoritativeEnglish);
       } catch {
         if (!cancelled) {
-          setExpressionVariants(fallbackVariants);
+          setExpressionVariants([]);
+          setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
           setStandardEnglish(authoritativeEnglish);
         }
       } finally {
