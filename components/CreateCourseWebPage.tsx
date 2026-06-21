@@ -140,13 +140,19 @@ function buildRecommendationVariants(
 
 function buildValidatedRecommendationVariants(
   chinese: string,
-  variantMap?: Partial<Record<RecommendationVariantKey, unknown>>,
+  variantMap?: Partial<Record<RecommendationVariantKey | "natural", unknown>>,
   standardEnglish = ""
 ) {
   const preferredStandardEnglish = cleanExpressionText(standardEnglish);
+  const normalizedVariantMap = variantMap
+    ? {
+        ...variantMap,
+        spoken: variantMap.spoken || variantMap.natural,
+      }
+    : undefined;
   const variantsForDisplay = preferredStandardEnglish
-    ? { ...variantMap, standard: preferredStandardEnglish }
-    : variantMap;
+    ? { ...normalizedVariantMap, standard: preferredStandardEnglish }
+    : normalizedVariantMap;
 
   if (
     !variantsForDisplay ||

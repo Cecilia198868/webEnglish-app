@@ -128,7 +128,16 @@ function contractCommonPhrases(text: string) {
 function createGenericFallbackVariants(
   standard: string
 ): FreePracticeExpressionVariants {
-  const base = ensureSentence(standard) || "I want to say a little more about how I feel.";
+  const base = ensureSentence(standard);
+  if (!base) {
+    return {
+      standard: "",
+      idiomatic: "",
+      simple: "",
+      natural: "",
+      spoken: "",
+    };
+  }
   const baseWithoutPeriod = withoutFinalPunctuation(base);
   const contractedBase = ensureSentence(contractCommonPhrases(base));
   const idiomatic =
@@ -210,7 +219,7 @@ export function createFallbackEnglish(chinese: string) {
     return "I want to get something nice to eat in a little while.";
   }
 
-  return "I want to say a little more about how I feel.";
+  return "";
 }
 
 function createConcertVariants(
