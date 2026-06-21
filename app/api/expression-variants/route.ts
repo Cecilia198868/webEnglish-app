@@ -1,8 +1,6 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
-import {
-  isEnglishRelevantToChinese,
-} from "@/lib/freePracticeEnglishFallback";
+import { isEnglishRelevantToChinese } from "@/lib/freePracticeEnglishFallback";
 import {
   cleanExpressionText,
   EXPRESSION_VARIANTS_ERROR_MESSAGE,
@@ -20,13 +18,24 @@ const noStoreHeaders = {
 };
 
 type VariantResponse = Partial<Record<ExpressionVariantApiKey, string>>;
+type ExpressionVariantRequestBody = {
+  chinese?: unknown;
+  standardEnglish?: unknown;
+  userEnglish?: unknown;
+  variantKeys?: unknown;
+};
+type OpenAIApiKeyConfig = {
+  apiKey: string;
+  tokenCount: number;
+};
 
 class VariantGenerationError extends Error {
   constructor(
-    message: string,
-    readonly code = message
+    readonly code: string,
+    readonly clientMessage = EXPRESSION_VARIANTS_ERROR_MESSAGE,
+    readonly status = 502
   ) {
-    super(message);
+    super(code);
     this.name = "VariantGenerationError";
   }
 }
@@ -85,16 +94,58 @@ function sanitizeExpressionVariants(
   return sanitized;
 }
 
+function redactSensitiveText(value: string) {
+  return value.replace(/sk-[A-Za-z0-9_-]{10,}/g, "[REDACTED_OPENAI_KEY]");
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function getOpenAIApiKeyConfig(): OpenAIApiKeyConfig {
+  const tokens =
+    process.env.OPENAI_API_KEY?.split(/\s+/)
+      .map((token) => token.trim())
+      .filter(Boolean) || [];
+
+  return {
+    apiKey: tokens.find((token) => token.startsWith("sk-")) || tokens[0] || "",
+    tokenCount: tokens.length,
+  };
+}
+
+function formatErrorForLog(error: unknown) {
+  if (error instanceof Error) {
+    return redactSensitiveText(
+      JSON.stringify({
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      })
+    );
+  }
+
+  try {
+    return redactSensitiveText(JSON.stringify(error));
+  } catch {
+    return redactSensitiveText(String(error));
+  }
+}
+
 function logExpressionVariantError(
   stage: string,
   error: unknown,
   context: Record<string, unknown> = {}
 ) {
-  const message = error instanceof Error ? error.message : String(error);
-  const stack = error instanceof Error ? error.stack : undefined;
+  const message = redactSensitiveText(
+    error instanceof Error ? error.message : String(error)
+  );
+  const stack =
+    error instanceof Error ? redactSensitiveText(error.stack || "") : undefined;
 
-  console.error("[expression-variants]", {
+  console.error("[expression-variants] error", {
     ...context,
+    error: formatErrorForLog(error),
     message,
     stack,
     stage,
@@ -107,7 +158,9 @@ function getErrorProperty(error: unknown, key: string) {
 }
 
 function getErrorDetails(error: unknown) {
-  const detail = error instanceof Error ? error.message : String(error);
+  const detail = redactSensitiveText(
+    error instanceof Error ? error.message : String(error)
+  );
   const upstreamStatus = getErrorProperty(error, "status");
   const upstreamCode = getErrorProperty(error, "code");
   const upstreamType = getErrorProperty(error, "type");
@@ -121,65 +174,60 @@ function getErrorDetails(error: unknown) {
   };
 }
 
-async function readExpressionVariantRequest(req: Request) {
-  try {
-    return (await req.json()) as {
-      chinese?: unknown;
-      standardEnglish?: unknown;
-      userEnglish?: unknown;
-      variantKeys?: unknown;
-    };
-  } catch (error) {
-    logExpressionVariantError("parse_request_json", error);
-    throw new VariantGenerationError("INVALID_JSON");
-  }
+function jsonError(
+  status: number,
+  error: string,
+  message: string,
+  extra: Record<string, unknown> = {}
+) {
+  return NextResponse.json(
+    {
+      error,
+      message,
+      ...extra,
+    },
+    { headers: noStoreHeaders, status }
+  );
 }
 
-export async function POST(req: Request) {
+async function readExpressionVariantRequest(
+  req: Request
+): Promise<ExpressionVariantRequestBody> {
+  let body: unknown;
+
   try {
-    const { chinese, userEnglish, standardEnglish, variantKeys } =
-      await readExpressionVariantRequest(req);
+    body = await req.json();
+  } catch (error) {
+    logExpressionVariantError("parse_request_json", error);
+    throw new VariantGenerationError(
+      "INVALID_JSON",
+      "Request body must be valid JSON.",
+      400
+    );
+  }
 
-    const chineseText = cleanExpressionText(chinese);
-    const learnerTranscript = cleanExpressionText(userEnglish);
-    let authoritativeEnglish = cleanExpressionText(standardEnglish);
-    const requestedVariantKeys = normalizeVariantKeys(variantKeys);
-    const apiKey = process.env.OPENAI_API_KEY?.trim();
+  if (!isRecord(body)) {
+    throw new VariantGenerationError(
+      "INVALID_REQUEST_BODY",
+      "Request body must be a JSON object.",
+      400
+    );
+  }
 
-    if (!chineseText) {
-      return NextResponse.json(
-        { error: "NO_CHINESE", message: "Missing required field: chinese." },
-        { headers: noStoreHeaders, status: 400 }
-      );
-    }
+  return body;
+}
 
-    if (
-      authoritativeEnglish &&
-      (!isEnglishRelevantToChinese(chineseText, authoritativeEnglish) ||
-        !preservesRequiredLiteralTerms(chineseText, authoritativeEnglish))
-    ) {
-      authoritativeEnglish = "";
-    }
-
-    if (!apiKey) {
-      logExpressionVariantError(
-        "missing_openai_api_key",
-        "OPENAI_API_KEY is missing",
-        { requestedVariantKeys }
-      );
-
-      return NextResponse.json(
-        {
-          error: "OPENAI_API_KEY_MISSING",
-          message:
-            "OPENAI_API_KEY is not configured for this Vercel environment.",
-        },
-        { headers: noStoreHeaders, status: 500 }
-      );
-    }
-
-    const openai = new OpenAI({ apiKey });
-    const completion = await openai.chat.completions.create({
+async function requestOpenAIExpressionVariants(
+  openai: OpenAI,
+  requestedVariantKeys: readonly ExpressionVariantApiKey[],
+  payload: {
+    authoritativeEnglish: string;
+    chinese: string;
+    learnerTranscript: string;
+  }
+) {
+  try {
+    return await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       response_format: { type: "json_object" },
       messages: [
@@ -189,79 +237,136 @@ export async function POST(req: Request) {
         },
         {
           role: "user",
-          content: JSON.stringify({
-            authoritativeEnglish,
-            chinese: chineseText,
-            learnerTranscript,
-          }),
+          content: JSON.stringify(payload),
         },
       ],
     });
+  } catch (error) {
+    const errorDetails = getErrorDetails(error);
+    logExpressionVariantError("openai_request", error, errorDetails);
+    throw new VariantGenerationError(
+      "OPENAI_REQUEST_FAILED",
+      `OpenAI request failed: ${errorDetails.detail}`,
+      502
+    );
+  }
+}
 
-    const content = completion.choices[0]?.message?.content || "";
-    if (!content.trim()) {
-      throw new VariantGenerationError("EMPTY_VARIANTS");
-    }
+async function handleExpressionVariantsPost(req: Request) {
+  const body = await readExpressionVariantRequest(req);
 
-    let variants: VariantResponse;
-    try {
-      variants = JSON.parse(content) as VariantResponse;
-    } catch (error) {
-      logExpressionVariantError("parse_openai_json", error, {
-        contentPreview: content.slice(0, 500),
-      });
-      throw new VariantGenerationError("INVALID_OPENAI_JSON");
-    }
+  const chineseText = cleanExpressionText(body.chinese);
+  const learnerTranscript = cleanExpressionText(body.userEnglish);
+  let authoritativeEnglish = cleanExpressionText(body.standardEnglish);
+  const requestedVariantKeys = normalizeVariantKeys(body.variantKeys);
+  const { apiKey, tokenCount } = getOpenAIApiKeyConfig();
 
-    const sanitizedVariants = sanitizeExpressionVariants(
-      chineseText,
-      variants,
-      requestedVariantKeys
+  if (!chineseText) {
+    return jsonError(400, "NO_CHINESE", "Missing required field: chinese.");
+  }
+
+  if (
+    authoritativeEnglish &&
+    (!isEnglishRelevantToChinese(chineseText, authoritativeEnglish) ||
+      !preservesRequiredLiteralTerms(chineseText, authoritativeEnglish))
+  ) {
+    authoritativeEnglish = "";
+  }
+
+  if (!apiKey) {
+    logExpressionVariantError(
+      "missing_openai_api_key",
+      "OPENAI_API_KEY is missing",
+      { requestedVariantKeys }
     );
 
-    return NextResponse.json(
-      {
-        source: "ai",
-        variants: sanitizedVariants,
-      },
-      { headers: noStoreHeaders }
+    return jsonError(
+      500,
+      "OPENAI_API_KEY_MISSING",
+      "OPENAI_API_KEY is not configured for this Vercel environment."
     );
+  }
+
+  if (tokenCount > 1) {
+    console.error("[expression-variants] warning", {
+      message:
+        "OPENAI_API_KEY contains multiple whitespace-separated values; using the first key-like token.",
+      requestedVariantKeys,
+      stage: "normalize_openai_api_key",
+      tokenCount,
+    });
+  }
+
+  const openai = new OpenAI({ apiKey });
+  const completion = await requestOpenAIExpressionVariants(
+    openai,
+    requestedVariantKeys,
+    {
+      authoritativeEnglish,
+      chinese: chineseText,
+      learnerTranscript,
+    }
+  );
+
+  const content = completion.choices[0]?.message?.content || "";
+  if (!content.trim()) {
+    throw new VariantGenerationError("EMPTY_VARIANTS");
+  }
+
+  let variants: VariantResponse;
+  try {
+    variants = JSON.parse(content) as VariantResponse;
+  } catch (error) {
+    logExpressionVariantError("parse_openai_json", error, {
+      contentPreview: content.slice(0, 500),
+    });
+    throw new VariantGenerationError("INVALID_OPENAI_JSON");
+  }
+
+  const sanitizedVariants = sanitizeExpressionVariants(
+    chineseText,
+    variants,
+    requestedVariantKeys
+  );
+
+  return NextResponse.json(
+    {
+      source: "ai",
+      variants: sanitizedVariants,
+      recommendedExpression: sanitizedVariants.standard,
+      idiomaticExpression: sanitizedVariants.idiomatic,
+      simpleExpression: sanitizedVariants.simple,
+      naturalExpression: sanitizedVariants.natural,
+      spokenExpression: sanitizedVariants.spoken,
+    },
+    { headers: noStoreHeaders }
+  );
+}
+
+export async function POST(req: Request) {
+  try {
+    return await handleExpressionVariantsPost(req);
   } catch (error) {
     const errorDetails = getErrorDetails(error);
     logExpressionVariantError("post_handler", error, errorDetails);
 
-    if (
-      error instanceof VariantGenerationError &&
-      error.code === "INVALID_JSON"
-    ) {
-      return NextResponse.json(
-        {
-          error: error.code,
-          message: "Request body must be valid JSON.",
-        },
-        { headers: noStoreHeaders, status: 400 }
-      );
-    }
-
-    const isVariantError = error instanceof VariantGenerationError;
-    const status = isVariantError || errorDetails.upstreamStatus ? 502 : 500;
-    const errorCode = isVariantError
-      ? error.code
-      : errorDetails.upstreamStatus
-        ? "OPENAI_REQUEST_FAILED"
-        : "AI_GENERATION_FAILED";
-
-    return NextResponse.json(
-      {
-        error: errorCode,
-        message: isVariantError
-          ? EXPRESSION_VARIANTS_ERROR_MESSAGE
-          : errorDetails.detail || EXPRESSION_VARIANTS_ERROR_MESSAGE,
+    if (error instanceof VariantGenerationError) {
+      return jsonError(error.status, error.code, error.clientMessage, {
         upstreamCode: errorDetails.upstreamCode,
         upstreamStatus: errorDetails.upstreamStatus,
         upstreamType: errorDetails.upstreamType,
-      },
-      { headers: noStoreHeaders, status }
+      });
+    }
+
+    return jsonError(
+      500,
+      "AI_GENERATION_FAILED",
+      errorDetails.detail || EXPRESSION_VARIANTS_ERROR_MESSAGE,
+      {
+        upstreamCode: errorDetails.upstreamCode,
+        upstreamStatus: errorDetails.upstreamStatus,
+        upstreamType: errorDetails.upstreamType,
+      }
     );
   }
 }
