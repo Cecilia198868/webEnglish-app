@@ -14,9 +14,6 @@ import {
 import {
   requestExpressionVariants,
 } from "@/lib/expressionVariantsClient";
-import {
-  createFallbackVariants as createDeterministicExpressionVariants,
-} from "@/lib/freePracticeEnglishFallback";
 import { playSpeakFlowTts, stopSpeakFlowTts } from "@/lib/speakFlowTtsClient";
 import {
   createFallbackTrainingItemsFromText,
@@ -166,16 +163,6 @@ function buildValidatedRecommendationVariants(
   return buildRecommendationVariants(variantsForDisplay);
 }
 
-function buildFallbackRecommendationVariants(
-  chinese: string,
-  standardEnglish: string
-) {
-  return buildValidatedRecommendationVariants(
-    chinese,
-    createDeterministicExpressionVariants(chinese, standardEnglish),
-    standardEnglish
-  );
-}
 
 function normalizeStatus(status?: string): CourseStatus {
   if (
@@ -772,35 +759,14 @@ export function CreateCourseWebPage() {
         );
 
         if (!response.ok || data.source === "fallback" || !nextVariants) {
-          const fallbackVariants = buildFallbackRecommendationVariants(
-            chinese,
-            standardEnglish
-          );
-
-          if (fallbackVariants) {
-            setExpressionVariants(fallbackVariants);
-            setExpressionVariantError("");
-            return;
-          }
-
           throw new Error(data.message || EXPRESSION_VARIANTS_ERROR_MESSAGE);
         }
 
         setExpressionVariants(nextVariants);
       } catch {
         if (expressionRequestRef.current === requestId) {
-          const fallbackVariants = buildFallbackRecommendationVariants(
-            chinese,
-            standardEnglish
-          );
-
-          if (fallbackVariants) {
-            setExpressionVariants(fallbackVariants);
-            setExpressionVariantError("");
-          } else {
-            setExpressionVariants([]);
-            setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
-          }
+          setExpressionVariants([]);
+          setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
         }
       } finally {
         if (expressionRequestRef.current === requestId) {
