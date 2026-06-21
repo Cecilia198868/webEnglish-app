@@ -10,6 +10,18 @@ export default function PwaRegister() {
       return;
     }
 
+    let isRefreshingForNewServiceWorker = false;
+    const reloadWhenNewServiceWorkerControlsPage = () => {
+      if (isRefreshingForNewServiceWorker) return;
+      isRefreshingForNewServiceWorker = true;
+      window.location.reload();
+    };
+
+    navigator.serviceWorker.addEventListener(
+      "controllerchange",
+      reloadWhenNewServiceWorkerControlsPage
+    );
+
     const registerServiceWorker = () => {
       void navigator.serviceWorker
         .register("/sw.js", { scope: "/" })
@@ -28,6 +40,10 @@ export default function PwaRegister() {
 
     return () => {
       window.removeEventListener("load", registerServiceWorker);
+      navigator.serviceWorker.removeEventListener(
+        "controllerchange",
+        reloadWhenNewServiceWorkerControlsPage
+      );
     };
   }, []);
 
