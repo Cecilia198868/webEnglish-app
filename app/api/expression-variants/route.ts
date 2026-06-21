@@ -12,11 +12,8 @@ import {
   type ExpressionVariantApiKey,
 } from "@/lib/expressionVariantValidation";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 const noStoreHeaders = {
   "Cache-Control": "no-store, max-age=0",
@@ -24,7 +21,15 @@ const noStoreHeaders = {
 
 type VariantResponse = Partial<Record<ExpressionVariantApiKey, string>>;
 
-class VariantGenerationError extends Error {}
+class VariantGenerationError extends Error {
+  constructor(
+    message: string,
+    readonly code = message
+  ) {
+    super(message);
+    this.name = "VariantGenerationError";
+  }
+}
 
 const variantInstructions: Record<ExpressionVariantApiKey, string> = {
   idiomatic: '"idiomatic" should be a different native-sounding phrasing.',
@@ -80,24 +85,50 @@ function sanitizeExpressionVariants(
   return sanitized;
 }
 
+function logExpressionVariantError(
+  stage: string,
+  error: unknown,
+  context: Record<string, unknown> = {}
+) {
+  const message = error instanceof Error ? error.message : String(error);
+  const stack = error instanceof Error ? error.stack : undefined;
+
+  console.error("[expression-variants]", {
+    ...context,
+    message,
+    stack,
+    stage,
+  });
+}
+
+async function readExpressionVariantRequest(req: Request) {
+  try {
+    return (await req.json()) as {
+      chinese?: unknown;
+      standardEnglish?: unknown;
+      userEnglish?: unknown;
+      variantKeys?: unknown;
+    };
+  } catch (error) {
+    logExpressionVariantError("parse_request_json", error);
+    throw new VariantGenerationError("INVALID_JSON");
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const { chinese, userEnglish, standardEnglish, variantKeys } =
-      (await req.json()) as {
-      chinese?: unknown;
-      userEnglish?: unknown;
-      standardEnglish?: unknown;
-      variantKeys?: unknown;
-    };
+      await readExpressionVariantRequest(req);
 
     const chineseText = cleanExpressionText(chinese);
     const learnerTranscript = cleanExpressionText(userEnglish);
     let authoritativeEnglish = cleanExpressionText(standardEnglish);
     const requestedVariantKeys = normalizeVariantKeys(variantKeys);
+    const apiKey = process.env.OPENAI_API_KEY?.trim();
 
     if (!chineseText) {
       return NextResponse.json(
-        { error: "NO_CHINESE" },
+        { error: "NO_CHINESE", message: "Missing required field: chinese." },
         { headers: noStoreHeaders, status: 400 }
       );
     }
@@ -110,16 +141,24 @@ export async function POST(req: Request) {
       authoritativeEnglish = "";
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!apiKey) {
+      logExpressionVariantError(
+        "missing_openai_api_key",
+        "OPENAI_API_KEY is missing",
+        { requestedVariantKeys }
+      );
+
       return NextResponse.json(
         {
-          error: "AI_GENERATION_FAILED",
-          message: EXPRESSION_VARIANTS_ERROR_MESSAGE,
+          error: "OPENAI_API_KEY_MISSING",
+          message:
+            "OPENAI_API_KEY is not configured for this Vercel environment.",
         },
-        { headers: noStoreHeaders, status: 503 }
+        { headers: noStoreHeaders, status: 500 }
       );
     }
 
+    const openai = new OpenAI({ apiKey });
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       response_format: { type: "json_object" },
@@ -144,7 +183,16 @@ export async function POST(req: Request) {
       throw new VariantGenerationError("EMPTY_VARIANTS");
     }
 
-    const variants = JSON.parse(content) as VariantResponse;
+    let variants: VariantResponse;
+    try {
+      variants = JSON.parse(content) as VariantResponse;
+    } catch (error) {
+      logExpressionVariantError("parse_openai_json", error, {
+        contentPreview: content.slice(0, 500),
+      });
+      throw new VariantGenerationError("INVALID_OPENAI_JSON");
+    }
+
     const sanitizedVariants = sanitizeExpressionVariants(
       chineseText,
       variants,
@@ -159,11 +207,30 @@ export async function POST(req: Request) {
       { headers: noStoreHeaders }
     );
   } catch (error) {
+    logExpressionVariantError("post_handler", error);
+
+    if (
+      error instanceof VariantGenerationError &&
+      error.code === "INVALID_JSON"
+    ) {
+      return NextResponse.json(
+        {
+          error: error.code,
+          message: "Request body must be valid JSON.",
+        },
+        { headers: noStoreHeaders, status: 400 }
+      );
+    }
+
     const status = error instanceof VariantGenerationError ? 502 : 500;
+    const errorCode =
+      error instanceof VariantGenerationError
+        ? error.code
+        : "AI_GENERATION_FAILED";
 
     return NextResponse.json(
       {
-        error: "AI_GENERATION_FAILED",
+        error: errorCode,
         message: EXPRESSION_VARIANTS_ERROR_MESSAGE,
       },
       { headers: noStoreHeaders, status }
