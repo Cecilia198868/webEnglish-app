@@ -30,6 +30,10 @@ const todayPattern = /\u4eca\u5929/;
 const wePattern = /\u6211\u4eec|\u54b1\u4eec/;
 const jobPattern = /\u5de5\u4f5c|\u804c\u4f4d|\u6c42\u804c|\u627e\u5de5\u4f5c|job|work/i;
 const betterPattern = /\u66f4\u597d|\u66f4\u4f73|\u7406\u60f3|\u6ee1\u610f|better/i;
+const bagPattern =
+  /\u884c\u56ca|\u884c\u674e|\u80cc\u5305|\u5305|\u884c\u88c5|bag|backpack|luggage/i;
+const simpleBagPattern =
+  /\u7b80\u5355|\u8f7b\u4fbf|\u8f7b\u88c5|\u8f7b\u677e|simple|light/i;
 const futurePattern =
   /\u660e\u5929|\u540e\u5929|\u4e0b\u5468|\u4e0b\u4e2a|\u7b49\u4f1a|\u5f85\u4f1a|\u4e00\u4f1a|\u8981|\u4f1a(?:\u53bb|\u6765|\u770b|\u542c|\u53c2\u52a0|\u89c9\u5f97|\u611f\u5230|\u5f88|\u975e\u5e38|\u66f4|\u8ba9)|\u6253\u7b97|\u51c6\u5907|\u60f3\u53bb|\u5c06|soon|later/i;
 const pastPattern =
@@ -93,6 +97,54 @@ function finishConcertSentence(base: string, context: ConcertContext) {
   return `${base}, and ${context.hasWe ? "we" : "I"} felt ${degree} relaxed.`;
 }
 
+function ensureSentence(text: string) {
+  const trimmedText = text.replace(/\s+/g, " ").trim();
+  if (!trimmedText) return "";
+  return /[.!?]$/.test(trimmedText) ? trimmedText : `${trimmedText}.`;
+}
+
+function withoutFinalPunctuation(text: string) {
+  return text.replace(/\s+/g, " ").trim().replace(/[.!?]+$/g, "");
+}
+
+function contractCommonPhrases(text: string) {
+  return text
+    .replace(/\bI am\b/g, "I'm")
+    .replace(/\bI will\b/g, "I'll")
+    .replace(/\bWe are\b/g, "We're")
+    .replace(/\bWe will\b/g, "We'll")
+    .replace(/\bThey are\b/g, "They're")
+    .replace(/\bThey will\b/g, "They'll")
+    .replace(/\bIt is\b/g, "It's")
+    .replace(/\bThat is\b/g, "That's")
+    .replace(/\bThere is\b/g, "There's")
+    .replace(/\bdo not\b/g, "don't")
+    .replace(/\bdoes not\b/g, "doesn't")
+    .replace(/\bdid not\b/g, "didn't")
+    .replace(/\bcannot\b/g, "can't")
+    .replace(/\bwill not\b/g, "won't");
+}
+
+function createGenericFallbackVariants(
+  standard: string
+): FreePracticeExpressionVariants {
+  const base = ensureSentence(standard) || "I want to say a little more about how I feel.";
+  const baseWithoutPeriod = withoutFinalPunctuation(base);
+  const contractedBase = ensureSentence(contractCommonPhrases(base));
+  const idiomatic =
+    contractedBase !== base
+      ? contractedBase
+      : ensureSentence(`I'd put it this way: ${baseWithoutPeriod}`);
+
+  return {
+    standard: base,
+    idiomatic,
+    simple: ensureSentence(`In simple words, ${baseWithoutPeriod}`),
+    natural: ensureSentence(`A natural way to say it is, ${baseWithoutPeriod}`),
+    spoken: ensureSentence(`Honestly, ${baseWithoutPeriod}`),
+  };
+}
+
 function createConcertBase(chinese: string) {
   const context = getConcertContext(chinese);
   const subject = context.hasWe ? "We" : "I";
@@ -140,6 +192,10 @@ export function createFallbackEnglish(chinese: string) {
 
   if (jobPattern.test(normalizedChinese) && betterPattern.test(normalizedChinese)) {
     return "That's why I'm looking for a better job.";
+  }
+
+  if (bagPattern.test(normalizedChinese) && simpleBagPattern.test(normalizedChinese)) {
+    return "I carry a simple bag on my back.";
   }
 
   if (/\u6237\u5916|\u5929\u6c14|\u592a\u9633/.test(normalizedChinese)) {
@@ -319,6 +375,16 @@ export function createFallbackVariants(
     };
   }
 
+  if (bagPattern.test(normalizedChinese) && simpleBagPattern.test(normalizedChinese)) {
+    return {
+      standard: standard || "I carry a simple bag on my back.",
+      idiomatic: "I sling a simple bag over my shoulder.",
+      simple: "I carry a simple bag.",
+      natural: "I have a simple bag on my back.",
+      spoken: "I've got a simple bag with me.",
+    };
+  }
+
   if (/\u8fd0\u52a8|\u953b\u70bc|\u7cbe\u795e|\u7761/.test(normalizedChinese)) {
     return {
       standard,
@@ -331,13 +397,7 @@ export function createFallbackVariants(
     };
   }
 
-  return {
-    standard,
-    idiomatic: standard,
-    simple: standard,
-    natural: standard,
-    spoken: standard,
-  };
+  return createGenericFallbackVariants(standard);
 }
 
 export function isEnglishRelevantToChinese(chinese: string, english: string) {

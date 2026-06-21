@@ -6,8 +6,13 @@ export type ExpressionVariantsApiResponse<
   K extends string = ExpressionVariantApiKey,
 > = {
   error?: string;
+  idiomaticExpression?: string;
   message?: string;
+  naturalExpression?: string;
+  recommendedExpression?: string;
+  simpleExpression?: string;
   source?: string;
+  spokenExpression?: string;
   variants?: Partial<Record<K, string>>;
 };
 
@@ -45,10 +50,39 @@ export async function requestExpressionVariants<
         message: await response.text(),
       } satisfies ExpressionVariantsApiResponse<K>);
 
+  const normalizedVariants = normalizeExpressionVariants(data, payload);
+  if (normalizedVariants) {
+    data.variants = normalizedVariants as Partial<Record<K, string>>;
+  }
+
   return {
     data,
     path: EXPRESSION_VARIANTS_API_PATH,
     response,
     status: response.status,
   };
+}
+
+function normalizeExpressionVariants<K extends string>(
+  data: ExpressionVariantsApiResponse<K>,
+  payload: ExpressionVariantsRequest
+) {
+  const variants = data.variants
+    ? ({ ...data.variants } as Record<string, string | undefined>)
+    : {};
+
+  variants.standard ||= data.recommendedExpression;
+  variants.idiomatic ||= data.idiomaticExpression;
+  variants.natural ||= data.naturalExpression;
+  variants.simple ||= data.simpleExpression;
+  variants.spoken ||=
+    data.spokenExpression || data.naturalExpression || variants.natural;
+
+  const requestedKeys =
+    payload.variantKeys && payload.variantKeys.length
+      ? payload.variantKeys
+      : Object.keys(variants);
+
+  const hasRequestedVariants = requestedKeys.some((key) => variants[key]);
+  return hasRequestedVariants ? variants : undefined;
 }
