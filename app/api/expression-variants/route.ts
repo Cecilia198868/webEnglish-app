@@ -101,6 +101,26 @@ function logExpressionVariantError(
   });
 }
 
+function getErrorProperty(error: unknown, key: string) {
+  if (!error || typeof error !== "object" || !(key in error)) return undefined;
+  return (error as Record<string, unknown>)[key];
+}
+
+function getErrorDetails(error: unknown) {
+  const detail = error instanceof Error ? error.message : String(error);
+  const upstreamStatus = getErrorProperty(error, "status");
+  const upstreamCode = getErrorProperty(error, "code");
+  const upstreamType = getErrorProperty(error, "type");
+
+  return {
+    detail,
+    upstreamCode: typeof upstreamCode === "string" ? upstreamCode : undefined,
+    upstreamStatus:
+      typeof upstreamStatus === "number" ? upstreamStatus : undefined,
+    upstreamType: typeof upstreamType === "string" ? upstreamType : undefined,
+  };
+}
+
 async function readExpressionVariantRequest(req: Request) {
   try {
     return (await req.json()) as {
@@ -207,7 +227,8 @@ export async function POST(req: Request) {
       { headers: noStoreHeaders }
     );
   } catch (error) {
-    logExpressionVariantError("post_handler", error);
+    const errorDetails = getErrorDetails(error);
+    logExpressionVariantError("post_handler", error, errorDetails);
 
     if (
       error instanceof VariantGenerationError &&
@@ -222,16 +243,23 @@ export async function POST(req: Request) {
       );
     }
 
-    const status = error instanceof VariantGenerationError ? 502 : 500;
-    const errorCode =
-      error instanceof VariantGenerationError
-        ? error.code
+    const isVariantError = error instanceof VariantGenerationError;
+    const status = isVariantError || errorDetails.upstreamStatus ? 502 : 500;
+    const errorCode = isVariantError
+      ? error.code
+      : errorDetails.upstreamStatus
+        ? "OPENAI_REQUEST_FAILED"
         : "AI_GENERATION_FAILED";
 
     return NextResponse.json(
       {
         error: errorCode,
-        message: EXPRESSION_VARIANTS_ERROR_MESSAGE,
+        message: isVariantError
+          ? EXPRESSION_VARIANTS_ERROR_MESSAGE
+          : errorDetails.detail || EXPRESSION_VARIANTS_ERROR_MESSAGE,
+        upstreamCode: errorDetails.upstreamCode,
+        upstreamStatus: errorDetails.upstreamStatus,
+        upstreamType: errorDetails.upstreamType,
       },
       { headers: noStoreHeaders, status }
     );
