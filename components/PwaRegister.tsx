@@ -11,9 +11,12 @@ export default function PwaRegister() {
     }
 
     const registerServiceWorker = () => {
-      void navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {
-        // PWA install metadata should not block the app if registration fails.
-      });
+      void navigator.serviceWorker
+        .register("/sw.js", { scope: "/" })
+        .then((registration) => registration.update())
+        .catch(() => {
+          // PWA install metadata should not block the app if registration fails.
+        });
     };
 
     if (document.readyState === "complete") {

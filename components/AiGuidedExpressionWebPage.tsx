@@ -7,6 +7,7 @@ import {
   preservesRequiredLiteralTerms,
   validateExpressionVariantMap,
 } from "@/lib/expressionVariantValidation";
+import { requestExpressionVariants } from "@/lib/expressionVariantsClient";
 import styles from "./AiGuidedExpressionWebPage.module.css";
 
 const DEFAULT_CHINESE_TEXT =
@@ -46,12 +47,6 @@ type ExpressionVariant = {
   key: ExpressionVariantKey;
   label: string;
   text: string;
-};
-
-type ExpressionVariantsResponse = {
-  message?: string;
-  source?: string;
-  variants?: Partial<Record<ExpressionVariantKey, string>>;
 };
 
 type AccurateSentenceResponse = {
@@ -504,16 +499,13 @@ export default function AiGuidedExpressionWebPage() {
     }
 
     try {
-      const response = await fetch("/api/expression-variants", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { data, response } =
+        await requestExpressionVariants<ExpressionVariantKey>({
           chinese,
           userEnglish: learnerEnglish || authoritativeEnglish,
           standardEnglish: authoritativeEnglish,
-        }),
-      });
-      const data = (await response.json()) as ExpressionVariantsResponse;
+          variantKeys: expressionVariantLabels.map(({ key }) => key),
+        });
 
       if (expressionRequestRef.current !== requestId) {
         return "";

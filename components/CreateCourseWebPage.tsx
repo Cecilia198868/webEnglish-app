@@ -11,6 +11,12 @@ import {
   type RecommendationVariantKey,
   validateExpressionVariantMap,
 } from "@/lib/expressionVariantValidation";
+import {
+  requestExpressionVariants,
+} from "@/lib/expressionVariantsClient";
+import {
+  createFallbackVariants as createDeterministicExpressionVariants,
+} from "@/lib/freePracticeEnglishFallback";
 import { playSpeakFlowTts, stopSpeakFlowTts } from "@/lib/speakFlowTtsClient";
 import {
   createFallbackTrainingItemsFromText,
@@ -68,13 +74,6 @@ type RecommendationVariant = {
   tone: string;
 };
 
-type ExpressionVariantsResponse = {
-  error?: string;
-  message?: string;
-  source?: string;
-  variants?: Partial<Record<RecommendationVariantKey, string>>;
-};
-
 const LESSONS_STORAGE_KEY = "english-app-lessons";
 const LAST_STUDY_PROGRESS_KEY = "lastStudyProgress";
 const RECORDING_SILENCE_DELAY_MS = 2000;
@@ -123,12 +122,10 @@ const recommendationTones: Array<{
 const sampleChinesePrompt = "那我们休息一下，过会儿再去散步吧。";
 const sampleSpokenEnglish = "Let's have a rest, and then we can go hiking.";
 
-const sampleRecommendationTexts: Record<RecommendationVariantKey, string> = {
-  idiomatic: "Let's take a quick break, then go for a walk in a bit.",
-  simple: "Let's rest first, and then take a walk later.",
-  spoken: "How about we take a break and go for a walk later?",
-  standard: "Let's take a break, and then go for a walk later.",
-};
+const emptyRecordingHint =
+  "\u5f55\u97f3\u540e\u8fd9\u91cc\u4f1a\u663e\u793a\u4f60\u521a\u624d\u8bf4\u7684\u82f1\u6587";
+const emptyRecommendationHint =
+  "\u5b8c\u6210\u82f1\u6587\u5f55\u97f3\u540e\uff0c\u8fd9\u91cc\u4f1a\u751f\u6210\u56db\u79cd\u63a8\u8350\u8868\u8fbe";
 
 function buildRecommendationVariants(
   variantMap: Partial<Record<RecommendationVariantKey, unknown>>
@@ -141,24 +138,37 @@ function buildRecommendationVariants(
   }));
 }
 
-function buildSampleRecommendationVariants() {
-  return buildRecommendationVariants(sampleRecommendationTexts);
-}
-
 function buildValidatedRecommendationVariants(
   chinese: string,
-  variantMap?: Partial<Record<RecommendationVariantKey, unknown>>
+  variantMap?: Partial<Record<RecommendationVariantKey, unknown>>,
+  standardEnglish = ""
 ) {
+  const preferredStandardEnglish = cleanExpressionText(standardEnglish);
+  const variantsForDisplay = preferredStandardEnglish
+    ? { ...variantMap, standard: preferredStandardEnglish }
+    : variantMap;
+
   if (
-    !variantMap ||
-    !validateExpressionVariantMap(variantMap, RECOMMENDATION_VARIANT_KEYS, {
+    !variantsForDisplay ||
+    !validateExpressionVariantMap(variantsForDisplay, RECOMMENDATION_VARIANT_KEYS, {
       chinese,
     })
   ) {
     return null;
   }
 
-  return buildRecommendationVariants(variantMap);
+  return buildRecommendationVariants(variantsForDisplay);
+}
+
+function buildFallbackRecommendationVariants(
+  chinese: string,
+  standardEnglish: string
+) {
+  return buildValidatedRecommendationVariants(
+    chinese,
+    createDeterministicExpressionVariants(chinese, standardEnglish),
+    standardEnglish
+  );
 }
 
 function normalizeStatus(status?: string): CourseStatus {
@@ -683,7 +693,7 @@ export function CreateCourseWebPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [expressionVariants, setExpressionVariants] = useState<
     RecommendationVariant[]
-  >(() => buildSampleRecommendationVariants());
+  >([]);
   const [isLoadingExpressionVariants, setIsLoadingExpressionVariants] =
     useState(false);
   const [expressionVariantError, setExpressionVariantError] = useState("");
@@ -739,33 +749,52 @@ export function CreateCourseWebPage() {
       setIsLoadingExpressionVariants(true);
 
       try {
-        const response = await fetch("/api/expression-variants", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+        const { data, response } =
+          await requestExpressionVariants<RecommendationVariantKey>({
             chinese,
             standardEnglish,
             userEnglish: userEnglishInput.trim(),
-          }),
-        });
-        const data = (await response.json()) as ExpressionVariantsResponse;
+            variantKeys: RECOMMENDATION_VARIANT_KEYS,
+          });
 
         if (expressionRequestRef.current !== requestId) return;
 
         const nextVariants = buildValidatedRecommendationVariants(
           chinese,
-          data.variants
+          data.variants,
+          standardEnglish
         );
 
         if (!response.ok || data.source === "fallback" || !nextVariants) {
+          const fallbackVariants = buildFallbackRecommendationVariants(
+            chinese,
+            standardEnglish
+          );
+
+          if (fallbackVariants) {
+            setExpressionVariants(fallbackVariants);
+            setExpressionVariantError("");
+            return;
+          }
+
           throw new Error(data.message || EXPRESSION_VARIANTS_ERROR_MESSAGE);
         }
 
         setExpressionVariants(nextVariants);
       } catch {
         if (expressionRequestRef.current === requestId) {
-          setExpressionVariants([]);
-          setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
+          const fallbackVariants = buildFallbackRecommendationVariants(
+            chinese,
+            standardEnglish
+          );
+
+          if (fallbackVariants) {
+            setExpressionVariants(fallbackVariants);
+            setExpressionVariantError("");
+          } else {
+            setExpressionVariants([]);
+            setExpressionVariantError(EXPRESSION_VARIANTS_ERROR_MESSAGE);
+          }
         }
       } finally {
         if (expressionRequestRef.current === requestId) {
@@ -776,25 +805,24 @@ export function CreateCourseWebPage() {
     []
   );
 
-  useEffect(() => {
-    if (!currentPair) {
-      expressionRequestRef.current += 1;
-      setExpressionVariants(buildSampleRecommendationVariants());
-      setExpressionVariantError("");
-      setIsLoadingExpressionVariants(false);
-      return;
-    }
+  const clearPracticeOutput = useCallback(() => {
+    expressionRequestRef.current += 1;
+    finalTranscriptRef.current = "";
+    setSpokenEnglish("");
+    setLiveTranscript("");
+    setExpressionVariants([]);
+    setExpressionVariantError("");
+    setIsLoadingExpressionVariants(false);
+  }, []);
 
-    void refreshExpressionVariants(
-      currentChinesePrompt,
-      currentStandardEnglish,
-      ""
-    );
+  useEffect(() => {
+    clearPracticeOutput();
   }, [
-    currentPair,
+    clearPracticeOutput,
+    currentIndex,
     currentChinesePrompt,
     currentStandardEnglish,
-    refreshExpressionVariants,
+    selectedCourseId,
   ]);
 
   useEffect(() => {
@@ -891,8 +919,7 @@ export function CreateCourseWebPage() {
     saveCourses(nextCourses);
     setSelectedCourseId(course.id);
     setCurrentIndex(0);
-    setSpokenEnglish("");
-    setLiveTranscript("");
+    clearPracticeOutput();
     return course;
   }
 
@@ -912,8 +939,7 @@ export function CreateCourseWebPage() {
     });
     setSelectedCourseId(courseId);
     setCurrentIndex(0);
-    setSpokenEnglish("");
-    setLiveTranscript("");
+    clearPracticeOutput();
     window.localStorage.setItem("currentLessonTitle", courseTitle);
     window.localStorage.removeItem(`lesson-progress-${courseId}`);
     setMessage(`已生成 ${items.length} 句练习，课程已放到列表最顶部。`);
@@ -1019,8 +1045,7 @@ export function CreateCourseWebPage() {
     setSelectedCourseId(course.id);
     setCurrentIndex(useSavedProgress ? getProgressIndex(course.id, pairs.length) : 0);
     setOpenMenuId("");
-    setSpokenEnglish("");
-    setLiveTranscript("");
+    clearPracticeOutput();
     setMessage("");
   }
 
@@ -1059,8 +1084,7 @@ export function CreateCourseWebPage() {
     if (selectedCourseId === courseId) {
       setSelectedCourseId(nextCourses[0]?.id || "");
       setCurrentIndex(0);
-      setSpokenEnglish("");
-      setLiveTranscript("");
+      clearPracticeOutput();
     }
 
     setOpenMenuId("");
@@ -1111,7 +1135,7 @@ export function CreateCourseWebPage() {
     );
   }
 
-  function startEnglishRecognition(resetTranscript = false) {
+  function startEnglishRecognition() {
     if (!currentPair) {
       setMessage("请先选择一个已有内容的课程。");
       return;
@@ -1123,10 +1147,7 @@ export function CreateCourseWebPage() {
       return;
     }
 
-    if (resetTranscript) {
-      setSpokenEnglish("");
-      setLiveTranscript("");
-    }
+    clearPracticeOutput();
 
     recognitionRef.current?.abort?.();
     clearSpeechSilenceTimer();
@@ -1206,20 +1227,19 @@ export function CreateCourseWebPage() {
       return;
     }
 
-    startEnglishRecognition(false);
+    startEnglishRecognition();
   }
 
   function handleRetryRecording() {
     if (isRecording) return;
-    startEnglishRecognition(true);
+    startEnglishRecognition();
   }
 
   function goPreviousSentence() {
     if (!selectedCourse || currentIndex <= 0) return;
     const nextIndex = currentIndex - 1;
     setCurrentIndex(nextIndex);
-    setSpokenEnglish("");
-    setLiveTranscript("");
+    clearPracticeOutput();
     window.localStorage.setItem(`lesson-progress-${selectedCourse.id}`, String(nextIndex));
   }
 
@@ -1227,15 +1247,13 @@ export function CreateCourseWebPage() {
     if (!selectedCourse || currentIndex >= selectedPairs.length - 1) return;
     const nextIndex = currentIndex + 1;
     setCurrentIndex(nextIndex);
-    setSpokenEnglish("");
-    setLiveTranscript("");
+    clearPracticeOutput();
     window.localStorage.setItem(`lesson-progress-${selectedCourse.id}`, String(nextIndex));
   }
 
   const practiceTranscript = isRecording && liveTranscript ? liveTranscript : spokenEnglish;
   const displayedChinesePrompt = currentChinesePrompt;
-  const displayedSpokenEnglish =
-    practiceTranscript || currentStandardEnglish || sampleSpokenEnglish;
+  const displayedSpokenEnglish = practiceTranscript || emptyRecordingHint;
 
   return (
     <main className={styles.page}>
@@ -1613,6 +1631,13 @@ export function CreateCourseWebPage() {
               </div>
             ) : null}
             <div className={styles.variantList}>
+              {!expressionVariantError &&
+              !isLoadingExpressionVariants &&
+              expressionVariants.length === 0 ? (
+                <div className={styles.emptyRecommendation}>
+                  {emptyRecommendationHint}
+                </div>
+              ) : null}
               {!expressionVariantError && expressionVariants.map((variant, index) => {
                 const VariantIcon =
                   index === 0

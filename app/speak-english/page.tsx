@@ -50,6 +50,7 @@ import {
   EXPRESSION_VARIANTS_ERROR_MESSAGE,
   validateExpressionVariantMap,
 } from "@/lib/expressionVariantValidation";
+import { requestExpressionVariants } from "@/lib/expressionVariantsClient";
 import {
   FREE_PRACTICE_DAILY_LIMIT,
   type FreePracticeScope,
@@ -5687,20 +5688,13 @@ function SpeakEnglishClient() {
 
     async function loadExpressionVariants() {
       try {
-        const response = await fetch("/api/expression-variants", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+        const { data, response } =
+          await requestExpressionVariants<ExpressionVariantKey>({
             chinese: nativeSpeech,
             userEnglish: message,
             standardEnglish: authoritativeEnglish,
-          }),
-        });
-        const data = (await response.json()) as {
-          message?: string;
-          source?: string;
-          variants?: Partial<Record<ExpressionVariantKey, string>>;
-        };
+            variantKeys: expressionVariantLabels.map(({ key }) => key),
+          });
 
         if (cancelled) return;
 

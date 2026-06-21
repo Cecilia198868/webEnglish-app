@@ -16,15 +16,48 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+export const dynamic = "force-dynamic";
+
+const noStoreHeaders = {
+  "Cache-Control": "no-store, max-age=0",
+};
+
 type VariantResponse = Partial<Record<ExpressionVariantApiKey, string>>;
 
 class VariantGenerationError extends Error {}
 
+const variantInstructions: Record<ExpressionVariantApiKey, string> = {
+  idiomatic: '"idiomatic" should be a different native-sounding phrasing.',
+  natural: '"natural" should sound casual and everyday.',
+  simple: '"simple" should be easy beginner English.',
+  spoken: '"spoken" should be relaxed conversational English.',
+  standard: '"standard" is the most natural and idiomatic recommendation.',
+};
+
+function normalizeVariantKeys(value: unknown): ExpressionVariantApiKey[] {
+  if (!Array.isArray(value)) return [...EXPRESSION_VARIANT_KEYS];
+
+  const keys = value.filter((key): key is ExpressionVariantApiKey =>
+    EXPRESSION_VARIANT_KEYS.includes(key as ExpressionVariantApiKey)
+  );
+  const distinctKeys = Array.from(new Set(keys));
+
+  return distinctKeys.length ? distinctKeys : [...EXPRESSION_VARIANT_KEYS];
+}
+
+function getVariantPrompt(keys: readonly ExpressionVariantApiKey[]) {
+  const quotedKeys = keys.map((key) => `"${key}"`).join(", ");
+  const instructions = keys.map((key) => variantInstructions[key]).join(" ");
+
+  return `Create ${keys.length} different English alternatives for a spoken English learner. Semantic authority is strict: use "authoritativeEnglish" when it is provided and relevant; otherwise use only the meaning of "chinese". Every returned sentence must preserve all core facts from the Chinese: tense or completed action, time, place, activity, people, degree words, mixed Chinese/English technical terms such as Bug or API, and feelings or results. Never drop feelings like relaxed, happy, tired, or confident. "learnerTranscript" is an unreliable speech-recognition transcript of the learner's attempt. It may contain wrong words or extra facts. Never copy or preserve facts, nouns, reasons, places, events, or causal links from learnerTranscript unless they are clearly supported by chinese or authoritativeEnglish. If learnerTranscript conflicts with chinese or authoritativeEnglish, ignore learnerTranscript. Return only JSON with keys ${quotedKeys}. Keep each value one sentence. All values must be meaning-preserving and must not be identical or near-duplicate. ${instructions}`;
+}
+
 function sanitizeExpressionVariants(
   chinese: string,
-  variants: VariantResponse
-): Record<ExpressionVariantApiKey, string> {
-  const sanitized = EXPRESSION_VARIANT_KEYS.reduce((nextVariants, key) => {
+  variants: VariantResponse,
+  keys: readonly ExpressionVariantApiKey[]
+): Partial<Record<ExpressionVariantApiKey, string>> {
+  const sanitized = keys.reduce((nextVariants, key) => {
     const candidate = cleanExpressionText(variants[key]);
 
     if (
@@ -37,9 +70,9 @@ function sanitizeExpressionVariants(
 
     nextVariants[key] = candidate;
     return nextVariants;
-  }, {} as Record<ExpressionVariantApiKey, string>);
+  }, {} as Partial<Record<ExpressionVariantApiKey, string>>);
 
-  const variantTexts = EXPRESSION_VARIANT_KEYS.map((key) => sanitized[key]);
+  const variantTexts = keys.map((key) => sanitized[key] || "");
   if (!hasDistinctExpressionTexts(variantTexts)) {
     throw new VariantGenerationError("DUPLICATE_VARIANTS");
   }
@@ -49,18 +82,24 @@ function sanitizeExpressionVariants(
 
 export async function POST(req: Request) {
   try {
-    const { chinese, userEnglish, standardEnglish } = (await req.json()) as {
+    const { chinese, userEnglish, standardEnglish, variantKeys } =
+      (await req.json()) as {
       chinese?: unknown;
       userEnglish?: unknown;
       standardEnglish?: unknown;
+      variantKeys?: unknown;
     };
 
     const chineseText = cleanExpressionText(chinese);
     const learnerTranscript = cleanExpressionText(userEnglish);
     let authoritativeEnglish = cleanExpressionText(standardEnglish);
+    const requestedVariantKeys = normalizeVariantKeys(variantKeys);
 
     if (!chineseText) {
-      return NextResponse.json({ error: "NO_CHINESE" }, { status: 400 });
+      return NextResponse.json(
+        { error: "NO_CHINESE" },
+        { headers: noStoreHeaders, status: 400 }
+      );
     }
 
     if (
@@ -77,7 +116,7 @@ export async function POST(req: Request) {
           error: "AI_GENERATION_FAILED",
           message: EXPRESSION_VARIANTS_ERROR_MESSAGE,
         },
-        { status: 503 }
+        { headers: noStoreHeaders, status: 503 }
       );
     }
 
@@ -87,8 +126,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content:
-            'Create five different English alternatives for a spoken English learner. Semantic authority is strict: use "authoritativeEnglish" when it is provided and relevant; otherwise use only the meaning of "chinese". Every returned sentence must preserve all core facts from the Chinese: tense or completed action, time, place, activity, people, degree words, mixed Chinese/English technical terms such as Bug or API, and feelings or results. Never drop feelings like relaxed, happy, tired, or confident. "learnerTranscript" is an unreliable speech-recognition transcript of the learner\'s attempt. It may contain wrong words or extra facts. Never copy or preserve facts, nouns, reasons, places, events, or causal links from learnerTranscript unless they are clearly supported by chinese or authoritativeEnglish. If learnerTranscript conflicts with chinese or authoritativeEnglish, ignore learnerTranscript. Return only JSON with keys "standard", "idiomatic", "simple", "natural", and "spoken". Keep each value one sentence. All five values must be meaning-preserving and must not be identical or near-duplicate. "standard" is the most natural and idiomatic recommendation. "idiomatic" should be a different native-sounding phrasing. "simple" should be easy beginner English. "natural" should sound casual and everyday. "spoken" should be relaxed conversational English.',
+          content: getVariantPrompt(requestedVariantKeys),
         },
         {
           role: "user",
@@ -107,12 +145,19 @@ export async function POST(req: Request) {
     }
 
     const variants = JSON.parse(content) as VariantResponse;
-    const sanitizedVariants = sanitizeExpressionVariants(chineseText, variants);
+    const sanitizedVariants = sanitizeExpressionVariants(
+      chineseText,
+      variants,
+      requestedVariantKeys
+    );
 
-    return NextResponse.json({
-      source: "ai",
-      variants: sanitizedVariants,
-    });
+    return NextResponse.json(
+      {
+        source: "ai",
+        variants: sanitizedVariants,
+      },
+      { headers: noStoreHeaders }
+    );
   } catch (error) {
     const status = error instanceof VariantGenerationError ? 502 : 500;
 
@@ -121,7 +166,7 @@ export async function POST(req: Request) {
         error: "AI_GENERATION_FAILED",
         message: EXPRESSION_VARIANTS_ERROR_MESSAGE,
       },
-      { status }
+      { headers: noStoreHeaders, status }
     );
   }
 }
